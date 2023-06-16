@@ -1,20 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { TabsProps } from "antd";
 import { Button, Space, Tabs, Typography, Table, Tag } from "antd";
 import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
 import dayjs from "dayjs";
 import "./TaskList.scss";
 import { useNavigate } from "react-router-dom";
+import TaskViewEdit from "./TaskViewEdit";
+import TabPane from "antd/es/tabs/TabPane";
 
 const { Title } = Typography;
 const pageSize = 20;
 
 const TaskList = () => {
     const [current, setCurrent] = useState(1);
+    const [activeTab, setActiveTab] = useState<string>("1");
     const dateFormat = "YYYY-MM-DD";
+    const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+    const [tableRowSelected, setTableRowSelected] = useState<any>({});
 
-    const onChange = (key: string) => {
-        // console.log(key);
+    const screenModeToggle = () => {
+        setFullScreenMode(!fullScreenMode);
+    };
+
+    const onTabChange = (key: string) => {
+        setActiveTab(key);
+        setFullScreenMode(false);
     };
 
     const colInfo = [
@@ -163,9 +173,17 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "today")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    style={{ width: "100%" }}
                 />
             </div>
         );
@@ -177,9 +195,17 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "upcoming")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    //style={{ width: "100%" }}
                 />
             </div>
         );
@@ -191,29 +217,50 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "history")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                console.log("history", record);
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    //style={{ width: "100%" }}
                 />
             </div>
         );
+    };
+
+    const getContentRender = () => {
+        switch (activeTab) {
+            case "1": {
+                return todayContent();
+            }
+            case "2": {
+                return upcomingContent();
+            }
+            case "3": {
+                return historyContent();
+            }
+        }
+        return null;
     };
 
     const tabContent: TabsProps["items"] = [
         {
             key: "1",
             label: "Today",
-            children: todayContent(),
         },
         {
             key: "2",
             label: "Upcoming",
-            children: upcomingContent(),
         },
         {
             key: "3",
             label: "History",
-            children: historyContent(),
         },
     ];
 
@@ -231,23 +278,59 @@ const TaskList = () => {
                 <Title level={5}>Tasks</Title>
             </div>
 
-            <div className="task-list-header">
+            <div
+                className="task-list-header"
+                style={{ borderBottom: "2px solid #d8e2ef" }}
+            >
                 <div>
                     <Tabs
                         defaultActiveKey="1"
                         items={tabContent}
-                        onChange={onChange}
-                    />
+                        onChange={onTabChange}
+                        style={{ width: "100%" }}
+                    ></Tabs>
                 </div>
                 <div className="task-list-add">
-                    <Space>
-                        <Button type="primary" onClick={addNewMultiTaskHandler}>
-                            Add Multiple Task
-                        </Button>
-                        <Button type="primary" onClick={addNewTaskHandler}>
-                            Add New Task
-                        </Button>
-                    </Space>
+                    <div>
+                        <Space>
+                            <Button
+                                type="primary"
+                                onClick={addNewMultiTaskHandler}
+                            >
+                                Add Multiple Task
+                            </Button>
+                            <Button type="primary" onClick={addNewTaskHandler}>
+                                Add New Task
+                            </Button>
+                        </Space>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div
+                    style={{
+                        width: "64%",
+                        float: "left",
+                        display: fullScreenMode ? "none" : "block",
+                        marginRight: "15px",
+                    }}
+                >
+                    {getContentRender()}
+                </div>
+                <div
+                    style={{
+                        float: "right",
+                        width: fullScreenMode ? "100%" : "35%",
+                        //textAlign: "right",
+                        //border: "1px solid #d8e2ef",
+                    }}
+                >
+                    <TaskViewEdit
+                        handleScreenMode={screenModeToggle}
+                        fullScreenMode={fullScreenMode}
+                        tableRowSelected={tableRowSelected}
+                        isEdit={false}
+                    />
                 </div>
             </div>
         </>

@@ -1,3 +1,5 @@
+export const dateFormat = "YYYY-MM-DD";
+
 export const modeOptions = ["Repetitive", "Never", "Daily"].map((item: any) => {
     return {
         value: item.toLowerCase(),
@@ -64,3 +66,10 @@ export const statusList = ["Pending", "InProgress", "Complete", "Cancel"].map(
         };
     }
 );
+
+export const capitalize = (value: string) => {
+    if (value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    return value;
+};

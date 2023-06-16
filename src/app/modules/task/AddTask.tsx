@@ -30,6 +30,8 @@ import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
 const { Title } = Typography;
 
@@ -40,7 +42,7 @@ const AddTask = () => {
     const dateFormat = "YYYY-MM-DD";
     const addTaskObj = {
         status: "Pending",
-        startDate: dayjs().toString(),
+        startDate: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     } as IAddTask;
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
@@ -77,6 +79,8 @@ const AddTask = () => {
             ...addTask,
             [name]: value,
         });
+
+        toast("input changed ");
     };
 
     const handleAddTask = () => {
@@ -84,8 +88,13 @@ const AddTask = () => {
 
         // Read all existing task from `localStorage`
         const taskList = localStorage.getItem("task");
-        const tasks = taskList != null ? [JSON.parse(taskList)] : [];
-        const allTask = [...tasks, addTask];
+        let allTask = [];
+        if (taskList && taskList.length > 0) {
+            allTask = JSON.parse(taskList);
+            allTask.push(addTask);
+        } else {
+            allTask.push(addTask);
+        }
 
         // Set Task to `localStorage`
         localStorage.setItem("task", JSON.stringify(allTask));
@@ -106,6 +115,7 @@ const AddTask = () => {
     return (
         <>
             <div className="add-task-header">
+                <ToastContainer />
                 <div>
                     <Title level={5}>Add Task</Title>
                 </div>

@@ -1,9 +1,14 @@
 .task-list-header {
     display: flex;
     flex-wrap: nowrap;
-    margin-bottom: 15px;
+    //margin-bottom: 15px;
 }
 
 .task-list-add {
     margin-left: auto;
+}
+
+.ant-tabs {
+    width: 100%;
+    height: 46px;
 }
