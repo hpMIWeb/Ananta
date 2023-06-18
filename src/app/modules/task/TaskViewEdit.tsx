@@ -8,32 +8,54 @@ import {
     Typography,
     DatePicker,
     TimePicker,
+    Input,
 } from "antd";
-import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 import {
     assigneeOpts,
     capitalize,
     dateFormat,
+    priorityOpts,
     statusList,
 } from "../../components/utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
-import {
-    ClockCircleOutlined,
-    CalendarOutlined,
-    EditOutlined,
-} from "@ant-design/icons";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 import {
     faEdit,
     faExpandArrowsAlt,
     faCompressArrowsAlt,
+    faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
+import Stopwatch from "../../components/hooks/Stopwatch";
 const { Title } = Typography;
 
+dayjs.extend(customParseFormat);
+
 const TaskViewEdit = (props: any) => {
+    // if (props.tableRowSelected) {
+    //     props.tableRowSelected.timer = {
+    //         state: TimerOpts.stop,
+    //         time: "00:00:00",
+    //     };
+    // }
+
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
+    // const [taskTimer, setTaskTimer] = useState<TaskTimer>({
+    //     state: TimerOpts.stop,
+    //     time: 0,
+    // } as TaskTimer);
+    // const [isTaskRunning, setIsTaskRuning] = useState<Boolean>(
+    //     props.tableRowSelected.timer.state === 1
+    // );
+    // const [time, setTime] = useState(0);
+    // const [timerDetail, setTimerDetail] = useState({
+    //     hours: 0,
+    //     minutes: 0,
+    //     seconds: 0,
+    //     milliseconds: 0,
+    // } as TimerDetail);
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -41,7 +63,7 @@ const TaskViewEdit = (props: any) => {
         }
     };
 
-    console.log(props.tableRowSelected.budgetTime);
+    console.log("props into Task View Edit", props.tableRowSelected);
 
     useEffect(() => {}, []);
 
@@ -65,12 +87,55 @@ const TaskViewEdit = (props: any) => {
 
     const editClickHandler = () => {
         console.log(props.tableRowSelected);
-        setIsEdit(true);
+        setIsEdit(!isEdit);
     };
 
     const statusChangeHandler = (event: any) => {
         console.log("Status change - ", event);
     };
+
+    // let interval = setInterval(handleTick, 1000);
+
+    // const playTimer = () => {
+    //     // taskTimer.state = TimerOpts.pause;
+    //     const timer = {} as TaskTimer;
+    //     timer.state = TimerOpts.pause;
+    //     timer.time = "00:00:00";
+    //     setTaskTimer(timer);
+    //     setIsTaskRuning(!isTaskRunning);
+    // };
+
+    // const pauseTimer = () => {
+    //     taskTimer.state = TimerOpts.play;
+    //     setTaskTimer(taskTimer);
+    //     setIsTaskRuning(!isTaskRunning);
+    // };
+
+    // const stopTimer = () => {
+    //     taskTimer.state = TimerOpts.stop;
+    //     setTaskTimer(taskTimer);
+    //     setIsTaskRuning(false);
+    //     setTime(0);
+    // };
+
+    // useEffect(() => {
+    //     console.log(taskTimer);
+    // }, [taskTimer]);
+
+    // useEffect(() => {
+    //     if (isTaskRunning) {
+    //         const interval = setInterval(() => {
+    //             setTime(time + 1);
+
+    //             timerDetail.hours = Math.floor(time / 360000);
+    //             timerDetail.minutes = Math.floor((time % 360000) / 6000);
+    //             timerDetail.seconds = Math.floor((time % 6000) / 100);
+    //             timerDetail.milliseconds = time % 100;
+    //             setTimerDetail(timerDetail);
+    //         }, 10);
+    //         return () => clearInterval(interval);
+    //     }
+    // }, [isTaskRunning, time]);
 
     return (
         <>
@@ -89,9 +154,21 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: props.fullScreenMode ? 18 : 16 }}
                         >
-                            <Title level={5} style={{ textAlign: "left" }}>
-                                {props.tableRowSelected.task}
-                            </Title>
+                            {!isEdit && (
+                                <Title level={5} style={{ textAlign: "left" }}>
+                                    {props.tableRowSelected.task}
+                                </Title>
+                            )}
+                            {isEdit && (
+                                <Input
+                                    placeholder="Task"
+                                    name="task"
+                                    value={props.tableRowSelected.task}
+                                    // onChange={(event) => {
+                                    //     inputChangeHandler(event);
+                                    // }}
+                                />
+                            )}
                         </Col>
                         <Col
                             xs={{ span: 24 }}
@@ -107,126 +184,103 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: props.fullScreenMode ? 1 : 3 }}
                         >
-                            {/* <EditOutlined
-                                style={{
-                                    fontSize: "25px",
-                                    color: "#2c7be5",
-                                }}
-                                title="Click here to edit record"
-                                onClick={editClickHandler}
-                            /> */}
                             <FontAwesomeIcon
-                                icon={faEdit}
+                                icon={isEdit ? faXmark : faEdit}
                                 style={{
-                                    fontSize: "20px",
+                                    fontSize: isEdit ? "25px" : "20px",
                                     color: "#2c7be5",
                                     cursor: "pointer",
+                                    marginLeft: "10px",
+                                    marginTop: isEdit ? "-3px" : "0",
                                 }}
-                                title="Click here to edit"
+                                title={
+                                    "Click here to " +
+                                    (isEdit ? "cancel" : "edit")
+                                }
                                 onClick={editClickHandler}
                             />
-                            <FontAwesomeIcon
-                                icon={faExpandArrowsAlt}
-                                style={{
-                                    fontSize: "20px",
-                                    fontWeight: "normal",
-                                    color: "#2c7be5",
-                                    float: "right",
-                                    cursor: "pointer",
-                                    display: props.fullScreenMode
-                                        ? "none"
-                                        : "block",
-                                }}
-                                title="Click here to maximize"
-                                onClick={fullScreenModeToggle}
-                            />
-                            {/* <FullscreenOutlined
-                                onClick={fullScreenModeToggle}
-                                style={{
-                                    fontSize: "25px",
-                                    color: "#2c7be5",
-                                    float: "right",
-                                    display: props.fullScreenMode
-                                        ? "none"
-                                        : "block",
-                                }}
-                                title="Maximize"
-                            /> */}
-                            <FontAwesomeIcon
-                                icon={faCompressArrowsAlt}
-                                onClick={fullScreenModeToggle}
-                                style={{
-                                    fontSize: "20px",
-                                    color: "#2c7be5",
-                                    float: "right",
-                                    cursor: "pointer",
-                                    display: props.fullScreenMode
-                                        ? "block"
-                                        : "none",
-                                }}
-                                title="Click here to minimize"
-                            />
-                            {/* <FullscreenExitOutlined
-                                onClick={fullScreenModeToggle}
-                                style={{
-                                    fontSize: "25px",
-                                    color: "#2c7be5",
-                                    float: "right",
-                                    display: props.fullScreenMode
-                                        ? "block"
-                                        : "none",
-                                }}
-                                title="Minimize"
-                            /> */}
+                            {!props.fullScreenMode && (
+                                <FontAwesomeIcon
+                                    icon={faExpandArrowsAlt}
+                                    style={{
+                                        fontSize: "20px",
+                                        fontWeight: "normal",
+                                        color: "#2c7be5",
+                                        float: "right",
+                                        cursor: "pointer",
+                                        display: props.fullScreenMode
+                                            ? "none"
+                                            : "block",
+                                    }}
+                                    title="Click here to maximize"
+                                    onClick={fullScreenModeToggle}
+                                />
+                            )}
+                            {props.fullScreenMode && (
+                                <FontAwesomeIcon
+                                    icon={faCompressArrowsAlt}
+                                    onClick={fullScreenModeToggle}
+                                    style={{
+                                        fontSize: "20px",
+                                        color: "#2c7be5",
+                                        float: "right",
+                                        cursor: "pointer",
+                                        display: props.fullScreenMode
+                                            ? "block"
+                                            : "none",
+                                    }}
+                                    title="Click here to minimize"
+                                />
+                            )}
                         </Col>
                     </Row>
                     {dividerRow()}
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
                             xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 8 }}
+                            sm={{ span: 12 }}
+                            md={{ span: 16 }}
+                            lg={{ span: 14 }}
                         >
-                            {/* <button
-                                className=""
-                                id="pauseTimer"
-                                title="Pause"
-                            ></button>
-                            <button
-                                className="triangle"
-                                id="startTimer"
-                                title="Play"
-                            ></button>
-                            <button
-                                className="square"
-                                title="Complete"
-                            ></button> */}
+                            <div className="timerbuttons">
+                                <Stopwatch
+                                    taskId={props.tableRowSelected.taskId}
+                                />
+                            </div>
                         </Col>
                         <Col
                             xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 20 }}
-                        >
-                            Time 00:00
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
+                            sm={{ span: 6 }}
                             md={{ span: 4 }}
+                            lg={{ span: 5 }}
+                        >
+                            <Select
+                                allowClear
+                                placeholder="Select Priority"
+                                options={priorityOpts}
+                                value={props.tableRowSelected.priority}
+                                className="w100"
+                                onChange={(value, event) => {
+                                    statusChangeHandler(event);
+                                }}
+                            />
+                        </Col>
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 6 }}
+                            md={{ span: 4 }}
+                            lg={{ span: 5 }}
                         >
                             <Select
                                 allowClear
                                 placeholder="Select Status"
                                 options={statusList}
-                                value={
-                                    props.tableRowSelected &&
-                                    props.tableRowSelected.status
-                                }
+                                value={props.tableRowSelected.status}
                                 className="w100"
                                 onChange={(value, event) => {
                                     statusChangeHandler(event);
                                 }}
-                            ></Select>
+                            />
                         </Col>
                     </Row>
                     {dividerRow()}
@@ -234,30 +288,26 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 5 }}
-                            md={{ span: 5 }}
+                            md={{ span: 4 }}
                         >
                             Assigned To
                             <div>
-                                <b
-                                    style={{
-                                        display: isEdit ? "none" : "block",
-                                    }}
-                                >
-                                    {props.tableRowSelected.assignee}
-                                </b>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    placeholder="Assign Person"
-                                    value={props.tableRowSelected.assignee}
-                                    options={assigneeOpts}
-                                    // onChange={(value, event) => {
-                                    //     inputChangeHandler(event);
-                                    // }}
-                                    style={{
-                                        display: isEdit ? "block" : "none",
-                                    }}
-                                ></Select>
+                                {!isEdit && (
+                                    <b>{props.tableRowSelected.assignee}</b>
+                                )}
+                                {isEdit && (
+                                    <Select
+                                        allowClear
+                                        showSearch
+                                        placeholder="Assign Person"
+                                        value={props.tableRowSelected.assignee}
+                                        options={assigneeOpts}
+                                        className="w100"
+                                        // onChange={(value, event) => {
+                                        //     inputChangeHandler(event);
+                                        // }}
+                                    ></Select>
+                                )}
                             </div>
                         </Col>
                         <Col
@@ -267,73 +317,70 @@ const TaskViewEdit = (props: any) => {
                         >
                             Assigned Date
                             <div>
-                                <b
-                                    style={{
-                                        display: isEdit ? "none" : "block",
-                                    }}
-                                >
-                                    <CalendarOutlined
-                                        style={{
-                                            color: "#2c7be5",
-                                            marginRight: "10px",
-                                        }}
+                                {!isEdit && (
+                                    <b>
+                                        <CalendarOutlined
+                                            style={{
+                                                color: "#2c7be5",
+                                                marginRight: "10px",
+                                            }}
+                                        />
+                                        {dayjs(
+                                            props.tableRowSelected.startDate
+                                        ).format("YYYY-MM-DD, HH:mm A")}
+                                    </b>
+                                )}
+
+                                {isEdit && (
+                                    <DatePicker
+                                        placeholder="Start Date"
+                                        name="startDate"
+                                        defaultValue={dayjs(
+                                            props.tableRowSelected.startDate
+                                        )}
+                                        className="w100"
+                                        // format={dateFormat}
+                                        // className="w100"
+                                        // onChange={(date, dateString) => {
+                                        //     inputChangeHandler(dateString, "startDate");
+                                        // }}
+                                        onPanelChange={() => {}}
                                     />
-                                    {dayjs(
-                                        props.tableRowSelected.startDate
-                                    ).format("YYYY-MM-DD, HH:mm A")}
-                                </b>
-                                <DatePicker
-                                    placeholder="Start Date"
-                                    name="startDate"
-                                    defaultValue={
-                                        props.tableRowSelected.startDate
-                                    }
-                                    format={dateFormat}
-                                    // className="w100"
-                                    // onChange={(date, dateString) => {
-                                    //     inputChangeHandler(dateString, "startDate");
-                                    // }}
-                                    onPanelChange={() => {}}
-                                    style={{
-                                        display: isEdit ? "block" : "none",
-                                    }}
-                                />
+                                )}
                             </div>
                         </Col>
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 5 }}
-                            md={{ span: 5 }}
+                            md={{ span: 6 }}
                         >
                             Due Date
                             <div>
-                                <b
-                                    style={{
-                                        display: isEdit ? "none" : "block",
-                                    }}
-                                >
-                                    <CalendarOutlined
-                                        style={{
-                                            color: "#2c7be5",
-                                            marginRight: "10px",
-                                        }}
+                                {!isEdit && (
+                                    <b>
+                                        <CalendarOutlined
+                                            style={{
+                                                color: "#2c7be5",
+                                                marginRight: "10px",
+                                            }}
+                                        />
+                                        {dayjs(
+                                            props.tableRowSelected.dueDate
+                                        ).format("YYYY-MM-DD, HH:mm A")}
+                                    </b>
+                                )}
+                                {isEdit && (
+                                    <DatePicker
+                                        placeholder="Due Date"
+                                        name="dueDate"
+                                        defaultValue={dayjs(
+                                            props.tableRowSelected.dueDate
+                                        )}
+                                        format={dateFormat}
+                                        onPanelChange={() => {}}
+                                        className="w100"
                                     />
-                                    {dayjs(
-                                        props.tableRowSelected.dueDate
-                                    ).format("YYYY-MM-DD, HH:mm A")}
-                                </b>
-                                <DatePicker
-                                    placeholder="Due Date"
-                                    name="dueDate"
-                                    defaultValue={
-                                        props.tableRowSelected.dueDate
-                                    }
-                                    format={dateFormat}
-                                    onPanelChange={() => {}}
-                                    style={{
-                                        display: isEdit ? "block" : "none",
-                                    }}
-                                />
+                                )}
                             </div>
                         </Col>
                         <Col
@@ -343,31 +390,31 @@ const TaskViewEdit = (props: any) => {
                         >
                             Budget Time
                             <div>
-                                <b
-                                    style={{
-                                        display: isEdit ? "none" : "block",
-                                    }}
-                                >
-                                    <ClockCircleOutlined
-                                        style={{
-                                            color: "#2c7be5",
-                                            marginRight: "10px",
-                                        }}
+                                {!isEdit && (
+                                    <b>
+                                        <ClockCircleOutlined
+                                            style={{
+                                                color: "#2c7be5",
+                                                marginRight: "10px",
+                                            }}
+                                        />
+                                        {props.tableRowSelected.budgetTime}
+                                    </b>
+                                )}
+                                {isEdit && (
+                                    <TimePicker
+                                        placeholder="Budget Time"
+                                        name="budgetTime"
+                                        defaultValue={dayjs(
+                                            props.tableRowSelected.budgetTime,
+                                            "HH:mm:ss"
+                                        )}
+                                        // onChange={(date, dateString) => {
+                                        //     inputChangeHandler(dateString, "budgetTime");
+                                        // }}
+                                        className="w100"
                                     />
-                                    {props.tableRowSelected.budgetTime}
-                                </b>
-                                <TimePicker
-                                    placeholder="Budget Time"
-                                    name="budgetTime"
-                                    defaultValue={dayjs("12:08:23", "HH:mm:ss")}
-                                    // onChange={(date, dateString) => {
-                                    //     inputChangeHandler(dateString, "budgetTime");
-                                    // }}
-                                    className="w100"
-                                    style={{
-                                        display: isEdit ? "block" : "none",
-                                    }}
-                                />
+                                )}
                             </div>
                         </Col>
                         <Col
@@ -377,11 +424,7 @@ const TaskViewEdit = (props: any) => {
                         >
                             Actual Time
                             <div>
-                                <b
-                                    style={{
-                                        display: isEdit ? "none" : "block",
-                                    }}
-                                >
+                                <b>
                                     <ClockCircleOutlined
                                         style={{
                                             color: "#2c7be5",
@@ -390,23 +433,6 @@ const TaskViewEdit = (props: any) => {
                                     />
                                     {props.tableRowSelected.budgetTime}
                                 </b>
-                                <TimePicker
-                                    placeholder="Actual Time"
-                                    name="actualTime"
-                                    defaultValue={
-                                        props.tableRowSelected
-                                            ? dayjs(
-                                                  props.tableRowSelected
-                                                      .budgetTime,
-                                                  "HH:mm:ss"
-                                              )
-                                            : dayjs()
-                                    }
-                                    className="w100"
-                                    style={{
-                                        display: isEdit ? "block" : "none",
-                                    }}
-                                />
                             </div>
                         </Col>
                     </Row>

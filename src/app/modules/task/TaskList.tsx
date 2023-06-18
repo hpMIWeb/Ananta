@@ -141,19 +141,25 @@ const TaskList = () => {
         switch (rangeMode) {
             case "today": {
                 retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isSame(dayjs());
+                    return dayjs(item.startDate, dateFormat).isSame(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
             case "upcoming": {
                 retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isAfter(dayjs());
+                    return dayjs(item.startDate, dateFormat).isAfter(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
             case "history": {
                 retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isBefore(dayjs());
+                    return dayjs(item.startDate, dateFormat).isBefore(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
@@ -317,21 +323,24 @@ const TaskList = () => {
                 >
                     {getContentRender()}
                 </div>
-                <div
-                    style={{
-                        float: "right",
-                        width: fullScreenMode ? "100%" : "35%",
-                        //textAlign: "right",
-                        //border: "1px solid #d8e2ef",
-                    }}
-                >
-                    <TaskViewEdit
-                        handleScreenMode={screenModeToggle}
-                        fullScreenMode={fullScreenMode}
-                        tableRowSelected={tableRowSelected}
-                        isEdit={false}
-                    />
-                </div>
+                {tableRowSelected &&
+                    Object.keys(tableRowSelected).length > 0 && (
+                        <div
+                            style={{
+                                float: "right",
+                                width: fullScreenMode ? "100%" : "35%",
+                                //textAlign: "right",
+                                //border: "1px solid #d8e2ef",
+                            }}
+                        >
+                            <TaskViewEdit
+                                handleScreenMode={screenModeToggle}
+                                fullScreenMode={fullScreenMode}
+                                tableRowSelected={tableRowSelected}
+                                isEdit={false}
+                            />
+                        </div>
+                    )}
             </div>
         </>
     );

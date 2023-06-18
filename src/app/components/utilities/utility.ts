@@ -73,3 +73,16 @@ export const capitalize = (value: string) => {
     }
     return value;
 };
+
+// set, get and remove items from `localStorage`
+export const setLocalstorage = (key: string, value: any) => {
+    localStorage.setItem(key, value);
+};
+
+export const removeLocalstorage = (key: string) => {
+    localStorage.removeItem(key);
+};
+
+export const getLocalStorage = (key: string) => {
+    return localStorage.getItem(key);
+};

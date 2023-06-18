@@ -29,14 +29,19 @@ import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
+import {
+    AddTask as IAddTask,
+    SubTask as ISubTask,
+    TaskTimer,
+    TimerOpts,
+} from "./interfaces/ITask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
 const { Title } = Typography;
 
-dayjs.extend(weekday);
-dayjs.extend(localeData);
+//dayjs.extend(weekday);
+//dayjs.extend(localeData);
 
 const AddTask = () => {
     const dateFormat = "YYYY-MM-DD";
@@ -79,25 +84,43 @@ const AddTask = () => {
             ...addTask,
             [name]: value,
         });
+    };
 
-        toast("input changed ");
+    const validate = () => {
+        if (addTask.client === "") {
+        }
+
+        return true;
     };
 
     const handleAddTask = () => {
-        console.log(addTask);
+        if (validate()) {
+            toast.error("Please set mandatory fields", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return false;
+        }
 
         // Read all existing task from `localStorage`
         const taskList = localStorage.getItem("task");
-        let allTask = [];
-        if (taskList && taskList.length > 0) {
-            allTask = JSON.parse(taskList);
-            allTask.push(addTask);
-        } else {
-            allTask.push(addTask);
-        }
 
+        // set timer
+        const timer = {} as TaskTimer;
+        timer.state = TimerOpts.stop;
+        timer.time = 0;
+        addTask.timer = timer;
+
+        let allTask =
+            taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
+        addTask.taskId = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
+        allTask.push(addTask);
+
+        console.log("ALL TASK", allTask);
         // Set Task to `localStorage`
         localStorage.setItem("task", JSON.stringify(allTask));
+        toast.success("Successfully Created Task", {
+            position: toast.POSITION.TOP_RIGHT,
+        });
     };
 
     const updateSubComponents = (subTasks: ISubTask[]) => {
@@ -263,6 +286,7 @@ const AddTask = () => {
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <Select
+                            status="error"
                             allowClear
                             showSearch
                             placeholder="Client"

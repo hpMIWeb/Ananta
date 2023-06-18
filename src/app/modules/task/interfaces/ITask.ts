@@ -8,6 +8,7 @@ export interface AddTask {
     workArea: string;
     remark: string;
     budgetTime: string;
+    timer: TaskTimer;
     priority: string;
     billable: string;
     client: string;
@@ -25,6 +26,7 @@ export interface SubTask {
     dueDate: string;
     status: string;
     budgetTime: string;
+    timer: TaskTimer;
     remark: string;
     client: string;
     assignee: string;
@@ -42,4 +44,22 @@ export interface Comment {
     comment: string;
     commentDate: string;
     commentBy: string;
+}
+
+export const TimerOpts = {
+    play: 1,
+    pause: -1,
+    stop: 0,
+};
+
+export interface TaskTimer {
+    state: number;
+    time: number;
+}
+
+export interface TimerDetail {
+    hours: number;
+    minutes: number;
+    seconds: number;
+    milliseconds: number;
 }
