@@ -15,7 +15,7 @@ import {
     assigneeOpts,
     clientOpts,
     priorityOpts,
-} from "../../components/utilities/utility";
+} from "../../utilities/utility";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubTask as ISubTask } from "./interfaces/ITask";

@@ -79,6 +79,7 @@ const LayoutComponent = () => {
                             padding: 24,
                             minHeight: 360,
                             background: colorBgContainer,
+                            height: "100%",
                         }}
                     >
                         <Outlet />

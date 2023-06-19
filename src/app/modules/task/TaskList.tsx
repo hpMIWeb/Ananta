@@ -1,27 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { TabsProps } from "antd";
 import { Button, Space, Tabs, Typography, Table, Tag } from "antd";
-import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
+import {
+    AddTask,
+    AddTask as IAddTask,
+    SubTask as ISubTask,
+} from "./interfaces/ITask";
 import dayjs from "dayjs";
 import "./TaskList.scss";
 import { useNavigate } from "react-router-dom";
+import TaskViewEdit from "./TaskViewEdit";
+import api from "../../utilities/apiServices";
 
 const { Title } = Typography;
 const pageSize = 20;
 
 const TaskList = () => {
     const [current, setCurrent] = useState(1);
+    const [activeTab, setActiveTab] = useState<string>("1");
     const dateFormat = "YYYY-MM-DD";
+    const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+    const [tableRowSelected, setTableRowSelected] = useState<any>({});
+    const [allTask, setAllTask] = useState<[]>([]);
 
-    const onChange = (key: string) => {
-        // console.log(key);
+    const screenModeToggle = () => {
+        setFullScreenMode(!fullScreenMode);
     };
+
+    const onTabChange = (key: string) => {
+        setActiveTab(key);
+        setFullScreenMode(false);
+    };
+
+    useEffect(() => {
+        api.getAllTask().then((resp: any) => {
+            console.log(resp.data.allTask);
+            setAllTask(resp.data.allTask);
+        });
+    }, []);
 
     const colInfo = [
         {
-            title: "task",
-            dataIndex: "task",
-            key: "task",
+            title: "title",
+            dataIndex: "title",
+            key: "title",
             render: (text: string) => text,
         },
         {
@@ -36,10 +58,10 @@ const TaskList = () => {
         },
         {
             title: "task date",
-            dataIndex: "startDate",
-            key: "startDate",
-            render: (startDate: string) => (
-                <span>{dayjs(startDate).format(dateFormat)}</span>
+            dataIndex: "start_date",
+            key: "start_date",
+            render: (start_date: string) => (
+                <span>{dayjs(start_date).format(dateFormat)}</span>
             ),
         },
         {
@@ -50,18 +72,23 @@ const TaskList = () => {
                 <span>
                     {[status].map((item) => {
                         let color = "#fb275d";
+                        let title = item;
                         switch (item) {
-                            case "Completed": {
+                            case "completed": {
                                 color = "#00ca72";
                                 break;
                             }
-                            case "InProgress": {
+                            case "in_progress": {
                                 color = "#ffcc00";
                                 break;
                             }
-                            case "Cancel": {
-                                color = "#808080";
+                            case "cancelled": {
+                                color = "#5e6e82";
                                 break;
+                            }
+                            case "1": {
+                                color = "#fb275d";
+                                title = "pending";
                             }
                         }
 
@@ -71,7 +98,7 @@ const TaskList = () => {
                                 key={item}
                                 style={{ fontWeight: "500", fontSize: "12px" }}
                             >
-                                {item.toUpperCase()}
+                                {title.toUpperCase()}
                             </Tag>
                         );
                     })}
@@ -79,18 +106,18 @@ const TaskList = () => {
             ),
         },
         {
-            title: "subTask",
-            key: "subTask",
-            dataIndex: "subTask",
-            render: (subTask: []) => {
-                if (subTask && subTask.length > 0) {
+            title: "subtask",
+            key: "subtask",
+            dataIndex: "subtask",
+            render: (subtask: []) => {
+                if (subtask && subtask.length > 0) {
                     return (
-                        <div key={subTask.length}>
-                            {subTask.filter((item: ISubTask) => {
+                        <div key={subtask.length}>
+                            {subtask.filter((item: ISubTask) => {
                                 return item.status === "Completed";
                             }).length +
                                 "/" +
-                                subTask.length}
+                                subtask.length}
                         </div>
                     );
                 } else {
@@ -102,20 +129,21 @@ const TaskList = () => {
 
     const rowClassHandler = (record: IAddTask) => {
         let rowClassName = "";
-        switch (record.status) {
-            case "Pending": {
+        switch (record.status.toLowerCase()) {
+            case "pending":
+            case "1": {
                 rowClassName = "data-row-pending";
                 break;
             }
-            case "Completed": {
+            case "completed": {
                 rowClassName = "data-row-completed";
                 break;
             }
-            case "InProgress": {
+            case "in_progress": {
                 rowClassName = "data-row-in-progress";
                 break;
             }
-            case "Cancel": {
+            case "cancelled": {
                 rowClassName = "data-row-cancel";
                 break;
             }
@@ -124,28 +152,35 @@ const TaskList = () => {
     };
 
     const getData = (current: number, pageSize: number, rangeMode: string) => {
-        const taskList = localStorage.getItem("task");
-        const tasks = taskList != null ? JSON.parse(taskList) : [];
-        let retVal = [];
+        let retVal: AddTask[] = [];
 
         switch (rangeMode) {
             case "today": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isSame(dayjs());
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isSame(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
             case "upcoming": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isAfter(dayjs());
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isAfter(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
             case "history": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate).isBefore(dayjs());
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isBefore(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
+            }
+            default: {
+                retVal = [];
             }
         }
 
@@ -163,9 +198,17 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "today")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    style={{ width: "100%" }}
                 />
             </div>
         );
@@ -177,9 +220,17 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "upcoming")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    //style={{ width: "100%" }}
                 />
             </div>
         );
@@ -191,29 +242,50 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "history")}
                     rowClassName={rowClassHandler}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                console.log("history", record);
+                                setTableRowSelected(record);
+                            },
+                        };
+                    }}
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
+                    //style={{ width: "100%" }}
                 />
             </div>
         );
+    };
+
+    const getContentRender = () => {
+        switch (activeTab) {
+            case "1": {
+                return todayContent();
+            }
+            case "2": {
+                return upcomingContent();
+            }
+            case "3": {
+                return historyContent();
+            }
+        }
+        return null;
     };
 
     const tabContent: TabsProps["items"] = [
         {
             key: "1",
             label: "Today",
-            children: todayContent(),
         },
         {
             key: "2",
             label: "Upcoming",
-            children: upcomingContent(),
         },
         {
             key: "3",
             label: "History",
-            children: historyContent(),
         },
     ];
 
@@ -231,24 +303,63 @@ const TaskList = () => {
                 <Title level={5}>Tasks</Title>
             </div>
 
-            <div className="task-list-header">
+            <div
+                className="task-list-header"
+                style={{ borderBottom: "2px solid #d8e2ef" }}
+            >
                 <div>
                     <Tabs
                         defaultActiveKey="1"
                         items={tabContent}
-                        onChange={onChange}
-                    />
+                        onChange={onTabChange}
+                        style={{ width: "100%" }}
+                    ></Tabs>
                 </div>
                 <div className="task-list-add">
-                    <Space>
-                        <Button type="primary" onClick={addNewMultiTaskHandler}>
-                            Add Multiple Task
-                        </Button>
-                        <Button type="primary" onClick={addNewTaskHandler}>
-                            Add New Task
-                        </Button>
-                    </Space>
+                    <div>
+                        <Space>
+                            <Button
+                                type="primary"
+                                onClick={addNewMultiTaskHandler}
+                            >
+                                Add Multiple Task
+                            </Button>
+                            <Button type="primary" onClick={addNewTaskHandler}>
+                                Add New Task
+                            </Button>
+                        </Space>
+                    </div>
                 </div>
+            </div>
+            <div>
+                <div
+                    style={{
+                        width: "64%",
+                        float: "left",
+                        display: fullScreenMode ? "none" : "block",
+                        marginRight: "15px",
+                    }}
+                >
+                    {getContentRender()}
+                </div>
+                {tableRowSelected &&
+                    Object.keys(tableRowSelected).length > 0 && (
+                        <div
+                            style={{
+                                float: "right",
+                                width: fullScreenMode ? "100%" : "35%",
+                                //textAlign: "right",
+                                //border: "1px solid #d8e2ef",
+                            }}
+                        >
+                            <TaskViewEdit
+                                handleScreenMode={screenModeToggle}
+                                fullScreenMode={fullScreenMode}
+                                tableRowSelected={tableRowSelected}
+                                isEdit={false}
+                            />
+                        </div>
+                    )}
             </div>
         </>
     );
