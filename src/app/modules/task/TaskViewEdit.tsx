@@ -16,7 +16,7 @@ import {
     dateFormat,
     priorityOpts,
     statusList,
-} from "../../components/utilities/utility";
+} from "../../utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -28,42 +28,22 @@ import {
     faCompressArrowsAlt,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import Stopwatch from "../../components/hooks/Stopwatch";
+import Stopwatch from "../../components/Stockwatch/Stopwatch";
+import { ToastContainer, toast } from "react-toastify";
+import api from "../../utilities/apiServices";
+import { AddTask } from "./interfaces/ITask";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
 
 const TaskViewEdit = (props: any) => {
-    // if (props.tableRowSelected) {
-    //     props.tableRowSelected.timer = {
-    //         state: TimerOpts.stop,
-    //         time: "00:00:00",
-    //     };
-    // }
-
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-    // const [taskTimer, setTaskTimer] = useState<TaskTimer>({
-    //     state: TimerOpts.stop,
-    //     time: 0,
-    // } as TaskTimer);
-    // const [isTaskRunning, setIsTaskRuning] = useState<Boolean>(
-    //     props.tableRowSelected.timer.state === 1
-    // );
-    // const [time, setTime] = useState(0);
-    // const [timerDetail, setTimerDetail] = useState({
-    //     hours: 0,
-    //     minutes: 0,
-    //     seconds: 0,
-    //     milliseconds: 0,
-    // } as TimerDetail);
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
             props.handleScreenMode();
         }
     };
-
-    console.log("props into Task View Edit", props.tableRowSelected);
 
     useEffect(() => {}, []);
 
@@ -86,56 +66,24 @@ const TaskViewEdit = (props: any) => {
     };
 
     const editClickHandler = () => {
-        console.log(props.tableRowSelected);
         setIsEdit(!isEdit);
     };
 
-    const statusChangeHandler = (event: any) => {
+    const statusChangeHandler = (event: any, value: string) => {
         console.log("Status change - ", event);
+
+        const taskUpdate = {} as AddTask;
+        taskUpdate.status = value;
+
+        api.updateTask(props.tableRowSelected._id, taskUpdate).then(
+            (resp: any) => {
+                // localStorage.setItem("task", JSON.stringify(taskUpdate));
+                toast.success("Successfully Updated Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        );
     };
-
-    // let interval = setInterval(handleTick, 1000);
-
-    // const playTimer = () => {
-    //     // taskTimer.state = TimerOpts.pause;
-    //     const timer = {} as TaskTimer;
-    //     timer.state = TimerOpts.pause;
-    //     timer.time = "00:00:00";
-    //     setTaskTimer(timer);
-    //     setIsTaskRuning(!isTaskRunning);
-    // };
-
-    // const pauseTimer = () => {
-    //     taskTimer.state = TimerOpts.play;
-    //     setTaskTimer(taskTimer);
-    //     setIsTaskRuning(!isTaskRunning);
-    // };
-
-    // const stopTimer = () => {
-    //     taskTimer.state = TimerOpts.stop;
-    //     setTaskTimer(taskTimer);
-    //     setIsTaskRuning(false);
-    //     setTime(0);
-    // };
-
-    // useEffect(() => {
-    //     console.log(taskTimer);
-    // }, [taskTimer]);
-
-    // useEffect(() => {
-    //     if (isTaskRunning) {
-    //         const interval = setInterval(() => {
-    //             setTime(time + 1);
-
-    //             timerDetail.hours = Math.floor(time / 360000);
-    //             timerDetail.minutes = Math.floor((time % 360000) / 6000);
-    //             timerDetail.seconds = Math.floor((time % 6000) / 100);
-    //             timerDetail.milliseconds = time % 100;
-    //             setTimerDetail(timerDetail);
-    //         }, 10);
-    //         return () => clearInterval(interval);
-    //     }
-    // }, [isTaskRunning, time]);
 
     return (
         <>
@@ -147,6 +95,7 @@ const TaskViewEdit = (props: any) => {
                             : "none",
                 }}
             >
+                <ToastContainer />
                 <Form style={{ padding: "15px 0 0 0" }}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
@@ -156,14 +105,14 @@ const TaskViewEdit = (props: any) => {
                         >
                             {!isEdit && (
                                 <Title level={5} style={{ textAlign: "left" }}>
-                                    {props.tableRowSelected.task}
+                                    {props.tableRowSelected.title}
                                 </Title>
                             )}
                             {isEdit && (
                                 <Input
                                     placeholder="Task"
                                     name="task"
-                                    value={props.tableRowSelected.task}
+                                    value={props.tableRowSelected.title}
                                     // onChange={(event) => {
                                     //     inputChangeHandler(event);
                                     // }}
@@ -261,7 +210,7 @@ const TaskViewEdit = (props: any) => {
                                 value={props.tableRowSelected.priority}
                                 className="w100"
                                 onChange={(value, event) => {
-                                    statusChangeHandler(event);
+                                    statusChangeHandler(event, value);
                                 }}
                             />
                         </Col>
@@ -278,7 +227,7 @@ const TaskViewEdit = (props: any) => {
                                 value={props.tableRowSelected.status}
                                 className="w100"
                                 onChange={(value, event) => {
-                                    statusChangeHandler(event);
+                                    statusChangeHandler(event, value);
                                 }}
                             />
                         </Col>
@@ -398,7 +347,7 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {props.tableRowSelected.budgetTime}
+                                        {props.tableRowSelected.budget_time}
                                     </b>
                                 )}
                                 {isEdit && (
@@ -406,7 +355,7 @@ const TaskViewEdit = (props: any) => {
                                         placeholder="Budget Time"
                                         name="budgetTime"
                                         defaultValue={dayjs(
-                                            props.tableRowSelected.budgetTime,
+                                            props.tableRowSelected.budget_time,
                                             "HH:mm:ss"
                                         )}
                                         // onChange={(date, dateString) => {
@@ -431,7 +380,7 @@ const TaskViewEdit = (props: any) => {
                                             marginRight: "10px",
                                         }}
                                     />
-                                    {props.tableRowSelected.budgetTime}
+                                    {props.tableRowSelected.actual_time}
                                 </b>
                             </div>
                         </Col>
@@ -484,49 +433,6 @@ const TaskViewEdit = (props: any) => {
                     </Row>
                 </Form>
             </div>
-
-            {/* <div className="row avtardiv my-3">
-                <div className="col-2">
-                    <p>Assigned To</p>
-                    <div className="asgnp_avtar">
-                        <strong>Arya Stark</strong>
-                    </div>
-                </div>
-                <div className="col-3">
-                    <p>Assigned Date</p>
-                    <div className="asgnp_avtar">
-                        <i className="far fa-calendar-alt"></i>{" "}
-                        <strong> 25 Aug 2022, 10am</strong>
-                    </div>
-                </div>
-                <div className="col-3">
-                    <p>Due Date</p>
-                    <div className="asgnp_avtar">
-                        <i className="far fa-calendar-alt"></i>{" "}
-                        <strong> 27 Aug 2022, 10am</strong>
-                    </div>
-                </div>
-                <div className="col-2">
-                    <p>Budget Time</p>
-                    <div className="asgnp_avtar">
-                        <i className="far fa-clock"></i>{" "}
-                        <strong>02h 30m</strong>
-                    </div>
-                </div>
-                <div className="col-2">
-                    <p>Actual Time</p>
-                    <div className="asgnp_avtar">
-                        <i className="far fa-clock"></i>{" "}
-                        <strong>02h 30m</strong>
-                    </div>
-                </div>
-                <div className="col-2 clientname">
-                    <p>Client</p>
-                    <div className="asgnp_avtar">
-                        <strong>Trusha Bhanderi</strong>
-                    </div>
-                </div>
-            </div> */}
         </>
     );
 };

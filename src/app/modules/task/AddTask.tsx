@@ -21,10 +21,8 @@ import {
     clientOpts,
     modeOptions,
     workAreaOpts,
-} from "../../components/utilities/utility";
+} from "../../utilities/utility";
 import dayjs from "dayjs";
-import weekday from "dayjs/plugin/weekday";
-import localeData from "dayjs/plugin/localeData";
 import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
@@ -35,6 +33,7 @@ import {
     TaskTimer,
     TimerOpts,
 } from "./interfaces/ITask";
+import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
@@ -47,7 +46,7 @@ const AddTask = () => {
     const dateFormat = "YYYY-MM-DD";
     const addTaskObj = {
         status: "Pending",
-        startDate: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     } as IAddTask;
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
@@ -90,7 +89,7 @@ const AddTask = () => {
         if (addTask.client === "") {
         }
 
-        return true;
+        return false;
     };
 
     const handleAddTask = () => {
@@ -109,18 +108,29 @@ const AddTask = () => {
         timer.state = TimerOpts.stop;
         timer.time = 0;
         addTask.timer = timer;
+        addTask.actual_time = addTask.budget_time;
 
         let allTask =
             taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
-        addTask.taskId = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
+        addTask._id = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
         allTask.push(addTask);
 
         console.log("ALL TASK", allTask);
-        // Set Task to `localStorage`
-        localStorage.setItem("task", JSON.stringify(allTask));
-        toast.success("Successfully Created Task", {
-            position: toast.POSITION.TOP_RIGHT,
-        });
+
+        // Save to DB
+        try {
+            api.createTask(addTask).then((resp: any) => {
+                // Set Task to `localStorage`
+                localStorage.setItem("task", JSON.stringify(allTask));
+                toast.success("Successfully Created Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+        } catch (ex) {
+            toast.error("Technical error while creating Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
 
     const updateSubComponents = (subTasks: ISubTask[]) => {
@@ -158,13 +168,13 @@ const AddTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
                             placeholder="Start Date"
-                            name="startDate"
+                            name="start_date"
                             //value={addTask.startDate}
                             defaultValue={dayjs()}
                             format={dateFormat}
                             className="w100"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "startDate");
+                                inputChangeHandler(dateString, "start_date");
                             }}
                             onPanelChange={() => {}}
                         />
@@ -172,10 +182,10 @@ const AddTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
                             placeholder="Due Date"
-                            name="dueDate"
+                            name="due_date"
                             //value={addTask.dueDate}
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "dueDate");
+                                inputChangeHandler(dateString, "due_date");
                             }}
                             className="w100"
                         />
@@ -208,7 +218,7 @@ const AddTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
                         <Input
                             placeholder="Task"
-                            name="task"
+                            name="title"
                             value={addTask.title}
                             onChange={(event) => {
                                 inputChangeHandler(event);
@@ -251,11 +261,12 @@ const AddTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <TimePicker
                             placeholder="Budget Time"
-                            name="budgetTime"
+                            name="budget_time"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "budgetTime");
+                                inputChangeHandler(dateString, "budget_time");
                             }}
                             className="w100"
+                            format={"HH:mm"}
                         />
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -286,7 +297,6 @@ const AddTask = () => {
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <Select
-                            status="error"
                             allowClear
                             showSearch
                             placeholder="Client"
@@ -326,7 +336,7 @@ const AddTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
                         <Input
                             placeholder="Data Path"
-                            name="dataPath"
+                            name="datapath"
                             value={addTask.dataPath}
                             onChange={(event) => {
                                 inputChangeHandler(event);

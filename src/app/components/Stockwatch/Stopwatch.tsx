@@ -4,13 +4,13 @@ import {
     setLocalstorage,
     removeLocalstorage,
     getLocalStorage,
-} from "../../components/utilities/utility";
+} from "../../utilities/utility";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 
 const Stopwatch = (props: any) => {
     // state to store time
-    const [time, setTime] = useState(0);
+    const [time, setTime] = useState<number>(0);
 
     useEffect(() => {
         const taskTiming = getLocalStorage("task_" + props.taskId);
@@ -27,7 +27,7 @@ const Stopwatch = (props: any) => {
             // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
             intervalId = setInterval(() => {
                 setTime(time + 1);
-                setLocalstorage("task_" + props.taskId, time);
+                setLocalstorage("task_" + props.taskId, time.toString());
             }, 10);
         }
         return () => clearInterval(intervalId);

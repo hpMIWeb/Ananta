@@ -1,13 +1,14 @@
 export interface AddTask {
-    taskId: number;
+    _id: number;
     title: string;
-    startDate: string;
-    dueDate: string;
+    start_date: string;
+    due_date: string;
     mode: string;
     status: string;
     workArea: string;
     remark: string;
-    budgetTime: string;
+    budget_time: string;
+    actual_time: string;
     timer: TaskTimer;
     priority: string;
     billable: string;
@@ -25,7 +26,7 @@ export interface SubTask {
     startDate: string;
     dueDate: string;
     status: string;
-    budgetTime: string;
+    budget_time: string;
     timer: TaskTimer;
     remark: string;
     client: string;

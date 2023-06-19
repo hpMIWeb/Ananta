@@ -1,14 +1,16 @@
 export const dateFormat = "YYYY-MM-DD";
 
-export const modeOptions = ["Repetitive", "Never", "Daily"].map((item: any) => {
-    return {
-        value: item.toLowerCase(),
-        label: item,
-        name: "mode",
-    };
-});
+export const modeOptions = ["Repetitive", "Never", "Daily"].map(
+    (item: string) => {
+        return {
+            value: item.toLowerCase(),
+            label: item,
+            name: "mode",
+        };
+    }
+);
 
-export const priorityOpts = ["High", "Medium", "Low"].map((item: any) => {
+export const priorityOpts = ["High", "Medium", "Low"].map((item: string) => {
     return {
         value: item.toLowerCase(),
         label: item,
@@ -16,7 +18,7 @@ export const priorityOpts = ["High", "Medium", "Low"].map((item: any) => {
     };
 });
 
-export const chargesOpts = ["Billable", "Non Billable"].map((item: any) => {
+export const chargesOpts = ["Billable", "Non Billable"].map((item: string) => {
     return {
         value: item.toLowerCase(),
         label: item,
@@ -24,7 +26,7 @@ export const chargesOpts = ["Billable", "Non Billable"].map((item: any) => {
     };
 });
 
-export const clientOpts = ["Jack John", "Sohan Varani"].map((item: any) => {
+export const clientOpts = ["Jack John", "Sohan Varani"].map((item: string) => {
     return {
         value: item.toLowerCase(),
         label: item,
@@ -39,7 +41,7 @@ export const assigneeOpts = [
     "Hitesh Patel",
     "Ankit Patel",
     "Rohit Soni",
-].map((item: any) => {
+].map((item: string) => {
     return {
         value: item.toLowerCase(),
         label: item,
@@ -48,7 +50,7 @@ export const assigneeOpts = [
 });
 
 export const workAreaOpts = ["GST", "TDS", "Audit", "Accounting"].map(
-    (item: any) => {
+    (item: string) => {
         return {
             value: item.toLowerCase(),
             label: item,
@@ -57,15 +59,18 @@ export const workAreaOpts = ["GST", "TDS", "Audit", "Accounting"].map(
     }
 );
 
-export const statusList = ["Pending", "InProgress", "Complete", "Cancel"].map(
-    (item: any) => {
-        return {
-            value: item.toLowerCase(),
-            label: item,
-            name: "status",
-        };
-    }
-);
+export const statusList = [
+    "pending",
+    "in_progress",
+    "complete",
+    "cancelled",
+].map((item: string) => {
+    return {
+        value: item.toLowerCase(),
+        label: item,
+        name: "status",
+    };
+});
 
 export const capitalize = (value: string) => {
     if (value) {
@@ -75,7 +80,7 @@ export const capitalize = (value: string) => {
 };
 
 // set, get and remove items from `localStorage`
-export const setLocalstorage = (key: string, value: any) => {
+export const setLocalstorage = (key: string, value: string) => {
     localStorage.setItem(key, value);
 };
 

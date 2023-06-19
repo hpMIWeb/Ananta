@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import type { TabsProps } from "antd";
 import { Button, Space, Tabs, Typography, Table, Tag } from "antd";
-import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
+import {
+    AddTask,
+    AddTask as IAddTask,
+    SubTask as ISubTask,
+} from "./interfaces/ITask";
 import dayjs from "dayjs";
 import "./TaskList.scss";
 import { useNavigate } from "react-router-dom";
 import TaskViewEdit from "./TaskViewEdit";
-import TabPane from "antd/es/tabs/TabPane";
+import api from "../../utilities/apiServices";
 
 const { Title } = Typography;
 const pageSize = 20;
@@ -17,6 +21,7 @@ const TaskList = () => {
     const dateFormat = "YYYY-MM-DD";
     const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
     const [tableRowSelected, setTableRowSelected] = useState<any>({});
+    const [allTask, setAllTask] = useState<[]>([]);
 
     const screenModeToggle = () => {
         setFullScreenMode(!fullScreenMode);
@@ -27,11 +32,18 @@ const TaskList = () => {
         setFullScreenMode(false);
     };
 
+    useEffect(() => {
+        api.getAllTask().then((resp: any) => {
+            console.log(resp.data.allTask);
+            setAllTask(resp.data.allTask);
+        });
+    }, []);
+
     const colInfo = [
         {
-            title: "task",
-            dataIndex: "task",
-            key: "task",
+            title: "title",
+            dataIndex: "title",
+            key: "title",
             render: (text: string) => text,
         },
         {
@@ -46,10 +58,10 @@ const TaskList = () => {
         },
         {
             title: "task date",
-            dataIndex: "startDate",
-            key: "startDate",
-            render: (startDate: string) => (
-                <span>{dayjs(startDate).format(dateFormat)}</span>
+            dataIndex: "start_date",
+            key: "start_date",
+            render: (start_date: string) => (
+                <span>{dayjs(start_date).format(dateFormat)}</span>
             ),
         },
         {
@@ -60,18 +72,23 @@ const TaskList = () => {
                 <span>
                     {[status].map((item) => {
                         let color = "#fb275d";
+                        let title = item;
                         switch (item) {
-                            case "Completed": {
+                            case "completed": {
                                 color = "#00ca72";
                                 break;
                             }
-                            case "InProgress": {
+                            case "in_progress": {
                                 color = "#ffcc00";
                                 break;
                             }
-                            case "Cancel": {
-                                color = "#808080";
+                            case "cancelled": {
+                                color = "#5e6e82";
                                 break;
+                            }
+                            case "1": {
+                                color = "#fb275d";
+                                title = "pending";
                             }
                         }
 
@@ -81,7 +98,7 @@ const TaskList = () => {
                                 key={item}
                                 style={{ fontWeight: "500", fontSize: "12px" }}
                             >
-                                {item.toUpperCase()}
+                                {title.toUpperCase()}
                             </Tag>
                         );
                     })}
@@ -89,18 +106,18 @@ const TaskList = () => {
             ),
         },
         {
-            title: "subTask",
-            key: "subTask",
-            dataIndex: "subTask",
-            render: (subTask: []) => {
-                if (subTask && subTask.length > 0) {
+            title: "subtask",
+            key: "subtask",
+            dataIndex: "subtask",
+            render: (subtask: []) => {
+                if (subtask && subtask.length > 0) {
                     return (
-                        <div key={subTask.length}>
-                            {subTask.filter((item: ISubTask) => {
+                        <div key={subtask.length}>
+                            {subtask.filter((item: ISubTask) => {
                                 return item.status === "Completed";
                             }).length +
                                 "/" +
-                                subTask.length}
+                                subtask.length}
                         </div>
                     );
                 } else {
@@ -112,20 +129,21 @@ const TaskList = () => {
 
     const rowClassHandler = (record: IAddTask) => {
         let rowClassName = "";
-        switch (record.status) {
-            case "Pending": {
+        switch (record.status.toLowerCase()) {
+            case "pending":
+            case "1": {
                 rowClassName = "data-row-pending";
                 break;
             }
-            case "Completed": {
+            case "completed": {
                 rowClassName = "data-row-completed";
                 break;
             }
-            case "InProgress": {
+            case "in_progress": {
                 rowClassName = "data-row-in-progress";
                 break;
             }
-            case "Cancel": {
+            case "cancelled": {
                 rowClassName = "data-row-cancel";
                 break;
             }
@@ -134,34 +152,35 @@ const TaskList = () => {
     };
 
     const getData = (current: number, pageSize: number, rangeMode: string) => {
-        const taskList = localStorage.getItem("task");
-        const tasks = taskList != null ? JSON.parse(taskList) : [];
-        let retVal = [];
+        let retVal: AddTask[] = [];
 
         switch (rangeMode) {
             case "today": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate, dateFormat).isSame(
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isSame(
                         dayjs().format(dateFormat)
                     );
                 });
                 break;
             }
             case "upcoming": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate, dateFormat).isAfter(
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isAfter(
                         dayjs().format(dateFormat)
                     );
                 });
                 break;
             }
             case "history": {
-                retVal = tasks.filter((item: IAddTask) => {
-                    return dayjs(item.startDate, dateFormat).isBefore(
+                retVal = allTask.filter((item: IAddTask) => {
+                    return dayjs(item.start_date, dateFormat).isBefore(
                         dayjs().format(dateFormat)
                     );
                 });
                 break;
+            }
+            default: {
+                retVal = [];
             }
         }
 
