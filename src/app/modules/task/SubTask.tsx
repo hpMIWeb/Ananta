@@ -107,16 +107,27 @@ const SubTask = (props: any) => {
                                         sm={{ span: 24 }}
                                         md={{ span: 16 }}
                                     >
-                                        <Input
-                                            placeholder="Sub Task"
-                                            name="title"
-                                            onChange={(event) => {
-                                                inputChangeHandler(
-                                                    event,
-                                                    subTaskItem
-                                                );
-                                            }}
-                                        />
+                                        <Form.Item
+                                            name="titlewe"
+                                            rules={[
+                                                {
+                                                    required:true,
+                                                    message:"Pease enter subtitle name."
+                                                }
+                                            ]}
+                                        >
+                                            <Input
+                                                placeholder="Sub Task"
+                                                name="titlewe"
+                                                onChange={(event) => {
+                                                    inputChangeHandler(
+                                                        event,
+                                                        subTaskItem
+                                                    );
+                                                }}
+                                            />
+                                        </Form.Item>
+
                                     </Col>
                                     <Col
                                         xs={{ span: 24 }}

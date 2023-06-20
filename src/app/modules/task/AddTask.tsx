@@ -85,52 +85,109 @@ const AddTask = () => {
         });
     };
 
+
     const validate = () => {
-        if (addTask.client === "") {
+
+        let returnFlag = false;
+
+        console.log(addTask.start_date);
+        if (addTask.hasOwnProperty("start_date") && addTask.start_date === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("due_date") && addTask.due_date === '') {
+            
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("mode") && addTask.mode === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("title") && addTask.title === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("client") && addTask.client === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("workArea") && addTask.workArea === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("remark") && addTask.remark === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("budget_time") && addTask.budget_time === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("priority") && addTask.priority === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("billable") && addTask.billable === '') {
+
+            returnFlag = false;
+        }
+        else if (addTask.hasOwnProperty("assignee") && addTask.assignee === '') {
+
+            returnFlag = true;
         }
 
-        return false;
+
+        console.log(returnFlag)
+        return returnFlag;
+
     };
 
     const handleAddTask = () => {
+
         if (validate()) {
             toast.error("Please set mandatory fields", {
                 position: toast.POSITION.TOP_RIGHT,
             });
+
             return false;
-        }
 
-        // Read all existing task from `localStorage`
-        const taskList = localStorage.getItem("task");
+        } else {
+            // Read all existing task from `localStorage`
+            console.log("Pihank")
+            const taskList = localStorage.getItem("task");
 
-        // set timer
-        const timer = {} as TaskTimer;
-        timer.state = TimerOpts.stop;
-        timer.time = 0;
-        addTask.timer = timer;
-        addTask.actual_time = addTask.budget_time;
+            // set timer
+            const timer = {} as TaskTimer;
+            timer.state = TimerOpts.stop;
+            timer.time = 0;
+            addTask.timer = timer;
+            addTask.actual_time = addTask.budget_time;
 
-        let allTask =
-            taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
-        addTask._id = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
-        allTask.push(addTask);
+            let allTask =
+                taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
+            addTask._id = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
+            allTask.push(addTask);
 
-        console.log("ALL TASK", allTask);
+            console.log("ALL TASK", allTask);
 
-        // Save to DB
-        try {
-            api.createTask(addTask).then((resp: any) => {
-                // Set Task to `localStorage`
-                localStorage.setItem("task", JSON.stringify(allTask));
-                toast.success("Successfully Created Task", {
+            // Save to DB
+            try {
+                api.createTask(addTask).then((resp: any) => {
+                    // Set Task to `localStorage`
+                    localStorage.setItem("task", JSON.stringify(allTask));
+                    toast.success("Successfully Created Task", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                });
+            } catch (ex) {
+                toast.error("Technical error while creating Task", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-            });
-        } catch (ex) {
-            toast.error("Technical error while creating Task", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
+            }
         }
+
+
+
     };
 
     const updateSubComponents = (subTasks: ISubTask[]) => {
@@ -166,170 +223,297 @@ const AddTask = () => {
             <Form>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <DatePicker
-                            placeholder="Start Date"
-                            name="start_date"
-                            //value={addTask.startDate}
-                            defaultValue={dayjs()}
-                            format={dateFormat}
-                            className="w100"
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "start_date");
-                            }}
-                            onPanelChange={() => {}}
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <DatePicker
-                            placeholder="Due Date"
-                            name="due_date"
-                            //value={addTask.dueDate}
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "due_date");
-                            }}
-                            className="w100"
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            ref={selectModeRef}
-                            allowClear
-                            placeholder="Select Task Mode"
-                            options={modeOptions}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            value={addTask.mode}
-                            onInputKeyDown={(event) => {
-                                if (event.keyCode === 9) {
-                                    // console.log(event.keyCode, event);
-                                    // inputChangeHandler(event);
-                                    handleInputKeyDown();
+                        <Form.Item
+                            name='start_date'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select start date."
                                 }
-                            }}
-                            // onBlur={(event) => {
-                            //     console.log("onBlur", event.target);
-                            // }}
-                            className="w100"
-                        ></Select>
+                            ]}
+                        >
+
+                            <DatePicker
+                                placeholder="Start Date"
+                                name="start_date"
+                                //value={addTask.startDate}
+
+                                format={dateFormat}
+                                className="w100"
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(dateString, "start_date");
+                                }}
+                                onPanelChange={() => { }}
+                            />
+                        </Form.Item>
+
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Form.Item
+                            name='due_date'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select due date."
+                                }
+                            ]}
+                        >
+                            <DatePicker
+                                placeholder="Due Date"
+                                name="due_date"
+                                //value={addTask.dueDate}
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(dateString, "due_date");
+                                }}
+                                className="w100"
+                            />
+
+                        </Form.Item>
+
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Form.Item
+                            name='mode'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select task mode."
+                                }
+                            ]}
+                        >
+                            <Select
+                                ref={selectModeRef}
+                                allowClear
+                                placeholder="Select Task Mode"
+                                options={modeOptions}
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                value={addTask.mode}
+                                onInputKeyDown={(event) => {
+                                    if (event.keyCode === 9) {
+                                        // console.log(event.keyCode, event);
+                                        // inputChangeHandler(event);
+                                        handleInputKeyDown();
+                                    }
+                                }}
+                                // onBlur={(event) => {
+                                //     console.log("onBlur", event.target);
+                                // }}
+                                className="w100"
+                            ></Select>
+
+                        </Form.Item>
+
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
-                        <Input
-                            placeholder="Task"
-                            name="title"
-                            value={addTask.title}
-                            onChange={(event) => {
-                                inputChangeHandler(event);
-                            }}
-                        />
+                        <Form.Item
+                            name='title'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter title."
+                                }
+                            ]}
+                        >
+                            <Input
+                                placeholder="Task"
+                                name="title"
+                                value={addTask.title}
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                            />
+                        </Form.Item>
+
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            placeholder="Select Work Area"
-                            options={workAreaOpts}
-                            value={addTask.workArea}
-                            className="w100"
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                        ></Select>
+                        <Form.Item
+                            name='workArea'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select work area."
+                                }
+
+                            ]}
+                        >
+
+                            <Select
+                                allowClear
+                                placeholder="Select Work Area"
+                                options={workAreaOpts}
+                                value={addTask.workArea}
+                                className="w100"
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                            ></Select>
+                        </Form.Item>
+
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        {/* <Input
-                            placeholder="Remark"
-                            name="remark"
-                            onChange={(event) => {
-                                inputChangeHandler(event);
-                            }}
-                        /> */}
-                        <ReactQuill
-                            theme="snow"
-                            value={addTask.remark}
-                            placeholder="Remark"
-                            onChange={(event) => {
-                                inputChangeHandler(event, "remark");
-                            }}
-                        />
+
+                        <Form.Item
+                            name='remak'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please entre remark.'
+                                }
+                            ]}
+                        >
+                            <ReactQuill
+                                theme="snow"
+                                value={addTask.remark}
+                                placeholder="Remark"
+                                onChange={(event) => {
+                                    inputChangeHandler(event, "remark");
+                                }}
+                            />
+
+                        </Form.Item>
+
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <TimePicker
-                            placeholder="Budget Time"
-                            name="budget_time"
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "budget_time");
-                            }}
-                            className="w100"
-                            format={"HH:mm"}
-                        />
+                        <Form.Item
+                            name='budget_time'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select budget time.'
+                                }
+                            ]}
+                        >
+
+                            <TimePicker
+                                placeholder="Budget Time"
+                                name="budget_time"
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(dateString, "budget_time");
+                                }}
+                                className="w100"
+                                format={"HH:mm"}
+                            />
+                        </Form.Item>
+
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            placeholder="Priority"
-                            options={priorityOpts}
-                            value={addTask.priority}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
+                        <Form.Item
+                            name='priority'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select priority.'
+                                }
+                            ]}
+                        >
+                            <Select
+                                allowClear
+                                placeholder="Priority"
+                                options={priorityOpts}
+                                value={addTask.priority}
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
+                            />
+                        </Form.Item>
+
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            placeholder="Billable"
-                            value={addTask.billable}
-                            options={chargesOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        ></Select>
+                        <Form.Item
+                            name='billable'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select billable."
+                                }
+                            ]}
+                        >
+
+                            <Select
+                                allowClear
+                                placeholder="Billable"
+                                value={addTask.billable}
+                                options={chargesOpts}
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
+                            ></Select>
+
+                        </Form.Item>
+
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Client"
-                            value={addTask.client}
-                            options={clientOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
+                        <Form.Item
+                            name='client'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select client."
+                                }
+                            ]}
+                        >
+                            <Select
+                                allowClear
+                                showSearch
+                                placeholder="Client"
+                                value={addTask.client}
+                                options={clientOpts}
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
+                            />
+                        </Form.Item>
+
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Assign Person"
-                            value={addTask.assignee}
-                            options={assigneeOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            // onInputKeyDown={(event) => {
-                            //     if (event.keyCode === 9) {
-                            //         console.log(event.keyCode);
-                            //     }
-                            // }}
-                            className="w100"
-                        ></Select>
+                        <Form.Item
+                            name='assignee'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select assignee."
+                                }
+                            ]}
+                        >
+
+                            <Select
+                                allowClear
+                                showSearch
+                                placeholder="Assign Person"
+                                value={addTask.assignee}
+                                options={assigneeOpts}
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                // onInputKeyDown={(event) => {
+                                //     if (event.keyCode === 9) {
+                                //         console.log(event.keyCode);
+                                //     }
+                                // }}
+                                className="w100"
+                            ></Select>
+                        </Form.Item>
+
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-                        <Upload>
+                        <Upload
+                            showUploadList={{ showPreviewIcon: true }}
+                        >
                             <Button type="primary">Attach Files</Button>
                         </Upload>
                     </Col>
