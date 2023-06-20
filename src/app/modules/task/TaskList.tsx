@@ -11,6 +11,12 @@ import "./TaskList.scss";
 import { useNavigate } from "react-router-dom";
 import TaskViewEdit from "./TaskViewEdit";
 import api from "../../utilities/apiServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faAlignLeft,
+    faCalendarAlt,
+    faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
 
 const { Title } = Typography;
 const pageSize = 20;
@@ -34,7 +40,7 @@ const TaskList = () => {
 
     useEffect(() => {
         api.getAllTask().then((resp: any) => {
-            console.log(resp.data.allTask);
+            // console.log(resp.data.allTask);
             setAllTask(resp.data.allTask);
         });
     }, []);
@@ -55,6 +61,21 @@ const TaskList = () => {
             title: "assignee",
             dataIndex: "assignee",
             key: "assignee",
+        },
+        {
+            title: "calendaricon",
+            key: "start_date",
+            dataIndex: "start_Date",
+            render: () => {
+                return (
+                    <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        style={{
+                            fontSize: "13px",
+                        }}
+                    />
+                );
+            },
         },
         {
             title: "task date",
@@ -106,6 +127,21 @@ const TaskList = () => {
             ),
         },
         {
+            title: "lefticon",
+            key: "subtask",
+            dataIndex: "subtask",
+            render: () => {
+                return (
+                    <FontAwesomeIcon
+                        icon={faAlignLeft}
+                        style={{
+                            fontSize: "13px",
+                        }}
+                    />
+                );
+            },
+        },
+        {
             title: "subtask",
             key: "subtask",
             dataIndex: "subtask",
@@ -121,7 +157,7 @@ const TaskList = () => {
                         </div>
                     );
                 } else {
-                    return <span>No sub task</span>;
+                    return <span>0/0</span>;
                 }
             },
         },
@@ -242,10 +278,10 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "history")}
                     rowClassName={rowClassHandler}
-                    onRow={(record, rowIndex) => {
+                    onRow={(record: AddTask, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                console.log("history", record);
+                                console.log("history", record._id);
                                 setTableRowSelected(record);
                             },
                         };

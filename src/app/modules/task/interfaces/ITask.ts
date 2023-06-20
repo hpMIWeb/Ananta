@@ -42,9 +42,16 @@ export interface Attachment {
 }
 
 export interface Comment {
+    _id: string;
     comment: string;
-    commentDate: string;
-    commentBy: string;
+    comment_date: string;
+    comment_by: string;
+}
+
+export interface SaveComment {
+    taskId: string;
+    comment: string;
+    commentId: string;
 }
 
 export const TimerOpts = {

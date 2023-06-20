@@ -1,0 +1,75 @@
+.comment_list {
+}
+.comment_list .commentlist {
+    padding: 0;
+    margin: 0;
+}
+.comment_list .commentlist li {
+    list-style-type: none;
+    display: flex;
+    border-bottom: 1px solid #6c757d40;
+    padding: 25px 5px;
+}
+.comment_list .commentlist li img {
+    height: 36px;
+    width: 36px;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.comment_list .commentlist li .commentcnt {
+    width: calc(100% - 36px);
+    padding: 0 0 0 12px;
+}
+.comment_list .commentlist li .commentcnt h6 {
+    font-size: 15px;
+    color: #6c757d;
+}
+.comment_list .commentlist li .commentcnt h6 a {
+}
+.comment_list .commentlist li .commentcnt h6 .cmnt_dlt {
+    color: #fa5c7c;
+    padding-left: 8px;
+}
+.comment_list .commentlist li .commentcnt h6 .cmnt_edt {
+    padding-left: 12px;
+}
+.comment_list .commentlist li .commentcnt h6 strong {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 20px;
+}
+.comment_list .commentlist li .commentcnt p {
+    color: #98a6ad;
+    font-size: 14px;
+    margin: 0;
+}
+.addcmtform {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.addcmtform .form-control {
+    padding: 7px 15px;
+    font-size: 14px;
+}
+.addcmtform textarea.form-control:focus {
+    box-shadow: none;
+}
+.addcmtbtn {
+    background: #2c7be51a;
+    padding: 12px;
+    display: flex;
+}
+.addcmtbtn a,
+.btn-paper-clip,
+.btn-at {
+    line-height: 36px;
+    color: #313a46;
+    font-weight: normal;
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 16px;
+}
+.addcmtbtn button {
+    margin-left: auto;
+}

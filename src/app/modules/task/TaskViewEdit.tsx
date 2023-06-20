@@ -29,6 +29,7 @@ import {
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
+import Comments from "../../components/Comments/Comments";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
 import { AddTask } from "./interfaces/ITask";
@@ -193,7 +194,7 @@ const TaskViewEdit = (props: any) => {
                         >
                             <div className="timerbuttons">
                                 <Stopwatch
-                                    taskId={props.tableRowSelected.taskId}
+                                    taskId={props.tableRowSelected._id}
                                 />
                             </div>
                         </Col>
@@ -429,6 +430,10 @@ const TaskViewEdit = (props: any) => {
                             <Title level={5} style={{ textAlign: "left" }}>
                                 Comments
                             </Title>
+                            <Comments
+                                comments={props.tableRowSelected.comments}
+                                taskId={props.tableRowSelected._id}
+                            />
                         </Col>
                     </Row>
                 </Form>

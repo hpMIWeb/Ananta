@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./stopwatch.scss";
-import {
-    setLocalstorage,
-    removeLocalstorage,
-    getLocalStorage,
-} from "../../utilities/utility";
+import { setLocalstorage, getLocalStorage } from "../../utilities/utility";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,9 +9,11 @@ const Stopwatch = (props: any) => {
     const [time, setTime] = useState<number>(0);
 
     useEffect(() => {
-        const taskTiming = getLocalStorage("task_" + props.taskId);
-        console.log("taskTiming - ", taskTiming);
-        if (taskTiming && taskTiming !== "") setTime(parseInt(taskTiming));
+        if (props.taskId) {
+            let taskTiming = getLocalStorage("task_" + props.taskId);
+            taskTiming = taskTiming ?? "0";
+            setTime(parseInt(taskTiming));
+        }
     }, [props.taskId]);
 
     // state to check stopwatch running or not

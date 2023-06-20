@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AddTask } from "../modules/task/interfaces/ITask";
+import { AddTask, SaveComment } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 
 const token = getLocalStorage("authtoken");
@@ -104,5 +104,27 @@ export default {
             method: "POST",
             url: "task/create-multiple-task",
             data: tasks,
+        }),
+    addTaskComment: (comment: SaveComment) =>
+        instance({
+            method: "POST",
+            url: "comment/create-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    updateTaskComment: (comment: SaveComment) =>
+        instance({
+            method: "PUT",
+            url: "comment/update-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
         }),
 };
