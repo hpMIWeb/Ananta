@@ -108,17 +108,17 @@ const SubTask = (props: any) => {
                                         md={{ span: 16 }}
                                     >
                                         <Form.Item
-                                            name="titlewe"
+                                            name={"title_"+index}
                                             rules={[
                                                 {
                                                     required:true,
-                                                    message:"Pease enter subtitle name."
+                                                    message:"Please enter subtitle name."
                                                 }
                                             ]}
                                         >
                                             <Input
                                                 placeholder="Sub Task"
-                                                name="titlewe"
+                                                name={"title_"+index}
                                                 onChange={(event) => {
                                                     inputChangeHandler(
                                                         event,
