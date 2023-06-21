@@ -20,6 +20,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubCompliance as ISubCompliance } from "./interfaces/ICompliance";
 import "./subCompliance.scss";
+import TableStrcture from "./TableStrcture";
 
 const SubCompliance = (props: any) => {
   const subComplianceObj = {
@@ -167,30 +168,6 @@ const SubCompliance = (props: any) => {
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                     <Select
                       allowClear
-                      showSearch
-                      placeholder="Client"
-                      options={clientOpts}
-                      onChange={(value, event) => {
-                        inputChangeHandler(event, subComplianceItem);
-                      }}
-                      className="w100"
-                    />
-                  </Col>
-                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                    <Select
-                      allowClear
-                      showSearch
-                      placeholder="Assign Person"
-                      options={assigneeOpts}
-                      onChange={(value, event) => {
-                        inputChangeHandler(event, subComplianceItem);
-                      }}
-                      className="w100"
-                    ></Select>
-                  </Col>
-                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                    <Select
-                      allowClear
                       placeholder="Priority"
                       options={priorityOpts}
                       onChange={(value, event) => {
@@ -200,23 +177,7 @@ const SubCompliance = (props: any) => {
                     />
                   </Col>
                 </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-                    <Upload>
-                      <Button type="primary">Attach Files</Button>
-                    </Upload>
-                  </Col>
-                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-                    <Input
-                      placeholder="Data Path"
-                      name="dataPath"
-                      onChange={(event) => {
-                        inputChangeHandler(event, subComplianceItem);
-                      }}
-                      className="w100"
-                    />
-                  </Col>
-                </Row>
+                <TableStrcture />
               </Form>
             </div>
           </div>

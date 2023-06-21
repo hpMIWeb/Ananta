@@ -12,6 +12,7 @@ import {
   TimePicker,
   Upload,
   Divider,
+  Table,
 } from "antd";
 import SubCompliance from "./SubCompliance";
 import {
@@ -37,11 +38,132 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
+import TableStrcture from "./TableStrcture";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrash,
+  faTrashAlt,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import TextArea from "antd/es/input/TextArea";
 const { Title } = Typography;
 
 //dayjs.extend(weekday);
 //dayjs.extend(localeData);
+const getClientDropDown = () => {
+  return (
+    <Select
+      allowClear
+      showSearch
+      placeholder="Client"
+      options={clientOpts}
+      className="w100"
+    />
+  );
+};
 
+const getAssignDropDown = () => {
+  return (
+    <Select
+      allowClear
+      showSearch
+      placeholder="Assign Person"
+      options={assigneeOpts}
+      className="w100"
+    ></Select>
+  );
+};
+
+const columns = [
+  {
+    title: "Action",
+    dataIndex: "action",
+    key: "action",
+    render: () => (
+      <FontAwesomeIcon
+        icon={faTrashAlt}
+        style={{
+          fontSize: "15px",
+          color: "#ec0033",
+          cursor: "pointer",
+          marginLeft: "10px",
+          marginTop: "0",
+          alignSelf: "center",
+        }}
+        title={"Click here to Delete"}
+      />
+    ),
+  },
+  {
+    title: "Client",
+    dataIndex: "client",
+    key: "client",
+    render: () => (
+      <Select
+        allowClear
+        showSearch
+        placeholder="Client"
+        options={clientOpts}
+        className="w100"
+      />
+    ),
+  },
+  {
+    title: "Assign To",
+    dataIndex: "assignTo",
+    key: "assignTo",
+    render: () => (
+      <Select
+        allowClear
+        showSearch
+        placeholder="Assign Person"
+        options={assigneeOpts}
+        className="w100"
+      ></Select>
+    ),
+  },
+  {
+    title: "Budget Time",
+    dataIndex: "budgetTime",
+    key: "budgetTime",
+    render: () => (
+      <TimePicker
+        placeholder="Budget Time"
+        name="budget_time"
+        className="w100"
+        format={"HH:mm"}
+      />
+    ),
+  },
+  {
+    title: "Priority",
+    dataIndex: "priority",
+    key: "priority",
+    render: () => (
+      <Select
+        allowClear
+        placeholder="Priority"
+        options={priorityOpts}
+        className="w100"
+      />
+    ),
+  },
+  {
+    title: "Remark",
+    dataIndex: "remark",
+    key: "remark",
+    render: () => <TextArea rows={2} />,
+  },
+];
+
+const dataSource = [
+  {
+    key: "1",
+    action: "Mike",
+    age: 32,
+    address: "10 Downing Street",
+  },
+];
 const AddCompliance = () => {
   const dateFormat = "YYYY-MM-DD";
   const addComplianceObj = {
@@ -212,12 +334,12 @@ const AddCompliance = () => {
 
   return (
     <>
-      <div className="add-task-header">
+      <div className="add-compliance-header">
         <ToastContainer />
         <div>
           <Title level={5}>Add Compliance</Title>
         </div>
-        <div className="add-task-cancel">
+        <div className="add-compliance-cancel">
           <Button
             type="primary"
             danger
@@ -281,7 +403,7 @@ const AddCompliance = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select task mode.",
+                  message: "Please select compliance mode.",
                 },
               ]}
             >
@@ -310,7 +432,7 @@ const AddCompliance = () => {
           </Col>
         </Row>
         <Row gutter={[8, 8]} className="form-row">
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
             <Form.Item
               name="title"
               rules={[
@@ -328,28 +450,6 @@ const AddCompliance = () => {
                   inputChangeHandler(event);
                 }}
               />
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-            <Form.Item
-              name="workArea"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select work area.",
-                },
-              ]}
-            >
-              <Select
-                allowClear
-                placeholder="Select Work Area"
-                options={workAreaOpts}
-                value={addCompliance.workArea}
-                className="w100"
-                onChange={(value, event) => {
-                  inputChangeHandler(event);
-                }}
-              ></Select>
             </Form.Item>
           </Col>
         </Row>
@@ -442,77 +542,9 @@ const AddCompliance = () => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={[8, 8]} className="form-row">
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-            <Form.Item
-              name="client"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select client.",
-                },
-              ]}
-            >
-              <Select
-                allowClear
-                showSearch
-                placeholder="Client"
-                value={addCompliance.client}
-                options={clientOpts}
-                onChange={(value, event) => {
-                  inputChangeHandler(event);
-                }}
-                className="w100"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-            <Form.Item
-              name="assignee"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select assignee.",
-                },
-              ]}
-            >
-              <Select
-                allowClear
-                showSearch
-                placeholder="Assign Person"
-                value={addCompliance.assignee}
-                options={assigneeOpts}
-                onChange={(value, event) => {
-                  inputChangeHandler(event);
-                }}
-                // onInputKeyDown={(event) => {
-                //     if (event.keyCode === 9) {
-                //         console.log(event.keyCode);
-                //     }
-                // }}
-                className="w100"
-              ></Select>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={[8, 8]} className="form-row">
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-            <Upload showUploadList={{ showPreviewIcon: true }}>
-              <Button type="primary">Attach Files</Button>
-            </Upload>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-            <Input
-              placeholder="Data Path"
-              name="datapath"
-              value={addCompliance.dataPath}
-              onChange={(event) => {
-                inputChangeHandler(event);
-              }}
-              className="w100"
-            />
-          </Col>
-        </Row>
+        <TableStrcture />
+        <Row gutter={[8, 8]} className="form-row"></Row>
+
         <Row gutter={[8, 8]} className="form-row">
           <Divider />
         </Row>
@@ -524,7 +556,6 @@ const AddCompliance = () => {
             <Switch onChange={onSwitchSubCompliance}></Switch>
           </Col>
         </Row>
-
         <Row
           gutter={[8, 8]}
           className={"form-row " + (!showSubCompliance ? "hide" : "")}
