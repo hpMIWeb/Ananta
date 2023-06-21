@@ -13,7 +13,7 @@ import {
   Upload,
   Divider,
 } from "antd";
-import SubTask from "./SubTask";
+import SubCompliance from "./SubCompliance";
 import {
   priorityOpts,
   chargesOpts,
@@ -28,39 +28,40 @@ import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
-  AddTask as IAddTask,
-  SubTask as ISubTask,
-  TaskTimer,
+  AddCompliance as IAddCompliance,
+  SubCompliance as ISubCompliance,
+  ComplianceTimer,
   TimerOpts,
-} from "./interfaces/ITask";
+} from "./interfaces/ICompliance";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./AddTask.scss";
+import "./AddCompliance.scss";
 const { Title } = Typography;
 
 //dayjs.extend(weekday);
 //dayjs.extend(localeData);
 
-const AddTask = () => {
+const AddCompliance = () => {
   const dateFormat = "YYYY-MM-DD";
-  const addTaskObj = {
+  const addComplianceObj = {
     status: "Pending",
     start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-  } as IAddTask;
+  } as IAddCompliance;
   const navigate = useNavigate();
   const selectModeRef = useRef(null);
 
   // local states
-  const [showSubTask, setShowSubTask] = useState<boolean>(false);
-  const [addTask, setAddTask] = useState<IAddTask>(addTaskObj);
+  const [showSubCompliance, setShowSubCompliance] = useState<boolean>(false);
+  const [addCompliance, setAddCompliance] =
+    useState<IAddCompliance>(addComplianceObj);
 
   // Handllers
-  const onSwitchSubTask = () => {
-    setShowSubTask(!showSubTask);
+  const onSwitchSubCompliance = () => {
+    setShowSubCompliance(!showSubCompliance);
   };
-  const cancelNewTaskHandler = () => {
-    navigate("/task");
+  const cancelNewComplianceHandler = () => {
+    navigate("/compliance");
   };
 
   const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -79,8 +80,8 @@ const AddTask = () => {
 
     console.log(name, value);
 
-    setAddTask({
-      ...addTask,
+    setAddCompliance({
+      ...addCompliance,
       [name]: value,
     });
   };
@@ -88,31 +89,61 @@ const AddTask = () => {
   const validate = () => {
     let returnFlag = true;
 
-    console.log(addTask.start_date);
-    if (addTask.hasOwnProperty("start_date") && addTask.start_date === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("due_date") && addTask.due_date === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("mode") && addTask.mode === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("title") && addTask.title === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("client") && addTask.client === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("workArea") && addTask.workArea === "") {
-      returnFlag = false;
-    } else if (addTask.hasOwnProperty("remark") && addTask.remark === "") {
-      returnFlag = false;
-    } else if (
-      addTask.hasOwnProperty("budget_time") &&
-      addTask.budget_time === ""
+    console.log(addCompliance.start_date);
+    if (
+      addCompliance.hasOwnProperty("start_date") &&
+      addCompliance.start_date === ""
     ) {
       returnFlag = false;
-    } else if (addTask.hasOwnProperty("priority") && addTask.priority === "") {
+    } else if (
+      addCompliance.hasOwnProperty("due_date") &&
+      addCompliance.due_date === ""
+    ) {
       returnFlag = false;
-    } else if (addTask.hasOwnProperty("billable") && addTask.billable === "") {
+    } else if (
+      addCompliance.hasOwnProperty("mode") &&
+      addCompliance.mode === ""
+    ) {
       returnFlag = false;
-    } else if (addTask.hasOwnProperty("assignee") && addTask.assignee === "") {
+    } else if (
+      addCompliance.hasOwnProperty("title") &&
+      addCompliance.title === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("client") &&
+      addCompliance.client === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("workArea") &&
+      addCompliance.workArea === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("remark") &&
+      addCompliance.remark === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("budget_time") &&
+      addCompliance.budget_time === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("priority") &&
+      addCompliance.priority === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("billable") &&
+      addCompliance.billable === ""
+    ) {
+      returnFlag = false;
+    } else if (
+      addCompliance.hasOwnProperty("assignee") &&
+      addCompliance.assignee === ""
+    ) {
       returnFlag = false;
     }
 
@@ -120,7 +151,7 @@ const AddTask = () => {
     return returnFlag;
   };
 
-  const handleAddTask = () => {
+  const handleAddCompliance = () => {
     if (!validate()) {
       toast.error("Please set mandatory fields", {
         position: toast.POSITION.TOP_RIGHT,
@@ -129,41 +160,47 @@ const AddTask = () => {
       return false;
     } else {
       // Read all existing task from `localStorage`
-      const taskList = localStorage.getItem("task");
+      const complianceList = localStorage.getItem("compliance");
 
       // set timer
-      const timer = {} as TaskTimer;
+      const timer = {} as ComplianceTimer;
       timer.state = TimerOpts.stop;
       timer.time = 0;
-      addTask.timer = timer;
-      addTask.actual_time = addTask.budget_time;
+      addCompliance.timer = timer;
+      addCompliance.actual_time = addCompliance.budget_time;
 
-      let allTask = taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
-      addTask._id = allTask && allTask.length > 0 ? allTask.length + 1 : 1;
-      allTask.push(addTask);
+      let allCompliance =
+        complianceList && complianceList.length > 0
+          ? JSON.parse(complianceList)
+          : [];
+      addCompliance._id =
+        allCompliance && allCompliance.length > 0
+          ? allCompliance.length + 1
+          : 1;
+      allCompliance.push(addCompliance);
 
-      console.log("ALL TASK", allTask);
+      console.log("ALL COMPLIANCE", allCompliance);
 
       // Save to DB
       try {
-        api.createTask(addTask).then((resp: any) => {
-          // Set Task to `localStorage`
-          localStorage.setItem("task", JSON.stringify(allTask));
-          toast.success("Successfully Created Task", {
+        api.createCompliance(addCompliance).then((resp: any) => {
+          // Set Compliance to `localStorage`
+          localStorage.setItem("compliance", JSON.stringify(allCompliance));
+          toast.success("Successfully Created Compliance", {
             position: toast.POSITION.TOP_RIGHT,
           });
         });
       } catch (ex) {
-        toast.error("Technical error while creating Task", {
+        toast.error("Technical error while creating Compliance", {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
     }
   };
 
-  const updateSubComponents = (subTasks: ISubTask[]) => {
-    addTask.subTask = subTasks;
-    console.log("list of subTasks", subTasks);
+  const updateSubComponents = (subCompliance: ISubCompliance[]) => {
+    addCompliance.subCompliance = subCompliance;
+    console.log("list of subCompliance", subCompliance);
   };
 
   const handleInputKeyDown = () => {
@@ -178,14 +215,14 @@ const AddTask = () => {
       <div className="add-task-header">
         <ToastContainer />
         <div>
-          <Title level={5}>Add Task</Title>
+          <Title level={5}>Add Compliance</Title>
         </div>
         <div className="add-task-cancel">
           <Button
             type="primary"
             danger
             icon={<CloseOutlined />}
-            onClick={cancelNewTaskHandler}
+            onClick={cancelNewComplianceHandler}
           >
             Cancel
           </Button>
@@ -206,7 +243,7 @@ const AddTask = () => {
               <DatePicker
                 placeholder="Start Date"
                 name="start_date"
-                //value={addTask.startDate}
+                //value={addCompliance.startDate}
 
                 format={dateFormat}
                 className="w100"
@@ -230,7 +267,7 @@ const AddTask = () => {
               <DatePicker
                 placeholder="Due Date"
                 name="due_date"
-                //value={addTask.dueDate}
+                //value={addCompliance.dueDate}
                 onChange={(date, dateString) => {
                   inputChangeHandler(dateString, "due_date");
                 }}
@@ -251,12 +288,12 @@ const AddTask = () => {
               <Select
                 ref={selectModeRef}
                 allowClear
-                placeholder="Select Task Mode"
+                placeholder="Select Compliance Mode"
                 options={modeOptions}
                 onChange={(value, event) => {
                   inputChangeHandler(event);
                 }}
-                value={addTask.mode}
+                value={addCompliance.mode}
                 onInputKeyDown={(event) => {
                   if (event.keyCode === 9) {
                     // console.log(event.keyCode, event);
@@ -284,9 +321,9 @@ const AddTask = () => {
               ]}
             >
               <Input
-                placeholder="Task"
+                placeholder="Compliance"
                 name="title"
-                value={addTask.title}
+                value={addCompliance.title}
                 onChange={(event) => {
                   inputChangeHandler(event);
                 }}
@@ -307,7 +344,7 @@ const AddTask = () => {
                 allowClear
                 placeholder="Select Work Area"
                 options={workAreaOpts}
-                value={addTask.workArea}
+                value={addCompliance.workArea}
                 className="w100"
                 onChange={(value, event) => {
                   inputChangeHandler(event);
@@ -329,7 +366,7 @@ const AddTask = () => {
             >
               <ReactQuill
                 theme="snow"
-                value={addTask.remark}
+                value={addCompliance.remark}
                 placeholder="Remark"
                 onChange={(event) => {
                   inputChangeHandler(event, "remark");
@@ -374,7 +411,7 @@ const AddTask = () => {
                 allowClear
                 placeholder="Priority"
                 options={priorityOpts}
-                value={addTask.priority}
+                value={addCompliance.priority}
                 onChange={(value, event) => {
                   inputChangeHandler(event);
                 }}
@@ -395,7 +432,7 @@ const AddTask = () => {
               <Select
                 allowClear
                 placeholder="Billable"
-                value={addTask.billable}
+                value={addCompliance.billable}
                 options={chargesOpts}
                 onChange={(value, event) => {
                   inputChangeHandler(event);
@@ -420,7 +457,7 @@ const AddTask = () => {
                 allowClear
                 showSearch
                 placeholder="Client"
-                value={addTask.client}
+                value={addCompliance.client}
                 options={clientOpts}
                 onChange={(value, event) => {
                   inputChangeHandler(event);
@@ -443,7 +480,7 @@ const AddTask = () => {
                 allowClear
                 showSearch
                 placeholder="Assign Person"
-                value={addTask.assignee}
+                value={addCompliance.assignee}
                 options={assigneeOpts}
                 onChange={(value, event) => {
                   inputChangeHandler(event);
@@ -468,7 +505,7 @@ const AddTask = () => {
             <Input
               placeholder="Data Path"
               name="datapath"
-              value={addTask.dataPath}
+              value={addCompliance.dataPath}
               onChange={(event) => {
                 inputChangeHandler(event);
               }}
@@ -481,19 +518,19 @@ const AddTask = () => {
         </Row>
         <Row gutter={[8, 8]} className="form-row">
           <Col>
-            <Title level={5}>Sub Task</Title>
+            <Title level={5}>Sub Compliance</Title>
           </Col>
           <Col>
-            <Switch onChange={onSwitchSubTask}></Switch>
+            <Switch onChange={onSwitchSubCompliance}></Switch>
           </Col>
         </Row>
 
         <Row
           gutter={[8, 8]}
-          className={"form-row " + (!showSubTask ? "hide" : "")}
+          className={"form-row " + (!showSubCompliance ? "hide" : "")}
         >
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-            <SubTask subComponentsHandler={updateSubComponents} />
+            <SubCompliance subComponentsHandler={updateSubComponents} />
           </Col>
         </Row>
         <Row gutter={[8, 8]} className="form-row">
@@ -501,9 +538,9 @@ const AddTask = () => {
             htmlType="submit"
             type="primary"
             className="w100"
-            onClick={handleAddTask}
+            onClick={handleAddCompliance}
           >
-            Add Task
+            Add Compliance
           </Button>
         </Row>
       </Form>
@@ -511,4 +548,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default AddCompliance;

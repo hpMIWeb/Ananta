@@ -1,0 +1,25 @@
+.sub-compliance-header {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.sub-compliance-delete {
+    margin-left: auto;
+}
+
+.sub-compliance-add {
+    margin-top: 30px;
+}
+
+.sub-compliance-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background-color: #748194;
+    color: #fff;
+    margin-bottom: 9px;
+}

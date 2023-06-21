@@ -33,7 +33,7 @@ import {
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
-import { AddTask } from "./interfaces/ITask";
+import { AddCompliance } from "./interfaces/ICompliance";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -54,7 +54,7 @@ const inputChangeHandler = (event: any, nameItem: string = "") => {
 
   console.log(name, value);
 
-  const taskUpdate = {} as AddTask;
+  const taskUpdate = {} as AddCompliance;
   taskUpdate.status = value;
 };
 
@@ -94,15 +94,17 @@ const TaskViewEdit = (props: any) => {
   const statusChangeHandler = (event: any, value: string) => {
     console.log("Status change - ", event);
 
-    const taskUpdate = {} as AddTask;
-    taskUpdate.status = value;
+    const complianceUpdate = {} as AddCompliance;
+    complianceUpdate.status = value;
 
-    api.updateTask(props.tableRowSelected._id, taskUpdate).then((resp: any) => {
-      // localStorage.setItem("task", JSON.stringify(taskUpdate));
-      toast.success("Successfully Updated Task", {
-        position: toast.POSITION.TOP_RIGHT,
+    api
+      .updateCompliance(props.tableRowSelected._id, complianceUpdate)
+      .then((resp: any) => {
+        // localStorage.setItem("task", JSON.stringify(taskUpdate));
+        toast.success("Successfully Updated Compliance", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       });
-    });
   };
 
   const handleUpdateTask = () => {};
@@ -130,7 +132,7 @@ const TaskViewEdit = (props: any) => {
               )}
               {isEdit && (
                 <Input
-                  placeholder="Task"
+                  placeholder="Compliance"
                   name="task"
                   value={props.tableRowSelected.title}
                   // onChange={(event) => {
