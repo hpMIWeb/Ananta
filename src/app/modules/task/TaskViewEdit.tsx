@@ -25,9 +25,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ClockCircleOutlined,
   CalendarOutlined,
-  UploadOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
-import { CloseOutlined, ProfileOutlined } from "@ant-design/icons";
+
 import {
   faEdit,
   faExpandArrowsAlt,
@@ -88,6 +88,8 @@ const TaskViewEdit = (props: any) => {
       });
     });
   };
+
+  const handleUpdateTask = () => {};
 
   return (
     <>
@@ -181,7 +183,11 @@ const TaskViewEdit = (props: any) => {
             md={{ span: props.fullScreenMode ? 1 : 3 }}
           >
             {isEdit && (
-              <Button type="primary" icon={<ProfileOutlined />}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                onClick={handleUpdateTask}
+              >
                 Update
               </Button>
             )}
