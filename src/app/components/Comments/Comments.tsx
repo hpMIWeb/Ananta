@@ -9,6 +9,7 @@ import {
     faPaperclip,
     faEdit,
     faTrash,
+    faClose,
 } from "@fortawesome/free-solid-svg-icons";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
@@ -23,11 +24,22 @@ const Comments = (props: any) => {
     const [taskComments, setTaskComments] = useState<[]>(props.comments);
     const [comment, setComment] = useState<string>("");
     const [isEditComment, setIsEditComment] = useState<Boolean>(false);
-    const [editComment, setEditComment] = useState<Comment>({} as Comment);
+    const [editCommentItem, setEditCommentItem] = useState<Comment>(
+        {} as Comment
+    );
+    const [updateComment, setUpdateComment] = useState<string>("");
     const { Title } = Typography;
+
+    useEffect(() => {
+        console.log("render", "test");
+    }, []);
 
     const inputChangeHandler = (event: any) => {
         setComment(event.target.value);
+    };
+
+    const updateInputCommentChangeHandler = (event: any) => {
+        setUpdateComment(event.target.value);
     };
 
     // Add comment for the task
@@ -38,14 +50,29 @@ const Comments = (props: any) => {
         }
     };
 
+    const updateCommentHandler = (
+        commentId: string,
+        parentId: string,
+        commentItem: Comment
+    ) => {
+        console.log(commentId, parentId, commentItem, updateComment);
+        setIsEditComment(false);
+        // setEditCommentItem(commentItem);
+        if (props.editComment) {
+            props.editComment(commentId, parentId, updateComment);
+        }
+    };
+
     const editCommentHandler = (
         commentId: string,
         parentId: string,
-        comment: Comment
+        commentItem: Comment
     ) => {
-        console.log(commentId, parentId, comment);
+        console.log(commentId, parentId, commentItem);
         setIsEditComment(true);
-        setEditComment(comment);
+        setEditCommentItem(commentItem);
+        setUpdateComment(commentItem.comment);
+
         // if (props.editComment) {
         //     props.editComment(commentId, parentId, comment);
         // }
@@ -58,102 +85,142 @@ const Comments = (props: any) => {
         }
     };
 
-    const renderComment = () => {
-        console.log("taskComments -", taskComments);
+    const cancelEditCommentHandler = () => {
+        setIsEditComment(false);
+    };
 
-        if (taskComments && taskComments.length > 0) {
-            return taskComments.map((commentItem: any, index: number) => {
-                console.log(commentItem.comment_date);
-                return (
-                    <li
-                        key={index}
-                        style={{
-                            listStyleType: "none",
-                        }}
-                    >
-                        <div className="commentcnt">
-                            <Title
-                                level={5}
-                                style={{
-                                    textAlign: "left",
-                                    color: "#6c757d",
-                                    fontSize: "15px",
-                                }}
-                            >
-                                {commentItem.comment_by}
-                                <strong className="float-end text-muted comment-date">
-                                    <span>
-                                        {dayjs(commentItem.comment_date).format(
-                                            "YYYY-MM-DD, HH:mm a"
-                                        )}
-                                    </span>
-                                    <span>
-                                        <FontAwesomeIcon
-                                            icon={faEdit}
-                                            className="btn-at"
-                                            title="Edit comment"
-                                            style={{
-                                                color: "#2c7be5",
-                                                marginLeft: "15px",
-                                            }}
-                                            onClick={() => {
+    const renderComment = taskComments.map(
+        (commentItem: any, index: number) => {
+            return (
+                <li
+                    key={index}
+                    style={{
+                        listStyleType: "none",
+                    }}
+                >
+                    <div className="commentcnt">
+                        <Title
+                            level={5}
+                            style={{
+                                textAlign: "left",
+                                color: "#6c757d",
+                                fontSize: "15px",
+                            }}
+                        >
+                            {commentItem.comment_by}
+                            <strong className="float-end text-muted comment-date">
+                                <span>
+                                    {dayjs(commentItem.comment_date).format(
+                                        "YYYY-MM-DD, HH:mm a"
+                                    )}
+                                </span>
+                                <span>
+                                    <FontAwesomeIcon
+                                        icon={
+                                            isEditComment &&
+                                            commentItem._id ===
+                                                editCommentItem._id
+                                                ? faClose
+                                                : faEdit
+                                        }
+                                        className="btn-at"
+                                        title="Edit comment"
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginLeft: "15px",
+                                        }}
+                                        onClick={() => {
+                                            if (
+                                                isEditComment &&
+                                                commentItem._id ===
+                                                    editCommentItem._id
+                                            ) {
+                                                cancelEditCommentHandler();
+                                            } else {
                                                 editCommentHandler(
                                                     commentItem._id,
                                                     props.parentId,
                                                     commentItem
                                                 );
-                                            }}
-                                        />
-                                    </span>
-                                    <span>
-                                        <FontAwesomeIcon
-                                            icon={faTrash}
-                                            className="btn-at"
-                                            title="Delete comment"
-                                            style={{ color: "#fa5c7c" }}
-                                            onClick={() => {
-                                                deleteCommentHandler(
-                                                    commentItem._id,
-                                                    props.parentId
-                                                );
-                                            }}
-                                        />
-                                    </span>
-                                </strong>
-                            </Title>
-                            <p>{parse(commentItem.comment)}</p>
-                            <div
-                                style={{
-                                    display:
-                                        isEditComment &&
-                                        commentItem._id === editComment._id
-                                            ? "block"
-                                            : "none",
-                                }}
-                            >
-                                <div>
-                                    <TextArea
-                                        placeholder="Your comment..."
-                                        rows={4}
-                                        onChange={inputChangeHandler}
-                                        defaultValue={editComment.comment}
+                                            }
+                                        }}
                                     />
-                                </div>
+                                </span>
+                                <span>
+                                    <FontAwesomeIcon
+                                        icon={faTrash}
+                                        className="btn-at"
+                                        title="Delete comment"
+                                        style={{ color: "#fa5c7c" }}
+                                        onClick={() => {
+                                            deleteCommentHandler(
+                                                commentItem._id,
+                                                props.parentId
+                                            );
+                                        }}
+                                    />
+                                </span>
+                            </strong>
+                        </Title>
+                        <p
+                            style={{
+                                display:
+                                    isEditComment &&
+                                    commentItem._id === editCommentItem._id
+                                        ? "none"
+                                        : "block",
+                            }}
+                        >
+                            {parse(
+                                commentItem.comment.replace(/\n/g, "<br />")
+                            )}
+                        </p>
+                        <div
+                            style={{
+                                display:
+                                    isEditComment &&
+                                    commentItem._id === editCommentItem._id
+                                        ? "block"
+                                        : "none",
+                            }}
+                        >
+                            <div>
+                                <TextArea
+                                    placeholder="Your comment..."
+                                    rows={6}
+                                    onChange={updateInputCommentChangeHandler}
+                                    value={updateComment}
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateCommentHandler(
+                                            commentItem._id,
+                                            props.parentId,
+                                            commentItem
+                                        );
+                                    }}
+                                    style={{
+                                        float: "right",
+                                        marginTop: "10px",
+                                        marginBottom: "20px",
+                                    }}
+                                >
+                                    Update
+                                </Button>
                             </div>
                         </div>
-                        <Divider />
-                    </li>
-                );
-            });
-        } else {
-            return <>No comments</>;
+                    </div>
+                    <Divider />
+                </li>
+            );
         }
-    };
+    );
 
     return (
         <>
             <ToastContainer />
-            <ul className="commentlist">{renderComment()}</ul>
+            <ul className="commentlist">{renderComment}</ul>
             <Divider />
             <div className="addcmtform">
                 <div>

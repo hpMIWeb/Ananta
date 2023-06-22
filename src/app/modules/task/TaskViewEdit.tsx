@@ -104,13 +104,15 @@ const TaskViewEdit = (props: any) => {
             });
     };
 
-    const editCommentHandler = (commentId: string, comment: string) => {
-        console.log(commentId, comment);
-
+    const editCommentHandler = (
+        commentId: string,
+        parentId: string,
+        comment: string
+    ) => {
         const updateComment = {} as SaveComment;
         updateComment.commentId = commentId;
         updateComment.comment = comment;
-        updateComment.taskId = props.tableRowSelected._id;
+        updateComment.taskId = parentId;
 
         api.updateTaskComment(updateComment)
             .then(() => {
@@ -127,7 +129,6 @@ const TaskViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        console.log(commentId);
         api.deleteTaskComment(props.tableRowSelected._id, commentId)
             .then(() => {
                 toast.success("Successfully deleted comment", {

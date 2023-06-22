@@ -41,7 +41,7 @@ const TaskList = () => {
     useEffect(() => {
         api.getAllTask().then((resp: any) => {
             // console.log(resp.data.allTask);
-            setAllTask(resp.data.allTask);
+            setAllTask(resp.data);
         });
     }, []);
 

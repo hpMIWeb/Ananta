@@ -20,10 +20,11 @@ export default {
     getAllTask: () =>
         instance({
             method: "GET",
-            url: "task/get-all-tasks",
+            url: "task/get-task",
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
+                    console.log("all task", json.payload);
                     return json.payload;
                 },
             ],
