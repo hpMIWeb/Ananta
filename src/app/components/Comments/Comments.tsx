@@ -50,6 +50,7 @@ const Comments = (props: any) => {
         }
     };
 
+    // Update comment
     const updateCommentHandler = (
         commentId: string,
         parentId: string,
@@ -57,12 +58,12 @@ const Comments = (props: any) => {
     ) => {
         console.log(commentId, parentId, commentItem, updateComment);
         setIsEditComment(false);
-        // setEditCommentItem(commentItem);
         if (props.editComment) {
             props.editComment(commentId, parentId, updateComment);
         }
     };
 
+    // make editable comment
     const editCommentHandler = (
         commentId: string,
         parentId: string,
@@ -72,12 +73,9 @@ const Comments = (props: any) => {
         setIsEditComment(true);
         setEditCommentItem(commentItem);
         setUpdateComment(commentItem.comment);
-
-        // if (props.editComment) {
-        //     props.editComment(commentId, parentId, comment);
-        // }
     };
 
+    // delete comment
     const deleteCommentHandler = (commentId: string, parentId: string) => {
         console.log(commentId, parentId);
         if (props.deleteComment) {
@@ -85,6 +83,7 @@ const Comments = (props: any) => {
         }
     };
 
+    // close edit comment
     const cancelEditCommentHandler = () => {
         setIsEditComment(false);
     };

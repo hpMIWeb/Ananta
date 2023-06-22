@@ -120,11 +120,12 @@ export default {
     updateTaskComment: (comment: SaveComment) =>
         instance({
             method: "PUT",
-            url: "comment/update-comment",
+            url: "comment/update-task-comment",
             data: comment,
             transformResponse: [
                 function (data) {
-                    return data;
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),
@@ -132,13 +133,14 @@ export default {
         instance({
             method: "DELETE",
             url:
-                "comment/delete-comment?taskId=" +
+                "comment/delete-task-comment?taskId=" +
                 taskId +
                 "&commentId=" +
                 commentId,
             transformResponse: [
                 function (data) {
-                    return data;
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),

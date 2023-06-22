@@ -26,7 +26,9 @@ const TaskList = () => {
     const [activeTab, setActiveTab] = useState<string>("1");
     const dateFormat = "YYYY-MM-DD";
     const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
-    const [tableRowSelected, setTableRowSelected] = useState<any>({});
+    const [tableRowSelected, setTableRowSelected] = useState<IAddTask>(
+        {} as IAddTask
+    );
     const [allTask, setAllTask] = useState<[]>([]);
 
     const screenModeToggle = () => {
@@ -281,7 +283,7 @@ const TaskList = () => {
                     onRow={(record: AddTask, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                console.log("history", record._id);
+                                console.log("history", record.comments);
                                 setTableRowSelected(record);
                             },
                         };
@@ -289,7 +291,6 @@ const TaskList = () => {
                     columns={colInfo}
                     showHeader={false}
                     pagination={false}
-                    //style={{ width: "100%" }}
                 />
             </div>
         );
@@ -391,7 +392,7 @@ const TaskList = () => {
                             <TaskViewEdit
                                 handleScreenMode={screenModeToggle}
                                 fullScreenMode={fullScreenMode}
-                                tableRowSelected={tableRowSelected}
+                                selectedRow={tableRowSelected}
                                 isEdit={false}
                             />
                         </div>

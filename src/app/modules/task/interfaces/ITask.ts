@@ -1,5 +1,5 @@
 export interface AddTask {
-    _id: number;
+    _id: string;
     title: string;
     start_date: string;
     due_date: string;
