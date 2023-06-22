@@ -127,4 +127,18 @@ export default {
                 },
             ],
         }),
+    deleteTaskComment: (taskId: string, commentId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "comment/delete-comment?taskId=" +
+                taskId +
+                "&commentId=" +
+                commentId,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 };

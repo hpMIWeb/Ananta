@@ -5,10 +5,11 @@
     margin: 0;
 }
 .comment_list .commentlist li {
-    list-style-type: none;
+    list-style-type: none !important;
     display: flex;
     border-bottom: 1px solid #6c757d40;
     padding: 25px 5px;
+    color: #fa5c7c;
 }
 .comment_list .commentlist li img {
     height: 36px;
@@ -72,4 +73,14 @@
 }
 .addcmtbtn button {
     margin-left: auto;
+}
+
+.float-end {
+    float: right;
+}
+
+.comment-date {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 20px;
 }

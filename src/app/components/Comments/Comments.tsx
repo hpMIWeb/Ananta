@@ -2,30 +2,29 @@ import React, { useState, useEffect } from "react";
 import { setLocalstorage, getLocalStorage } from "../../utilities/utility";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
-import { SaveComment } from "../../modules/task/interfaces/ITask";
+import { Comment } from "../../modules/task/interfaces/ITask";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAt, faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import parse from "html-react-parser";
 import {
-    Form,
-    Input,
-    Button,
-    Typography,
-    DatePicker,
-    Select,
-    Switch,
-    Row,
-    Col,
-    TimePicker,
-    Upload,
-    Divider,
-} from "antd";
+    faAt,
+    faPaperclip,
+    faEdit,
+    faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import parse from "html-react-parser";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { Input, Button, Typography, Divider } from "antd";
 import "./Comments.scss";
+
+dayjs.extend(customParseFormat);
 
 const Comments = (props: any) => {
     const { TextArea } = Input;
     const [taskComments, setTaskComments] = useState<[]>(props.comments);
     const [comment, setComment] = useState<string>("");
+    const [isEditComment, setIsEditComment] = useState<Boolean>(false);
+    const [editComment, setEditComment] = useState<Comment>({} as Comment);
+    const { Title } = Typography;
 
     const inputChangeHandler = (event: any) => {
         setComment(event.target.value);
@@ -33,54 +32,117 @@ const Comments = (props: any) => {
 
     // Add comment for the task
     const addCommentHandler = () => {
-        const addComment = {} as SaveComment;
-        addComment.comment = comment;
-        addComment.taskId = props.taskId;
-
-        api.addTaskComment(addComment)
-            .then(() => {
-                setComment("");
-                toast.success("Successfully added comment", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            })
-            .catch((error: any) => {
-                const msg = JSON.parse(error.response.data).message;
-                toast.error(msg, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            });
+        setComment("");
+        if (props.addComment) {
+            props.addComment(comment);
+        }
     };
 
-    const parseComment = (comment: string) => {
-        return parse(comment);
+    const editCommentHandler = (
+        commentId: string,
+        parentId: string,
+        comment: Comment
+    ) => {
+        console.log(commentId, parentId, comment);
+        setIsEditComment(true);
+        setEditComment(comment);
+        // if (props.editComment) {
+        //     props.editComment(commentId, parentId, comment);
+        // }
+    };
+
+    const deleteCommentHandler = (commentId: string, parentId: string) => {
+        console.log(commentId, parentId);
+        if (props.deleteComment) {
+            props.deleteComment(commentId, parentId);
+        }
     };
 
     const renderComment = () => {
         console.log("taskComments -", taskComments);
 
         if (taskComments && taskComments.length > 0) {
-            taskComments.map((commentItem: any, index: number) => {
+            return taskComments.map((commentItem: any, index: number) => {
                 console.log(commentItem.comment_date);
-
-                return <>No comments</>;
-
                 return (
-                    <>
-                        <li key={index}>
-                            <div>Test</div>
-                            {/* <div className="commentcnt">
-                                <h6>
-                                    {commentItem.comment_by}
-                                    <strong className="float-end text-muted">
-                                        {commentItem.comment_date}
-                                    </strong>
-                                </h6>
-                                <p>{commentItem.comment}</p>
-                            </div> */}
-                        </li>
+                    <li
+                        key={index}
+                        style={{
+                            listStyleType: "none",
+                        }}
+                    >
+                        <div className="commentcnt">
+                            <Title
+                                level={5}
+                                style={{
+                                    textAlign: "left",
+                                    color: "#6c757d",
+                                    fontSize: "15px",
+                                }}
+                            >
+                                {commentItem.comment_by}
+                                <strong className="float-end text-muted comment-date">
+                                    <span>
+                                        {dayjs(commentItem.comment_date).format(
+                                            "YYYY-MM-DD, HH:mm a"
+                                        )}
+                                    </span>
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={faEdit}
+                                            className="btn-at"
+                                            title="Edit comment"
+                                            style={{
+                                                color: "#2c7be5",
+                                                marginLeft: "15px",
+                                            }}
+                                            onClick={() => {
+                                                editCommentHandler(
+                                                    commentItem._id,
+                                                    props.parentId,
+                                                    commentItem
+                                                );
+                                            }}
+                                        />
+                                    </span>
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={faTrash}
+                                            className="btn-at"
+                                            title="Delete comment"
+                                            style={{ color: "#fa5c7c" }}
+                                            onClick={() => {
+                                                deleteCommentHandler(
+                                                    commentItem._id,
+                                                    props.parentId
+                                                );
+                                            }}
+                                        />
+                                    </span>
+                                </strong>
+                            </Title>
+                            <p>{parse(commentItem.comment)}</p>
+                            <div
+                                style={{
+                                    display:
+                                        isEditComment &&
+                                        commentItem._id === editComment._id
+                                            ? "block"
+                                            : "none",
+                                }}
+                            >
+                                <div>
+                                    <TextArea
+                                        placeholder="Your comment..."
+                                        rows={4}
+                                        onChange={inputChangeHandler}
+                                        defaultValue={editComment.comment}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <Divider />
-                    </>
+                    </li>
                 );
             });
         } else {

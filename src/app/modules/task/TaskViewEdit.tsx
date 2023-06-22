@@ -32,7 +32,7 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import Comments from "../../components/Comments/Comments";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
-import { AddTask } from "./interfaces/ITask";
+import { AddTask, SaveComment } from "./interfaces/ITask";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -84,6 +84,62 @@ const TaskViewEdit = (props: any) => {
                 });
             }
         );
+    };
+
+    const addCommentHandler = (comment: string) => {
+        const addComment = {} as SaveComment;
+        addComment.comment = comment;
+        addComment.taskId = props.tableRowSelected._id;
+        api.addTaskComment(addComment)
+            .then(() => {
+                toast.success("Successfully added comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+    };
+
+    const editCommentHandler = (commentId: string, comment: string) => {
+        console.log(commentId, comment);
+
+        const updateComment = {} as SaveComment;
+        updateComment.commentId = commentId;
+        updateComment.comment = comment;
+        updateComment.taskId = props.tableRowSelected._id;
+
+        api.updateTaskComment(updateComment)
+            .then(() => {
+                toast.success("Successfully updated comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+    };
+
+    const deleteCommentHandler = (commentId: string, parentId: string) => {
+        console.log(commentId);
+        api.deleteTaskComment(props.tableRowSelected._id, commentId)
+            .then(() => {
+                toast.success("Successfully deleted comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
     };
 
     return (
@@ -432,7 +488,10 @@ const TaskViewEdit = (props: any) => {
                             </Title>
                             <Comments
                                 comments={props.tableRowSelected.comments}
-                                taskId={props.tableRowSelected._id}
+                                parentId={props.tableRowSelected._id}
+                                addComment={addCommentHandler}
+                                editComment={editCommentHandler}
+                                deleteComment={deleteCommentHandler}
                             />
                         </Col>
                     </Row>
