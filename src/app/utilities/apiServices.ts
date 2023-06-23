@@ -109,7 +109,7 @@ export default {
     addTaskComment: (comment: SaveComment) =>
         instance({
             method: "POST",
-            url: "comment/create-comment",
+            url: "comment/create-task-comment",
             data: comment,
             transformResponse: [
                 function (data) {
