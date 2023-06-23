@@ -163,7 +163,7 @@ const ComplianceList = () => {
         });
         break;
       }
-      case "upcoming": {
+      case "report": {
         retVal = allTask.filter((item: IAddCompliance) => {
           return dayjs(item.start_date, dateFormat).isAfter(
             dayjs().format(dateFormat)
@@ -171,14 +171,7 @@ const ComplianceList = () => {
         });
         break;
       }
-      case "history": {
-        retVal = allTask.filter((item: IAddCompliance) => {
-          return dayjs(item.start_date, dateFormat).isBefore(
-            dayjs().format(dateFormat)
-          );
-        });
-        break;
-      }
+
       default: {
         retVal = [];
       }
@@ -214,38 +207,15 @@ const ComplianceList = () => {
     );
   };
 
-  const upcomingContent = () => {
+  const reportContent = () => {
     return (
       <div>
         <Table
-          dataSource={getData(current, pageSize, "upcoming")}
+          dataSource={getData(current, pageSize, "report")}
           rowClassName={rowClassHandler}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
-                setTableRowSelected(record);
-              },
-            };
-          }}
-          columns={colInfo}
-          showHeader={false}
-          pagination={false}
-          //style={{ width: "100%" }}
-        />
-      </div>
-    );
-  };
-
-  const historyContent = () => {
-    return (
-      <div>
-        <Table
-          dataSource={getData(current, pageSize, "history")}
-          rowClassName={rowClassHandler}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                console.log("history", record);
                 setTableRowSelected(record);
               },
             };
@@ -265,10 +235,7 @@ const ComplianceList = () => {
         return todayContent();
       }
       case "2": {
-        return upcomingContent();
-      }
-      case "3": {
-        return historyContent();
+        return reportContent();
       }
     }
     return null;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Typography, Select, TimePicker, Table } from "antd";
+import { Typography, Select, TimePicker, Table, Button } from "antd";
 import {
   priorityOpts,
   assigneeOpts,
@@ -9,12 +9,20 @@ import "react-quill/dist/quill.snow.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
+import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextArea from "antd/es/input/TextArea";
-
+import {
+  AddCompliance as IAddCompliance,
+  SubCompliance as ISubCompliance,
+  ComplianceDetails as IComplianceDetails,
+  ComplianceTimer,
+  TimerOpts,
+} from "./interfaces/ICompliance";
 //dayjs.extend(weekday);
 //dayjs.extend(localeData);
+
 const getClientDropDown = () => {
   return (
     <Select
@@ -121,20 +129,55 @@ const columns = [
   },
 ];
 
-const dataSource = [
-  {
-    key: "1",
-    action: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-];
-const TableStrcture = () => {
+const complianceDetailsObj = {
+  complianceDetailId: 1,
+  client: "",
+  key: 1,
+} as IComplianceDetails;
+
+const TableStructure = (props: any) => {
+  const [complianceDetails, setComplianceDetails] = useState<
+    IComplianceDetails[]
+  >([complianceDetailsObj]);
+
+  const removeComplianceDetails = (item: IComplianceDetails) => {
+    const index = complianceDetails.indexOf(item);
+    if (index > -1) {
+      const compliance = [...complianceDetails].filter((compliance: any) => {
+        return compliance.complianceDetailId !== item.complianceDetailId;
+      });
+      setComplianceDetails(compliance);
+    }
+  };
+
+  const addNewComplianceDetails = () => {
+    complianceDetailsObj.key = complianceDetails.length + 1;
+    complianceDetailsObj.complianceDetailId = complianceDetails.length + 1;
+    setComplianceDetails([]);
+    setComplianceDetails([...complianceDetails, complianceDetailsObj]);
+  };
+  useEffect(() => {
+    console.log("props", props);
+  }, [props]);
+
   return (
     <>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <div className="sub-task-add">
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={addNewComplianceDetails}
+        >
+          Add
+        </Button>
+      </div>
+      <Table
+        dataSource={complianceDetails}
+        columns={columns}
+        pagination={false}
+      />
     </>
   );
 };
 
-export default TableStrcture;
+export default TableStructure;

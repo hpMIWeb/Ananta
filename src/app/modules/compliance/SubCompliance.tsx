@@ -6,43 +6,39 @@ import {
   Select,
   Row,
   Col,
-  Upload,
   Divider,
   TimePicker,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  assigneeOpts,
-  clientOpts,
-  priorityOpts,
-} from "../../utilities/utility";
+import { priorityOpts } from "../../utilities/utility";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubCompliance as ISubCompliance } from "./interfaces/ICompliance";
 import "./subCompliance.scss";
-import TableStrcture from "./TableStrcture";
+import ComplianceDetails from "./ComplianceDetails";
 
 const SubCompliance = (props: any) => {
   const subComplianceObj = {
     subComplianceId: 1,
     status: "Pending",
   } as ISubCompliance;
-  const [subTasks, setCompliance] = useState<ISubCompliance[]>([
+
+  const [subCompliances, setSubCompliance] = useState<ISubCompliance[]>([
     subComplianceObj,
   ]);
 
   const addNewCompliance = () => {
-    subComplianceObj.subComplianceId = subTasks.length + 1;
-    setCompliance([...subTasks, subComplianceObj]);
+    subComplianceObj.subComplianceId = subCompliances.length + 1;
+    setSubCompliance([...subCompliances, subComplianceObj]);
   };
 
   const removeTask = (item: ISubCompliance) => {
-    const index = subTasks.indexOf(item);
+    const index = subCompliances.indexOf(item);
     if (index > -1) {
-      const compliance = [...subTasks].filter((compliance: any) => {
+      const compliance = [...subCompliances].filter((compliance: any) => {
         return compliance.subComplianceId !== item.subComplianceId;
       });
-      setCompliance(compliance);
+      setSubCompliance(compliance);
     }
   };
 
@@ -65,28 +61,28 @@ const SubCompliance = (props: any) => {
       value = event.value;
     }
 
-    const updatedCompliance = [...subTasks].map((item: any) => {
+    const updatedCompliance = [...subCompliances].map((item: any) => {
       if (item.subComplianceId === subCompliance.subComplianceId) {
         item[name] = value;
       }
       return item;
     });
 
-    // console.log(name, value, updatedCompliance);
+    console.log(name, value, updatedCompliance);
 
-    setCompliance(updatedCompliance);
+    setSubCompliance(updatedCompliance);
   };
 
   useEffect(() => {
-    console.log(subTasks);
+    console.log(subCompliances);
     if (props.subComponentsHandler) {
-      props.subComponentsHandler(subTasks);
+      props.subComponentsHandler(subCompliances);
     }
-  }, [subTasks]);
+  }, [subCompliances]);
 
   return (
     <div>
-      {subTasks.map((subComplianceItem: any, index: number) => (
+      {subCompliances.map((subComplianceItem: any, index: number) => (
         <>
           {index !== 0 && <Divider />}
           <div key={index}>
@@ -177,7 +173,7 @@ const SubCompliance = (props: any) => {
                     />
                   </Col>
                 </Row>
-                <TableStrcture />
+                <ComplianceDetails />
               </Form>
             </div>
           </div>

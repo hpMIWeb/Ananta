@@ -18,19 +18,17 @@ import SubCompliance from "./SubCompliance";
 import {
   priorityOpts,
   chargesOpts,
-  assigneeOpts,
-  clientOpts,
   modeOptions,
-  workAreaOpts,
 } from "../../utilities/utility";
 import dayjs from "dayjs";
-import { CloseOutlined } from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
   AddCompliance as IAddCompliance,
   SubCompliance as ISubCompliance,
+  ComplianceDetails as IComplianceDetails,
   ComplianceTimer,
   TimerOpts,
 } from "./interfaces/ICompliance";
@@ -38,123 +36,12 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
-import TableStrcture from "./TableStrcture";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faTrashAlt,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import TextArea from "antd/es/input/TextArea";
+import ComplianceDetails from "./ComplianceDetails";
+
 const { Title } = Typography;
 
 //dayjs.extend(weekday);
 //dayjs.extend(localeData);
-const getClientDropDown = () => {
-  return (
-    <Select
-      allowClear
-      showSearch
-      placeholder="Client"
-      options={clientOpts}
-      className="w100"
-    />
-  );
-};
-
-const getAssignDropDown = () => {
-  return (
-    <Select
-      allowClear
-      showSearch
-      placeholder="Assign Person"
-      options={assigneeOpts}
-      className="w100"
-    ></Select>
-  );
-};
-
-const columns = [
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-    render: () => (
-      <FontAwesomeIcon
-        icon={faTrashAlt}
-        style={{
-          fontSize: "15px",
-          color: "#ec0033",
-          cursor: "pointer",
-          marginLeft: "10px",
-          marginTop: "0",
-          alignSelf: "center",
-        }}
-        title={"Click here to Delete"}
-      />
-    ),
-  },
-  {
-    title: "Client",
-    dataIndex: "client",
-    key: "client",
-    render: () => (
-      <Select
-        allowClear
-        showSearch
-        placeholder="Client"
-        options={clientOpts}
-        className="w100"
-      />
-    ),
-  },
-  {
-    title: "Assign To",
-    dataIndex: "assignTo",
-    key: "assignTo",
-    render: () => (
-      <Select
-        allowClear
-        showSearch
-        placeholder="Assign Person"
-        options={assigneeOpts}
-        className="w100"
-      ></Select>
-    ),
-  },
-  {
-    title: "Budget Time",
-    dataIndex: "budgetTime",
-    key: "budgetTime",
-    render: () => (
-      <TimePicker
-        placeholder="Budget Time"
-        name="budget_time"
-        className="w100"
-        format={"HH:mm"}
-      />
-    ),
-  },
-  {
-    title: "Priority",
-    dataIndex: "priority",
-    key: "priority",
-    render: () => (
-      <Select
-        allowClear
-        placeholder="Priority"
-        options={priorityOpts}
-        className="w100"
-      />
-    ),
-  },
-  {
-    title: "Remark",
-    dataIndex: "remark",
-    key: "remark",
-    render: () => <TextArea rows={2} />,
-  },
-];
 
 const dataSource = [
   {
@@ -299,12 +186,13 @@ const AddCompliance = () => {
         allCompliance && allCompliance.length > 0
           ? allCompliance.length + 1
           : 1;
+      console.log(addCompliance);
       allCompliance.push(addCompliance);
 
       console.log("ALL COMPLIANCE", allCompliance);
-
+      localStorage.setItem("compliance", JSON.stringify(allCompliance));
       // Save to DB
-      try {
+      /* try {
         api.createCompliance(addCompliance).then((resp: any) => {
           // Set Compliance to `localStorage`
           localStorage.setItem("compliance", JSON.stringify(allCompliance));
@@ -316,7 +204,7 @@ const AddCompliance = () => {
         toast.error("Technical error while creating Compliance", {
           position: toast.POSITION.TOP_RIGHT,
         });
-      }
+      } */
     }
   };
 
@@ -542,8 +430,7 @@ const AddCompliance = () => {
             </Form.Item>
           </Col>
         </Row>
-        <TableStrcture />
-        <Row gutter={[8, 8]} className="form-row"></Row>
+        <ComplianceDetails />
 
         <Row gutter={[8, 8]} className="form-row">
           <Divider />
