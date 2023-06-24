@@ -20,8 +20,6 @@ import {
   ComplianceTimer,
   TimerOpts,
 } from "./interfaces/ICompliance";
-//dayjs.extend(weekday);
-//dayjs.extend(localeData);
 
 const getClientDropDown = () => {
   return (
@@ -187,7 +185,7 @@ const ComplianceDetails = (props: any) => {
 
     console.log("===============");
     console.log(name, value);
-    console.log(clientDetails1);
+    console.log(selectedTableRow);
 
     Object.keys(selectedTableRow).map((keyItem: string) => {
       if (keyItem === name) {
