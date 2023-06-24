@@ -34,6 +34,8 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
 import { AddCompliance } from "./interfaces/ICompliance";
+import ReactQuill from "react-quill";
+import ComplianceDetails from "./ComplianceDetails";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -406,9 +408,32 @@ const TaskViewEdit = (props: any) => {
             style={{ border: "1px solid #d8e2ef" }}
           >
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-              {getRemark()}
+              {!isEdit && getRemark()}
+              {isEdit && (
+                <ReactQuill
+                  theme="snow"
+                  value={props.tableRowSelected.remark}
+                  placeholder="Remark"
+                  onChange={(event) => {
+                    inputChangeHandler(event, "remark");
+                  }}
+                />
+              )}{" "}
             </Col>
           </Row>
+
+          <Row
+            gutter={[8, 8]}
+            className="form-row"
+            style={{ border: "1px solid #d8e2ef" }}
+          >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+              {isEdit && (
+                <ComplianceDetails props={props.tableRowSelected.clients} />
+              )}{" "}
+            </Col>
+          </Row>
+
           <Row gutter={[8, 8]} className="form-row">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
               <Title level={5} style={{ textAlign: "left" }}>
@@ -419,7 +444,7 @@ const TaskViewEdit = (props: any) => {
           <Row gutter={[8, 8]} className="form-row">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
               <Title level={5} style={{ textAlign: "left" }}>
-                Sub-tasks
+                Sub-Compliance
               </Title>
             </Col>
           </Row>

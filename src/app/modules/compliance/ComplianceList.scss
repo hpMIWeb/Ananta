@@ -1,19 +1,14 @@
-/* table */
-
-
-/* row tags */
-.my-tag {
-    font-size: 12px;
+.compliance-list-header {
+    display: flex;
+    flex-wrap: nowrap;
+    //margin-bottom: 15px;
 }
 
-.ant-table-thead>tr>th {
-    height: 5px;
-    padding: 4px;
+.compliance-list-add {
+    margin-left: auto;
 }
-.text-truncate {
-    overflow: hidden;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    
-       
+
+.ant-tabs {
+    width: 100%;
+    height: 46px;
 }

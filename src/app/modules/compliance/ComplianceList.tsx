@@ -23,20 +23,8 @@ import { useNavigate } from "react-router-dom";
 import ComplianceViewEdit from "./ComplianceViewEdit";
 import api from "../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendar,
-  faCalendarAlt,
-  faCalendarXmark,
-  faExpandArrowsAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  complianceReportOpts,
-  chargesOpts,
-  assigneeOpts,
-  clientOpts,
-  modeOptions,
-  workAreaOpts,
-} from "../../utilities/utility";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { complianceReportOpts, clientOpts } from "../../utilities/utility";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -50,6 +38,7 @@ const ComplianceList = () => {
   const [activeTab, setActiveTab] = useState<string>("1");
   const dateFormat = "YYYY-MM-DD";
   const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+  const [reportTab, setReportTab] = useState<boolean>(false);
   const [tableRowSelected, setTableRowSelected] = useState<any>({});
   const [allCompliance, setAllCompliance] = useState<[]>([]);
 
@@ -57,9 +46,14 @@ const ComplianceList = () => {
     setFullScreenMode(!fullScreenMode);
   };
 
+  const reportTabToggle = () => {
+    setReportTab(!reportTab);
+  };
+
   const onTabChange = (key: string) => {
     setActiveTab(key);
     setFullScreenMode(false);
+    setReportTab(key === "2" ? true : false);
   };
 
   useEffect(() => {
@@ -70,6 +64,80 @@ const ComplianceList = () => {
   }, []);
 
   const colInfo = [
+    {
+      title: "title",
+      dataIndex: "title",
+      key: "title",
+      render: (text: string) => <p className="text-truncate">{text}</p>,
+    },
+
+    {
+      title: "task date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (start_date: string) => (
+        <span>
+          <FontAwesomeIcon
+            icon={faCalendarAlt}
+            style={{
+              fontSize: "20px",
+              fontWeight: "normal",
+              color: "#41454a",
+            }}
+          />
+          {dayjs(start_date).format(dateFormat)}
+        </span>
+      ),
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      render: (status: string) => (
+        <span>
+          {[status].map((item) => {
+            let color = "#fb275d";
+            let title = item;
+            switch (item) {
+              case "completed": {
+                color = "#00ca72";
+                break;
+              }
+              case "in_progress": {
+                color = "#ffcc00";
+                break;
+              }
+              case "cancelled": {
+                color = "#5e6e82";
+                break;
+              }
+              case "1": {
+                color = "#fb275d";
+                title = "pending";
+                break;
+              }
+              case "2": {
+                color = "#40fb27";
+                title = "completed";
+              }
+            }
+
+            return (
+              <Tag
+                color={color}
+                key={item}
+                style={{ fontWeight: "500", fontSize: "12px" }}
+              >
+                {title.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </span>
+      ),
+    },
+  ];
+
+  const colInfoForReportTab = [
     {
       title: "title",
       dataIndex: "title",
@@ -235,7 +303,7 @@ const ComplianceList = () => {
               className="w100"
             />
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8, offset: 8 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
             <Select
               allowClear
               showSearch
@@ -244,7 +312,7 @@ const ComplianceList = () => {
               className="w100"
             />
           </Col>
-          <Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
             <Switch onChange={onSwitchMoreFilter}></Switch>
           </Col>
         </Row>
@@ -255,7 +323,7 @@ const ComplianceList = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}></Col>
         </Row>
         <Table
-          dataSource={getData(current, pageSize, "report")}
+          dataSource={getData(current, pageSize, "today")}
           rowClassName={rowClassHandler}
           onRow={(record, rowIndex) => {
             return {
@@ -264,7 +332,7 @@ const ComplianceList = () => {
               },
             };
           }}
-          columns={colInfo}
+          columns={colInfoForReportTab}
           showHeader={false}
           pagination={false}
           //style={{ width: "100%" }}
@@ -319,7 +387,7 @@ const ComplianceList = () => {
             style={{ width: "100%" }}
           ></Tabs>
         </div>
-        <div className="task-list-add">
+        <div className="compliance-list-add">
           <div>
             <Space>
               <Button type="primary" onClick={addNewComplianceHandler}>
@@ -332,7 +400,7 @@ const ComplianceList = () => {
       <div>
         <div
           style={{
-            width: "64%",
+            width: reportTab ? "100%" : "64%",
             float: "left",
             display: fullScreenMode ? "none" : "block",
             marginRight: "15px",
@@ -345,6 +413,7 @@ const ComplianceList = () => {
             style={{
               float: "right",
               width: fullScreenMode ? "100%" : "35%",
+              display: reportTab ? "none" : "",
               //textAlign: "right",
               //border: "1px solid #d8e2ef",
             }}

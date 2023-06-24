@@ -235,6 +235,7 @@ const ComplianceDetails = (props: any) => {
   };
   useEffect(() => {
     console.log("props", props);
+    setClientDetails([...clientDetails, props]);
   }, [props]);
 
   return (
