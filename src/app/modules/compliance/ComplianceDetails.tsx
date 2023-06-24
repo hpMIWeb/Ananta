@@ -216,7 +216,7 @@ const ComplianceDetails = (props: any) => {
       }
     });
 
-    setClientDetails1([selectedTableRow]);
+    setClientDetails1([...clientDetails1, selectedTableRow]);
     console.log(clientDetails1);
   };
 
