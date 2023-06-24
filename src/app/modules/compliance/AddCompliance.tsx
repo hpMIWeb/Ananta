@@ -28,7 +28,7 @@ import "react-quill/dist/quill.snow.css";
 import {
   AddCompliance as IAddCompliance,
   SubCompliance as ISubCompliance,
-  ComplianceDetails as IComplianceDetails,
+  ClientDetails as IClientDetails,
   ComplianceTimer,
   TimerOpts,
 } from "./interfaces/ICompliance";
@@ -120,11 +120,6 @@ const AddCompliance = () => {
     ) {
       returnFlag = false;
     } else if (
-      addCompliance.hasOwnProperty("client") &&
-      addCompliance.client === ""
-    ) {
-      returnFlag = false;
-    } else if (
       addCompliance.hasOwnProperty("workArea") &&
       addCompliance.workArea === ""
     ) {
@@ -208,10 +203,7 @@ const AddCompliance = () => {
     }
   };
 
-  const updateSubComponents = (subCompliance: ISubCompliance[]) => {
-    addCompliance.subCompliance = subCompliance;
-    console.log("list of subCompliance", subCompliance);
-  };
+  const updateSubComponents = (subCompliance: ISubCompliance[]) => {};
 
   const handleInputKeyDown = () => {
     if (selectModeRef.current) {

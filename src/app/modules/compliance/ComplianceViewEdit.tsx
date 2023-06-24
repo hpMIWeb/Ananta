@@ -135,9 +135,9 @@ const TaskViewEdit = (props: any) => {
                   placeholder="Compliance"
                   name="task"
                   value={props.tableRowSelected.title}
-                  // onChange={(event) => {
-                  //     inputChangeHandler(event);
-                  // }}
+                  onChange={(event) => {
+                    inputChangeHandler(event);
+                  }}
                 />
               )}
             </Col>

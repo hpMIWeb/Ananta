@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import type { TabsProps } from "antd";
-import { Button, Space, Tabs, Typography, Table, Tag } from "antd";
+import {
+  Button,
+  Space,
+  Tabs,
+  Typography,
+  Table,
+  Tag,
+  Row,
+  Col,
+  Select,
+  Switch,
+} from "antd";
 import {
   AddCompliance,
   AddCompliance as IAddCompliance,
@@ -11,17 +22,36 @@ import "./ComplianceList.scss";
 import { useNavigate } from "react-router-dom";
 import ComplianceViewEdit from "./ComplianceViewEdit";
 import api from "../../utilities/apiServices";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendar,
+  faCalendarAlt,
+  faCalendarXmark,
+  faExpandArrowsAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  complianceReportOpts,
+  chargesOpts,
+  assigneeOpts,
+  clientOpts,
+  modeOptions,
+  workAreaOpts,
+} from "../../utilities/utility";
 const { Title } = Typography;
 const pageSize = 20;
 
 const ComplianceList = () => {
+  const [showMoreFilter, setShowMoreFilterTask] = useState<boolean>(false);
+
+  const onSwitchMoreFilter = () => {
+    setShowMoreFilterTask(!showMoreFilter);
+  };
   const [current, setCurrent] = useState(1);
   const [activeTab, setActiveTab] = useState<string>("1");
   const dateFormat = "YYYY-MM-DD";
   const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
   const [tableRowSelected, setTableRowSelected] = useState<any>({});
-  const [allTask, setAllTask] = useState<[]>([]);
+  const [allCompliance, setAllCompliance] = useState<[]>([]);
 
   const screenModeToggle = () => {
     setFullScreenMode(!fullScreenMode);
@@ -33,9 +63,9 @@ const ComplianceList = () => {
   };
 
   useEffect(() => {
-    api.getAllTask().then((resp: any) => {
-      console.log(resp.data.allTask);
-      setAllTask(resp.data.allTask);
+    api.getAllCompliance().then((resp: any) => {
+      console.log(resp.data);
+      setAllCompliance(resp.data);
     });
   }, []);
 
@@ -44,24 +74,25 @@ const ComplianceList = () => {
       title: "title",
       dataIndex: "title",
       key: "title",
-      render: (text: string) => text,
+      render: (text: string) => <p className="text-truncate">{text}</p>,
     },
-    {
-      title: "client",
-      dataIndex: "client",
-      key: "client",
-    },
-    {
-      title: "assignee",
-      dataIndex: "assignee",
-      key: "assignee",
-    },
+
     {
       title: "task date",
       dataIndex: "start_date",
       key: "start_date",
       render: (start_date: string) => (
-        <span>{dayjs(start_date).format(dateFormat)}</span>
+        <span>
+          <FontAwesomeIcon
+            icon={faCalendarAlt}
+            style={{
+              fontSize: "20px",
+              fontWeight: "normal",
+              color: "#41454a",
+            }}
+          />
+          {dayjs(start_date).format(dateFormat)}
+        </span>
       ),
     },
     {
@@ -89,6 +120,11 @@ const ComplianceList = () => {
               case "1": {
                 color = "#fb275d";
                 title = "pending";
+                break;
+              }
+              case "2": {
+                color = "#40fb27";
+                title = "completed";
               }
             }
 
@@ -105,46 +141,22 @@ const ComplianceList = () => {
         </span>
       ),
     },
-    {
-      title: "subtask",
-      key: "subtask",
-      dataIndex: "subtask",
-      render: (subtask: []) => {
-        if (subtask && subtask.length > 0) {
-          return (
-            <div key={subtask.length}>
-              {subtask.filter((item: ISubTask) => {
-                return item.status === "Completed";
-              }).length +
-                "/" +
-                subtask.length}
-            </div>
-          );
-        } else {
-          return <span>No sub task</span>;
-        }
-      },
-    },
   ];
 
   const rowClassHandler = (record: IAddCompliance) => {
     let rowClassName = "";
     switch (record.status.toLowerCase()) {
       case "pending":
-      case "1": {
+      case "2": {
         rowClassName = "data-row-pending";
         break;
       }
-      case "completed": {
+      case "4": {
         rowClassName = "data-row-completed";
         break;
       }
-      case "in_progress": {
+      case "3": {
         rowClassName = "data-row-in-progress";
-        break;
-      }
-      case "cancelled": {
-        rowClassName = "data-row-cancel";
         break;
       }
     }
@@ -156,7 +168,7 @@ const ComplianceList = () => {
 
     switch (rangeMode) {
       case "today": {
-        retVal = allTask.filter((item: IAddCompliance) => {
+        retVal = allCompliance.filter((item: IAddCompliance) => {
           return dayjs(item.start_date, dateFormat).isSame(
             dayjs().format(dateFormat)
           );
@@ -164,7 +176,7 @@ const ComplianceList = () => {
         break;
       }
       case "report": {
-        retVal = allTask.filter((item: IAddCompliance) => {
+        retVal = allCompliance.filter((item: IAddCompliance) => {
           return dayjs(item.start_date, dateFormat).isAfter(
             dayjs().format(dateFormat)
           );
@@ -198,10 +210,12 @@ const ComplianceList = () => {
               },
             };
           }}
+          className=""
           columns={colInfo}
           showHeader={false}
           pagination={false}
           style={{ width: "100%" }}
+          size="small"
         />
       </div>
     );
@@ -210,6 +224,36 @@ const ComplianceList = () => {
   const reportContent = () => {
     return (
       <div>
+        <Row gutter={[8, 8]} className="form-row"></Row>
+        <Row gutter={[8, 8]} className="form-row">
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Client"
+              options={clientOpts}
+              className="w100"
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8, offset: 8 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Report Type"
+              options={complianceReportOpts}
+              className="w100"
+            />
+          </Col>
+          <Col>
+            <Switch onChange={onSwitchMoreFilter}></Switch>
+          </Col>
+        </Row>
+        <Row
+          gutter={[8, 8]}
+          className={"form-row " + (!showMoreFilter ? "hide" : "")}
+        >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}></Col>
+        </Row>
         <Table
           dataSource={getData(current, pageSize, "report")}
           rowClassName={rowClassHandler}

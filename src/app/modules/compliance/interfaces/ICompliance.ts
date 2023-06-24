@@ -12,13 +12,9 @@ export interface AddCompliance {
   timer: ComplianceTimer;
   priority: string;
   billable: string;
-  client: string;
   assignee: string;
   dataPath: string;
-  subCompliance: SubCompliance[];
-  attachments: Attachment[];
-  comments: Comment[];
-  complianceDetails: ComplianceDetails[];
+  clients: ClientDetails[];
 }
 
 export interface SubCompliance {
@@ -66,13 +62,12 @@ export interface TimerDetail {
   milliseconds: number;
 }
 
-export interface ComplianceDetails {
+export interface ClientDetails {
   complianceDetailId: number;
   client: string;
   assignee: string;
   budget_time: string;
-  timer: ComplianceTimer;
+  actual_time: string;
   priority: string;
   remark: string;
-  key: number;
 }

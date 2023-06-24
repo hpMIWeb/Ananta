@@ -173,7 +173,6 @@ const SubCompliance = (props: any) => {
                     />
                   </Col>
                 </Row>
-                <ComplianceDetails />
               </Form>
             </div>
           </div>

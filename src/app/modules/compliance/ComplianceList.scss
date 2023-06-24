@@ -1,0 +1,19 @@
+/* table */
+
+
+/* row tags */
+.my-tag {
+    font-size: 12px;
+}
+
+.ant-table-thead>tr>th {
+    height: 5px;
+    padding: 4px;
+}
+.text-truncate {
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    
+       
+}
