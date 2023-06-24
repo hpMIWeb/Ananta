@@ -1,268 +1,253 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Select, TimePicker, Table, Button } from "antd";
 import {
-  priorityOpts,
-  assigneeOpts,
-  clientOpts,
+    priorityOpts,
+    assigneeOpts,
+    clientOpts,
 } from "../../utilities/utility";
 import "react-quill/dist/quill.snow.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
-import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextArea from "antd/es/input/TextArea";
-import {
-  AddCompliance as IAddCompliance,
-  SubCompliance as ISubCompliance,
-  ClientDetails as IClientDetails,
-  ComplianceTimer,
-  TimerOpts,
-} from "./interfaces/ICompliance";
-
-const getClientDropDown = () => {
-  return (
-    <Select
-      allowClear
-      showSearch
-      placeholder="Client"
-      options={clientOpts}
-      className="w100"
-    />
-  );
-};
-
-const getAssignDropDown = () => {
-  return (
-    <Select
-      allowClear
-      showSearch
-      placeholder="Assign Person"
-      options={assigneeOpts}
-      className="w100"
-    ></Select>
-  );
-};
-
-const clientDetailsObj = {
-  complianceDetailId: 1,
-  client: "",
-  actual_time: "",
-  assignee: "",
-  budget_time: "",
-  priority: "",
-  remark: "",
-} as IClientDetails;
-
-const removeComplianceDetails11 = (item: IClientDetails) => {
-  console.log(item);
-};
+import { ClientDetails as IClientDetails } from "./interfaces/ICompliance";
 
 const ComplianceDetails = (props: any) => {
-  const [clientDetails, setClientDetails] = useState<IClientDetails[]>([
-    clientDetailsObj,
-  ]);
-  const [clientDetails1, setClientDetails1] = useState<IClientDetails[]>([
-    clientDetailsObj,
-  ]);
-  const [selectedTableRow, setSelectedTableRow] = useState(clientDetailsObj);
+    const [clientDetails, setClientDetails] = useState<IClientDetails[]>([
+        {
+            complianceDetailId: 1,
+            client_name: "",
+            actual_time: "",
+            assignee_to: "",
+            budget_time: "",
+            priority: "",
+            remark: "",
+        } as IClientDetails,
+    ]);
+    const [selectedTableRow, setSelectedTableRow] = useState({
+        complianceDetailId: 1,
+        client_name: "",
+        actual_time: "",
+        assignee_to: "",
+        budget_time: "",
+        priority: "",
+        remark: "",
+    } as IClientDetails);
 
-  const columns = [
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: () => (
-        <FontAwesomeIcon
-          icon={faTrashAlt}
-          style={{
-            fontSize: "15px",
-            color: "#ec0033",
-            cursor: "pointer",
-            marginLeft: "10px",
-            marginTop: "0",
-            alignSelf: "center",
-          }}
-          title={"Click here to Delete"}
-        />
-      ),
-    },
-    {
-      title: "Client",
-      dataIndex: "client",
-      key: "client",
-      render: (item: any) => (
-        <Select
-          allowClear
-          showSearch
-          placeholder="Client"
-          options={clientOpts}
-          className="w100"
-          onChange={(value, event) => {
-            inputChangeHandler(event, "client");
-          }}
-        />
-      ),
-    },
-    {
-      title: "Assign To",
-      dataIndex: "assignTo",
-      key: "assignTo",
-      render: () => (
-        <Select
-          allowClear
-          showSearch
-          placeholder="Assign Person"
-          options={assigneeOpts}
-          className="w100"
-          onChange={(value, event) => {
-            inputChangeHandler(event, "assignee");
-          }}
-        ></Select>
-      ),
-    },
-    {
-      title: "Budget Time",
-      dataIndex: "budgetTime",
-      key: "budgetTime",
-      render: () => (
-        <TimePicker
-          placeholder="Budget Time"
-          name="budget_time"
-          className="w100"
-          format={"HH:mm"}
-          onChange={(date, dateString) => {
-            inputChangeHandler(dateString, "budget_time");
-          }}
-        />
-      ),
-    },
-    {
-      title: "Priority",
-      dataIndex: "priority",
-      key: "priority",
-      render: () => (
-        <Select
-          allowClear
-          placeholder="Priority"
-          options={priorityOpts}
-          className="w100"
-          onChange={(value, event) => {
-            inputChangeHandler(event, "priority");
-          }}
-        />
-      ),
-    },
-    {
-      title: "Remark",
-      dataIndex: "remark",
-      key: "remark",
-      render: () => (
-        <TextArea
-          rows={2}
-          onChange={(value) => {
-            inputChangeHandler(value, "remark");
-          }}
-        />
-      ),
-    },
-  ];
+    const columns = [
+        {
+            title: "Action",
+            dataIndex: "action",
+            key: "action",
+            render: (text: any, record: any, index: number) => (
+                <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{
+                        fontSize: "15px",
+                        color: "#ec0033",
+                        cursor: "pointer",
+                        marginLeft: "10px",
+                        marginTop: "0",
+                        alignSelf: "center",
+                    }}
+                    title={"Click here to Delete"}
+                    onClick={() => {
+                        removeComplianceDetails(record);
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Client",
+            dataIndex: "client",
+            key: "client",
+            render: (item: any) => (
+                <Select
+                    allowClear
+                    showSearch
+                    placeholder="Client"
+                    options={clientOpts}
+                    className="w100"
+                    onChange={(value, event) => {
+                        inputChangeHandler(event, "client_name");
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Assign To",
+            dataIndex: "assignTo",
+            key: "assignTo",
+            render: () => (
+                <Select
+                    allowClear
+                    showSearch
+                    placeholder="Assign Person"
+                    options={assigneeOpts}
+                    className="w100"
+                    onChange={(value, event) => {
+                        inputChangeHandler(event, "assignee_to");
+                    }}
+                ></Select>
+            ),
+        },
+        {
+            title: "Budget Time",
+            dataIndex: "budgetTime",
+            key: "budgetTime",
+            render: () => (
+                <TimePicker
+                    placeholder="Budget Time"
+                    name="budget_time"
+                    className="w100"
+                    format={"HH:mm"}
+                    onChange={(date, dateString) => {
+                        inputChangeHandler(dateString, "budget_time");
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Priority",
+            dataIndex: "priority",
+            key: "priority",
+            render: () => (
+                <Select
+                    allowClear
+                    placeholder="Priority"
+                    options={priorityOpts}
+                    className="w100"
+                    onChange={(value, event) => {
+                        inputChangeHandler(event, "priority");
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Remark",
+            dataIndex: "remark",
+            key: "remark",
+            render: () => (
+                <TextArea
+                    rows={2}
+                    name="remark"
+                    onChange={(value) => {
+                        inputChangeHandler(value);
+                    }}
+                />
+            ),
+        },
+    ];
 
-  const inputChangeHandler = (event: any, nameItem: string = "") => {
-    let name = "";
-    let value = "";
-    if (event && event.target) {
-      name = event.target.name;
-      value = event.target.value;
-    } else if (nameItem !== "" && event !== "") {
-      name = nameItem;
-      value = event.value;
-    } else if (event) {
-      name = event.name;
-      value = event.value;
-    }
-
-    console.log("===============");
-    console.log(name, value);
-    console.log(selectedTableRow);
-
-    Object.keys(selectedTableRow).map((keyItem: string) => {
-      if (keyItem === name) {
-        switch (keyItem) {
-          case "client": {
-            selectedTableRow.client = value;
-            break;
-          }
-          case "assignee": {
-            selectedTableRow.assignee = value;
-            break;
-          }
-          case "budget_time": {
-            selectedTableRow.budget_time = value;
-            break;
-          }
-          case "priority": {
-            selectedTableRow.priority = value;
-            break;
-          }
-          case "remark": {
-            selectedTableRow.remark = value;
-            break;
-          }
+    const inputChangeHandler = (event: any, nameItem: string = "") => {
+        let name = "";
+        let value = "";
+        if (event && event.target) {
+            name = event.target.name;
+            value = event.target.value;
+        } else if (nameItem !== "" && event !== "") {
+            name = nameItem;
+            value = event.value ?? event;
+        } else if (event) {
+            name = event.name;
+            value = event.value;
         }
-      }
-    });
 
-    setClientDetails1([...clientDetails1, selectedTableRow]);
-    console.log(clientDetails1);
-  };
+        Object.keys(selectedTableRow).map((keyItem: string) => {
+            if (keyItem === name) {
+                switch (keyItem) {
+                    case "client_name": {
+                        selectedTableRow.client_name = value;
+                        break;
+                    }
+                    case "assignee_to": {
+                        selectedTableRow.assignee_to = value;
+                        break;
+                    }
+                    case "budget_time": {
+                        selectedTableRow.budget_time = value;
+                        selectedTableRow.actual_time = value;
+                        break;
+                    }
+                    case "priority": {
+                        selectedTableRow.priority = value;
+                        break;
+                    }
+                    case "remark": {
+                        selectedTableRow.remark = value;
+                        break;
+                    }
+                }
+            }
+        });
+        // update selected rows
+        setSelectedTableRow(selectedTableRow);
 
-  const removeComplianceDetails = (item: IClientDetails) => {
-    const index = clientDetails.indexOf(item);
-    if (index > -1) {
-      const compliance = [...clientDetails].filter((compliance: any) => {
-        return compliance.complianceDetailId !== item.complianceDetailId;
-      });
-      setClientDetails(compliance);
-    }
-  };
+        // update parent component
+        if (props.updateClients) {
+            props.updateClients(clientDetails);
+        }
+    };
 
-  const addNewComplianceDetails = () => {
-    clientDetailsObj.complianceDetailId = clientDetails.length + 1;
-    console.log(clientDetailsObj);
-    setClientDetails([...clientDetails, clientDetailsObj]);
-  };
-  useEffect(() => {
-    console.log("props", props);
-    setClientDetails([...clientDetails, props]);
-  }, [props]);
+    const removeComplianceDetails = (item: IClientDetails) => {
+        const index = clientDetails.indexOf(item);
+        if (index > -1) {
+            const compliance = [...clientDetails].filter((compliance: any) => {
+                return (
+                    compliance.complianceDetailId !== item.complianceDetailId
+                );
+            });
+            setClientDetails(compliance);
+        }
+    };
 
-  return (
-    <>
-      <div className="sub-task-add">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={addNewComplianceDetails}
-        >
-          Add
-        </Button>
-      </div>
-      <Table
-        dataSource={clientDetails}
-        columns={columns}
-        pagination={false}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event) => {
-              setSelectedTableRow(record);
-            },
-          };
-        }}
-      />
-    </>
-  );
+    const addNewComplianceDetails = () => {
+        const newClient = {
+            complianceDetailId: clientDetails.length + 1,
+            client_name: "",
+            actual_time: "",
+            assignee_to: "",
+            budget_time: "",
+            priority: "",
+            remark: "",
+        } as IClientDetails;
+        setClientDetails([...clientDetails, newClient]);
+
+        // update parent component
+        if (props.updateClients) {
+            props.updateClients(clientDetails);
+        }
+    };
+
+    return (
+        <>
+            <div className="sub-task-add">
+                <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={addNewComplianceDetails}
+                    style={{ float: "right", marginBottom: "10px" }}
+                >
+                    Add
+                </Button>
+            </div>
+            <Table
+                dataSource={clientDetails}
+                columns={columns}
+                pagination={false}
+                onRow={(record, rowIndex) => {
+                    return {
+                        onClick: (event) => {
+                            setSelectedTableRow(record);
+                        },
+                    };
+                }}
+            />
+        </>
+    );
 };
 
 export default ComplianceDetails;
