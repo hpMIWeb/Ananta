@@ -18,19 +18,15 @@ export interface AddCompliance {
 }
 
 export interface SubCompliance {
-    subComplianceId: number;
+    _id: number;
     title: string;
-    startDate: string;
-    dueDate: string;
     status: string;
     budget_time: string;
-    timer: ComplianceTimer;
     remark: string;
-    client: string;
-    assignee: string;
     priority: string;
-    dataPath: string;
-    attachments: Attachment[];
+    workArea: string;
+    complianceId: string;
+    clients: ClientDetails[];
 }
 
 export interface Attachment {

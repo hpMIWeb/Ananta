@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Select, TimePicker, Table, Button } from "antd";
+import { Typography, Select, TimePicker, Table, Button, Form } from "antd";
 import {
     priorityOpts,
     assigneeOpts,
@@ -64,73 +64,133 @@ const ComplianceDetails = (props: any) => {
             title: "Client",
             dataIndex: "client",
             key: "client",
-            render: (item: any) => (
-                <Select
-                    allowClear
-                    showSearch
-                    placeholder="Client"
-                    options={clientOpts}
-                    className="w100"
-                    onChange={(value, event) => {
-                        inputChangeHandler(event, "client_name");
-                    }}
-                />
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "client_name_" +
+                        record.complianceDetailId +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select Client.",
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        showSearch
+                        placeholder="Client"
+                        options={clientOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "client_name");
+                        }}
+                    />
+                </Form.Item>
             ),
         },
         {
             title: "Assign To",
             dataIndex: "assignTo",
             key: "assignTo",
-            render: () => (
-                <Select
-                    allowClear
-                    showSearch
-                    placeholder="Assign Person"
-                    options={assigneeOpts}
-                    className="w100"
-                    onChange={(value, event) => {
-                        inputChangeHandler(event, "assignee_to");
-                    }}
-                ></Select>
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "assignee_to_" +
+                        record.complianceDetailId +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select Assignee.",
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        showSearch
+                        placeholder="Assign Person"
+                        options={assigneeOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "assignee_to");
+                        }}
+                    />
+                </Form.Item>
             ),
         },
         {
             title: "Budget Time",
             dataIndex: "budgetTime",
             key: "budgetTime",
-            render: () => (
-                <TimePicker
-                    placeholder="Budget Time"
-                    name="budget_time"
-                    className="w100"
-                    format={"HH:mm"}
-                    onChange={(date, dateString) => {
-                        inputChangeHandler(dateString, "budget_time");
-                    }}
-                />
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "budget_time_" +
+                        record.complianceDetailId +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please set Budget Time.",
+                        },
+                    ]}
+                >
+                    <TimePicker
+                        placeholder="Budget Time"
+                        name="budget_time"
+                        className="w100"
+                        format={"HH:mm"}
+                        onChange={(date, dateString) => {
+                            inputChangeHandler(dateString, "budget_time");
+                        }}
+                    />
+                </Form.Item>
             ),
         },
         {
             title: "Priority",
             dataIndex: "priority",
             key: "priority",
-            render: () => (
-                <Select
-                    allowClear
-                    placeholder="Priority"
-                    options={priorityOpts}
-                    className="w100"
-                    onChange={(value, event) => {
-                        inputChangeHandler(event, "priority");
-                    }}
-                />
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "_priority_" +
+                        record.complianceDetailId +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please set Priority.",
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        placeholder="Priority"
+                        options={priorityOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "priority");
+                        }}
+                    />
+                </Form.Item>
             ),
         },
         {
             title: "Remark",
             dataIndex: "remark",
             key: "remark",
-            render: () => (
+            render: (text: any, record: any, index: number) => (
                 <TextArea
                     rows={2}
                     name="remark"
@@ -148,7 +208,7 @@ const ComplianceDetails = (props: any) => {
         if (event && event.target) {
             name = event.target.name;
             value = event.target.value;
-        } else if (nameItem !== "" && event !== "") {
+        } else if (nameItem !== "" && event !== "" && event !== undefined) {
             name = nameItem;
             value = event.value ?? event;
         } else if (event) {
@@ -224,7 +284,10 @@ const ComplianceDetails = (props: any) => {
 
     return (
         <>
-            <div className="sub-task-add">
+            <div
+                className="sub-task-add"
+                style={{ display: props.isAllowAdd ? "block" : "none" }}
+            >
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}

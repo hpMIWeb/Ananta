@@ -66,10 +66,20 @@ const AddCompliance = () => {
     const [addCompliance, setAddCompliance] = useState<IAddCompliance>({
         status: "Pending",
         start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        title: "",
+        actual_time: "",
+        assignee: "",
+        billable: "",
+        remark: "",
+        priority: "",
+        mode: "",
+        due_date: "",
+        workArea: "",
     } as IAddCompliance);
     const [complianceDetails, setComplianceDetails] = useState<
         IClientDetails[]
     >([]);
+    const [subCompliance, setSubCompliance] = useState<ISubCompliance[]>();
 
     // Handllers
     const onSwitchSubCompliance = () => {
@@ -155,10 +165,10 @@ const AddCompliance = () => {
             addCompliance.billable === ""
         ) {
             returnFlag = false;
-        } else if (
-            addCompliance.hasOwnProperty("assignee") &&
-            addCompliance.assignee === ""
-        ) {
+        }
+
+        // Clients validation
+        if (complianceDetails === undefined || complianceDetails.length === 0) {
             returnFlag = false;
         }
 
@@ -171,7 +181,6 @@ const AddCompliance = () => {
             toast.error("Please set mandatory fields", {
                 position: toast.POSITION.TOP_RIGHT,
             });
-
             return false;
         } else {
             // // Read all existing task from `localStorage`
@@ -198,6 +207,10 @@ const AddCompliance = () => {
             addCompliance.clients = complianceDetails;
             setAddCompliance(addCompliance);
 
+            console.log("before same subCompliance - ", subCompliance);
+
+            return false;
+
             // Save to DB
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
@@ -206,6 +219,28 @@ const AddCompliance = () => {
                     //     "compliance",
                     //     JSON.stringify(allCompliance)
                     // );
+
+                    // create sub-compliance
+                    const newSubCompliance = {
+                        complianceId: resp._id,
+                        _id: 0,
+                        title: addCompliance.title,
+                        budget_time: addCompliance.budget_time,
+                        actual_time: addCompliance.budget_time,
+                        remark: addCompliance.remark,
+                        workArea: addCompliance.workArea,
+                        priority: addCompliance.priority,
+                        status: addCompliance.status,
+                        clients: addCompliance.clients,
+                    } as ISubCompliance;
+
+                    console.log("newSubCompliance - ", newSubCompliance);
+
+                    //TODO: once API is ready then call it with above format of JSON
+                    // api.createSubCompliance(newSubCompliance).then(
+                    //     (resp: any) => {}
+                    // );
+
                     toast.success("Successfully Created Compliance", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
@@ -218,7 +253,9 @@ const AddCompliance = () => {
         }
     };
 
-    const updateSubComponents = (subCompliance: ISubCompliance[]) => {};
+    const updateSubComponents = (subCompliance: ISubCompliance[]) => {
+        setSubCompliance(subCompliance);
+    };
 
     const handleInputKeyDown = () => {
         if (selectModeRef.current) {
@@ -260,8 +297,6 @@ const AddCompliance = () => {
                             <DatePicker
                                 placeholder="Start Date"
                                 name="start_date"
-                                //value={addCompliance.startDate}
-
                                 format={dateFormat}
                                 className="w100"
                                 onChange={(date, dateString) => {
@@ -287,7 +322,6 @@ const AddCompliance = () => {
                             <DatePicker
                                 placeholder="Due Date"
                                 name="due_date"
-                                //value={addCompliance.dueDate}
                                 onChange={(date, dateString) => {
                                     inputChangeHandler(dateString, "due_date");
                                 }}
@@ -465,8 +499,15 @@ const AddCompliance = () => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <ComplianceDetails updateClients={complianceDetailsHandler} />
-
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        <ComplianceDetails
+                            updateClients={complianceDetailsHandler}
+                            isAllowAdd={true}
+                            parentId="compliance"
+                        />
+                    </Col>
+                </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Divider />
                 </Row>

@@ -1,7 +1,10 @@
 import axios from "axios";
 import { AddTask } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
-import { AddCompliance } from "../modules/compliance/interfaces/ICompliance";
+import {
+    AddCompliance,
+    SubCompliance,
+} from "../modules/compliance/interfaces/ICompliance";
 
 const token = getLocalStorage("authtoken");
 const apiURL = "http://localhost:8005/api/v1/";
@@ -157,5 +160,45 @@ export default {
                     return json.payload;
                 },
             ],
+        }),
+    createSubCompliance: (subCompliance: SubCompliance) =>
+        instance({
+            method: "POST",
+            url: "subcompliance/create-subcompliance",
+            data: {
+                complianceId: subCompliance.complianceId,
+                status: subCompliance.status,
+                budget_time: subCompliance.budget_time,
+                actual_time: subCompliance.budget_time,
+                title: subCompliance.title,
+                remark: subCompliance.remark,
+                workArea: subCompliance.workArea,
+                priority: subCompliance.priority,
+                clients: subCompliance.clients,
+            },
+        }),
+    getSubCompliance: (subComplianceId: string, complianceId: string) =>
+        instance({
+            method: "GET",
+            url:
+                "subcompliance/get-subcompliance?subComplianceId=" +
+                subComplianceId +
+                "&ComplianceId=" +
+                complianceId,
+        }),
+    updateSubCompliance: (updateSubCompliance: SubCompliance) =>
+        instance({
+            method: "PUT",
+            url: "subcompliance/update-subcompliance",
+            data: updateSubCompliance,
+        }),
+    deleteSubCompliance: (complianceId: string, subComplianceId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "subcompliance/delete-subcompliance?ComplianceId=" +
+                complianceId +
+                "&subComplianceId=" +
+                subComplianceId,
         }),
 };
