@@ -68,7 +68,9 @@ const ComplianceList = () => {
       title: "title",
       dataIndex: "title",
       key: "title",
-      render: (text: string) => <p className="text-truncate">{text}</p>,
+      render: (text: string) => (
+        <p className="text-truncate tasklist button p">{text}</p>
+      ),
     },
 
     {
@@ -216,15 +218,15 @@ const ComplianceList = () => {
     switch (record.status.toLowerCase()) {
       case "pending":
       case "2": {
-        rowClassName = "data-row-pending";
+        rowClassName = "complianceListRow data-row-pending";
         break;
       }
       case "4": {
-        rowClassName = "data-row-completed";
+        rowClassName = "complianceListRow data-row-completed";
         break;
       }
       case "3": {
-        rowClassName = "data-row-in-progress";
+        rowClassName = "complianceListRow data-row-in-progress";
         break;
       }
     }
