@@ -423,23 +423,25 @@ const ComplianceList = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}></Col>
         </Row>
         <Row gutter={[8, 8]} className="form-row">
-          <Table
-            id={"complianceReport"}
-            dataSource={getData(current, pageSize, "today")}
-            rowClassName={rowClassHandlerForReport}
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: (event) => {
-                  setTableRowSelected(record);
-                },
-              };
-            }}
-            columns={colInfoForReportTab}
-            showHeader={true}
-            size="small"
-            showSorterTooltip
-            scroll={{ x: 1300 }}
-          />
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+            <Table
+              id={"complianceReport"}
+              dataSource={getData(current, pageSize, "today")}
+              rowClassName={rowClassHandlerForReport}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    setTableRowSelected(record);
+                  },
+                };
+              }}
+              columns={colInfoForReportTab}
+              showHeader={true}
+              size="small"
+              showSorterTooltip
+              scroll={{ x: 1300 }}
+            />
+          </Col>
         </Row>
       </div>
     );
