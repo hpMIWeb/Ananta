@@ -117,7 +117,7 @@ export default {
       data: {
         start_date: compliance.start_date,
         due_date: compliance.due_date,
-        status: "cancelled",
+        status: compliance.status,
         budget_time: compliance.budget_time,
         actual_time: compliance.budget_time,
         mode: compliance.mode,
