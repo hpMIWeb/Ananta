@@ -25,6 +25,7 @@ const ComplianceDetails = (props: any) => {
             budget_time: "",
             priority: "",
             remark: "",
+            parentId: props.parentId,
         } as IClientDetails,
     ]);
     const [selectedTableRow, setSelectedTableRow] = useState({
@@ -35,6 +36,7 @@ const ComplianceDetails = (props: any) => {
         budget_time: "",
         priority: "",
         remark: "",
+        parentId: props.parentId,
     } as IClientDetails);
 
     const columns = [
@@ -70,6 +72,8 @@ const ComplianceDetails = (props: any) => {
                         "client_name_" +
                         record.complianceDetailId +
                         "_" +
+                        props.parentTitle +
+                        "_" +
                         props.parentId
                     }
                     rules={[
@@ -101,6 +105,8 @@ const ComplianceDetails = (props: any) => {
                     name={
                         "assignee_to_" +
                         record.complianceDetailId +
+                        "_" +
+                        props.parentTitle +
                         "_" +
                         props.parentId
                     }
@@ -134,6 +140,8 @@ const ComplianceDetails = (props: any) => {
                         "budget_time_" +
                         record.complianceDetailId +
                         "_" +
+                        props.parentTitle +
+                        "_" +
                         props.parentId
                     }
                     rules={[
@@ -164,6 +172,8 @@ const ComplianceDetails = (props: any) => {
                     name={
                         "_priority_" +
                         record.complianceDetailId +
+                        "_" +
+                        props.parentTitle +
                         "_" +
                         props.parentId
                     }
@@ -243,6 +253,7 @@ const ComplianceDetails = (props: any) => {
                 }
             }
         });
+
         // update selected rows
         setSelectedTableRow(selectedTableRow);
 
@@ -273,6 +284,7 @@ const ComplianceDetails = (props: any) => {
             budget_time: "",
             priority: "",
             remark: "",
+            parentId: props.parentId,
         } as IClientDetails;
         setClientDetails([...clientDetails, newClient]);
 

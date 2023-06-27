@@ -88,9 +88,8 @@ const SubCompliance = (props: any) => {
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add SubCompliance - ", details);
-        debugger;
         const matchedItem = subCompliances.find((item: ISubCompliance) => {
-            return item._id === details[0].complianceDetailId;
+            return item._id === details[0].parentId;
         });
 
         if (matchedItem) {
@@ -150,17 +149,13 @@ const SubCompliance = (props: any) => {
                                 >
                                     <Input
                                         placeholder="Compliance"
-                                        name={
-                                            "sub_compliance_title" +
-                                            subComplianceItem._id
-                                        }
+                                        name={"sub_compliance_title"}
                                         value={subComplianceItem.title}
                                         onChange={(event) => {
                                             inputChangeHandler(
                                                 event,
                                                 subComplianceItem,
-                                                "sub_compliance_title" +
-                                                    subComplianceItem._id
+                                                "sub_compliance_title"
                                             );
                                         }}
                                     />
@@ -298,7 +293,8 @@ const SubCompliance = (props: any) => {
                                 <ComplianceDetails
                                     updateClients={complianceDetailsHandler}
                                     isAllowAdd={false}
-                                    parentId="sub_compliance"
+                                    parentTitle={"sub_compliance"}
+                                    parentId={subComplianceItem._id}
                                 />
                             </Col>
                         </Row>
