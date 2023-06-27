@@ -149,13 +149,13 @@ const SubCompliance = (props: any) => {
                                 >
                                     <Input
                                         placeholder="Compliance"
-                                        name={"sub_compliance_title"}
+                                        name={"title"}
                                         value={subComplianceItem.title}
                                         onChange={(event) => {
                                             inputChangeHandler(
                                                 event,
                                                 subComplianceItem,
-                                                "sub_compliance_title"
+                                                "title"
                                             );
                                         }}
                                     />
@@ -181,15 +181,12 @@ const SubCompliance = (props: any) => {
                                 >
                                     <TimePicker
                                         placeholder="Time"
-                                        name={
-                                            "sub_compliance_budget_time" +
-                                            subComplianceItem._id
-                                        }
+                                        name={"budget_time"}
                                         onChange={(date, dateString) => {
                                             inputChangeHandler(
                                                 dateString,
                                                 subComplianceItem,
-                                                "sub_compliance_budget_time"
+                                                "budget_time"
                                             );
                                         }}
                                         className="w100"
