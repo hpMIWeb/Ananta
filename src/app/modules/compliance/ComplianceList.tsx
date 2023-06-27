@@ -286,6 +286,7 @@ const ComplianceList = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}></Col>
         </Row>
         <Table
+          id={"complianceListRow"}
           dataSource={getData(current, pageSize, "today")}
           rowClassName={rowClassHandler}
           onRow={(record, rowIndex) => {
@@ -296,9 +297,10 @@ const ComplianceList = () => {
             };
           }}
           columns={colInfoForReportTab}
-          showHeader={false}
-          pagination={false}
-          //style={{ width: "100%" }}
+          showHeader={true}
+          style={{ width: "100%" }}
+          size="small"
+          showSorterTooltip
         />
       </div>
     );
