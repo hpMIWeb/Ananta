@@ -23,7 +23,12 @@ import { useNavigate } from "react-router-dom";
 import ComplianceViewEdit from "./ComplianceViewEdit";
 import api from "../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarAlt,
+  faCalendarDays,
+  faUser,
+  faUserAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { complianceReportOpts, clientOpts } from "../../utilities/utility";
 const { Title } = Typography;
 const pageSize = 20;
@@ -78,17 +83,21 @@ const ComplianceList = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (start_date: string) => (
-        <span>
-          <FontAwesomeIcon
-            icon={faCalendarAlt}
-            style={{
-              fontSize: "20px",
-              fontWeight: "normal",
-              color: "#41454a",
-            }}
-          />
-          {dayjs(start_date).format(dateFormat)}
-        </span>
+        <div className="dateDisplay">
+          <FontAwesomeIcon icon={faCalendarAlt} style={{}} />
+          &nbsp; {dayjs(start_date).format(dateFormat)}
+        </div>
+      ),
+    },
+    {
+      title: "task date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (start_date: string) => (
+        <div className="dateDisplay">
+          <FontAwesomeIcon icon={faUser} style={{}} />
+          &nbsp; {dayjs(start_date).format(dateFormat)}
+        </div>
       ),
     },
     {
@@ -146,87 +155,26 @@ const ComplianceList = () => {
       key: "title",
       render: (text: string) => <p className="text-truncate">{text}</p>,
     },
-
-    {
-      title: "task date",
-      dataIndex: "start_date",
-      key: "start_date",
-      render: (start_date: string) => (
-        <span>
-          <FontAwesomeIcon
-            icon={faCalendarAlt}
-            style={{
-              fontSize: "20px",
-              fontWeight: "normal",
-              color: "#41454a",
-            }}
-          />
-          {dayjs(start_date).format(dateFormat)}
-        </span>
-      ),
-    },
-    {
-      title: "Status",
-      key: "status",
-      dataIndex: "status",
-      render: (status: string) => (
-        <span>
-          {[status].map((item) => {
-            let color = "#fb275d";
-            let title = item;
-            switch (item) {
-              case "completed": {
-                color = "#00ca72";
-                break;
-              }
-              case "in_progress": {
-                color = "#ffcc00";
-                break;
-              }
-              case "cancelled": {
-                color = "#5e6e82";
-                break;
-              }
-              case "1": {
-                color = "#fb275d";
-                title = "pending";
-                break;
-              }
-              case "2": {
-                color = "#40fb27";
-                title = "completed";
-              }
-            }
-
-            return (
-              <Tag
-                color={color}
-                key={item}
-                style={{ fontWeight: "500", fontSize: "12px" }}
-              >
-                {title.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </span>
-      ),
-    },
   ];
 
   const rowClassHandler = (record: IAddCompliance) => {
     let rowClassName = "";
     switch (record.status.toLowerCase()) {
       case "pending":
-      case "2": {
+      case "1": {
         rowClassName = "complianceListRow data-row-pending";
         break;
       }
-      case "4": {
+      case "completed": {
         rowClassName = "complianceListRow data-row-completed";
         break;
       }
-      case "3": {
+      case "in_progress": {
         rowClassName = "complianceListRow data-row-in-progress";
+        break;
+      }
+      case "cancelled": {
+        rowClassName = "complianceListRow data-row-cancel";
         break;
       }
     }
