@@ -24,6 +24,7 @@ import ComplianceViewEdit from "./ComplianceViewEdit";
 import api from "../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faAlignLeft,
   faCalendarAlt,
   faCalendarDays,
   faUser,
@@ -96,7 +97,18 @@ const ComplianceList = () => {
       render: (start_date: string) => (
         <div className="dateDisplay">
           <FontAwesomeIcon icon={faUser} style={{}} />
-          &nbsp; {dayjs(start_date).format(dateFormat)}
+          0/10
+        </div>
+      ),
+    },
+    {
+      title: "task date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (start_date: string) => (
+        <div className="dateDisplay">
+          <FontAwesomeIcon icon={faAlignLeft} style={{}} />
+          0/10
         </div>
       ),
     },
