@@ -71,16 +71,15 @@ const ComplianceList = () => {
 
   const colInfo = [
     {
-      title: "title",
+      title: "Title",
       dataIndex: "title",
       key: "title",
       render: (text: string) => (
-        <p className="text-truncate tasklist button p">{text}</p>
+        <p className="text-truncate tasklist button p nav-link">{text}</p>
       ),
     },
-
     {
-      title: "task date",
+      title: "Compliance date",
       dataIndex: "start_date",
       key: "start_date",
       render: (start_date: string) => (
@@ -91,13 +90,13 @@ const ComplianceList = () => {
       ),
     },
     {
-      title: "task date",
-      dataIndex: "start_date",
-      key: "start_date",
-      render: (start_date: string) => (
+      title: "Sub Compliance",
+      dataIndex: "start1_date",
+      key: "start1_date",
+      render: (start_date1: string) => (
         <div className="dateDisplay">
           <FontAwesomeIcon icon={faUser} style={{}} />
-          0/10
+          &nbsp; 0/10
         </div>
       ),
     },
@@ -108,7 +107,7 @@ const ComplianceList = () => {
       render: (start_date: string) => (
         <div className="dateDisplay">
           <FontAwesomeIcon icon={faAlignLeft} style={{}} />
-          0/10
+          &nbsp; 0/10
         </div>
       ),
     },
@@ -174,19 +173,19 @@ const ComplianceList = () => {
     switch (record.status.toLowerCase()) {
       case "pending":
       case "1": {
-        rowClassName = "complianceListRow data-row-pending";
+        rowClassName = "tasklist complianceListRow data-row-pending";
         break;
       }
       case "completed": {
-        rowClassName = "complianceListRow data-row-completed";
+        rowClassName = "tasklist complianceListRow data-row-completed";
         break;
       }
       case "in_progress": {
-        rowClassName = "complianceListRow data-row-in-progress";
+        rowClassName = "tasklist complianceListRow data-row-in-progress";
         break;
       }
       case "cancelled": {
-        rowClassName = "complianceListRow data-row-cancel";
+        rowClassName = "tasklist complianceListRow data-row-cancel";
         break;
       }
     }
@@ -231,6 +230,7 @@ const ComplianceList = () => {
     return (
       <div>
         <Table
+          id={"complianceListRow"}
           dataSource={getData(current, pageSize, "today")}
           rowClassName={rowClassHandler}
           onRow={(record, rowIndex) => {
@@ -246,6 +246,7 @@ const ComplianceList = () => {
           pagination={false}
           style={{ width: "100%" }}
           size="small"
+          showSorterTooltip
         />
       </div>
     );
