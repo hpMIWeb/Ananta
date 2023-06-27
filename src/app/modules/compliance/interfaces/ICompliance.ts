@@ -66,4 +66,5 @@ export interface ClientDetails {
     actual_time: string;
     priority: string;
     remark: string;
+    parentId: number;
 }
