@@ -23,7 +23,7 @@ import ComplianceDetails from "./ComplianceDetails";
 const SubCompliance = (props: any) => {
     const [subCompliances, setSubCompliance] = useState<ISubCompliance[]>([
         {
-            _id: 1,
+            _id: "1",
             status: "Pending",
         } as ISubCompliance,
     ]);
@@ -32,8 +32,9 @@ const SubCompliance = (props: any) => {
     >([]);
 
     const addNewCompliance = () => {
+        const new_Id = subCompliances.length + 1;
         let newCompliance = {
-            _id: subCompliances.length + 1,
+            _id: new_Id.toString(),
             status: "Pending",
         } as ISubCompliance;
 

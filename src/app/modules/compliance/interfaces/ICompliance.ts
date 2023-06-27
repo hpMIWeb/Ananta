@@ -1,5 +1,5 @@
 export interface AddCompliance {
-    _id: number;
+    _id: string;
     title: string;
     start_date: string;
     due_date: string;
@@ -20,14 +20,14 @@ export interface AddCompliance {
 }
 
 export interface SubCompliance {
-    _id: number;
+    _id?: string;
     title: string;
     status: string;
     budget_time: string;
     remark: string;
     priority: string;
     workArea: string;
-    complianceId: string;
+    complianceId?: string;
     clients: ClientDetails[];
 }
 
@@ -61,12 +61,12 @@ export interface TimerDetail {
 }
 
 export interface ClientDetails {
-    complianceDetailId: number;
+    complianceDetailId: string;
     client_name: string;
     assignee_to: string;
     budget_time: string;
     actual_time: string;
     priority: string;
     remark: string;
-    parentId: number;
+    parentId: string;
 }

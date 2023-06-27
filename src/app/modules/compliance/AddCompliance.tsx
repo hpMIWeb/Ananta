@@ -204,45 +204,47 @@ const AddCompliance = () => {
             // console.log("ALL COMPLIANCE", allCompliance);
             // localStorage.setItem("compliance", JSON.stringify(allCompliance));
 
-            addCompliance.clients = complianceDetails;
-            if (subCompliance && subCompliance.length > 0)
-                addCompliance.subCompliance = subCompliance;
+            const complianceData = JSON.parse(
+                JSON.stringify(complianceDetails)
+            );
+            if (complianceData && complianceData.length > 0) {
+                addCompliance.clients = complianceData.map(
+                    (item: IClientDetails) => {
+                        return {
+                            client_name: item.client_name,
+                            assignee_to: item.assignee_to,
+                            budget_time: item.budget_time,
+                            actual_time: item.actual_time,
+                            priority: item.priority,
+                            remark: item.remark,
+                        };
+                    }
+                );
+            }
+
+            if (subCompliance && subCompliance.length > 0) {
+                addCompliance.subCompliance = subCompliance.map(
+                    (item: ISubCompliance) => {
+                        return {
+                            title: item.title,
+                            status: item.status,
+                            budget_time: item.budget_time,
+                            remark: item.remark,
+                            priority: item.priority,
+                            workArea: item.workArea,
+                            clients: item.clients,
+                        };
+                    }
+                );
+            }
+
             setAddCompliance(addCompliance);
 
             console.log("before same subCompliance - ", subCompliance);
 
-            // return false;
-
             // Save to DB
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
-                    // Set Compliance to `localStorage`
-                    // localStorage.setItem(
-                    //     "compliance",
-                    //     JSON.stringify(allCompliance)
-                    // );
-
-                    // create sub-compliance
-                    const newSubCompliance = {
-                        complianceId: resp._id,
-                        _id: 0,
-                        title: addCompliance.title,
-                        budget_time: addCompliance.budget_time,
-                        actual_time: addCompliance.budget_time,
-                        remark: addCompliance.remark,
-                        workArea: addCompliance.workArea,
-                        priority: addCompliance.priority,
-                        status: addCompliance.status,
-                        clients: addCompliance.clients,
-                    } as ISubCompliance;
-
-                    console.log("newSubCompliance - ", newSubCompliance);
-
-                    //TODO: once API is ready then call it with above format of JSON
-                    // api.createSubCompliance(newSubCompliance).then(
-                    //     (resp: any) => {}
-                    // );
-
                     toast.success("Successfully Created Compliance", {
                         position: toast.POSITION.TOP_RIGHT,
                     });

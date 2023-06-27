@@ -119,7 +119,7 @@ export default {
                 due_date: compliance.due_date,
                 status: compliance.status,
                 budget_time: compliance.budget_time,
-                actual_time: compliance.budget_time,
+                actual_time: " ",
                 mode: compliance.mode,
                 title: compliance.title,
                 remark: compliance.remark,
@@ -133,23 +133,6 @@ export default {
                 attachments: [],
                 comments: [],
             },
-            // data: {
-            //     start_date: compliance.start_date,
-            //     due_date: compliance.due_date,
-            //     status: compliance.status,
-            //     budget_time: compliance.budget_time,
-            //     actual_time: compliance.budget_time,
-            //     mode: compliance.mode,
-            //     title: compliance.title,
-            //     remark: compliance.remark,
-            //     workArea: compliance.workArea,
-            //     priority: compliance.priority,
-            //     billable: compliance.billable,
-            //     // client: " ", // Discuss with API for this field, as it's no require
-            //     // assignee: " ", // Discuss with API for this field, as it's no require
-            //     datapath: " ",
-            //     clients: compliance.clients,
-            // },
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
