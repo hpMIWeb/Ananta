@@ -19,6 +19,14 @@
   margin-left: 10px;
 }
 
+.text-truncate-report {
+  overflow: hidden;
+  //padding-right: 10px;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #complianceListRow td {
   cursor: pointer;
   color: #5e6e84 !important;
@@ -36,9 +44,25 @@
   padding: 1px 3px;
 }
 
+#complianceReport td {
+  cursor: pointer;
+  color: #5e6e84 !important;
+  margin: 0;
+  --falcon-gutter-x: 0.5rem;
+  list-style-type: none;
+  position: relative;
+  font-size: 15px;
+  text-align: left;
+  border-radius: 0 !important;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 1px 3px;
+}
+
 .dateDisplay {
   display: inline-block;
-  font-size: 13px;
+  font-size: 15px;
   padding-right: 10px;
   list-style-type: none;
   position: relative;
