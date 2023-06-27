@@ -161,10 +161,123 @@ const ComplianceList = () => {
 
   const colInfoForReportTab = [
     {
-      title: "title",
+      title: "Compliance Name",
       dataIndex: "title",
       key: "title",
-      render: (text: string) => <p className="text-truncate">{text}</p>,
+      render: (text: string) => (
+        <p className="text-truncate-report">GST Return</p>
+      ),
+      sorter: (a, b) => a.title - b.title,
+      width: "20%",
+    },
+    {
+      title: "Jan",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+      width: 20,
+    },
+    {
+      title: "Feb",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Mar",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Apr",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "May",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Jun",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Jul",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Aug",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Sep",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Oct",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Nov",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
+    },
+    {
+      title: "Dec",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <p className="text-truncate-report">{status}</p>
+      ),
+      sorter: (a, b) => a.status - b.status,
     },
   ];
 
@@ -186,6 +299,30 @@ const ComplianceList = () => {
       }
       case "cancelled": {
         rowClassName = "tasklist complianceListRow data-row-cancel";
+        break;
+      }
+    }
+    return rowClassName;
+  };
+
+  const rowClassHandlerForReport = (record: IAddCompliance) => {
+    let rowClassName = "";
+    switch (record.status.toLowerCase()) {
+      case "pending":
+      case "1": {
+        rowClassName = "tasklist complianceReportRow ";
+        break;
+      }
+      case "completed": {
+        rowClassName = "tasklist complianceReportRow ";
+        break;
+      }
+      case "in_progress": {
+        rowClassName = "tasklist complianceReportRow ";
+        break;
+      }
+      case "cancelled": {
+        rowClassName = "tasklist complianceReportRow ";
         break;
       }
     }
@@ -285,23 +422,25 @@ const ComplianceList = () => {
         >
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}></Col>
         </Row>
-        <Table
-          id={"complianceListRow"}
-          dataSource={getData(current, pageSize, "today")}
-          rowClassName={rowClassHandler}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                setTableRowSelected(record);
-              },
-            };
-          }}
-          columns={colInfoForReportTab}
-          showHeader={true}
-          style={{ width: "100%" }}
-          size="small"
-          showSorterTooltip
-        />
+        <Row gutter={[8, 8]} className="form-row">
+          <Table
+            id={"complianceReport"}
+            dataSource={getData(current, pageSize, "today")}
+            rowClassName={rowClassHandlerForReport}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  setTableRowSelected(record);
+                },
+              };
+            }}
+            columns={colInfoForReportTab}
+            showHeader={true}
+            size="small"
+            showSorterTooltip
+            scroll={{ x: 1300 }}
+          />
+        </Row>
       </div>
     );
   };
