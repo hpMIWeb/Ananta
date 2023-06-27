@@ -205,6 +205,8 @@ const AddCompliance = () => {
             // localStorage.setItem("compliance", JSON.stringify(allCompliance));
 
             addCompliance.clients = complianceDetails;
+            if (subCompliance && subCompliance.length > 0)
+                addCompliance.subCompliance = subCompliance;
             setAddCompliance(addCompliance);
 
             console.log("before same subCompliance - ", subCompliance);

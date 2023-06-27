@@ -15,6 +15,8 @@ export interface AddCompliance {
     assignee: string;
     dataPath: string;
     clients: ClientDetails[];
+    subCompliance: SubCompliance[];
+    comments: [];
 }
 
 export interface SubCompliance {
