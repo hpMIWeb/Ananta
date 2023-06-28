@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import type { CollapseProps } from "antd";
 import {
   Select,
   Form,
@@ -10,7 +11,9 @@ import {
   TimePicker,
   Input,
   Button,
+  Collapse,
 } from "antd";
+
 import {
   assigneeOpts,
   capitalize,
@@ -44,6 +47,7 @@ import {
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
 import SubCompliance from "./SubCompliance";
+import CollapsePanel from "antd/es/collapse/CollapsePanel";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -239,7 +243,7 @@ const TaskViewEdit = (props: any) => {
               lg={{ span: 14 }}
             >
               <div className="timerbuttons">
-                <Stopwatch taskId={props.tableRowSelected.taskId} />
+                <Stopwatch complianceId={props.tableRowSelected._id} />
               </div>
             </Col>
             <Col
@@ -464,9 +468,24 @@ const TaskViewEdit = (props: any) => {
               <Title level={5} style={{ textAlign: "left" }}>
                 Sub-Compliance
               </Title>
+              {!isEdit && (
+                <Collapse>
+                  {props.tableRowSelected.subcompliance.map(
+                    (subComplianceItem: any, index: number) => (
+                      <CollapsePanel header={subComplianceItem._id} key={index}>
+                        <SubCompliance
+                          subComplianceData={subComplianceItem}
+                          isEdit={isEdit}
+                        />
+                      </CollapsePanel>
+                    )
+                  )}
+                </Collapse>
+              )}
               {isEdit && (
                 <SubCompliance
-                  subCompliance={props.tableRowSelected.subcompliance}
+                  subComplianceData={props.tableRowSelected.subcompliance}
+                  isEdit={isEdit}
                 />
               )}{" "}
             </Col>
