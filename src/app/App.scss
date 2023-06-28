@@ -80,3 +80,54 @@ body {
     opacity: 0.5;
     text-decoration: line-through;
 }
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 20px solid red;
+    background-color: transparent;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+    background-color: #555;
+}
+
+.ant-divider-horizontal {
+    margin: 10px 0 !important;
+}
+
+.timerbuttons {
+    display: inline-block;
+    padding: 0 10px 0 0;
+    font-size: 23px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+
+    .timer-play,
+    .timer-pause {
+        margin: 8px 20px 0 0;
+        color: #2c7be5;
+        float: left;
+        width: 17px;
+    }
+
+    .timer-stop {
+        color: #00ca72;
+        margin: 8px 20px 0 0;
+        float: left;
+        width: 17px;
+    }
+}
+
+.fLeft {
+    float: left;
+}
+
+.fRight {
+    float: right;
+}

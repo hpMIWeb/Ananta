@@ -1,4 +1,4 @@
-export interface AddTask {
+export interface AddCompliance {
     _id: string;
     title: string;
     start_date: string;
@@ -9,31 +9,26 @@ export interface AddTask {
     remark: string;
     budget_time: string;
     actual_time: string;
-    timer: TaskTimer;
+    timer: ComplianceTimer;
     priority: string;
     billable: string;
-    client: string;
     assignee: string;
     dataPath: string;
-    subTask: SubTask[];
-    attachments: Attachment[];
-    comments: Comment[];
+    clients: ClientDetails[];
+    subCompliance: SubCompliance[];
+    comments: [];
 }
 
-export interface SubTask {
-    subTaskId: number;
+export interface SubCompliance {
+    _id?: string;
     title: string;
-    startDate: string;
-    dueDate: string;
     status: string;
     budget_time: string;
-    timer: TaskTimer;
     remark: string;
-    client: string;
-    assignee: string;
     priority: string;
-    dataPath: string;
-    attachments: Attachment[];
+    workArea: string;
+    complianceId?: string;
+    clients: ClientDetails[];
 }
 
 export interface Attachment {
@@ -42,16 +37,9 @@ export interface Attachment {
 }
 
 export interface Comment {
-    _id: string;
     comment: string;
-    comment_date: string;
-    comment_by: string;
-}
-
-export interface SaveComment {
-    taskId: string;
-    comment: string;
-    commentId: string;
+    commentDate: string;
+    commentBy: string;
 }
 
 export const TimerOpts = {
@@ -60,7 +48,7 @@ export const TimerOpts = {
     stop: 0,
 };
 
-export interface TaskTimer {
+export interface ComplianceTimer {
     state: number;
     time: number;
 }
@@ -70,4 +58,15 @@ export interface TimerDetail {
     minutes: number;
     seconds: number;
     milliseconds: number;
+}
+
+export interface ClientDetails {
+    complianceDetailId: string;
+    client_name: string;
+    assignee_to: string;
+    budget_time: string;
+    actual_time: string;
+    priority: string;
+    remark: string;
+    parentId: string;
 }

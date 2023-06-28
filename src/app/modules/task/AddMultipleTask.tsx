@@ -20,7 +20,7 @@ import {
     clientOpts,
     modeOptions,
     workAreaOpts,
-} from "../../components/utilities/utility";
+} from "../../utilities/utility";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
