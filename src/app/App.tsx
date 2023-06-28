@@ -12,8 +12,10 @@ import TaskList from "./modules/task/TaskList";
 import AddTask from "./modules/task/AddTask";
 import AddMultipleTask from "./modules/task/AddMultipleTask";
 import TimeSheet from "./modules/timesheet/TimeSheet";
+import ComplianceList from "./modules/compliance/ComplianceList";
 import "./App.scss";
 import "antd/dist/reset.css";
+import AddCompliance from "./modules/compliance/AddCompliance";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -43,8 +45,15 @@ const App = () => {
                                 path="add-multi-task"
                                 element={<AddMultipleTask />}
                             />
+                            <Route
+                                path="compliance"
+                                element={<ComplianceList />}
+                            />
+                            <Route
+                                path="add-compliance"
+                                element={<AddCompliance />}
+                            />
                             <Route path="timesheet" element={<TimeSheet />} />
-
                             <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Routes>
