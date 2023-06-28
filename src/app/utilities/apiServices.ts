@@ -25,7 +25,6 @@ export default {
         instance({
             method: "GET",
             url: "task/get-task",
-            url: "task/get-task",
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
