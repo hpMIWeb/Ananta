@@ -1,5 +1,5 @@
 export interface AddTask {
-    _id: number;
+    _id: string;
     title: string;
     start_date: string;
     due_date: string;
@@ -42,9 +42,16 @@ export interface Attachment {
 }
 
 export interface Comment {
+    _id: string;
     comment: string;
-    commentDate: string;
-    commentBy: string;
+    comment_date: string;
+    comment_by: string;
+}
+
+export interface SaveComment {
+    taskId: string;
+    comment: string;
+    commentId: string;
 }
 
 export const TimerOpts = {

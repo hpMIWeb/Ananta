@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AddTask } from "../modules/task/interfaces/ITask";
+import { AddTask, SaveComment } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 import {
     AddCompliance,
@@ -28,6 +28,7 @@ export default {
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
+                    console.log("all task", json.payload);
                     console.log("all task", json.payload);
                     return json.payload;
                 },
@@ -109,6 +110,44 @@ export default {
             method: "POST",
             url: "task/create-multiple-task",
             data: tasks,
+        }),
+    addTaskComment: (comment: SaveComment) =>
+        instance({
+            method: "POST",
+            url: "taskcomment/create-task-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    updateTaskComment: (comment: SaveComment) =>
+        instance({
+            method: "PUT",
+            url: "taskcomment/update-task-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteTaskComment: (taskId: string, commentId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "taskcomment/delete-task-comment?taskId=" +
+                taskId +
+                "&commentId=" +
+                commentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
         }),
     createCompliance: (compliance: AddCompliance) =>
         instance({
