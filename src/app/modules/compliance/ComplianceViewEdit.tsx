@@ -33,9 +33,17 @@ import {
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
-import { AddCompliance } from "./interfaces/ICompliance";
+import {
+  AddCompliance as IAddCompliance,
+  SubCompliance as ISubCompliance,
+  ClientDetails as IClientDetails,
+  ComplianceTimer,
+  TimerOpts,
+  AddCompliance,
+} from "./interfaces/ICompliance";
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
+import SubCompliance from "./SubCompliance";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -133,14 +141,24 @@ const TaskViewEdit = (props: any) => {
                 </Title>
               )}
               {isEdit && (
-                <Input
-                  placeholder="Compliance"
-                  name="task"
-                  value={props.tableRowSelected.title}
-                  onChange={(event) => {
-                    inputChangeHandler(event);
-                  }}
-                />
+                <Form.Item
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter title.",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Compliance"
+                    name="title"
+                    value={props.tableRowSelected.title}
+                    onChange={(event) => {
+                      inputChangeHandler(event);
+                    }}
+                  />
+                </Form.Item>
               )}
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }}>
@@ -429,7 +447,7 @@ const TaskViewEdit = (props: any) => {
           >
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
               {isEdit && (
-                <ComplianceDetails props={props.tableRowSelected.clients} />
+                <ComplianceDetails clients={props.tableRowSelected.clients} />
               )}{" "}
             </Col>
           </Row>
@@ -446,6 +464,11 @@ const TaskViewEdit = (props: any) => {
               <Title level={5} style={{ textAlign: "left" }}>
                 Sub-Compliance
               </Title>
+              {isEdit && (
+                <SubCompliance
+                  subCompliance={props.tableRowSelected.subcompliance}
+                />
+              )}{" "}
             </Col>
           </Row>
           <Row gutter={[8, 8]} className="form-row">
