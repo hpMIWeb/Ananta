@@ -118,7 +118,8 @@ export default {
             data: comment,
             transformResponse: [
                 function (data) {
-                    return data;
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),

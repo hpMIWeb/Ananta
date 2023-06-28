@@ -61,6 +61,9 @@ const inputChangeHandler = (event: any, nameItem: string = "") => {
 
 const TaskViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
+    const [taskComments, setTaskComments] = useState<Comment>(
+        props.tableRowSelected.comments
+    );
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -113,10 +116,11 @@ const TaskViewEdit = (props: any) => {
         addComment.comment = comment;
         addComment.taskId = props.tableRowSelected._id;
         api.addTaskComment(addComment)
-            .then(() => {
+            .then((resp: any) => {
                 toast.success("Successfully added comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -141,7 +145,7 @@ const TaskViewEdit = (props: any) => {
                 toast.success("Successfully updated comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                //setTaskComments(resp.data.comments);
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -157,8 +161,7 @@ const TaskViewEdit = (props: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-
-                // setTaskComments(resp.data.comments);
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -547,7 +550,7 @@ const TaskViewEdit = (props: any) => {
                                 Comments
                             </Title>
                             <Comments
-                                comments={props.tableRowSelected.comments}
+                                comments={taskComments}
                                 parentId={props.tableRowSelected._id}
                                 addComment={addCommentHandler}
                                 editComment={editCommentHandler}
