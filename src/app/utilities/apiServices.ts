@@ -109,7 +109,7 @@ export default {
     addTaskComment: (comment: SaveComment) =>
         instance({
             method: "POST",
-            url: "comment/create-task-comment",
+            url: "taskcomment/create-task-comment",
             data: comment,
             transformResponse: [
                 function (data) {
@@ -120,7 +120,7 @@ export default {
     updateTaskComment: (comment: SaveComment) =>
         instance({
             method: "PUT",
-            url: "comment/update-task-comment",
+            url: "taskcomment/update-task-comment",
             data: comment,
             transformResponse: [
                 function (data) {
@@ -133,7 +133,7 @@ export default {
         instance({
             method: "DELETE",
             url:
-                "comment/delete-task-comment?taskId=" +
+                "taskcomment/delete-task-comment?taskId=" +
                 taskId +
                 "&commentId=" +
                 commentId,

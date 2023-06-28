@@ -47,6 +47,10 @@ const TaskList = () => {
         });
     }, []);
 
+    useEffect(() => {
+        console.log("Task List - ", tableRowSelected);
+    }, [tableRowSelected]);
+
     const colInfo = [
         {
             title: "title",
@@ -280,10 +284,9 @@ const TaskList = () => {
                 <Table
                     dataSource={getData(current, pageSize, "history")}
                     rowClassName={rowClassHandler}
-                    onRow={(record: AddTask, rowIndex) => {
+                    onRow={(record, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                console.log("history", record.comments);
                                 setTableRowSelected(record);
                             },
                         };
@@ -385,14 +388,12 @@ const TaskList = () => {
                             style={{
                                 float: "right",
                                 width: fullScreenMode ? "100%" : "35%",
-                                //textAlign: "right",
-                                //border: "1px solid #d8e2ef",
                             }}
                         >
                             <TaskViewEdit
                                 handleScreenMode={screenModeToggle}
                                 fullScreenMode={fullScreenMode}
-                                selectedRow={tableRowSelected}
+                                tableRowSelected={tableRowSelected}
                                 isEdit={false}
                             />
                         </div>

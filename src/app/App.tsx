@@ -11,6 +11,7 @@ import NoMatch from "./modules/NoMatch";
 import TaskList from "./modules/task/TaskList";
 import AddTask from "./modules/task/AddTask";
 import AddMultipleTask from "./modules/task/AddMultipleTask";
+import TimeSheet from "./modules/timesheet/TimeSheet";
 import "./App.scss";
 import "antd/dist/reset.css";
 
@@ -42,6 +43,7 @@ const App = () => {
                                 path="add-multi-task"
                                 element={<AddMultipleTask />}
                             />
+                            <Route path="timesheet" element={<TimeSheet />} />
 
                             <Route path="*" element={<NoMatch />} />
                         </Route>

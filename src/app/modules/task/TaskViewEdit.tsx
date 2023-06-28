@@ -9,6 +9,7 @@ import {
     DatePicker,
     TimePicker,
     Input,
+    Button,
 } from "antd";
 import {
     assigneeOpts,
@@ -22,6 +23,9 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
+import Comments from "../../components/Comments/Comments";
+import { AddTask, SaveComment } from "./interfaces/ITask";
+
 import {
     faEdit,
     faExpandArrowsAlt,
@@ -29,20 +33,34 @@ import {
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
-import Comments from "../../components/Comments/Comments";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
-import { AddTask, SaveComment } from "./interfaces/ITask";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
 
+const inputChangeHandler = (event: any, nameItem: string = "") => {
+    let name = "";
+    let value = "";
+    if (event && event.target) {
+        name = event.target.name;
+        value = event.target.value;
+    } else if (nameItem !== "" && event !== "") {
+        name = nameItem;
+        value = event;
+    } else if (event) {
+        name = event.name;
+        value = event.value;
+    }
+
+    console.log(name, value);
+
+    const taskUpdate = {} as AddTask;
+    taskUpdate.status = value;
+};
+
 const TaskViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-    const [selectedRow, setSelectedRow] = useState<AddTask>(props.selectedRow);
-    const [taskComments, setTaskComments] = useState<Comment>(
-        props.selectedRow.comments
-    );
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -50,9 +68,7 @@ const TaskViewEdit = (props: any) => {
         }
     };
 
-    useEffect(() => {
-        console.log("comment for selection row ", selectedRow.comments);
-    }, []);
+    useEffect(() => {}, []);
 
     const dividerRow = () => {
         return (
@@ -65,8 +81,8 @@ const TaskViewEdit = (props: any) => {
     };
 
     const getRemark = () => {
-        if (selectedRow.remark) {
-            return parse(selectedRow.remark);
+        if (props.tableRowSelected.remark) {
+            return parse(props.tableRowSelected.remark);
         } else {
             return "";
         }
@@ -82,18 +98,20 @@ const TaskViewEdit = (props: any) => {
         const taskUpdate = {} as AddTask;
         taskUpdate.status = value;
 
-        api.updateTask(selectedRow._id, taskUpdate).then((resp: any) => {
-            // localStorage.setItem("task", JSON.stringify(taskUpdate));
-            toast.success("Successfully Updated Task", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-        });
+        api.updateTask(props.tableRowSelected._id, taskUpdate).then(
+            (resp: any) => {
+                // localStorage.setItem("task", JSON.stringify(taskUpdate));
+                toast.success("Successfully Updated Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        );
     };
 
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComment;
         addComment.comment = comment;
-        addComment.taskId = selectedRow._id;
+        addComment.taskId = props.tableRowSelected._id;
         api.addTaskComment(addComment)
             .then(() => {
                 toast.success("Successfully added comment", {
@@ -123,7 +141,7 @@ const TaskViewEdit = (props: any) => {
                 toast.success("Successfully updated comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                setTaskComments(resp.data.comments);
+                //setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -134,13 +152,13 @@ const TaskViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        api.deleteTaskComment(selectedRow._id, commentId)
+        api.deleteTaskComment(props.tableRowSelected._id, commentId)
             .then((resp: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
 
-                setTaskComments(resp.data.comments);
+                // setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -150,12 +168,16 @@ const TaskViewEdit = (props: any) => {
             });
     };
 
+    const handleUpdateTask = () => {};
+
     return (
         <>
             <div
                 style={{
                     display:
-                        Object.keys(selectedRow).length > 0 ? "block" : "none",
+                        Object.keys(props.tableRowSelected).length > 0
+                            ? "block"
+                            : "none",
                 }}
             >
                 <ToastContainer />
@@ -168,14 +190,14 @@ const TaskViewEdit = (props: any) => {
                         >
                             {!isEdit && (
                                 <Title level={5} style={{ textAlign: "left" }}>
-                                    {selectedRow.title}
+                                    {props.tableRowSelected.title}
                                 </Title>
                             )}
                             {isEdit && (
                                 <Input
                                     placeholder="Task"
                                     name="task"
-                                    value={selectedRow.title}
+                                    value={props.tableRowSelected.title}
                                     // onChange={(event) => {
                                     //     inputChangeHandler(event);
                                     // }}
@@ -188,7 +210,7 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: 5 }}
                         >
                             <Title level={5} style={{ textAlign: "right" }}>
-                                {capitalize(selectedRow.assignee)}
+                                {capitalize(props.tableRowSelected.assignee)}
                             </Title>
                         </Col>
                         <Col
@@ -211,6 +233,7 @@ const TaskViewEdit = (props: any) => {
                                 }
                                 onClick={editClickHandler}
                             />
+
                             {!props.fullScreenMode && (
                                 <FontAwesomeIcon
                                     icon={faExpandArrowsAlt}
@@ -246,6 +269,21 @@ const TaskViewEdit = (props: any) => {
                             )}
                         </Col>
                     </Row>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: props.fullScreenMode ? 1 : 3 }}
+                    >
+                        {isEdit && (
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                onClick={handleUpdateTask}
+                            >
+                                Update
+                            </Button>
+                        )}
+                    </Col>
                     {dividerRow()}
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
@@ -255,7 +293,9 @@ const TaskViewEdit = (props: any) => {
                             lg={{ span: 14 }}
                         >
                             <div className="timerbuttons">
-                                <Stopwatch taskId={selectedRow._id} />
+                                <Stopwatch
+                                    taskId={props.tableRowSelected.taskId}
+                                />
                             </div>
                         </Col>
                         <Col
@@ -268,7 +308,7 @@ const TaskViewEdit = (props: any) => {
                                 allowClear
                                 placeholder="Select Priority"
                                 options={priorityOpts}
-                                value={selectedRow.priority}
+                                value={props.tableRowSelected.priority}
                                 className="w100"
                                 onChange={(value, event) => {
                                     statusChangeHandler(event, value);
@@ -285,7 +325,7 @@ const TaskViewEdit = (props: any) => {
                                 allowClear
                                 placeholder="Select Status"
                                 options={statusList}
-                                value={selectedRow.status}
+                                value={props.tableRowSelected.status}
                                 className="w100"
                                 onChange={(value, event) => {
                                     statusChangeHandler(event, value);
@@ -302,18 +342,20 @@ const TaskViewEdit = (props: any) => {
                         >
                             Assigned To
                             <div>
-                                {!isEdit && <b>{selectedRow.assignee}</b>}
+                                {!isEdit && (
+                                    <b>{props.tableRowSelected.assignee}</b>
+                                )}
                                 {isEdit && (
                                     <Select
                                         allowClear
                                         showSearch
                                         placeholder="Assign Person"
-                                        value={selectedRow.assignee}
+                                        value={props.tableRowSelected.assignee}
                                         options={assigneeOpts}
                                         className="w100"
-                                        // onChange={(value, event) => {
-                                        //     inputChangeHandler(event);
-                                        // }}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
                                     ></Select>
                                 )}
                             </div>
@@ -333,18 +375,18 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {dayjs(selectedRow.start_date).format(
-                                            "YYYY-MM-DD, HH:mm A"
-                                        )}
+                                        {dayjs(
+                                            props.tableRowSelected.startDate
+                                        ).format("YYYY-MM-DD, HH:mm A")}
                                     </b>
                                 )}
 
                                 {isEdit && (
                                     <DatePicker
                                         placeholder="Start Date"
-                                        name="start_date"
+                                        name="startDate"
                                         defaultValue={dayjs(
-                                            selectedRow.start_date
+                                            props.tableRowSelected.startDate
                                         )}
                                         className="w100"
                                         // format={dateFormat}
@@ -372,17 +414,17 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {dayjs(selectedRow.due_date).format(
-                                            "YYYY-MM-DD, HH:mm A"
-                                        )}
+                                        {dayjs(
+                                            props.tableRowSelected.dueDate
+                                        ).format("YYYY-MM-DD, HH:mm A")}
                                     </b>
                                 )}
                                 {isEdit && (
                                     <DatePicker
                                         placeholder="Due Date"
-                                        name="due_date"
+                                        name="dueDate"
                                         defaultValue={dayjs(
-                                            selectedRow.due_date
+                                            props.tableRowSelected.dueDate
                                         )}
                                         format={dateFormat}
                                         onPanelChange={() => {}}
@@ -406,16 +448,16 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {selectedRow.budget_time}
+                                        {props.tableRowSelected.budget_time}
                                     </b>
                                 )}
                                 {isEdit && (
                                     <TimePicker
                                         placeholder="Budget Time"
-                                        name="budget_time"
+                                        name="budgetTime"
                                         defaultValue={dayjs(
-                                            selectedRow.budget_time,
-                                            "HH:mm:ss"
+                                            props.tableRowSelected.budget_time,
+                                            "HH:mm"
                                         )}
                                         // onChange={(date, dateString) => {
                                         //     inputChangeHandler(dateString, "budgetTime");
@@ -432,15 +474,31 @@ const TaskViewEdit = (props: any) => {
                         >
                             Actual Time
                             <div>
-                                <b>
-                                    <ClockCircleOutlined
-                                        style={{
-                                            color: "#2c7be5",
-                                            marginRight: "10px",
-                                        }}
+                                {!isEdit && (
+                                    <b>
+                                        <ClockCircleOutlined
+                                            style={{
+                                                color: "#2c7be5",
+                                                marginRight: "10px",
+                                            }}
+                                        />
+                                        {props.tableRowSelected.actual_time}
+                                    </b>
+                                )}
+                                {isEdit && (
+                                    <TimePicker
+                                        placeholder="Actual Time"
+                                        name="actual_time"
+                                        defaultValue={dayjs(
+                                            props.tableRowSelected.actual_time,
+                                            "HH:mm"
+                                        )}
+                                        // onChange={(date, dateString) => {
+                                        //     inputChangeHandler(dateString, "budgetTime");
+                                        // }}
+                                        className="w100"
                                     />
-                                    {selectedRow.actual_time}
-                                </b>
+                                )}
                             </div>
                         </Col>
                     </Row>
@@ -489,8 +547,8 @@ const TaskViewEdit = (props: any) => {
                                 Comments
                             </Title>
                             <Comments
-                                comments={taskComments}
-                                parentId={selectedRow._id}
+                                comments={props.tableRowSelected.comments}
+                                parentId={props.tableRowSelected._id}
                                 addComment={addCommentHandler}
                                 editComment={editCommentHandler}
                                 deleteComment={deleteCommentHandler}

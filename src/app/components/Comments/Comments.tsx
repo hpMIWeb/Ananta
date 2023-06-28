@@ -88,8 +88,10 @@ const Comments = (props: any) => {
         setIsEditComment(false);
     };
 
-    const renderComment = taskComments.map(
-        (commentItem: any, index: number) => {
+    const renderComment =
+        props.comments &&
+        Object.keys(props.comments).length > 0 &&
+        props.comments.map((commentItem: any, index: number) => {
             return (
                 <li
                     key={index}
@@ -213,8 +215,7 @@ const Comments = (props: any) => {
                     <Divider />
                 </li>
             );
-        }
-    );
+        });
 
     return (
         <>
