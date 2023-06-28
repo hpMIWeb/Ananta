@@ -374,7 +374,7 @@ const TaskList = () => {
             <div>
                 <div
                     style={{
-                        width: "64%",
+                        width: "63%",
                         float: "left",
                         display: fullScreenMode ? "none" : "block",
                         marginRight: "15px",

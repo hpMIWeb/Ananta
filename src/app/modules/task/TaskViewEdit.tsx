@@ -10,7 +10,9 @@ import {
     TimePicker,
     Input,
     Button,
+    Collapse,
 } from "antd";
+import type { CollapseProps } from "antd";
 import {
     assigneeOpts,
     capitalize,
@@ -173,6 +175,20 @@ const TaskViewEdit = (props: any) => {
 
     const handleUpdateTask = () => {};
 
+    const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
+
+    const items: CollapseProps["items"] = [
+        {
+            key: "1",
+            label: "This is panel header 1",
+            children: <p>{text}</p>,
+        },
+    ];
+
     return (
         <>
             <div
@@ -189,7 +205,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 18 : 16 }}
+                            md={{ span: props.fullScreenMode ? 17 : 20 }}
                         >
                             {!isEdit && (
                                 <Title level={5} style={{ textAlign: "left" }}>
@@ -207,67 +223,60 @@ const TaskViewEdit = (props: any) => {
                                 />
                             )}
                         </Col>
+                        {props.fullScreenMode && (
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 5 }}
+                            >
+                                <Title level={5} style={{ textAlign: "right" }}>
+                                    {capitalize(
+                                        props.tableRowSelected.assigned_to
+                                    )}
+                                </Title>
+                            </Col>
+                        )}
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: 5 }}
-                        >
-                            <Title level={5} style={{ textAlign: "right" }}>
-                                {capitalize(props.tableRowSelected.assignee)}
-                            </Title>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 1 : 3 }}
+                            md={{ span: props.fullScreenMode ? 2 : 4 }}
                         >
                             <FontAwesomeIcon
-                                icon={isEdit ? faXmark : faEdit}
+                                icon={
+                                    props.fullScreenMode
+                                        ? faCompressArrowsAlt
+                                        : faExpandArrowsAlt
+                                }
+                                onClick={fullScreenModeToggle}
                                 style={{
-                                    fontSize: isEdit ? "25px" : "20px",
+                                    fontSize: "20px",
                                     color: "#2c7be5",
+                                    float: "right",
                                     cursor: "pointer",
-                                    marginLeft: "10px",
-                                    marginTop: isEdit ? "-3px" : "0",
                                 }}
                                 title={
-                                    "Click here to " +
-                                    (isEdit ? "cancel" : "edit")
+                                    "Click here to" +
+                                    (props.fullScreenMode
+                                        ? "minimize"
+                                        : "maximize")
                                 }
-                                onClick={editClickHandler}
                             />
-
-                            {!props.fullScreenMode && (
-                                <FontAwesomeIcon
-                                    icon={faExpandArrowsAlt}
-                                    style={{
-                                        fontSize: "20px",
-                                        fontWeight: "normal",
-                                        color: "#2c7be5",
-                                        float: "right",
-                                        cursor: "pointer",
-                                        display: props.fullScreenMode
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                    title="Click here to maximize"
-                                    onClick={fullScreenModeToggle}
-                                />
-                            )}
                             {props.fullScreenMode && (
                                 <FontAwesomeIcon
-                                    icon={faCompressArrowsAlt}
-                                    onClick={fullScreenModeToggle}
+                                    icon={isEdit ? faXmark : faEdit}
                                     style={{
-                                        fontSize: "20px",
+                                        fontSize: isEdit ? "25px" : "20px",
                                         color: "#2c7be5",
-                                        float: "right",
                                         cursor: "pointer",
-                                        display: props.fullScreenMode
-                                            ? "block"
-                                            : "none",
+                                        marginRight: "15px",
+                                        float: "right",
+                                        marginTop: isEdit ? "-3px" : "0",
                                     }}
-                                    title="Click here to minimize"
+                                    title={
+                                        "Click here to " +
+                                        (isEdit ? "cancel" : "edit")
+                                    }
+                                    onClick={editClickHandler}
                                 />
                             )}
                         </Col>
@@ -346,14 +355,16 @@ const TaskViewEdit = (props: any) => {
                             Assigned To
                             <div>
                                 {!isEdit && (
-                                    <b>{props.tableRowSelected.assignee}</b>
+                                    <b>{props.tableRowSelected.assigned_to}</b>
                                 )}
                                 {isEdit && (
                                     <Select
                                         allowClear
                                         showSearch
                                         placeholder="Assign Person"
-                                        value={props.tableRowSelected.assignee}
+                                        value={
+                                            props.tableRowSelected.assigned_to
+                                        }
                                         options={assigneeOpts}
                                         className="w100"
                                         onChange={(value, event) => {
@@ -508,7 +519,7 @@ const TaskViewEdit = (props: any) => {
                     <Row
                         gutter={[8, 8]}
                         className="form-row"
-                        style={{ border: "1px solid #d8e2ef" }}
+                        style={{ border: "1px solid #d8e2ef", padding: "15px" }}
                     >
                         <Col
                             xs={{ span: 24 }}
@@ -538,6 +549,11 @@ const TaskViewEdit = (props: any) => {
                             <Title level={5} style={{ textAlign: "left" }}>
                                 Sub-tasks
                             </Title>
+                            <Collapse
+                                accordion
+                                items={items}
+                                defaultActiveKey={["1"]}
+                            />
                         </Col>
                     </Row>
                     <Row gutter={[8, 8]} className="form-row">
