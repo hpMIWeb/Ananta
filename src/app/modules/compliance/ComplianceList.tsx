@@ -167,7 +167,7 @@ const ComplianceList = () => {
       render: (text: string) => (
         <p className="text-truncate-report">GST Return</p>
       ),
-      sorter: (a, b) => a.title - b.title,
+      sorter: (a: any, b: any) => a.title - b.title,
       width: "20%",
     },
     {
@@ -175,9 +175,42 @@ const ComplianceList = () => {
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <p className="text-truncate-report">{status}</p>
+        <span>
+          {[status].map((item) => {
+            let color = "#fb275d";
+            let title = item;
+            switch (item) {
+              case "completed": {
+                color = "#00ca72";
+                title = "Completed";
+                break;
+              }
+              case "in_progress": {
+                color = "#ffcc00";
+                title = "Inprogress";
+                break;
+              }
+              case "cancelled": {
+                color = "#5e6e82";
+                title = "Cancelled";
+                break;
+              }
+              case "pending": {
+                color = "#fb275d";
+                title = "Pending";
+                break;
+              }
+              case "2": {
+                color = "#40fb27";
+                title = "Completed";
+              }
+            }
+
+            return <span style={{ color: color }}>{title}</span>;
+          })}
+        </span>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
       width: 20,
     },
     {
@@ -187,7 +220,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Mar",
@@ -196,7 +229,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Apr",
@@ -205,7 +238,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "May",
@@ -214,7 +247,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Jun",
@@ -223,7 +256,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Jul",
@@ -232,7 +265,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Aug",
@@ -241,7 +274,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Sep",
@@ -250,7 +283,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Oct",
@@ -259,7 +292,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Nov",
@@ -268,7 +301,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
     {
       title: "Dec",
@@ -277,7 +310,7 @@ const ComplianceList = () => {
       render: (status: string) => (
         <p className="text-truncate-report">{status}</p>
       ),
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a: any, b: any) => a.status - b.status,
     },
   ];
 
@@ -413,7 +446,31 @@ const ComplianceList = () => {
             />
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-            <Switch onChange={onSwitchMoreFilter}></Switch>
+            <a
+              className="btn-link"
+              href="#"
+              title="Show Filters"
+              onClick={onSwitchMoreFilter}
+            >
+              <span>{!showMoreFilter ? "Show Filters" : "Hide Filters"}</span>
+              <svg
+                className="svg-inline--fa fa-angle-down fa-w-10"
+                aria-hidden="true"
+                focusable="false"
+                data-prefix="fas"
+                data-icon="angle-down"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+                data-fa-i2svg=""
+              >
+                <path
+                  fill="currentColor"
+                  d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
+                ></path>
+              </svg>
+              <i className="fas fa-angle-down"></i>
+            </a>
           </Col>
         </Row>
         <Row
