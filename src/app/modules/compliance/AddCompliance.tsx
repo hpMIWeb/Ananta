@@ -40,10 +40,6 @@ import "./AddCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
 
 const { Title } = Typography;
-
-//dayjs.extend(weekday);
-//dayjs.extend(localeData);
-
 const dataSource = [
   {
     key: "1",
@@ -54,10 +50,6 @@ const dataSource = [
 ];
 const AddCompliance = () => {
   const dateFormat = "YYYY-MM-DD";
-  // const addComplianceObj = {
-  //     status: "Pending",
-  //     start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-  // } as IAddCompliance;
   const navigate = useNavigate();
   const selectModeRef = useRef(null);
 
@@ -206,16 +198,6 @@ const AddCompliance = () => {
 
       const complianceData = JSON.parse(JSON.stringify(complianceDetails));
       if (complianceData && complianceData.length > 0) {
-        addCompliance.clients = complianceData.map((item: IClientDetails) => {
-          return {
-            client_name: item.client_name,
-            assignee_to: item.assignee_to,
-            budget_time: item.budget_time,
-            actual_time: item.actual_time,
-            priority: item.priority,
-            remark: item.remark,
-          };
-        });
       }
 
       if (subCompliance && subCompliance.length > 0) {
@@ -519,9 +501,7 @@ const AddCompliance = () => {
           className={"form-row " + (!showSubCompliance ? "hide" : "")}
         >
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <SubCompliance
-                            subComponentsHandler={updateSubComponents}
-                        />
+            <SubCompliance subComponentsHandler={updateSubComponents} />
           </Col>
         </Row>
         <Row gutter={[8, 8]} className="form-row">

@@ -29,10 +29,6 @@ const ComplianceDetails = (props: any) => {
     } as IClientDetails,
   ]);
 
-  useEffect(() => {
-    console.log("Pinank", props.clients);
-    setClientDetails(props.clients);
-  }, []);
   const [selectedTableRow, setSelectedTableRow] = useState({
     complianceDetailId: "1",
     client_name: "",

@@ -47,6 +47,7 @@ import {
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
 import SubCompliance from "./SubCompliance";
+import SubComplianceViewEdit from "./SubComplianceViewEdit";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
 const { Title } = Typography;
 
@@ -80,8 +81,6 @@ const TaskViewEdit = (props: any) => {
       props.handleScreenMode();
     }
   };
-
-  useEffect(() => {}, []);
 
   const dividerRow = () => {
     return (
@@ -472,8 +471,11 @@ const TaskViewEdit = (props: any) => {
                 <Collapse>
                   {props.tableRowSelected.subcompliance.map(
                     (subComplianceItem: any, index: number) => (
-                      <CollapsePanel header={subComplianceItem._id} key={index}>
-                        <SubCompliance
+                      <CollapsePanel
+                        header={subComplianceItem.title}
+                        key={index}
+                      >
+                        <SubComplianceViewEdit
                           subComplianceData={subComplianceItem}
                           isEdit={isEdit}
                         />
@@ -483,7 +485,7 @@ const TaskViewEdit = (props: any) => {
                 </Collapse>
               )}
               {isEdit && (
-                <SubCompliance
+                <SubComplianceViewEdit
                   subComplianceData={props.tableRowSelected.subcompliance}
                   isEdit={isEdit}
                 />
