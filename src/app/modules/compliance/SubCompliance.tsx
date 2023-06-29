@@ -42,7 +42,7 @@ const SubCompliance = (props: any) => {
   useEffect(() => {
     console.log("Pinank", props.subComplianceData);
     if (props.subComplianceData) {
-      setSubCompliance(props.subComplianceData);
+      //setSubCompliance(props.subComplianceData);
       //  setComplianceDetails(props.subComplianceData.clients);
     }
     if (props.subComplianceData.clients) {
@@ -174,124 +174,126 @@ const SubCompliance = (props: any) => {
                       />
                     </Form.Item>
                   </Col>
-                  {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                  {!props.isEdit && (
-                    <b>
-                      <ClockCircleOutlined
-                        style={{
-                          color: "#2c7be5",
-                          marginRight: "10px",
-                        }}
-                      />
-                      {dayjs(props.budget_time).format("YYYY-MM-DD, HH:mm A")}
-                      {props.budget_time}
-                    </b>
-                  )}
-                  {props.isEdit && (
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+                    {!props.isEdit && (
+                      <b>
+                        <ClockCircleOutlined
+                          style={{
+                            color: "#2c7be5",
+                            marginRight: "10px",
+                          }}
+                        />
+                        {dayjs(props.budget_time).format("YYYY-MM-DD, HH:mm A")}
+                        {props.budget_time}
+                      </b>
+                    )}
+                    {props.isEdit && (
+                      <Form.Item
+                        name={
+                          "sub_compliance_budget_time" + subComplianceItem._id
+                        }
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select budget time.",
+                          },
+                        ]}
+                      >
+                        <TimePicker
+                          placeholder="Time"
+                          name={"budget_time"}
+                          onChange={(date, dateString) => {
+                            inputChangeHandler(
+                              dateString,
+                              subComplianceItem,
+                              "budget_time"
+                            );
+                          }}
+                          className="w100"
+                          format={"HH:mm"}
+                        />
+                      </Form.Item>
+                    )}
+                  </Col>
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
                     <Form.Item
-                      name={
-                        "sub_compliance_budget_time" + subComplianceItem._id
-                      }
+                      name={"sub_compliance_work_area" + subComplianceItem._id}
                       rules={[
                         {
                           required: true,
-                          message: "Please select budget time.",
+                          message: "Please select work area.",
                         },
                       ]}
                     >
-                      <TimePicker
-                        placeholder="Time"
-                        name={"budget_time"}
-                        onChange={(date, dateString) => {
-                          inputChangeHandler(
-                            dateString,
-                            subComplianceItem,
-                            "budget_time"
-                          );
+                      <Select
+                        allowClear
+                        placeholder="Select Work Area"
+                        options={workAreaOpts}
+                        value={subComplianceItem.workArea}
+                        className="w100"
+                        onChange={(value, event) => {
+                          inputChangeHandler(event, subComplianceItem);
+                        }}
+                      ></Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[8, 8]} className="form-row">
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 18 }}>
+                    <ReactQuill
+                      theme="snow"
+                      value={subComplianceItem.remark}
+                      placeholder="Remark"
+                      onChange={(event) => {
+                        inputChangeHandler(event, subComplianceItem, "remark");
+                      }}
+                      style={{
+                        minHeight: "0 !important",
+                      }}
+                    />
+                  </Col>
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+                    <Form.Item
+                      name={"sub_compliance_priority" + subComplianceItem._id}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select work area.",
+                        },
+                      ]}
+                    >
+                      <Select
+                        allowClear
+                        placeholder="Priority"
+                        options={priorityOpts}
+                        onChange={(value, event) => {
+                          inputChangeHandler(event, subComplianceItem);
                         }}
                         className="w100"
-                        format={"HH:mm"}
                       />
                     </Form.Item>
-                  )}
-                </Col> */}
-                  {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                  <Form.Item
-                    name={"sub_compliance_work_area" + subComplianceItem._id}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select work area.",
-                      },
-                    ]}
-                  >
-                    <Select
-                      allowClear
-                      placeholder="Select Work Area"
-                      options={workAreaOpts}
-                      value={subComplianceItem.workArea}
-                      className="w100"
-                      onChange={(value, event) => {
-                        inputChangeHandler(event, subComplianceItem);
-                      }}
-                    ></Select>
-                  </Form.Item>
-                </Col> */}
+                  </Col>
                 </Row>
-                {/* <Row gutter={[8, 8]} className="form-row">
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 18 }}>
-                  <ReactQuill
-                    theme="snow"
-                    value={subComplianceItem.remark}
-                    placeholder="Remark"
-                    onChange={(event) => {
-                      inputChangeHandler(event, subComplianceItem, "remark");
-                    }}
-                    style={{
-                      minHeight: "0 !important",
-                    }}
-                  />
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                  <Form.Item
-                    name={"sub_compliance_priority" + subComplianceItem._id}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select work area.",
-                      },
-                    ]}
-                  >
-                    <Select
-                      allowClear
-                      placeholder="Priority"
-                      options={priorityOpts}
-                      onChange={(value, event) => {
-                        inputChangeHandler(event, subComplianceItem);
-                      }}
-                      className="w100"
+                <Row gutter={[8, 8]} className="form-row">
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                    <ComplianceDetails
+                      updateClients={complianceDetailsHandler}
+                      isAllowAdd={false}
+                      parentTitle={"sub_compliance"}
+                      parentId={subComplianceItem._id}
+                      clients={props.subComplianceData.clients}
                     />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[8, 8]} className="form-row">
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                  <ComplianceDetails
-                    updateClients={complianceDetailsHandler}
-                    isAllowAdd={false}
-                    parentTitle={"sub_compliance"}
-                    parentId={subComplianceItem._id}
-                    clients={props.subComplianceData.clients}
-                  />
-                </Col>
-              </Row> */}
-                {/* <Row gutter={[8, 8]} className="form-row">
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                  <div className="timerbuttons">
-                    <Stopwatch subComplianceId={props.subComplianceData._id} />
-                  </div>
-                </Col>
-              </Row> */}
+                  </Col>
+                </Row>
+                <Row gutter={[8, 8]} className="form-row">
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                    <div className="timerbuttons">
+                      <Stopwatch
+                        subComplianceId={props.subComplianceData._id}
+                      />
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </div>
           )
