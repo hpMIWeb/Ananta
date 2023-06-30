@@ -233,7 +233,17 @@ export default {
     instance({
       method: "PUT",
       url: "subcompliance/update-subcompliance",
-      data: updateSubCompliance,
+      data: {
+        subComplianceId: updateSubCompliance._id,
+        ComplianceId: updateSubCompliance.complianceId,
+        status: updateSubCompliance.status,
+      },
+      transformResponse: [
+        function (data) {
+          const json = JSON.parse(data);
+          return json.payload;
+        },
+      ],
     }),
   deleteSubCompliance: (complianceId: string, subComplianceId: string) =>
     instance({

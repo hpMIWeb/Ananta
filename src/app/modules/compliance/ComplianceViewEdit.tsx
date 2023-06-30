@@ -545,6 +545,7 @@ const TaskViewEdit = (props: any) => {
                         <SubComplianceViewEdit
                           subComplianceData={subComplianceItem}
                           isEdit={isEdit}
+                          complianceId={props.tableRowSelected._id}
                         />
                       </CollapsePanel>
                     )

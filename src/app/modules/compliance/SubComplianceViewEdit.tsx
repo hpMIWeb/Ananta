@@ -22,11 +22,13 @@ import {
   SubCompliance as ISubCompliance,
   ClientDetails as IClientDetails,
   AddCompliance,
+  SubCompliance,
 } from "./interfaces/ICompliance";
 import "./subCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
-
+import { ToastContainer, toast } from "react-toastify";
+import api from "../../utilities/apiServices";
 import type { ColumnsType, TableProps } from "antd/es/table";
 
 const SubComplianceViewEdit = (props: any) => {
@@ -42,10 +44,10 @@ const SubComplianceViewEdit = (props: any) => {
   );
 
   useEffect(() => {
+    console.log(props);
     if (props.subComplianceData) {
       setSubCompliance([props.subComplianceData]);
       setComplianceDetails([props.subComplianceData.clients]);
-      console.log(complianceDetails);
     }
   }, []);
 
@@ -90,11 +92,30 @@ const SubComplianceViewEdit = (props: any) => {
     setSubCompliance(updatedCompliance);
   };
 
-  const statusChangeHandler = (event: any, value: string) => {
-    console.log("Status change - ", event);
+  const subComplianceStatusChangeHandler = (
+    event: any,
+    value: string,
+    subCompliance: SubCompliance
+  ) => {
+    console.log("Status change - ", props.complianceId);
+    const subComplianceUpdate = {} as SubCompliance;
+    subComplianceUpdate.status = value;
+    subComplianceUpdate._id = subCompliance._id;
+
+    subComplianceUpdate.complianceId = props.complianceId;
+
+    console.log(subComplianceUpdate);
+    //subComplianceItem._id
+    //return false;
+    api.updateSubCompliance(subComplianceUpdate).then((resp: any) => {
+      // localStorage.setItem("task", JSON.stringify(taskUpdate));
+      toast.success("Successfully Updated", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    });
   };
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
       title: "Action",
       dataIndex: "_id",
@@ -110,6 +131,7 @@ const SubComplianceViewEdit = (props: any) => {
       dataIndex: "client_name",
       key: "client_name",
       sorter: (a: any, b: any) => a.client_name - b.client_name,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Assign To",
@@ -150,7 +172,7 @@ const SubComplianceViewEdit = (props: any) => {
     sorter,
     extra
   ) => {
-    console.log("params", pagination, filters, sorter, extra);
+    console.log("params", sorter);
   };
 
   return (
@@ -184,7 +206,11 @@ const SubComplianceViewEdit = (props: any) => {
                   value={subComplianceItem.priority}
                   className="w100"
                   onChange={(value, event) => {
-                    statusChangeHandler(event, value);
+                    subComplianceStatusChangeHandler(
+                      event,
+                      value,
+                      subComplianceItem
+                    );
                   }}
                 />
               </Col>
@@ -201,7 +227,11 @@ const SubComplianceViewEdit = (props: any) => {
                   value={subComplianceItem.status}
                   className="w100"
                   onChange={(value, event) => {
-                    statusChangeHandler(event, value);
+                    subComplianceStatusChangeHandler(
+                      event,
+                      value,
+                      subComplianceItem
+                    );
                   }}
                 />
               </Col>
