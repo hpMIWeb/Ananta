@@ -99,16 +99,13 @@ const SubComplianceViewEdit = (props: any) => {
   ) => {
     console.log("Status change - ", props.complianceId);
     const subComplianceUpdate = {} as SubCompliance;
-    subComplianceUpdate.status = value;
+    subComplianceUpdate.mode = value;
     subComplianceUpdate._id = subCompliance._id;
 
     subComplianceUpdate.complianceId = props.complianceId;
 
     console.log(subComplianceUpdate);
-    //subComplianceItem._id
-    //return false;
     api.updateSubCompliance(subComplianceUpdate).then((resp: any) => {
-      // localStorage.setItem("task", JSON.stringify(taskUpdate));
       toast.success("Successfully Updated", {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -224,7 +221,7 @@ const SubComplianceViewEdit = (props: any) => {
                   allowClear
                   placeholder="Select Status"
                   options={statusList}
-                  value={subComplianceItem.status}
+                  value={subComplianceItem.mode}
                   className="w100"
                   onChange={(value, event) => {
                     subComplianceStatusChangeHandler(

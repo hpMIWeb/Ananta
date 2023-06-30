@@ -206,6 +206,7 @@ const AddCompliance = () => {
             return {
               title: item.title,
               status: item.status,
+              mode: item.status,
               budget_time: item.budget_time,
               remark: item.remark,
               priority: item.priority,

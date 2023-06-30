@@ -236,7 +236,7 @@ export default {
       data: {
         subComplianceId: updateSubCompliance._id,
         ComplianceId: updateSubCompliance.complianceId,
-        status: updateSubCompliance.status,
+        mode: updateSubCompliance.mode,
       },
       transformResponse: [
         function (data) {

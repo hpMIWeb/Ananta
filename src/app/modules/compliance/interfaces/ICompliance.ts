@@ -23,6 +23,7 @@ export interface SubCompliance {
   _id?: string;
   title: string;
   status: string;
+  mode: string;
   budget_time: string;
   remark: string;
   priority: string;
