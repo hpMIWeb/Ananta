@@ -27,6 +27,8 @@ import "./subCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 
+import type { ColumnsType, TableProps } from "antd/es/table";
+
 const SubComplianceViewEdit = (props: any) => {
   const [subCompliances, setSubCompliance] = useState<ISubCompliance[]>([
     {
@@ -35,28 +37,17 @@ const SubComplianceViewEdit = (props: any) => {
     } as ISubCompliance,
   ]);
 
-  useEffect(() => {
-    if (props.subComplianceData) {
-      setSubCompliance([props.subComplianceData]);
-    }
-  }, []);
-
   const [complianceDetails, setComplianceDetails] = useState<IClientDetails[]>(
     []
   );
 
-  const addNewCompliance = () => {
-    const new_Id = subCompliances.length + 1;
-    let newCompliance = {
-      _id: new_Id.toString(),
-      status: "Pending",
-    } as ISubCompliance;
-
-    // TODO: update parent compliance
-    // if (props.updateClients) {
-    //     props.updateClients(subCompliances);
-    // }
-  };
+  useEffect(() => {
+    if (props.subComplianceData) {
+      setSubCompliance([props.subComplianceData]);
+      setComplianceDetails([props.subComplianceData.clients]);
+      console.log(complianceDetails);
+    }
+  }, []);
 
   const dividerRow = () => {
     return (
@@ -66,16 +57,6 @@ const SubComplianceViewEdit = (props: any) => {
         </Col>
       </Row>
     );
-  };
-
-  const removeTask = (item: ISubCompliance) => {
-    const index = subCompliances.indexOf(item);
-    if (index > -1) {
-      const compliance = [...subCompliances].filter((compliance: any) => {
-        return compliance._id !== item._id;
-      });
-      setSubCompliance(compliance);
-    }
   };
 
   const inputChangeHandler = (
@@ -113,105 +94,71 @@ const SubComplianceViewEdit = (props: any) => {
     console.log("Status change - ", event);
   };
 
-  const complianceDetailsHandler = (details: IClientDetails[]) => {
-    console.log("client details at Add SubCompliance - ", details);
-    const matchedItem = subCompliances.find((item: ISubCompliance) => {
-      return item._id === details[0].parentId;
-    });
-
-    if (matchedItem) {
-      matchedItem.clients = details;
-      setComplianceDetails(details);
-      //setSubCompliance([...subCompliances, matchedItem]);
-    }
-  };
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
-
   const columns = [
     {
       title: "Action",
-      dataIndex: "action",
-      key: "action",
+      dataIndex: "_id",
+      key: "_id",
+      render: (text: any, record: any, index: number) => (
+        <div className="timerbuttons">
+          <Stopwatch />
+        </div>
+      ),
     },
     {
       title: "Client Name",
-      dataIndex: "clientName",
-      key: "clientName",
+      dataIndex: "client_name",
+      key: "client_name",
+      sorter: (a: any, b: any) => a.client_name - b.client_name,
+    },
+    {
+      title: "Assign To",
+      dataIndex: "assigned_to",
+      key: "assigned_to",
+      sorter: (a: any, b: any) => a.assigned_to - b.assigned_to,
     },
     {
       title: "Remarks",
-      dataIndex: "remarks",
-      key: "remarks",
+      dataIndex: "remark",
+      key: "remark",
+      sorter: (a: any, b: any) => a.remark - b.remark,
     },
     {
       title: "Budget Time",
-      dataIndex: "budgetTime",
-      key: "budgetTime",
+      dataIndex: "budget_time",
+      key: "budget_time",
+      sorter: (a: any, b: any) => a.budget_time - b.budget_time,
     },
     {
       title: "Actual Time",
-      dataIndex: "actualTime",
-      key: "actualTime",
+      dataIndex: "budget_time",
+      key: "budget_time",
+      sorter: (a: any, b: any) => a.budget_time - b.budget_time,
     },
   ];
+
+  interface DataType {
+    key: React.Key;
+    client_name: string;
+    remark: number;
+    budget_time: string;
+  }
+
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
 
   return (
     <div>
       {subCompliances.map((subComplianceItem: any, index: number) => (
         <div key={subComplianceItem._id}>
           {index !== 0 && <Divider style={{ backgroundColor: "#9da9bb" }} />}
-          <div className="sub-compliance-header">
-            <div className="sub-compliance-number">{index + 1}</div>
-            <div className="sub-compliance-delete">
-              <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  removeTask(subComplianceItem);
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
+          <div className="sub-compliance-header"></div>
           <div className="sub-compliance-content">
             <Row gutter={[8, 8]} className="form-row">
               <Col
@@ -275,121 +222,24 @@ const SubComplianceViewEdit = (props: any) => {
             <Row gutter={[8, 8]} className="form-row">
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
                 {!props.isEdit && <b>{subComplianceItem.remark}</b>}
-                {props.isEdit && (
-                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 18 }}>
-                    <ReactQuill
-                      theme="snow"
-                      value={subComplianceItem.remark}
-                      placeholder="Remark"
-                      onChange={(event) => {
-                        inputChangeHandler(event, subComplianceItem, "remark");
-                      }}
-                      style={{
-                        minHeight: "0 !important",
-                      }}
-                    />
-                  </Col>
-                )}
               </Col>
             </Row>
             {!props.isEdit && (
-              <Table dataSource={dataSource} columns={columns} size="small" />
+              <Row gutter={[8, 8]} className="form-row">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                  <Table
+                    id="complianceViewEdit"
+                    dataSource={subComplianceItem.clients}
+                    columns={columns}
+                    size="small"
+                    onChange={onChange}
+                  />
+                </Col>
+              </Row>
             )}
-
-            <Row gutter={[8, 8]} className="form-row">
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                <Form.Item
-                  name={"sub_compliance_budget_time" + subComplianceItem._id}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select budget time.",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    placeholder="Time"
-                    name={"budget_time"}
-                    onChange={(date, dateString) => {
-                      inputChangeHandler(
-                        dateString,
-                        subComplianceItem,
-                        "budget_time"
-                      );
-                    }}
-                    className="w100"
-                    format={"HH:mm"}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                <Form.Item
-                  name={"sub_compliance_work_area" + subComplianceItem._id}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select work area.",
-                    },
-                  ]}
-                >
-                  <Select
-                    allowClear
-                    placeholder="Select Work Area"
-                    options={workAreaOpts}
-                    value={subComplianceItem.workArea}
-                    className="w100"
-                    onChange={(value, event) => {
-                      inputChangeHandler(event, subComplianceItem);
-                    }}
-                  ></Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[8, 8]} className="form-row">
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                <Form.Item
-                  name={"sub_compliance_priority" + subComplianceItem._id}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select work area.",
-                    },
-                  ]}
-                >
-                  <Select
-                    allowClear
-                    placeholder="Priority"
-                    options={priorityOpts}
-                    onChange={(value, event) => {
-                      inputChangeHandler(event, subComplianceItem);
-                    }}
-                    className="w100"
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[8, 8]} className="form-row">
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                <ComplianceDetails
-                  updateClients={complianceDetailsHandler}
-                  isAllowAdd={false}
-                  parentTitle={"sub_compliance"}
-                  parentId={subComplianceItem._id}
-                />
-              </Col>
-            </Row>
           </div>
         </div>
       ))}
-      <div className="sub-task-add">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={addNewCompliance}
-        >
-          Add
-        </Button>
-      </div>
     </div>
   );
 };

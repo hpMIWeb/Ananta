@@ -40,15 +40,14 @@ import {
   AddCompliance as IAddCompliance,
   SubCompliance as ISubCompliance,
   ClientDetails as IClientDetails,
-  ComplianceTimer,
-  TimerOpts,
-  AddCompliance,
+  SaveComplianceComment,
 } from "./interfaces/ICompliance";
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
 import SubCompliance from "./SubCompliance";
 import SubComplianceViewEdit from "./SubComplianceViewEdit";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
+import Comments from "../../components/Comments/Comments";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -69,7 +68,7 @@ const inputChangeHandler = (event: any, nameItem: string = "") => {
 
   console.log(name, value);
 
-  const taskUpdate = {} as AddCompliance;
+  const taskUpdate = {} as IAddCompliance;
   taskUpdate.status = value;
 };
 
@@ -107,7 +106,7 @@ const TaskViewEdit = (props: any) => {
   const statusChangeHandler = (event: any, value: string) => {
     console.log("Status change - ", event);
 
-    const complianceUpdate = {} as AddCompliance;
+    const complianceUpdate = {} as IAddCompliance;
     complianceUpdate.status = value;
 
     api
@@ -119,6 +118,74 @@ const TaskViewEdit = (props: any) => {
         });
       });
   };
+
+  /* comment code start */
+
+  // add comment code
+  const addCommentHandler = (comment: string) => {
+    const addComment = {} as SaveComplianceComment;
+    addComment.comment = comment;
+    addComment.complianceId = props.tableRowSelected._id;
+    api
+      .addComplianceComment(addComment)
+      .then(() => {
+        toast.success("Successfully added comment", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      })
+      .catch((error: any) => {
+        const msg = JSON.parse(error.response.data).message;
+        toast.error(msg, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
+  };
+
+  const editCommentHandler = (
+    commentId: string,
+    parentId: string,
+    comment: string
+  ) => {
+    const updateComment = {} as SaveComplianceComment;
+    updateComment.commentId = commentId;
+    updateComment.comment = comment;
+    updateComment.complianceId = parentId;
+
+    api
+      .updateComplianceComment(updateComment)
+      .then((resp: any) => {
+        toast.success("Successfully updated comment", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        //setTaskComments(resp.data.comments);
+      })
+      .catch((error: any) => {
+        const msg = JSON.parse(error.response.data).message;
+        toast.error(msg, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
+  };
+
+  const deleteCommentHandler = (commentId: string, parentId: string) => {
+    api
+      .deleteTaskComment(props.tableRowSelected._id, commentId)
+      .then((resp: any) => {
+        toast.success("Successfully deleted comment", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+
+        // setTaskComments(resp.data.comments);
+      })
+      .catch((error: any) => {
+        const msg = JSON.parse(error.response.data).message;
+        toast.error(msg, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
+  };
+
+  /* comment code end */
 
   const handleUpdateTask = () => {};
 
@@ -497,6 +564,13 @@ const TaskViewEdit = (props: any) => {
               <Title level={5} style={{ textAlign: "left" }}>
                 Comments
               </Title>
+              <Comments
+                comments={props.tableRowSelected.comments}
+                parentId={props.tableRowSelected._id}
+                addComment={addCommentHandler}
+                editComment={editCommentHandler}
+                deleteComment={deleteCommentHandler}
+              />
             </Col>
           </Row>
         </Form>

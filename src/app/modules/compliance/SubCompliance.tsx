@@ -39,17 +39,7 @@ const SubCompliance = (props: any) => {
     []
   );
 
-  useEffect(() => {
-    console.log("Pinank", props.subComplianceData);
-    if (props.subComplianceData) {
-      //setSubCompliance(props.subComplianceData);
-      //  setComplianceDetails(props.subComplianceData.clients);
-    }
-    if (props.subComplianceData.clients) {
-      // setSubCompliance(props.subComplianceData);
-      // setComplianceDetails(props.subComplianceData.clients);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   const addNewCompliance = () => {
     const new_Id = subCompliances.length + 1;
@@ -175,45 +165,31 @@ const SubCompliance = (props: any) => {
                     </Form.Item>
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                    {!props.isEdit && (
-                      <b>
-                        <ClockCircleOutlined
-                          style={{
-                            color: "#2c7be5",
-                            marginRight: "10px",
-                          }}
-                        />
-                        {dayjs(props.budget_time).format("YYYY-MM-DD, HH:mm A")}
-                        {props.budget_time}
-                      </b>
-                    )}
-                    {props.isEdit && (
-                      <Form.Item
-                        name={
-                          "sub_compliance_budget_time" + subComplianceItem._id
-                        }
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please select budget time.",
-                          },
-                        ]}
-                      >
-                        <TimePicker
-                          placeholder="Time"
-                          name={"budget_time"}
-                          onChange={(date, dateString) => {
-                            inputChangeHandler(
-                              dateString,
-                              subComplianceItem,
-                              "budget_time"
-                            );
-                          }}
-                          className="w100"
-                          format={"HH:mm"}
-                        />
-                      </Form.Item>
-                    )}
+                    <Form.Item
+                      name={
+                        "sub_compliance_budget_time" + subComplianceItem._id
+                      }
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select budget time.",
+                        },
+                      ]}
+                    >
+                      <TimePicker
+                        placeholder="Time"
+                        name={"budget_time"}
+                        onChange={(date, dateString) => {
+                          inputChangeHandler(
+                            dateString,
+                            subComplianceItem,
+                            "budget_time"
+                          );
+                        }}
+                        className="w100"
+                        format={"HH:mm"}
+                      />
+                    </Form.Item>
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
                     <Form.Item
@@ -281,16 +257,13 @@ const SubCompliance = (props: any) => {
                       isAllowAdd={false}
                       parentTitle={"sub_compliance"}
                       parentId={subComplianceItem._id}
-                      clients={props.subComplianceData.clients}
                     />
                   </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
                     <div className="timerbuttons">
-                      <Stopwatch
-                        subComplianceId={props.subComplianceData._id}
-                      />
+                      <Stopwatch />
                     </div>
                   </Col>
                 </Row>
