@@ -16,6 +16,9 @@ import ComplianceList from "./modules/compliance/ComplianceList";
 import "./App.scss";
 import "antd/dist/reset.css";
 import AddCompliance from "./modules/compliance/AddCompliance";
+import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
+import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
+import Approval from "./modules/aproval/Aproval";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -53,7 +56,16 @@ const App = () => {
                                 path="add-compliance"
                                 element={<AddCompliance />}
                             />
+                            <Route path="approval" element={<Approval />} />
                             <Route path="timesheet" element={<TimeSheet />} />
+                            <Route
+                                path="emp-time-sheet"
+                                element={<EmpTimeSheet />}
+                            />
+                            <Route
+                                path="client-time-sheet"
+                                element={<ClientTimeSheet />}
+                            />
                             <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Routes>

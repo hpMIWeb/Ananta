@@ -179,6 +179,7 @@ const AddMultipleTask = () => {
                                 inputChangeHandler(dateString, "budgetTime");
                             }}
                             className="w100"
+                            format={"HH:mm"}
                         />
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>

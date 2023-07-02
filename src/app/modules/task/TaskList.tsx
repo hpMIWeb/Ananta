@@ -40,11 +40,14 @@ const TaskList = () => {
         setFullScreenMode(false);
     };
 
-    useEffect(() => {
+    const getTaskData = () => {
         api.getAllTask().then((resp: any) => {
-            // console.log(resp.data.allTask);
             setAllTask(resp.data);
         });
+    };
+
+    useEffect(() => {
+        getTaskData();
     }, []);
 
     useEffect(() => {
@@ -53,10 +56,16 @@ const TaskList = () => {
 
     const colInfo = [
         {
-            title: "title",
+            title: " ",
+            dataIndex: " ",
+            key: " ",
+            render: (text: string) => <></>,
+        },
+        {
             dataIndex: "title",
             key: "title",
-            render: (text: string) => text,
+            render: (text: string) => <span className="title">{text}</span>,
+            width: "350px",
         },
         {
             title: "client",
@@ -65,8 +74,8 @@ const TaskList = () => {
         },
         {
             title: "assignee",
-            dataIndex: "assignee",
-            key: "assignee",
+            dataIndex: "assigned_to",
+            key: "assigned_to",
         },
         {
             title: "calendaricon",
@@ -101,7 +110,8 @@ const TaskList = () => {
                         let color = "#fb275d";
                         let title = item;
                         switch (item) {
-                            case "completed": {
+                            case "completed":
+                            case "complete": {
                                 color = "#00ca72";
                                 break;
                             }
@@ -156,7 +166,10 @@ const TaskList = () => {
                     return (
                         <div key={subtask.length}>
                             {subtask.filter((item: ISubTask) => {
-                                return item.status === "Completed";
+                                return (
+                                    item.status === "Completed" ||
+                                    item.status === "Complete"
+                                );
                             }).length +
                                 "/" +
                                 subtask.length}
@@ -177,7 +190,8 @@ const TaskList = () => {
                 rowClassName = "data-row-pending";
                 break;
             }
-            case "completed": {
+            case "completed":
+            case "complete": {
                 rowClassName = "data-row-completed";
                 break;
             }
@@ -238,6 +252,7 @@ const TaskList = () => {
         return (
             <div>
                 <Table
+                    showSorterTooltip={{ title: "testing functionality" }}
                     dataSource={getData(current, pageSize, "today")}
                     rowClassName={rowClassHandler}
                     onRow={(record, rowIndex) => {
@@ -249,7 +264,9 @@ const TaskList = () => {
                     }}
                     columns={colInfo}
                     showHeader={false}
-                    pagination={false}
+                    pagination={{
+                        defaultPageSize: 10,
+                    }}
                     style={{ width: "100%" }}
                 />
             </div>
@@ -271,8 +288,9 @@ const TaskList = () => {
                     }}
                     columns={colInfo}
                     showHeader={false}
-                    pagination={false}
-                    //style={{ width: "100%" }}
+                    pagination={{
+                        defaultPageSize: 10,
+                    }}
                 />
             </div>
         );
@@ -293,7 +311,9 @@ const TaskList = () => {
                     }}
                     columns={colInfo}
                     showHeader={false}
-                    pagination={false}
+                    pagination={{
+                        defaultPageSize: 10,
+                    }}
                 />
             </div>
         );
@@ -312,6 +332,10 @@ const TaskList = () => {
             }
         }
         return null;
+    };
+
+    const handleListUpdate = () => {
+        getTaskData();
     };
 
     const tabContent: TabsProps["items"] = [
@@ -395,6 +419,7 @@ const TaskList = () => {
                                 fullScreenMode={fullScreenMode}
                                 tableRowSelected={tableRowSelected}
                                 isEdit={false}
+                                handleListUpdate={handleListUpdate}
                             />
                         </div>
                     )}

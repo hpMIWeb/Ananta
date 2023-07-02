@@ -15,6 +15,7 @@ import {
 } from "antd";
 import type { TabsProps } from "antd";
 import "./TimeSheet.scss";
+import { Link } from "react-router-dom";
 const { Title } = Typography;
 
 const columns = [
@@ -105,21 +106,12 @@ const columns = [
 const data = [
     {
         key: "1",
-        name: "John",
-        age: 32,
-        address: "New York",
     },
     {
         key: "2",
-        name: "Jane",
-        age: 28,
-        address: "London",
     },
     {
         key: "3",
-        name: "Jim",
-        age: 34,
-        address: "Paris",
     },
 ];
 
@@ -139,15 +131,27 @@ const TimeSheet = () => {
     const tabContent: TabsProps["items"] = [
         {
             key: "1",
-            label: "My Timesheet",
+            label: (
+                <Link to="/timesheet" style={{ color: "black" }}>
+                    My Timesheet
+                </Link>
+            ),
         },
         {
             key: "2",
-            label: "Employee Timesheet Report",
+            label: (
+                <Link to="/emp-time-sheet" style={{ color: "black" }}>
+                    Employee Timesheet Report
+                </Link>
+            ),
         },
         {
             key: "3",
-            label: "Client Timesheet Report",
+            label: (
+                <Link to="/client-time-sheet" style={{ color: "black" }}>
+                    Client Timesheet Report
+                </Link>
+            ),
         },
     ];
     return (

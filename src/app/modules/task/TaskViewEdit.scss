@@ -1,0 +1,13 @@
+.ant-collapse {
+    border-radius: 3px;
+}
+
+.sub-task-header {
+    display: inline-flex;
+
+    .task-header-cell {
+        flex: 1;
+        font-size: 15px;
+        font-weight: 600;
+    }
+}
