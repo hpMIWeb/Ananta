@@ -241,7 +241,7 @@ const SubComplianceViewEdit = (props: any) => {
                   <Input
                     placeholder="Compliance"
                     name="title"
-                    value={subComplianceItem.title}
+                    defaultValue={subComplianceItem.title}
                   />
                 )}
               </Col>
@@ -260,6 +260,18 @@ const SubComplianceViewEdit = (props: any) => {
                     columns={columns}
                     size="small"
                     onChange={onChange}
+                  />
+                </Col>
+              </Row>
+            )}
+            {props.isEdit && (
+              <Row gutter={[8, 8]} className="form-row">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                  <ComplianceDetails
+                    updateClients={subComplianceItem.clients}
+                    isAllowAdd={false}
+                    parentTitle={"sub_compliance"}
+                    parentId={subComplianceItem._id}
                   />
                 </Col>
               </Row>

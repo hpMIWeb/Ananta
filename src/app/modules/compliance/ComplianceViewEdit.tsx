@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   Collapse,
+  Table,
 } from "antd";
 
 import {
@@ -48,9 +49,70 @@ import SubCompliance from "./SubCompliance";
 import SubComplianceViewEdit from "./SubComplianceViewEdit";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
 import Comments from "../../components/Comments/Comments";
+import type { ColumnsType, TableProps } from "antd/es/table";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
+
+const columns: ColumnsType<DataType> = [
+  {
+    title: "Action",
+    dataIndex: "_id",
+    key: "_id",
+    render: (text: any, record: any, index: number) => (
+      <div className="timerbuttons">
+        <Stopwatch />
+      </div>
+    ),
+  },
+  {
+    title: "Client Name",
+    dataIndex: "client_name",
+    key: "client_name",
+    sorter: (a: any, b: any) => a.client_name - b.client_name,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Assign To",
+    dataIndex: "assigned_to",
+    key: "assigned_to",
+    sorter: (a: any, b: any) => a.assigned_to - b.assigned_to,
+  },
+  {
+    title: "Remarks",
+    dataIndex: "remark",
+    key: "remark",
+    sorter: (a: any, b: any) => a.remark - b.remark,
+  },
+  {
+    title: "Budget Time",
+    dataIndex: "budget_time",
+    key: "budget_time",
+    sorter: (a: any, b: any) => a.budget_time - b.budget_time,
+  },
+  {
+    title: "Actual Time",
+    dataIndex: "budget_time",
+    key: "budget_time",
+    sorter: (a: any, b: any) => a.budget_time - b.budget_time,
+  },
+];
+
+interface DataType {
+  key: React.Key;
+  client_name: string;
+  remark: number;
+  budget_time: string;
+}
+
+const onChange: TableProps<DataType>["onChange"] = (
+  pagination,
+  filters,
+  sorter,
+  extra
+) => {
+  console.log("params", sorter);
+};
 
 const inputChangeHandler = (event: any, nameItem: string = "") => {
   let name = "";
@@ -223,7 +285,7 @@ const TaskViewEdit = (props: any) => {
                   <Input
                     placeholder="Compliance"
                     name="title"
-                    value={props.tableRowSelected.title}
+                    defaultValue={props.tableRowSelected.title}
                     onChange={(event) => {
                       inputChangeHandler(event);
                     }}
@@ -347,6 +409,32 @@ const TaskViewEdit = (props: any) => {
               />
             </Col>
           </Row>
+          {dividerRow()}
+          {!props.isEdit && (
+            <Row gutter={[8, 8]} className="form-row">
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                <Table
+                  id="complianceViewEdit"
+                  dataSource={props.tableRowSelected.clients}
+                  columns={columns}
+                  size="small"
+                  onChange={onChange}
+                />
+              </Col>
+            </Row>
+          )}
+          {isEdit && (
+            <Row gutter={[8, 8]} className="form-row">
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                <ComplianceDetails
+                  updateClients={props.tableRowSelected.clients}
+                  isAllowAdd={false}
+                  parentTitle={"sub_compliance"}
+                  parentId={props.tableRowSelected.subcompliance._id}
+                />
+              </Col>
+            </Row>
+          )}
           {dividerRow()}
           <Row gutter={[8, 8]} className="form-row">
             <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
@@ -516,19 +604,10 @@ const TaskViewEdit = (props: any) => {
             style={{ border: "1px solid #d8e2ef" }}
           >
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-              {isEdit && (
-                <ComplianceDetails clients={props.tableRowSelected.clients} />
-              )}{" "}
+              {isEdit && <ComplianceDetails />}{" "}
             </Col>
           </Row>
 
-          <Row gutter={[8, 8]} className="form-row">
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-              <Title level={5} style={{ textAlign: "left" }}>
-                Attachments
-              </Title>
-            </Col>
-          </Row>
           <Row gutter={[8, 8]} className="form-row">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
               <Title level={5} style={{ textAlign: "left" }}>
@@ -553,10 +632,17 @@ const TaskViewEdit = (props: any) => {
                 </Collapse>
               )}
               {isEdit && (
-                <SubComplianceViewEdit
-                  subComplianceData={props.tableRowSelected.subcompliance}
-                  isEdit={isEdit}
-                />
+                <div>
+                  {props.tableRowSelected.subcompliance.map(
+                    (subComplianceItem: any, index: number) => (
+                      <SubComplianceViewEdit
+                        subComplianceData={subComplianceItem}
+                        isEdit={isEdit}
+                        complianceId={props.tableRowSelected._id}
+                      />
+                    )
+                  )}
+                </div>
               )}{" "}
             </Col>
           </Row>
