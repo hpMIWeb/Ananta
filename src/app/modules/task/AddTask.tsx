@@ -44,7 +44,7 @@ const AddTask = () => {
   const dateFormat = "YYYY-MM-DD";
   const navigate = useNavigate();
   const selectModeRef = useRef(null);
-  const formRef = useRef(new Task());
+  const initialValuesRef = useRef(new Task());
   const [form] = Form.useForm();
 
   // local states
@@ -140,7 +140,9 @@ const AddTask = () => {
 
       console.log("ALL TASK", allTask);
       console.log("addTask", addTask);
+      resetFormValues();
 
+      return false;
       // Save to DB
       try {
         api.createTask(addTask).then((resp: any) => {
@@ -149,7 +151,6 @@ const AddTask = () => {
           toast.success("Successfully Created Task", {
             position: toast.POSITION.TOP_RIGHT,
           });
-          resetFormValues();
         });
       } catch (ex) {
         toast.error("Technical error while creating Task", {
@@ -188,11 +189,44 @@ const AddTask = () => {
 
   const resetFormValues = () => {
     //console.log(new Task());
+    //   form.resetFields();
+    // let addTask1 = new Task();
+    // console.log(initialValuesRef.current);
+    //setAddTask(addTask);
+    //setAddTask(addTask1);
+    //initialValuesRef;
+    setAddTask(new Task());
+    addTask._id = "";
+    addTask.start_date = "";
+    addTask.due_date = "";
+    addTask.title = "";
+    addTask.subTask = [];
+    addTask.status = "";
+    addTask.mode = "";
+    addTask.priority = "";
+
+    const fields = form.getFieldsValue();
+    Object.keys(fields).forEach((field) => {
+      form.setFieldsValue({ [field]: undefined });
+    });
     form.resetFields();
-    // let addTask = new Task();
-    // console.log(addTask);
-    // setAddTask(addTask);
-    // console.log(setAddTask);
+    form.validateFields(); // Reset validation status
+
+    // setAddTask((addTask) => ({
+    //   ...addTask,
+    //   title: "",
+    //   start_date: "",
+    //   due_date: "",
+    //   subTask: [],
+    //   status: "",
+    //   mode: "",
+    //   _id: "",
+    //   priority: "",
+    // }));
+
+    //form.resetFields();
+
+    console.log(addTask);
   };
 
   // render
@@ -307,6 +341,7 @@ const AddTask = () => {
                 {
                   required: true,
                   message: "Please enter title.",
+                  validateTrigger: ["onSubmit"],
                 },
               ]}
             >
