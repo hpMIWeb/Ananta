@@ -193,7 +193,7 @@ const Approval = () => {
         </Row>
         <Row gutter={[8, 8]} className="form-row">
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-            <TextArea rows={2} name="remark" placeholder="Reason" />
+            <TextArea rows={4} name="remark" placeholder="Reason" />
           </Col>
         </Row>
       </Modal>
