@@ -232,14 +232,13 @@ const TaskViewEdit = (props: any) => {
                         key={subTaskItem._id}
                         tableRowSelected={subTaskItem}
                         isEdit={isEdit}
-                        parentId={updateTask._id}
                     />
                 ),
             };
         }
     );
 
-    const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
+    //const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
 
     return (
         <>
@@ -647,121 +646,48 @@ const TaskViewEdit = (props: any) => {
                                     expandIconPosition="right"
                                 >
                                     {taskSubTasks.map(
-                                        (
-                                            subTaskItem: SubTask,
-                                            index: number
-                                        ) => {
+                                        (subTaskItem: SubTask) => {
                                             return (
                                                 <CollapsePanel
                                                     header={
                                                         <div className="sub-task-header">
-                                                            <div>
-                                                                <span
-                                                                    style={{
-                                                                        marginRight:
-                                                                            "10px",
-                                                                    }}
-                                                                >
-                                                                    {index + 1}.
-                                                                </span>
-                                                            </div>
-                                                            <div
-                                                                className="task-header-cell"
-                                                                style={{
-                                                                    flex: props.fullScreenMode
-                                                                        ? 5
-                                                                        : 14,
-                                                                }}
-                                                            >
+                                                            <div className="task-header-cell">
                                                                 {
                                                                     subTaskItem.title
                                                                 }
                                                             </div>
-                                                            {props.fullScreenMode && (
-                                                                <div className="task-header-cell">
-                                                                    {
-                                                                        subTaskItem.assigned_to
-                                                                    }
-                                                                </div>
-                                                            )}
-                                                            {props.fullScreenMode && (
-                                                                <div className="task-header-cell">
-                                                                    <FontAwesomeIcon
-                                                                        icon={
-                                                                            faClock
-                                                                        }
-                                                                        className="timer-play"
-                                                                        style={{
-                                                                            marginRight:
-                                                                                "10px",
-                                                                        }}
-                                                                    />
-                                                                    {
-                                                                        subTaskItem.budget_time
-                                                                    }
-                                                                </div>
-                                                            )}
-                                                            <div
-                                                                className="task-header-cell"
-                                                                style={{
-                                                                    flex: props.fullScreenMode
-                                                                        ? 1
-                                                                        : 2,
-                                                                }}
-                                                            >
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faCommentDots
-                                                                    }
-                                                                    className="timer-play"
-                                                                    style={{
-                                                                        marginRight:
-                                                                            "10px",
-                                                                    }}
-                                                                />
+                                                            <div className="task-header-cell">
+                                                                {
+                                                                    subTaskItem.assigned_to
+                                                                }
+                                                            </div>
+                                                            <div className="task-header-cell">
+                                                                {
+                                                                    subTaskItem.budget_time
+                                                                }
+                                                            </div>
+                                                            <div className="task-header-cell">
                                                                 {subTaskItem.comments &&
                                                                     subTaskItem
                                                                         .comments
                                                                         .length}
                                                             </div>
                                                             <div className="task-header-cell">
-                                                                {props.fullScreenMode && (
-                                                                    <Tag
-                                                                        color={
-                                                                            "red"
-                                                                        }
-                                                                        style={{
-                                                                            fontWeight:
-                                                                                "500",
-                                                                            fontSize:
-                                                                                "12px",
-                                                                        }}
-                                                                    >
-                                                                        {capitalize(
-                                                                            subTaskItem.status
-                                                                        )}
-                                                                    </Tag>
-                                                                )}
+                                                                {
+                                                                    subTaskItem.status
+                                                                }
                                                             </div>
                                                             <div
                                                                 className={`task-header-cell ${
-                                                                    props.fullScreenMode
-                                                                        ? ""
-                                                                        : "task_priorty"
-                                                                } ${
-                                                                    subTaskItem.priority
-                                                                } ${
                                                                     subTaskItem.priority ===
                                                                     "high"
                                                                         ? "blink"
                                                                         : ""
                                                                 }`}
                                                             >
-                                                                {props.fullScreenMode
-                                                                    ? capitalize(
-                                                                          subTaskItem.priority
-                                                                      )
-                                                                    : " "}
+                                                                {capitalize(
+                                                                    subTaskItem.priority
+                                                                )}
                                                             </div>
                                                         </div>
                                                     }
@@ -773,9 +699,6 @@ const TaskViewEdit = (props: any) => {
                                                             subTaskItem
                                                         }
                                                         isEdit={isEdit}
-                                                        parentId={
-                                                            updateTask._id
-                                                        }
                                                     />
                                                 </CollapsePanel>
                                             );

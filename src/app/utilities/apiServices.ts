@@ -11,6 +11,8 @@ import {
     SubCompliance,
 } from "../modules/compliance/interfaces/ICompliance";
 
+import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
+
 const token = getLocalStorage("authtoken");
 const apiURL = "http://localhost:8005/api/v1/";
 
@@ -229,5 +231,58 @@ export default {
                 complianceId +
                 "&subComplianceId=" +
                 subComplianceId,
+        }),
+    getTimesheet: () =>
+        instance({
+            method: "GET",
+            url: "timesheet/get-timesheet",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createTimesheet: (timesheet: AddTimesheet) =>
+        instance({
+            method: "POST",
+            url: "timesheet/create-timesheet",
+            data: {
+                start_time: timesheet.start_time,
+                end_time: timesheet.end_time,
+                remark: timesheet.remark,
+                client: timesheet.client,
+                work_area: timesheet.work_area,
+                pariculars: timesheet.pariculars,
+                total_time: timesheet.total_time,
+            },
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteTimesheet: (timeSheetId: string) =>
+        instance({
+            method: "DELETE",
+            url: "timesheet/delete-timesheet/id=" + timeSheetId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateTimesheet: (timeSheetId: string, updateTimeSheet: AddTimesheet) =>
+        instance({
+            method: "PUT",
+            url: "timesheet/update-timesheet/id=" + timeSheetId,
+            data: updateTimeSheet,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
         }),
 };
