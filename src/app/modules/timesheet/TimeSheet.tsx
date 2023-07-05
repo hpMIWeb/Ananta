@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSave,
+  faSleigh,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Tabs,
@@ -12,9 +17,10 @@ import {
   Select,
   Divider,
   Input,
-  Space,
   Button,
   TimePicker,
+  Modal,
+  Popconfirm,
 } from "antd";
 import type { TabsProps } from "antd";
 import "./TimeSheet.scss";
@@ -30,6 +36,8 @@ import { workAreaOpts, clientOpts } from "../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import { time } from "console";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -39,20 +47,8 @@ function onChange(sorter: any) {
 
 const TimeSheet = () => {
   const [current, setCurrent] = useState(1);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [addTimesheet, setAddTimesheet] = useState<ITimesheet>(new Timesheet());
-  const [timesheet, setTimesheet] = useState<ITimesheet[]>([
-    {
-      _id: "1",
-      start_time: "",
-      end_time: "",
-      remark: "",
-      client: "",
-      work_area: "",
-      pariculars: "",
-      total_time: "",
-    } as ITimesheet,
-  ]);
+  const [timesheet, setTimesheet] = useState<ITimesheet[]>([]);
 
   const columns = [
     {
@@ -61,17 +57,27 @@ const TimeSheet = () => {
       key: "start_time",
       ellipsis: true,
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (start_time: string) => (
-        <TimePicker
-          placeholder="Start Time"
+      render: (start_time: string, record: any) => (
+        <Form.Item
           name="start_time"
-          defaultValue={dayjs(start_time, "HH:mm")}
-          format={"HH:mm"}
-          onChange={(date, dateString) => {
-            inputChangeHandler(dateString, "start_time");
-          }}
-          className="w100"
-        />
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <TimePicker
+            placeholder="Start Time"
+            name="start_time"
+            defaultValue={dayjs(start_time, "HH:mm")}
+            format={"HH:mm"}
+            onChange={(date, dateString) => {
+              inputChangeHandler(dateString, "start_time");
+            }}
+            className="w100"
+          />
+        </Form.Item>
       ),
     },
     {
@@ -186,47 +192,72 @@ const TimeSheet = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <span>
-          <FontAwesomeIcon
-            icon={faSave}
-            className="btn-at"
-            title="Save Timesheet"
-            style={{
-              color: "#5edd0a",
-              marginLeft: "15px",
-            }}
-            onClick={addTimeSheetHandler}
-          />
-        </span>
-        // <span>
-
-        //   <FontAwesomeIcon
-        //     icon={faEdit}
-        //     className="btn-at"
-        //     title="Edit Timesheet"
-        //     style={{
-        //       color: "#2c7be5",
-        //       marginLeft: "15px",
-        //     }}
-        //     onClick={editClickHandler}
-        //   />
-        //   <Divider type="vertical" />
-        //   <FontAwesomeIcon
-        //     icon={faTrash}
-        //     className="btn-at"
-        //     title="Delete Timesheet"
-        //     style={{ color: "#fa5c7c" }}
-        //   />
-        // </span>
-      ),
+      render: (_: any, record: Timesheet) => {
+        if (record.is_new) {
+          return (
+            <span>
+              <Button htmlType="submit">
+                <FontAwesomeIcon
+                  icon={faSave}
+                  className="btn-at"
+                  title="Save Timesheet"
+                  style={{
+                    color: "#5edd0a",
+                    marginLeft: "15px",
+                  }}
+                  onClick={addTimeSheetHandler}
+                />
+              </Button>
+            </span>
+          );
+        }
+        return (
+          <span>
+            <FontAwesomeIcon
+              icon={faEdit}
+              className="btn-at"
+              title="Edit Timesheet"
+              style={{
+                color: "#2c7be5",
+                marginLeft: "15px",
+              }}
+              onClick={() => editClickHandler(record)}
+            />
+            <Divider type="vertical" />
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => deleteClickHandler(record._id)}
+            >
+              <FontAwesomeIcon
+                icon={faTrash}
+                className="btn-at"
+                title="Delete Timesheet"
+                style={{ color: "#fa5c7c" }}
+              />
+            </Popconfirm>
+          </span>
+        );
+      },
     },
   ];
 
   const addNewTimesheetRow = () => {
+    const hasDynamicRow = timesheet.some((row) => row.is_new);
+    const timeSheetList = localStorage.getItem("timesheet");
+    let allTimesheet =
+      timeSheetList && timeSheetList.length > 0
+        ? JSON.parse(timeSheetList)
+        : [];
+
+    if (hasDynamicRow) {
+      toast.error("Please complete old row action.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     const newTimesheet = {
-      _id: "1",
+      _id:
+        allTimesheet && allTimesheet.length > 0 ? allTimesheet.length + 1 : 1,
       start_time: "",
       end_time: "",
       remark: "",
@@ -234,8 +265,10 @@ const TimeSheet = () => {
       work_area: "",
       pariculars: "",
       total_time: "",
+      is_new: true,
     } as ITimesheet;
-    setTimesheet([...timesheet, newTimesheet]);
+    console.log(newTimesheet);
+    setTimesheet([newTimesheet, ...timesheet]);
   };
 
   const [activeTab, setActiveTab] = useState<string>("1");
@@ -244,22 +277,95 @@ const TimeSheet = () => {
     setActiveTab(key);
   };
 
-  const editClickHandler = () => {
-    setIsEdit(!isEdit);
+  // Edit time sheet data
+  const editClickHandler = (updateTimesheet: Timesheet) => {
+    console.log("Update task", updateTimesheet);
+
+    api
+      .updateTimesheet(updateTimesheet._id, updateTimesheet)
+      .then((resp: any) => {
+        toast.success("Successfully Updated Timesheet", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
   };
 
+  // delete time sheet data
+  const deleteClickHandler = (timeSheetId: string) => {
+    const timeSheetList = localStorage.getItem("timesheet");
+    let allTimesheet =
+      timeSheetList && timeSheetList.length > 0
+        ? JSON.parse(timeSheetList)
+        : [];
+    // Delete from  DB
+    try {
+      api.deleteTimesheet(timeSheetId).then((resp: any) => {
+        // Set timesheet to `localStorage`
+        const updatedData = allTimesheet.filter(
+          (item: Timesheet) => item._id !== timeSheetId
+        );
+        setTimesheet(updatedData);
+        localStorage.setItem("timesheet", JSON.stringify(updatedData));
+        toast.success("Successfully Timesheet add.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      });
+    } catch (ex) {
+      toast.error("Technical error while creating Task", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  // save time sheet data
   const addTimeSheetHandler = () => {
     // Read all existing timesheet from `localStorage`
-    const timesheetList = localStorage.getItem("timesheet");
+    const timeSheetList = localStorage.getItem("timesheet");
 
-    // set timer
+    if (
+      addTimesheet.start_time === "" ||
+      addTimesheet.end_time === "" ||
+      addTimesheet.client === "" ||
+      addTimesheet.work_area === "" ||
+      addTimesheet.pariculars === ""
+    ) {
+      // Show an error message
+      toast.error("Please fill in all fields", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+
+    // Parse the time values to compare
+    const startTime = dayjs(addTimesheet.start_time, "HH:mm");
+    const endTime = dayjs(addTimesheet.end_time, "HH:mm");
 
     let allTimesheet =
-      timesheetList && timesheetList.length > 0
-        ? JSON.parse(timesheetList)
+      timeSheetList && timeSheetList.length > 0
+        ? JSON.parse(timeSheetList)
         : [];
+
+    // Check if the entered time range overlaps with any existing records
+    const overlappingRecord = allTimesheet.find((item: Timesheet) => {
+      const itemStartTime = dayjs(item.start_time, "HH:mm");
+      const itemEndTime = dayjs(item.end_time, "HH:mm");
+      return (
+        (startTime.isSame(itemEndTime) && endTime.isAfter(itemStartTime)) ||
+        (startTime.isAfter(itemStartTime) && endTime.isSame(itemEndTime)) ||
+        (startTime.isBefore(itemStartTime) && endTime.isAfter(itemEndTime))
+      );
+    });
+
+    if (overlappingRecord) {
+      toast.error("Time entry overlaps with an existing record", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+
     addTimesheet._id =
       allTimesheet && allTimesheet.length > 0 ? allTimesheet.length + 1 : 1;
+
     allTimesheet.push(addTimesheet);
 
     console.log("ALL timesheet", allTimesheet);
@@ -270,6 +376,7 @@ const TimeSheet = () => {
       api.createTimesheet(addTimesheet).then((resp: any) => {
         // Set timesheet to `localStorage`
         localStorage.setItem("timesheet", JSON.stringify(allTimesheet));
+        setTimesheet(allTimesheet);
         toast.success("Successfully Timesheet add.", {
           position: toast.POSITION.TOP_RIGHT,
         });
@@ -315,13 +422,13 @@ const TimeSheet = () => {
   const getTaskData = () => {
     api.getTimesheet().then((resp: any) => {
       setTimesheet(resp.data);
+      localStorage.setItem("timesheet", JSON.stringify(resp.data));
     });
   };
   const getData = (current: number, pageSize: number) => {
     let retVal: AddTimesheet[] = [];
     retVal = timesheet;
 
-    console.log("retVal", retVal);
     return retVal
       .map((item: any, index: number) => {
         item.key = index;
@@ -367,6 +474,7 @@ const TimeSheet = () => {
         className="task-list-header"
         style={{ borderBottom: "2px solid #d8e2ef" }}
       >
+        <ToastContainer />
         <div>
           <Tabs
             defaultActiveKey="1"
@@ -400,6 +508,7 @@ const TimeSheet = () => {
               pagination={{ pageSize: 100 }}
               scroll={{ x: 1300 }}
               onChange={onChange}
+              rowKey="id"
             />
           </Col>
         </Row>

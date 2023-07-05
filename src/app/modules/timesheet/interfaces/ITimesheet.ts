@@ -7,6 +7,7 @@ export interface AddTimesheet {
   work_area: string;
   pariculars: string;
   total_time: string;
+  is_new: boolean;
 }
 
 export class Timesheet implements AddTimesheet {
@@ -18,4 +19,5 @@ export class Timesheet implements AddTimesheet {
   work_area: string = "";
   pariculars: string = "";
   total_time: string = "";
+  is_new: boolean = false;
 }

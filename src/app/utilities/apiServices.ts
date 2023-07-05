@@ -262,4 +262,26 @@ export default {
         },
       ],
     }),
+  deleteTimesheet: (timeSheetId: string) =>
+    instance({
+      method: "DELETE",
+      url: "timesheet/delete-timesheet/id=" + timeSheetId,
+      transformResponse: [
+        function (data) {
+          const json = JSON.parse(data);
+          return json.payload;
+        },
+      ],
+    }),
+  updateTimesheet: (timeSheetId: string, updateTimeSheet: AddTimesheet) =>
+    instance({
+      method: "PUT",
+      url: "timesheet/update-timesheet/id=" + timeSheetId,
+      data: updateTimeSheet,
+      transformResponse: [
+        function (data) {
+          return data;
+        },
+      ],
+    }),
 };
