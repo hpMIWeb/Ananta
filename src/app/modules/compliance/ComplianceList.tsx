@@ -10,7 +10,7 @@ import {
   Row,
   Col,
   Select,
-  Switch,
+  Input,
 } from "antd";
 import {
   AddCompliance,
@@ -32,6 +32,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { complianceReportOpts, clientOpts } from "../../utilities/utility";
 import Fillter from "../fillter/Fillter";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -400,6 +401,64 @@ const ComplianceList = () => {
   const todayContent = () => {
     return (
       <div>
+        <Row gutter={[8, 8]} className="form-row">
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            style={{
+              float: "right",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <Input placeholder="Search" prefix={<SearchOutlined />} />
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            style={{
+              float: "right",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+          ></Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            style={{ paddingTop: "20px", textAlign: "right" }}
+          >
+            <a
+              className="btn-link expanddiv"
+              title="Show Filters"
+              onClick={onSwitchMoreFilter}
+            >
+              <span className="svgIcon">
+                {!showMoreFilter ? "Show Filters " : "Hide Filters "}
+              </span>
+              <svg
+                className="svg-inline--fa fa-angle-down fa-w-10"
+                aria-hidden="true"
+                focusable="false"
+                data-prefix="fas"
+                data-icon="angle-down"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+                data-fa-i2svg=""
+              >
+                <path
+                  fill="currentColor"
+                  d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
+                ></path>
+              </svg>
+              <i className="fas fa-angle-down"></i>
+            </a>
+          </Col>
+        </Row>
+        <Fillter showMoreFilter={showMoreFilter} />
         <Table
           id={"complianceListRow"}
           dataSource={getData(current, pageSize, "today")}
