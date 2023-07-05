@@ -9,6 +9,7 @@ import { getLocalStorage } from "./utility";
 import {
     AddCompliance,
     SubCompliance,
+    SaveComplianceComment,
 } from "../modules/compliance/interfaces/ICompliance";
 
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
@@ -217,12 +218,6 @@ export default {
                 "&ComplianceId=" +
                 complianceId,
         }),
-    updateSubCompliance: (updateSubCompliance: SubCompliance) =>
-        instance({
-            method: "PUT",
-            url: "subcompliance/update-subcompliance",
-            data: updateSubCompliance,
-        }),
     deleteSubCompliance: (complianceId: string, subComplianceId: string) =>
         instance({
             method: "DELETE",
@@ -282,6 +277,60 @@ export default {
             transformResponse: [
                 function (data) {
                     return data;
+                },
+            ],
+        }),
+    updateSubCompliance: (updateSubCompliance: SubCompliance) =>
+        instance({
+            method: "PUT",
+            url: "subcompliance/update-subcompliance",
+            data: {
+                subComplianceId: updateSubCompliance._id,
+                ComplianceId: updateSubCompliance.complianceId,
+                mode: updateSubCompliance.mode,
+            },
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    addComplianceComment: (comment: SaveComplianceComment) =>
+        instance({
+            method: "POST",
+            url: "compliancecomment/create-compliance-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    updateComplianceComment: (comment: SaveComplianceComment) =>
+        instance({
+            method: "PUT",
+            url: "compliancecomment/update-compliance-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteComplianceComment: (complianceId: string, commentId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "compliancecomment/delete-compliance-comment?taskId=" +
+                complianceId +
+                "&commentId=" +
+                commentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),
