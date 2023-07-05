@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   faEdit,
   faSave,
@@ -46,6 +46,7 @@ function onChange(sorter: any) {
 }
 
 const TimeSheet = () => {
+  const formRef = useRef(null);
   const [current, setCurrent] = useState(1);
   const [addTimesheet, setAddTimesheet] = useState<ITimesheet>(new Timesheet());
   const [timesheet, setTimesheet] = useState<ITimesheet[]>([]);
@@ -55,11 +56,9 @@ const TimeSheet = () => {
       title: "Start Time",
       dataIndex: "start_time",
       key: "start_time",
-      ellipsis: true,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: (start_time: string, record: any) => (
+      render: (start_time: string, record: Timesheet) => (
         <Form.Item
-          name="start_time"
+          name={`start_time_${record._id}`}
           rules={[
             {
               required: true,
@@ -69,12 +68,9 @@ const TimeSheet = () => {
         >
           <TimePicker
             placeholder="Start Time"
-            name="start_time"
+            name={`start_time_${record._id}`}
             defaultValue={dayjs(start_time, "HH:mm")}
-            format={"HH:mm"}
-            onChange={(date, dateString) => {
-              inputChangeHandler(dateString, "start_time");
-            }}
+            format="HH:mm"
             className="w100"
           />
         </Form.Item>
@@ -85,17 +81,27 @@ const TimeSheet = () => {
       dataIndex: "end_time",
       key: "end_time",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (end_time: string) => (
-        <TimePicker
-          placeholder="End Time"
-          name="end_time"
-          defaultValue={dayjs(end_time, "HH:mm")}
-          format={"HH:mm"}
-          onChange={(date, dateString) => {
-            inputChangeHandler(dateString, "end_time");
-          }}
-          className="w100"
-        />
+      render: (end_time: string, record: Timesheet) => (
+        <Form.Item
+          name={`end_time_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <TimePicker
+            placeholder="End Time"
+            name="end_time"
+            defaultValue={dayjs(end_time, "HH:mm")}
+            format={"HH:mm"}
+            onChange={(date, dateString) => {
+              inputChangeHandler(dateString, "end_time");
+            }}
+            className="w100"
+          />
+        </Form.Item>
       ),
     },
     {
@@ -103,18 +109,28 @@ const TimeSheet = () => {
       dataIndex: "client",
       key: "client",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (client: string) => (
-        <Select
-          allowClear
-          showSearch
-          placeholder="Client"
-          options={clientOpts}
-          defaultValue={client}
-          className="w100"
-          onChange={(value, event) => {
-            inputChangeHandler(event, "client");
-          }}
-        />
+      render: (client: string, record: Timesheet) => (
+        <Form.Item
+          name={`client_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <Select
+            allowClear
+            showSearch
+            placeholder="Client"
+            options={clientOpts}
+            defaultValue={client}
+            className="w100"
+            onChange={(value, event) => {
+              inputChangeHandler(event, "client");
+            }}
+          />
+        </Form.Item>
       ),
     },
     {
@@ -122,18 +138,28 @@ const TimeSheet = () => {
       dataIndex: "work_area",
       key: "work_area",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (work_area: string) => (
-        <Select
-          allowClear
-          showSearch
-          placeholder="Work Area"
-          className="w102"
-          options={workAreaOpts}
-          defaultValue={work_area}
-          onChange={(value, event) => {
-            inputChangeHandler(event, "work_area");
-          }}
-        />
+      render: (work_area: string, record: Timesheet) => (
+        <Form.Item
+          name={`work_area_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <Select
+            allowClear
+            showSearch
+            placeholder="Work Area"
+            className="w102"
+            options={workAreaOpts}
+            defaultValue={work_area}
+            onChange={(value, event) => {
+              inputChangeHandler(event, "work_area");
+            }}
+          />
+        </Form.Item>
       ),
     },
     {
@@ -141,17 +167,27 @@ const TimeSheet = () => {
       dataIndex: "pariculars",
       key: "pariculars",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (pariculars: string) => (
-        <Input
-          placeholder="Particulars"
-          type="text"
-          name="pariculars"
-          defaultValue={pariculars}
-          className="w102"
-          onChange={(value) => {
-            inputChangeHandler(value);
-          }}
-        />
+      render: (pariculars: string, record: Timesheet) => (
+        <Form.Item
+          name={`pariculars_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Particulars"
+            type="text"
+            name="pariculars"
+            defaultValue={pariculars}
+            className="w102"
+            onChange={(value) => {
+              inputChangeHandler(value);
+            }}
+          />
+        </Form.Item>
       ),
     },
     {
@@ -159,17 +195,27 @@ const TimeSheet = () => {
       dataIndex: "remark",
       key: "remark",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (remark: string) => (
-        <Input
-          placeholder="Remark"
-          type="text"
-          name="remark"
-          defaultValue={remark}
-          className="w102"
-          onChange={(value) => {
-            inputChangeHandler(value);
-          }}
-        />
+      render: (remark: string, record: Timesheet) => (
+        <Form.Item
+          name={`remark_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Remark"
+            type="text"
+            name="remark"
+            defaultValue={remark}
+            className="w102"
+            onChange={(value) => {
+              inputChangeHandler(value);
+            }}
+          />
+        </Form.Item>
       ),
     },
     {
@@ -177,15 +223,25 @@ const TimeSheet = () => {
       dataIndex: "total_time",
       key: "total_time",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (remark: string) => (
-        <Input
-          name="total_time"
-          className="w102"
-          defaultValue={remark}
-          onChange={(value) => {
-            inputChangeHandler(value);
-          }}
-        />
+      render: (remark: string, record: Timesheet) => (
+        <Form.Item
+          name={`total_time_${record._id}`}
+          rules={[
+            {
+              required: true,
+              message: "Please enter start time.",
+            },
+          ]}
+        >
+          <Input
+            name="total_time"
+            className="w102"
+            defaultValue={remark}
+            onChange={(value) => {
+              inputChangeHandler(value);
+            }}
+          />
+        </Form.Item>
       ),
     },
     {
@@ -484,35 +540,37 @@ const TimeSheet = () => {
           />
         </div>
       </div>
-      <div style={{ textAlign: "right" }}>
-        <DatePicker placeholder="Date" name="due_date" className="w101" />
-        <div>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={addNewTimesheetRow}
-          >
-            Add
-          </Button>
+      <Form>
+        <div style={{ textAlign: "right" }}>
+          <DatePicker placeholder="Date" name="due_date" className="w101" />
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={addNewTimesheetRow}
+            >
+              Add
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <Row gutter={[8, 8]} className="form-row"></Row>
-      <div>
-        <Row gutter={[8, 8]} className="form-row">
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-            <Table
-              columns={columns}
-              //   dataSource={timesheet}
-              dataSource={getData(current, pageSize)}
-              pagination={{ pageSize: 100 }}
-              scroll={{ x: 1300 }}
-              onChange={onChange}
-              rowKey="id"
-            />
-          </Col>
-        </Row>
-      </div>
+        <Row gutter={[8, 8]} className="form-row"></Row>
+        <div>
+          <Row gutter={[8, 8]} className="form-row">
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+              <Table
+                columns={columns}
+                //   dataSource={timesheet}
+                dataSource={getData(current, pageSize)}
+                pagination={{ pageSize: 100 }}
+                scroll={{ x: 1300 }}
+                onChange={onChange}
+                rowKey="id"
+              />
+            </Col>
+          </Row>
+        </div>
+      </Form>
     </>
   );
 };
