@@ -56,53 +56,105 @@ const TimeSheet = () => {
       title: "Start Time",
       dataIndex: "start_time",
       key: "start_time",
-      render: (start_time: string, record: Timesheet) => (
-        <Form.Item
-          name={`start_time_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
-        >
-          <TimePicker
-            placeholder="Start Time"
+      render: (start_time: string, record: Timesheet) => {
+        if (record.is_new) {
+          return (
+            <Form.Item
+              name={`start_time_${record._id}`}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter start time.",
+                },
+              ]}
+            >
+              <TimePicker
+                placeholder="Start Time"
+                name={`start_time_${record._id}`}
+                format="HH:mm"
+                className="w100"
+                onChange={(date, dateString) => {
+                  inputChangeHandler(dateString, "start_time");
+                }}
+              />
+            </Form.Item>
+          );
+        }
+        return (
+          <Form.Item
             name={`start_time_${record._id}`}
-            defaultValue={dayjs(start_time, "HH:mm")}
-            format="HH:mm"
-            className="w100"
-          />
-        </Form.Item>
-      ),
+            rules={[
+              {
+                required: true,
+                message: "Please enter start time.",
+              },
+            ]}
+          >
+            <TimePicker
+              placeholder="Start Time"
+              name={`start_time_${record._id}`}
+              format="HH:mm"
+              className="w100"
+              onChange={(date, dateString) => {
+                inputChangeHandler(dateString, "start_time");
+              }}
+            />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "End Time",
       dataIndex: "end_time",
       key: "end_time",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (end_time: string, record: Timesheet) => (
-        <Form.Item
-          name={`end_time_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
-        >
-          <TimePicker
-            placeholder="End Time"
-            name="end_time"
-            defaultValue={dayjs(end_time, "HH:mm")}
-            format={"HH:mm"}
-            onChange={(date, dateString) => {
-              inputChangeHandler(dateString, "end_time");
-            }}
-            className="w100"
-          />
-        </Form.Item>
-      ),
+      render: (end_time: string, record: Timesheet) => {
+        if (record.is_new) {
+          return (
+            <Form.Item
+              name={`end_time_${record._id}`}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter start time.",
+                },
+              ]}
+            >
+              <TimePicker
+                placeholder="End Time"
+                name="end_time"
+                format={"HH:mm"}
+                onChange={(date, dateString) => {
+                  inputChangeHandler(dateString, "end_time");
+                }}
+                className="w100"
+              />
+            </Form.Item>
+          );
+        }
+        return (
+          <Form.Item
+            name={`end_time_${record._id}`}
+            rules={[
+              {
+                required: true,
+                message: "Please enter start time.",
+              },
+            ]}
+          >
+            <TimePicker
+              placeholder="End Time"
+              name="end_time"
+              defaultValue={dayjs(end_time, "HH:mm")}
+              format={"HH:mm"}
+              onChange={(date, dateString) => {
+                inputChangeHandler(dateString, "end_time");
+              }}
+              className="w100"
+            />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Client Name",
@@ -449,6 +501,7 @@ const TimeSheet = () => {
   const inputChangeHandler = (event: any, nameItem: string = "") => {
     let name = "";
     let value = "";
+    let start;
     if (event && event.target) {
       name = event.target.name;
       value = event.target.value;
@@ -460,6 +513,10 @@ const TimeSheet = () => {
       value = event.value;
     }
 
+    console.log("name", name);
+    console.log("value", value);
+    if (name === "start_time") {
+    }
     // update selected rows
     //setAddTimesheet(selectedTableRow);
     setAddTimesheet({
