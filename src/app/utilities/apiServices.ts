@@ -3,6 +3,7 @@ import {
     AddTask,
     SaveComment,
     SubTask,
+    UpdateSubTask,
 } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 import {
@@ -124,10 +125,10 @@ export default {
                 },
             ],
         }),
-    updateSubTask: (subTask: SubTask, subTaskId: string, taskId: string) =>
+    updateSubTask: (subTask: UpdateSubTask, subTaskId: string) =>
         instance({
-            method: "POST",
-            url: "subtask/update-subtask",
+            method: "PUT",
+            url: "subtask/update-subtask/" + subTaskId,
             data: subTask,
             transformResponse: [
                 function (data) {

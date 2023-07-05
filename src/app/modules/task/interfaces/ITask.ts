@@ -75,6 +75,23 @@ export interface SubTask {
     comments: Comment[];
 }
 
+export interface UpdateSubTask {
+    _id: string;
+    taskId: string;
+    title: string;
+    status: string;
+    budget_time: string;
+    actual_time: string;
+    remarks: string;
+    client: string;
+    assigned_to: string;
+    priority: string;
+    dataPath: string;
+    workArea: string;
+    attachments: Attachment[];
+    comments: Comment[];
+}
+
 export interface Attachment {
     fileName: string;
     filePath: string;

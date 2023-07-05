@@ -25,7 +25,12 @@ import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 import Comments from "../../components/Comments/Comments";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { SaveComment, SubTask } from "./interfaces/ITask";
+import {
+    AddTask,
+    SaveComment,
+    SubTask,
+    UpdateSubTask,
+} from "./interfaces/ITask";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
@@ -35,7 +40,8 @@ dayjs.extend(customParseFormat);
 
 const SubTaskViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-    const [updateTask, setUpdateTask] = useState<SubTask>(
+    const [parentId, setParentId] = useState(props.parentId);
+    const [updateTask, setUpdateTask] = useState<UpdateSubTask>(
         props.tableRowSelected
     );
     const [taskComments, setTaskComments] = useState<Comment>(
@@ -48,9 +54,11 @@ const SubTaskViewEdit = (props: any) => {
     }, [props.isEdit]);
 
     useEffect(() => {
+        setParentId(props.parentId);
+        setUpdateTask(props.tableRowSelected);
         setUpdateTask(props.tableRowSelected);
         setTaskComments(props.tableRowSelected.comments);
-    }, [props.tableRowSelected]);
+    }, [props.tableRowSelected, props.parentId]);
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
@@ -90,19 +98,47 @@ const SubTaskViewEdit = (props: any) => {
         }
     };
 
+    const handleUpdateTask = () => {
+        console.log("Update task", updateTask);
+
+        api.updateSubTask(updateTask, updateTask._id).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            setIsEdit(false);
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
+    };
+
+    const priorityChangeHandler = (event: any, value: string) => {
+        console.log("Priority change - ", event);
+
+        const taskUpdate = {} as UpdateSubTask;
+        taskUpdate.priority = value;
+        // taskUpdate._id = updateTask._id;
+        taskUpdate.taskId = parentId;
+
+        api.updateSubTask(taskUpdate, updateTask._id).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
+    };
+
     const statusChangeHandler = (event: any, value: string) => {
         console.log("Status change - ", event);
 
-        const taskUpdate = {} as SubTask;
+        const taskUpdate = {} as UpdateSubTask;
         taskUpdate.status = value;
+        // taskUpdate._id = updateTask._id;
+        taskUpdate.taskId = parentId;
 
-        api.updateSubTask(taskUpdate, updateTask._id, updateTask.taskId).then(
-            (resp: any) => {
-                toast.success("Successfully Updated Task", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            }
-        );
+        api.updateSubTask(taskUpdate, updateTask._id).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        });
     };
 
     const addCommentHandler = (comment: string) => {
@@ -164,8 +200,6 @@ const SubTaskViewEdit = (props: any) => {
                 });
             });
     };
-
-    const handleUpdateTask = () => {};
 
     return (
         <>
@@ -258,7 +292,7 @@ const SubTaskViewEdit = (props: any) => {
                                 defaultValue={updateTask.priority}
                                 className="w100"
                                 onChange={(value, event) => {
-                                    statusChangeHandler(event, value);
+                                    priorityChangeHandler(event, value);
                                 }}
                             />
                         )}
