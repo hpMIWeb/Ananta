@@ -10,7 +10,10 @@ import {
     TimePicker,
     Input,
     Button,
+    Collapse,
+    Tag,
 } from "antd";
+import type { CollapseProps } from "antd";
 import {
     assigneeOpts,
     capitalize,
@@ -24,43 +27,39 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 import Comments from "../../components/Comments/Comments";
-import { AddTask, SaveComment } from "./interfaces/ITask";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { AddTask, SaveComment, SubTask } from "./interfaces/ITask";
 
 import {
     faEdit,
     faExpandArrowsAlt,
     faCompressArrowsAlt,
     faXmark,
+    faClock,
+    faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
+import SubTaskViewEdit from "./SubTaskViewEdit";
+import "./TaskViewEdit.scss";
+import CollapsePanel from "antd/es/collapse/CollapsePanel";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
 
-const inputChangeHandler = (event: any, nameItem: string = "") => {
-    let name = "";
-    let value = "";
-    if (event && event.target) {
-        name = event.target.name;
-        value = event.target.value;
-    } else if (nameItem !== "" && event !== "") {
-        name = nameItem;
-        value = event;
-    } else if (event) {
-        name = event.name;
-        value = event.value;
-    }
-
-    console.log(name, value);
-
-    const taskUpdate = {} as AddTask;
-    taskUpdate.status = value;
-};
-
 const TaskViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
+    const [updateTask, setUpdateTask] = useState<AddTask>(
+        props.tableRowSelected
+    );
+    const [taskComments, setTaskComments] = useState<Comment>(
+        props.tableRowSelected.comments
+    );
+    const [taskSubTasks, setTaskSubTasks] = useState<SubTask[]>(
+        props.tableRowSelected.subtask ?? []
+    );
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -68,7 +67,33 @@ const TaskViewEdit = (props: any) => {
         }
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        setUpdateTask(props.tableRowSelected);
+        setTaskSubTasks(props.tableRowSelected.subtask);
+        setTaskComments(props.tableRowSelected.comments);
+    }, [props.tableRowSelected]);
+
+    const inputChangeHandler = (event: any, nameItem: string = "") => {
+        let name = "";
+        let value = "";
+        if (event && event.target) {
+            name = event.target.name;
+            value = event.target.value;
+        } else if (nameItem !== "" && event !== "") {
+            name = nameItem;
+            value = event;
+        } else if (event) {
+            name = event.name;
+            value = event.value;
+        }
+
+        console.log(name, value);
+
+        setUpdateTask({
+            ...updateTask,
+            [name]: value,
+        });
+    };
 
     const dividerRow = () => {
         return (
@@ -81,8 +106,8 @@ const TaskViewEdit = (props: any) => {
     };
 
     const getRemark = () => {
-        if (props.tableRowSelected.remark) {
-            return parse(props.tableRowSelected.remark);
+        if (updateTask.remarks) {
+            return parse(updateTask.remarks);
         } else {
             return "";
         }
@@ -92,31 +117,49 @@ const TaskViewEdit = (props: any) => {
         setIsEdit(!isEdit);
     };
 
-    const statusChangeHandler = (event: any, value: string) => {
-        console.log("Status change - ", event);
+    const priorityChangeHandler = (event: any, value: string) => {
+        console.log("Priority change - ", event);
 
+        const taskUpdate = {} as AddTask;
+        taskUpdate.priority = value;
+
+        api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
+    };
+
+    const statusChangeHandler = (event: any, value: string) => {
         const taskUpdate = {} as AddTask;
         taskUpdate.status = value;
 
-        api.updateTask(props.tableRowSelected._id, taskUpdate).then(
-            (resp: any) => {
-                // localStorage.setItem("task", JSON.stringify(taskUpdate));
+        if (value !== "" && value !== undefined) {
+            api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
                 toast.success("Successfully Updated Task", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-            }
-        );
+                if (props.handleListUpdate) props.handleListUpdate();
+            });
+        } else {
+            toast.error("Status should not blank", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
 
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComment;
         addComment.comment = comment;
-        addComment.taskId = props.tableRowSelected._id;
+        addComment.taskId = updateTask._id;
+
         api.addTaskComment(addComment)
-            .then(() => {
+            .then((resp: any) => {
                 toast.success("Successfully added comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -141,7 +184,7 @@ const TaskViewEdit = (props: any) => {
                 toast.success("Successfully updated comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                //setTaskComments(resp.data.comments);
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -152,13 +195,12 @@ const TaskViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        api.deleteTaskComment(props.tableRowSelected._id, commentId)
+        api.deleteTaskComment(updateTask._id, commentId)
             .then((resp: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-
-                // setTaskComments(resp.data.comments);
+                setTaskComments(resp.data.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -168,16 +210,43 @@ const TaskViewEdit = (props: any) => {
             });
     };
 
-    const handleUpdateTask = () => {};
+    const handleUpdateTask = () => {
+        console.log("Update task", updateTask);
+
+        api.updateTask(updateTask._id, updateTask).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            setIsEdit(false);
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
+    };
+
+    const subTaskCollapse = taskSubTasks.map(
+        (subTaskItem: SubTask, index: number) => {
+            return {
+                key: index,
+                label: subTaskItem.title,
+                children: (
+                    <SubTaskViewEdit
+                        key={subTaskItem._id}
+                        tableRowSelected={subTaskItem}
+                        isEdit={isEdit}
+                        parentId={updateTask._id}
+                    />
+                ),
+            };
+        }
+    );
+
+    const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
 
     return (
         <>
             <div
                 style={{
                     display:
-                        Object.keys(props.tableRowSelected).length > 0
-                            ? "block"
-                            : "none",
+                        Object.keys(updateTask).length > 0 ? "block" : "none",
                 }}
             >
                 <ToastContainer />
@@ -186,85 +255,76 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 18 : 16 }}
+                            md={{ span: props.fullScreenMode ? 17 : 20 }}
                         >
                             {!isEdit && (
-                                <Title level={5} style={{ textAlign: "left" }}>
-                                    {props.tableRowSelected.title}
+                                <Title level={4} style={{ textAlign: "left" }}>
+                                    {updateTask.title}
                                 </Title>
                             )}
                             {isEdit && (
                                 <Input
                                     placeholder="Task"
-                                    name="task"
-                                    value={props.tableRowSelected.title}
-                                    // onChange={(event) => {
-                                    //     inputChangeHandler(event);
-                                    // }}
+                                    name="title"
+                                    defaultValue={updateTask.title}
+                                    onChange={(event) => {
+                                        inputChangeHandler(event);
+                                    }}
                                 />
                             )}
                         </Col>
+                        {props.fullScreenMode && (
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 5 }}
+                            >
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    {capitalize(updateTask.assigned_to)}
+                                </Title>
+                            </Col>
+                        )}
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: 5 }}
-                        >
-                            <Title level={5} style={{ textAlign: "right" }}>
-                                {capitalize(props.tableRowSelected.assignee)}
-                            </Title>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 1 : 3 }}
+                            md={{ span: props.fullScreenMode ? 2 : 4 }}
                         >
                             <FontAwesomeIcon
-                                icon={isEdit ? faXmark : faEdit}
+                                icon={
+                                    props.fullScreenMode
+                                        ? faCompressArrowsAlt
+                                        : faExpandArrowsAlt
+                                }
+                                onClick={fullScreenModeToggle}
                                 style={{
-                                    fontSize: isEdit ? "25px" : "20px",
+                                    fontSize: "20px",
                                     color: "#2c7be5",
+                                    float: "right",
                                     cursor: "pointer",
-                                    marginLeft: "10px",
-                                    marginTop: isEdit ? "-3px" : "0",
                                 }}
                                 title={
-                                    "Click here to " +
-                                    (isEdit ? "cancel" : "edit")
+                                    "Click here to" +
+                                    (props.fullScreenMode
+                                        ? "minimize"
+                                        : "maximize")
                                 }
-                                onClick={editClickHandler}
                             />
-
-                            {!props.fullScreenMode && (
-                                <FontAwesomeIcon
-                                    icon={faExpandArrowsAlt}
-                                    style={{
-                                        fontSize: "20px",
-                                        fontWeight: "normal",
-                                        color: "#2c7be5",
-                                        float: "right",
-                                        cursor: "pointer",
-                                        display: props.fullScreenMode
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                    title="Click here to maximize"
-                                    onClick={fullScreenModeToggle}
-                                />
-                            )}
                             {props.fullScreenMode && (
                                 <FontAwesomeIcon
-                                    icon={faCompressArrowsAlt}
-                                    onClick={fullScreenModeToggle}
+                                    icon={isEdit ? faXmark : faEdit}
                                     style={{
-                                        fontSize: "20px",
+                                        fontSize: isEdit ? "25px" : "20px",
                                         color: "#2c7be5",
-                                        float: "right",
                                         cursor: "pointer",
-                                        display: props.fullScreenMode
-                                            ? "block"
-                                            : "none",
+                                        marginRight: "15px",
+                                        float: "right",
+                                        marginTop: isEdit ? "-3px" : "0",
                                     }}
-                                    title="Click here to minimize"
+                                    title={
+                                        "Click here to " +
+                                        (isEdit ? "cancel" : "edit")
+                                    }
+                                    onClick={editClickHandler}
                                 />
                             )}
                         </Col>
@@ -293,9 +353,7 @@ const TaskViewEdit = (props: any) => {
                             lg={{ span: 14 }}
                         >
                             <div className="timerbuttons">
-                                <Stopwatch
-                                    taskId={props.tableRowSelected.taskId}
-                                />
+                                <Stopwatch taskId={updateTask._id} />
                             </div>
                         </Col>
                         <Col
@@ -304,16 +362,36 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: 4 }}
                             lg={{ span: 5 }}
                         >
-                            <Select
-                                allowClear
-                                placeholder="Select Priority"
-                                options={priorityOpts}
-                                value={props.tableRowSelected.priority}
-                                className="w100"
-                                onChange={(value, event) => {
-                                    statusChangeHandler(event, value);
-                                }}
-                            />
+                            {!isEdit && (
+                                <>
+                                    <Title
+                                        level={4}
+                                        style={{
+                                            textAlign: "right",
+                                            marginRight: "30px",
+                                        }}
+                                        className={`text-priority ${
+                                            updateTask.priority === "high"
+                                                ? "blink"
+                                                : ""
+                                        }`}
+                                    >
+                                        {capitalize(updateTask.priority)}
+                                    </Title>
+                                </>
+                            )}
+                            {isEdit && (
+                                <Select
+                                    allowClear
+                                    placeholder="Select Priority"
+                                    options={priorityOpts}
+                                    defaultValue={updateTask.priority}
+                                    className="w100"
+                                    onChange={(value, event) => {
+                                        priorityChangeHandler(event, value);
+                                    }}
+                                />
+                            )}
                         </Col>
                         <Col
                             xs={{ span: 24 }}
@@ -325,7 +403,7 @@ const TaskViewEdit = (props: any) => {
                                 allowClear
                                 placeholder="Select Status"
                                 options={statusList}
-                                value={props.tableRowSelected.status}
+                                defaultValue={updateTask.status}
                                 className="w100"
                                 onChange={(value, event) => {
                                     statusChangeHandler(event, value);
@@ -342,15 +420,13 @@ const TaskViewEdit = (props: any) => {
                         >
                             Assigned To
                             <div>
-                                {!isEdit && (
-                                    <b>{props.tableRowSelected.assignee}</b>
-                                )}
+                                {!isEdit && <b>{updateTask.assigned_to}</b>}
                                 {isEdit && (
                                     <Select
                                         allowClear
                                         showSearch
                                         placeholder="Assign Person"
-                                        value={props.tableRowSelected.assignee}
+                                        defaultValue={updateTask.assigned_to}
                                         options={assigneeOpts}
                                         className="w100"
                                         onChange={(value, event) => {
@@ -375,25 +451,28 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {dayjs(
-                                            props.tableRowSelected.startDate
-                                        ).format("YYYY-MM-DD, HH:mm A")}
+                                        {dayjs(updateTask.start_date).format(
+                                            "YYYY-MM-DD, HH:mm A"
+                                        )}
                                     </b>
                                 )}
 
                                 {isEdit && (
                                     <DatePicker
                                         placeholder="Start Date"
-                                        name="startDate"
+                                        name="start_date"
                                         defaultValue={dayjs(
-                                            props.tableRowSelected.startDate
+                                            updateTask.start_date
                                         )}
                                         className="w100"
                                         // format={dateFormat}
                                         // className="w100"
-                                        // onChange={(date, dateString) => {
-                                        //     inputChangeHandler(dateString, "startDate");
-                                        // }}
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "start_date"
+                                            );
+                                        }}
                                         onPanelChange={() => {}}
                                     />
                                 )}
@@ -414,21 +493,27 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {dayjs(
-                                            props.tableRowSelected.dueDate
-                                        ).format("YYYY-MM-DD, HH:mm A")}
+                                        {dayjs(updateTask.due_date).format(
+                                            "YYYY-MM-DD, HH:mm A"
+                                        )}
                                     </b>
                                 )}
                                 {isEdit && (
                                     <DatePicker
                                         placeholder="Due Date"
-                                        name="dueDate"
+                                        name="due_date"
                                         defaultValue={dayjs(
-                                            props.tableRowSelected.dueDate
+                                            updateTask.due_date
                                         )}
                                         format={dateFormat}
                                         onPanelChange={() => {}}
                                         className="w100"
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "due_date"
+                                            );
+                                        }}
                                     />
                                 )}
                             </div>
@@ -448,20 +533,24 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {props.tableRowSelected.budget_time}
+                                        {updateTask.budget_time}
                                     </b>
                                 )}
                                 {isEdit && (
                                     <TimePicker
                                         placeholder="Budget Time"
-                                        name="budgetTime"
+                                        name="budget_time"
                                         defaultValue={dayjs(
-                                            props.tableRowSelected.budget_time,
+                                            updateTask.budget_time,
                                             "HH:mm"
                                         )}
-                                        // onChange={(date, dateString) => {
-                                        //     inputChangeHandler(dateString, "budgetTime");
-                                        // }}
+                                        format={"HH:mm"}
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "budget_time"
+                                            );
+                                        }}
                                         className="w100"
                                     />
                                 )}
@@ -474,7 +563,7 @@ const TaskViewEdit = (props: any) => {
                         >
                             Actual Time
                             <div>
-                                {!isEdit && (
+                                {
                                     <b>
                                         <ClockCircleOutlined
                                             style={{
@@ -482,37 +571,53 @@ const TaskViewEdit = (props: any) => {
                                                 marginRight: "10px",
                                             }}
                                         />
-                                        {props.tableRowSelected.actual_time}
+                                        {updateTask.actual_time.trim() === ""
+                                            ? "00:00"
+                                            : ""}
                                     </b>
-                                )}
-                                {isEdit && (
+                                }
+                                {/* {isEdit && (
                                     <TimePicker
                                         placeholder="Actual Time"
                                         name="actual_time"
                                         defaultValue={dayjs(
-                                            props.tableRowSelected.actual_time,
+                                            updateTask.actual_time,
                                             "HH:mm"
                                         )}
-                                        // onChange={(date, dateString) => {
-                                        //     inputChangeHandler(dateString, "budgetTime");
-                                        // }}
+                                        format={"HH:mm"}
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "budget_time"
+                                            );
+                                        }}
                                         className="w100"
                                     />
-                                )}
+                                )} */}
                             </div>
                         </Col>
                     </Row>
                     <Row
                         gutter={[8, 8]}
                         className="form-row"
-                        style={{ border: "1px solid #d8e2ef" }}
+                        style={{ border: "1px solid #d8e2ef", padding: "15px" }}
                     >
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            {getRemark()}
+                            {!isEdit && getRemark()}
+                            {isEdit && (
+                                <ReactQuill
+                                    theme="snow"
+                                    value={updateTask.remarks}
+                                    placeholder="Remark"
+                                    onChange={(event) => {
+                                        inputChangeHandler(event, "remarks");
+                                    }}
+                                />
+                            )}
                         </Col>
                     </Row>
                     <Row gutter={[8, 8]} className="form-row">
@@ -521,7 +626,7 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            <Title level={5} style={{ textAlign: "left" }}>
+                            <Title level={4} style={{ textAlign: "left" }}>
                                 Attachments
                             </Title>
                         </Col>
@@ -532,9 +637,164 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            <Title level={5} style={{ textAlign: "left" }}>
+                            <Title level={4} style={{ textAlign: "left" }}>
                                 Sub-tasks
                             </Title>
+                            {taskSubTasks.length > 0 && (
+                                <Collapse
+                                    accordion
+                                    //items={subTaskCollapseItems}
+                                    expandIconPosition="right"
+                                >
+                                    {taskSubTasks.map(
+                                        (
+                                            subTaskItem: SubTask,
+                                            index: number
+                                        ) => {
+                                            return (
+                                                <CollapsePanel
+                                                    header={
+                                                        <div className="sub-task-header">
+                                                            <div>
+                                                                <span
+                                                                    style={{
+                                                                        marginRight:
+                                                                            "10px",
+                                                                    }}
+                                                                >
+                                                                    {index + 1}.
+                                                                </span>
+                                                            </div>
+                                                            <div
+                                                                className="task-header-cell"
+                                                                style={{
+                                                                    flex: props.fullScreenMode
+                                                                        ? 5
+                                                                        : 14,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    subTaskItem.title
+                                                                }
+                                                            </div>
+                                                            {props.fullScreenMode && (
+                                                                <div className="task-header-cell">
+                                                                    {
+                                                                        subTaskItem.assigned_to
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                            {props.fullScreenMode && (
+                                                                <div className="task-header-cell">
+                                                                    <FontAwesomeIcon
+                                                                        icon={
+                                                                            faClock
+                                                                        }
+                                                                        className="timer-play"
+                                                                        style={{
+                                                                            marginRight:
+                                                                                "10px",
+                                                                        }}
+                                                                    />
+                                                                    {
+                                                                        subTaskItem.budget_time
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                            <div
+                                                                className="task-header-cell"
+                                                                style={{
+                                                                    flex: props.fullScreenMode
+                                                                        ? 1
+                                                                        : 2,
+                                                                }}
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faCommentDots
+                                                                    }
+                                                                    className="timer-play"
+                                                                    style={{
+                                                                        marginRight:
+                                                                            "10px",
+                                                                    }}
+                                                                />
+                                                                {subTaskItem.comments &&
+                                                                    subTaskItem
+                                                                        .comments
+                                                                        .length}
+                                                            </div>
+                                                            <div className="task-header-cell">
+                                                                {props.fullScreenMode && (
+                                                                    <Tag
+                                                                        color={
+                                                                            "red"
+                                                                        }
+                                                                        style={{
+                                                                            fontWeight:
+                                                                                "500",
+                                                                            fontSize:
+                                                                                "12px",
+                                                                        }}
+                                                                    >
+                                                                        {capitalize(
+                                                                            subTaskItem.status
+                                                                        )}
+                                                                    </Tag>
+                                                                )}
+                                                            </div>
+                                                            <div
+                                                                className={`task-header-cell ${
+                                                                    props.fullScreenMode
+                                                                        ? ""
+                                                                        : "task_priorty"
+                                                                } ${
+                                                                    subTaskItem.priority
+                                                                } ${
+                                                                    subTaskItem.priority ===
+                                                                    "high"
+                                                                        ? "blink"
+                                                                        : ""
+                                                                }`}
+                                                            >
+                                                                {props.fullScreenMode
+                                                                    ? capitalize(
+                                                                          subTaskItem.priority
+                                                                      )
+                                                                    : " "}
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    key={"asdasd"}
+                                                >
+                                                    <SubTaskViewEdit
+                                                        key={subTaskItem._id}
+                                                        tableRowSelected={
+                                                            subTaskItem
+                                                        }
+                                                        isEdit={isEdit}
+                                                        parentId={
+                                                            updateTask._id
+                                                        }
+                                                    />
+                                                </CollapsePanel>
+                                            );
+                                        }
+                                    )}
+                                </Collapse>
+                            )}
+                            {taskSubTasks.length <= 0 && (
+                                <Title
+                                    style={{
+                                        textAlign: "left",
+                                        fontSize: "12px",
+                                        fontWeight: "normal",
+                                        textIndent: "5px",
+                                    }}
+                                >
+                                    No Sub Tasks
+                                </Title>
+                            )}
                         </Col>
                     </Row>
                     <Row gutter={[8, 8]} className="form-row">
@@ -543,12 +803,12 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            <Title level={5} style={{ textAlign: "left" }}>
+                            <Title level={4} style={{ textAlign: "left" }}>
                                 Comments
                             </Title>
                             <Comments
-                                comments={props.tableRowSelected.comments}
-                                parentId={props.tableRowSelected._id}
+                                comments={taskComments}
+                                parentId={updateTask._id}
                                 addComment={addCommentHandler}
                                 editComment={editCommentHandler}
                                 deleteComment={deleteCommentHandler}

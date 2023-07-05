@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 export interface AddTask {
     _id: string;
     title: string;
@@ -6,34 +7,89 @@ export interface AddTask {
     mode: string;
     status: string;
     workArea: string;
-    remark: string;
+    remarks: string;
     budget_time: string;
     actual_time: string;
     timer: TaskTimer;
     priority: string;
     billable: string;
     client: string;
-    assignee: string;
+    assigned_to: string;
     dataPath: string;
-    subTask: SubTask[];
+    subTask: AddSubTask[];
+    attachments: Attachment[];
+    comments: Comment[];
+}
+
+export class Task implements AddTask {
+    _id: string = "";
+    title: string = "";
+    start_date: string = dayjs().format("YYYY-MM-DD");
+    due_date: string = "";
+    mode: string = "";
+    status: string = "pending";
+    workArea: string = "";
+    remarks: string = "";
+    budget_time: string = "";
+    actual_time: string = "";
+    timer: TaskTimer = {} as TaskTimer;
+    priority: string = "";
+    billable: string = "";
+    client: string = "";
+    assigned_to: string = "";
+    dataPath: string = "";
+    subTask: SubTask[] = [];
+    attachments: Attachment[] = [];
+    comments: Comment[] = [];
+}
+
+export interface AddSubTask {
+    title: string;
+    status: string;
+    budget_time: string;
+    actual_time: string;
+    remarks: string;
+    client: string;
+    assigned_to: string;
+    priority: string;
+    dataPath: string;
+    workArea: string;
     attachments: Attachment[];
     comments: Comment[];
 }
 
 export interface SubTask {
-    subTaskId: number;
+    _id: string;
+    taskId: string;
     title: string;
-    startDate: string;
-    dueDate: string;
     status: string;
     budget_time: string;
-    timer: TaskTimer;
-    remark: string;
+    actual_time: string;
+    remarks: string;
     client: string;
-    assignee: string;
+    assigned_to: string;
     priority: string;
     dataPath: string;
+    workArea: string;
     attachments: Attachment[];
+    comments: Comment[];
+}
+
+export interface UpdateSubTask {
+    _id: string;
+    taskId: string;
+    title: string;
+    status: string;
+    budget_time: string;
+    actual_time: string;
+    remarks: string;
+    client: string;
+    assigned_to: string;
+    priority: string;
+    dataPath: string;
+    workArea: string;
+    attachments: Attachment[];
+    comments: Comment[];
 }
 
 export interface Attachment {
@@ -63,11 +119,4 @@ export const TimerOpts = {
 export interface TaskTimer {
     state: number;
     time: number;
-}
-
-export interface TimerDetail {
-    hours: number;
-    minutes: number;
-    seconds: number;
-    milliseconds: number;
 }

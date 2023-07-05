@@ -13,13 +13,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Input, Button, Typography, Divider } from "antd";
 import "./Comments.scss";
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(tz);
 
 const Comments = (props: any) => {
+    const timeZone = dayjs.tz.guess();
+
     const { TextArea } = Input;
     const [taskComments, setTaskComments] = useState<[]>(props.comments);
     const [comment, setComment] = useState<string>("");
@@ -111,9 +117,11 @@ const Comments = (props: any) => {
                             {commentItem.comment_by}
                             <strong className="float-end text-muted comment-date">
                                 <span>
-                                    {dayjs(commentItem.comment_date).format(
-                                        "YYYY-MM-DD, HH:mm a"
-                                    )}
+                                    {dayjs
+                                        .utc(commentItem.comment_date)
+                                        .tz(timeZone)
+                                        .local()
+                                        .format("YYYY-MM-DD, HH:mm a")}
                                 </span>
                                 <span>
                                     <FontAwesomeIcon
@@ -228,6 +236,7 @@ const Comments = (props: any) => {
                         placeholder="Your comment..."
                         rows={4}
                         onChange={inputChangeHandler}
+                        value={comment}
                     />
                 </div>
                 <div className="addcmtbtn">
