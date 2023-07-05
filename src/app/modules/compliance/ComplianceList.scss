@@ -27,6 +27,13 @@
   white-space: nowrap;
 }
 
+#complianceListRow {
+  border-spacing: 0 4px;
+}
+
+table {
+  border-spacing: 0 4px;
+}
 #complianceListRow td {
   cursor: pointer;
   color: #5e6e84 !important;
@@ -72,4 +79,16 @@
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
+}
+
+.svg-inline--fa {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+}
+
+.pending {
+  color: red;
 }

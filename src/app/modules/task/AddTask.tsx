@@ -44,6 +44,7 @@ const AddTask = () => {
     const dateFormat = "YYYY-MM-DD";
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
+    const initialValuesRef = useRef(new Task());
     const [form] = Form.useForm();
 
     // local states
@@ -155,7 +156,10 @@ const AddTask = () => {
             allTask.push(addTask);
 
             console.log("ALL TASK", allTask);
+            console.log("addTask", addTask);
+            resetFormValues();
 
+            return false;
             // Save to DB
             try {
                 api.createTask(addTask).then((resp: any) => {
@@ -200,6 +204,48 @@ const AddTask = () => {
         }
     };
 
+    const resetFormValues = () => {
+        //console.log(new Task());
+        //   form.resetFields();
+        // let addTask1 = new Task();
+        // console.log(initialValuesRef.current);
+        //setAddTask(addTask);
+        //setAddTask(addTask1);
+        //initialValuesRef;
+        setAddTask(new Task());
+        addTask._id = "";
+        addTask.start_date = "";
+        addTask.due_date = "";
+        addTask.title = "";
+        addTask.subTask = [];
+        addTask.status = "";
+        addTask.mode = "";
+        addTask.priority = "";
+
+        const fields = form.getFieldsValue();
+        Object.keys(fields).forEach((field) => {
+            form.setFieldsValue({ [field]: undefined });
+        });
+        form.resetFields();
+        form.validateFields(); // Reset validation status
+
+        // setAddTask((addTask) => ({
+        //   ...addTask,
+        //   title: "",
+        //   start_date: "",
+        //   due_date: "",
+        //   subTask: [],
+        //   status: "",
+        //   mode: "",
+        //   _id: "",
+        //   priority: "",
+        // }));
+
+        //form.resetFields();
+
+        console.log(addTask);
+    };
+
     // render
     return (
         <>
@@ -224,6 +270,7 @@ const AddTask = () => {
                 initialValues={{
                     start_date: dayjs(),
                 }}
+                id="addTaskFrm"
             >
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -264,7 +311,7 @@ const AddTask = () => {
                             <DatePicker
                                 placeholder="Due Date"
                                 name="due_date"
-                                //value={addTask.dueDate}
+                                //  value={addTask.due_date}
                                 onChange={(date, dateString) => {
                                     inputChangeHandler(dateString, "due_date");
                                 }}
@@ -314,6 +361,7 @@ const AddTask = () => {
                                 {
                                     required: true,
                                     message: "Please enter title.",
+                                    validateTrigger: ["onSubmit"],
                                 },
                             ]}
                         >

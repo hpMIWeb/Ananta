@@ -232,14 +232,13 @@ const TaskViewEdit = (props: any) => {
                         key={subTaskItem._id}
                         tableRowSelected={subTaskItem}
                         isEdit={isEdit}
-                        parentId={updateTask._id}
                     />
                 ),
             };
         }
     );
 
-    const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
+    //const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
 
     return (
         <>
