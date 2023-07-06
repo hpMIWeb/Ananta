@@ -95,6 +95,7 @@ const TimeSheet = () => {
               name={`start_time_${record._id}`}
               format="HH:mm"
               className="w100"
+              defaultValue={dayjs(start_time, "HH:mm")}
               onChange={(date, dateString) => {
                 inputChangeHandler(dateString, "start_time");
               }}
