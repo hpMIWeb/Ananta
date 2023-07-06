@@ -13,6 +13,7 @@ const Fillter = (prop: any) => {
       <Row
         gutter={[8, 8]}
         className={"form-row " + (!prop.showMoreFilter ? "hide" : "")}
+        style={{ marginTop: "10px" }}
       >
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
           <Select
@@ -45,6 +46,7 @@ const Fillter = (prop: any) => {
       <Row
         gutter={[8, 8]}
         className={"form-row " + (!prop.showMoreFilter ? "hide" : "")}
+        style={{ marginTop: "10px" }}
       >
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
           <DatePicker
