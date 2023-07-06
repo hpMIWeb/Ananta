@@ -180,7 +180,10 @@ const SubTask = (props: any) => {
                                         </Form.Item>
                                     </Col>
                                 </Row>
-                                <Row gutter={[8, 8]} className="form-row">
+                                <Row
+                                    gutter={[8, 8]}
+                                    className="form-row add-form-row"
+                                >
                                     <Col
                                         xs={{ span: 24 }}
                                         sm={{ span: 24 }}
@@ -210,7 +213,10 @@ const SubTask = (props: any) => {
                                         />
                                     </Col>
                                 </Row>
-                                <Row gutter={[8, 8]} className="form-row">
+                                <Row
+                                    gutter={[8, 10]}
+                                    className="form-row add-form-row"
+                                >
                                     <Col
                                         xs={{ span: 24 }}
                                         sm={{ span: 24 }}
@@ -268,7 +274,10 @@ const SubTask = (props: any) => {
                                         />
                                     </Col>
                                 </Row>
-                                <Row gutter={[8, 8]} className="form-row">
+                                <Row
+                                    gutter={[8, 8]}
+                                    className="form-row add-form-row"
+                                >
                                     <Col
                                         xs={{ span: 24 }}
                                         sm={{ span: 24 }}

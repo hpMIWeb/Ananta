@@ -15,7 +15,7 @@ export interface AddTask {
     billable: string;
     client: string;
     assigned_to: string;
-    dataPath: string;
+    datapath: string;
     subTask: AddSubTask[];
     attachments: Attachment[];
     comments: Comment[];
@@ -37,7 +37,7 @@ export class Task implements AddTask {
     billable: string = "";
     client: string = "";
     assigned_to: string = "";
-    dataPath: string = "";
+    datapath: string = "";
     subTask: SubTask[] = [];
     attachments: Attachment[] = [];
     comments: Comment[] = [];
@@ -52,7 +52,7 @@ export interface AddSubTask {
     client: string;
     assigned_to: string;
     priority: string;
-    dataPath: string;
+    datapath: string;
     workArea: string;
     attachments: Attachment[];
     comments: Comment[];
@@ -69,7 +69,7 @@ export interface SubTask {
     client: string;
     assigned_to: string;
     priority: string;
-    dataPath: string;
+    datapath: string;
     workArea: string;
     attachments: Attachment[];
     comments: Comment[];
@@ -86,7 +86,7 @@ export interface UpdateSubTask {
     client: string;
     assigned_to: string;
     priority: string;
-    dataPath: string;
+    datapath: string;
     workArea: string;
     attachments: Attachment[];
     comments: Comment[];
