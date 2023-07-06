@@ -73,6 +73,12 @@ const ComplianceList = () => {
 
     const colInfo = [
         {
+            title: " ",
+            dataIndex: " ",
+            key: " ",
+            render: (text: string) => <></>,
+        },
+        {
             title: "Title",
             dataIndex: "title",
             key: "title",
@@ -645,7 +651,7 @@ const ComplianceList = () => {
             <div>
                 <div
                     style={{
-                        width: reportTab ? "100%" : "64%",
+                        width: "63%",
                         float: "left",
                         display: fullScreenMode ? "none" : "block",
                         marginRight: "15px",

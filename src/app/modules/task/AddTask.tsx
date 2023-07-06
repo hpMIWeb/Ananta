@@ -156,10 +156,7 @@ const AddTask = () => {
             allTask.push(addTask);
 
             console.log("ALL TASK", allTask);
-            console.log("addTask", addTask);
-            resetFormValues();
 
-            return false;
             // Save to DB
             try {
                 api.createTask(addTask).then((resp: any) => {
@@ -168,6 +165,8 @@ const AddTask = () => {
                     toast.success("Successfully Created Task", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
+                    // TODO: need to implement
+                    // resetFormValues();
                 });
             } catch (ex) {
                 toast.error("Technical error while creating Task", {
@@ -178,23 +177,25 @@ const AddTask = () => {
     };
 
     const updateSubComponents = (subTasks: AddSubTask[]) => {
-        addTask.subTask = subTasks.map((subTaskItem: AddSubTask) => {
-            return {
-                title: subTaskItem.title,
-                status: "pending",
-                budget_time: subTaskItem.budget_time,
-                actual_time: " ",
-                remarks: subTaskItem.remarks,
-                priority: subTaskItem.priority,
-                workArea: subTaskItem.workArea,
-                client: subTaskItem.client,
-                assigned_to: subTaskItem.assigned_to,
-                dataPath: subTaskItem.dataPath,
-                attachments: [], //TODO: once attachement available then implement this
-                mode: " ",
-                comments: [],
-            };
-        });
+        addTask.subTask = !showSubTask
+            ? []
+            : subTasks.map((subTaskItem: AddSubTask) => {
+                  return {
+                      title: subTaskItem.title,
+                      status: "pending",
+                      budget_time: subTaskItem.budget_time,
+                      actual_time: " ",
+                      remarks: subTaskItem.remarks,
+                      priority: subTaskItem.priority,
+                      workArea: subTaskItem.workArea,
+                      client: subTaskItem.client,
+                      assigned_to: subTaskItem.assigned_to,
+                      datapath: subTaskItem.datapath,
+                      attachments: [], //TODO: once attachement available then implement this
+                      mode: " ",
+                      comments: [],
+                  };
+              });
     };
 
     const handleInputKeyDown = () => {
@@ -205,13 +206,6 @@ const AddTask = () => {
     };
 
     const resetFormValues = () => {
-        //console.log(new Task());
-        //   form.resetFields();
-        // let addTask1 = new Task();
-        // console.log(initialValuesRef.current);
-        //setAddTask(addTask);
-        //setAddTask(addTask1);
-        //initialValuesRef;
         setAddTask(new Task());
         addTask._id = "";
         addTask.start_date = "";
@@ -221,28 +215,14 @@ const AddTask = () => {
         addTask.status = "";
         addTask.mode = "";
         addTask.priority = "";
+        addTask.datapath = "";
 
         const fields = form.getFieldsValue();
         Object.keys(fields).forEach((field) => {
             form.setFieldsValue({ [field]: undefined });
         });
         form.resetFields();
-        form.validateFields(); // Reset validation status
-
-        // setAddTask((addTask) => ({
-        //   ...addTask,
-        //   title: "",
-        //   start_date: "",
-        //   due_date: "",
-        //   subTask: [],
-        //   status: "",
-        //   mode: "",
-        //   _id: "",
-        //   priority: "",
-        // }));
-
-        //form.resetFields();
-
+        //form.validateFields();
         console.log(addTask);
     };
 
@@ -491,7 +471,7 @@ const AddTask = () => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row gutter={[8, 8]} className="form-row">
+                <Row gutter={[8, 8]} className="form-row add-form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <Form.Item
                             name="client"
@@ -551,15 +531,24 @@ const AddTask = () => {
                         </Upload>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-                        <Input
-                            placeholder="Data Path"
+                        <Form.Item
                             name="datapath"
-                            defaultValue={addTask.dataPath}
-                            onChange={(event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
+                            rules={[
+                                {
+                                    required: false,
+                                },
+                            ]}
+                        >
+                            <Input
+                                placeholder="Data Path"
+                                name="datapath"
+                                defaultValue={addTask.datapath}
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
+                            />
+                        </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">

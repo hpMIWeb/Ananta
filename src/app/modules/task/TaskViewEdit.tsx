@@ -262,14 +262,24 @@ const TaskViewEdit = (props: any) => {
                                 </Title>
                             )}
                             {isEdit && (
-                                <Input
-                                    placeholder="Task"
+                                <Form.Item
                                     name="title"
-                                    defaultValue={updateTask.title}
-                                    onChange={(event) => {
-                                        inputChangeHandler(event);
-                                    }}
-                                />
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter title.",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Task"
+                                        name="title"
+                                        defaultValue={updateTask.title}
+                                        onChange={(event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                    />
+                                </Form.Item>
                             )}
                         </Col>
                         {props.fullScreenMode && (
