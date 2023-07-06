@@ -266,7 +266,11 @@ const TaskList = () => {
   const todayContent = () => {
     return (
       <div>
-        <Row gutter={[8, 8]} className="form-row">
+        <Row
+          gutter={[8, 8]}
+          className="form-row "
+          style={{ marginTop: "10px" }}
+        >
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -325,24 +329,26 @@ const TaskList = () => {
         </Row>
         <Fillter showMoreFilter={showMoreFilter} />
 
-        <Table
-          showSorterTooltip={{ title: "testing functionality" }}
-          dataSource={getData(current, pageSize, "today")}
-          rowClassName={rowClassHandler}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                setTableRowSelected(record);
-              },
-            };
-          }}
-          columns={colInfo}
-          showHeader={false}
-          pagination={{
-            defaultPageSize: 10,
-          }}
-          style={{ width: "100%" }}
-        />
+        <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
+          <Table
+            showSorterTooltip={{ title: "testing functionality" }}
+            dataSource={getData(current, pageSize, "today")}
+            rowClassName={rowClassHandler}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  setTableRowSelected(record);
+                },
+              };
+            }}
+            columns={colInfo}
+            showHeader={false}
+            pagination={{
+              defaultPageSize: 10,
+            }}
+            style={{ width: "100%" }}
+          />
+        </Row>
       </div>
     );
   };
@@ -350,7 +356,7 @@ const TaskList = () => {
   const upcomingContent = () => {
     return (
       <div>
-        <Row gutter={[8, 8]} className="form-row">
+        <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -408,22 +414,24 @@ const TaskList = () => {
           </Col>
         </Row>
         <Fillter showMoreFilter={showMoreFilter} />
-        <Table
-          dataSource={getData(current, pageSize, "upcoming")}
-          rowClassName={rowClassHandler}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                setTableRowSelected(record);
-              },
-            };
-          }}
-          columns={colInfo}
-          showHeader={false}
-          pagination={{
-            defaultPageSize: 10,
-          }}
-        />
+        <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
+          <Table
+            dataSource={getData(current, pageSize, "upcoming")}
+            rowClassName={rowClassHandler}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  setTableRowSelected(record);
+                },
+              };
+            }}
+            columns={colInfo}
+            showHeader={false}
+            pagination={{
+              defaultPageSize: 10,
+            }}
+          />
+        </Row>
       </div>
     );
   };
@@ -431,7 +439,7 @@ const TaskList = () => {
   const historyContent = () => {
     return (
       <div>
-        <Row gutter={[8, 8]} className="form-row">
+        <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -489,22 +497,24 @@ const TaskList = () => {
           </Col>
         </Row>
         <Fillter showMoreFilter={showMoreFilter} />
-        <Table
-          dataSource={getData(current, pageSize, "history")}
-          rowClassName={rowClassHandler}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                setTableRowSelected(record);
-              },
-            };
-          }}
-          columns={colInfo}
-          showHeader={false}
-          pagination={{
-            defaultPageSize: 10,
-          }}
-        />
+        <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
+          <Table
+            dataSource={getData(current, pageSize, "history")}
+            rowClassName={rowClassHandler}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  setTableRowSelected(record);
+                },
+              };
+            }}
+            columns={colInfo}
+            showHeader={false}
+            pagination={{
+              defaultPageSize: 10,
+            }}
+          />
+        </Row>
       </div>
     );
   };

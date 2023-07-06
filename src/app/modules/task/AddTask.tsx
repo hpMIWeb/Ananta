@@ -166,7 +166,7 @@ const AddTask = () => {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                     // TODO: need to implement
-                    // resetFormValues();
+                    resetFormValues();
                 });
             } catch (ex) {
                 toast.error("Technical error while creating Task", {
@@ -206,22 +206,14 @@ const AddTask = () => {
     };
 
     const resetFormValues = () => {
-        setAddTask(new Task());
-        addTask._id = "";
-        addTask.start_date = "";
-        addTask.due_date = "";
-        addTask.title = "";
-        addTask.subTask = [];
-        addTask.status = "";
-        addTask.mode = "";
-        addTask.priority = "";
-        addTask.datapath = "";
-
         const fields = form.getFieldsValue();
         Object.keys(fields).forEach((field) => {
             form.setFieldsValue({ [field]: undefined });
         });
-        form.resetFields();
+
+        // onSwitchSubTask();
+        setShowSubTask(false);
+        //form.resetFields();
         //form.validateFields();
         console.log(addTask);
     };
@@ -559,7 +551,10 @@ const AddTask = () => {
                         <Title level={5}>Sub Task</Title>
                     </Col>
                     <Col>
-                        <Switch onChange={onSwitchSubTask}></Switch>
+                        <Switch
+                            checked={showSubTask}
+                            onChange={onSwitchSubTask}
+                        ></Switch>
                     </Col>
                 </Row>
 
