@@ -83,7 +83,7 @@ export default {
                 },
             ],
         }),
-    createMultileTask: (tasks: AddTask[]) =>
+    createMultipleTask: (tasks: AddTask[]) =>
         instance({
             method: "POST",
             url: "task/create-multiple-task",
