@@ -159,7 +159,7 @@ export default {
                 assigned_to: " ",
                 datapath: " ",
                 clients: compliance.clients,
-                subcompliance: compliance.subCompliance,
+                subcompliance: compliance.subcompliance,
                 attachments: [],
                 comments: [],
             },

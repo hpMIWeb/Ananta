@@ -13,6 +13,7 @@ import {
     Button,
     Collapse,
     Table,
+    Tag,
 } from "antd";
 
 import {
@@ -33,6 +34,9 @@ import {
     faExpandArrowsAlt,
     faCompressArrowsAlt,
     faXmark,
+    faCommentDots,
+    faClock,
+    faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
@@ -107,6 +111,15 @@ interface DataType {
 
 const ComplianceViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
+    const [updateCompliance, setUpdateCompliance] = useState<IAddCompliance>(
+        props.tableRowSelected
+    );
+    const [complianceComments, setComplianceComments] = useState<Comment>(
+        props.tableRowSelected.comments
+    );
+    const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
+        props.tableRowSelected.subcompliance ?? []
+    );
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -125,11 +138,26 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const getRemark = () => {
-        if (props.tableRowSelected.remark) {
-            return parse(props.tableRowSelected.remark);
+        if (updateCompliance.remark) {
+            return parse(updateCompliance.remark);
         } else {
             return "";
         }
+    };
+
+    // event handler from `stopwatch` action - play & stop
+    const handleTaskStatus = (isRunning: boolean) => {
+        const complianceUpdate = {} as IAddCompliance;
+        complianceUpdate.status = isRunning ? "in_progress" : "complete";
+
+        api.updateCompliance(updateCompliance._id, complianceUpdate).then(
+            (resp: any) => {
+                toast.success("Successfully Updated Compliance", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                if (props.handleListUpdate) props.handleListUpdate();
+            }
+        );
     };
 
     const editClickHandler = () => {
@@ -142,12 +170,13 @@ const ComplianceViewEdit = (props: any) => {
         const complianceUpdate = {} as IAddCompliance;
         complianceUpdate.status = value;
 
-        api.updateCompliance(props.tableRowSelected._id, complianceUpdate).then(
+        api.updateCompliance(updateCompliance._id, complianceUpdate).then(
             (resp: any) => {
                 // localStorage.setItem("task", JSON.stringify(taskUpdate));
                 toast.success("Successfully Updated Compliance", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                if (props.handleListUpdate) props.handleListUpdate();
             }
         );
     };
@@ -160,6 +189,12 @@ const ComplianceViewEdit = (props: any) => {
     ) => {
         console.log("params", sorter);
     };
+
+    useEffect(() => {
+        setUpdateCompliance(props.tableRowSelected);
+        setSubCompliances(props.tableRowSelected.subcompliance);
+        setComplianceComments(props.tableRowSelected.comments);
+    }, [props.tableRowSelected]);
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
@@ -187,7 +222,7 @@ const ComplianceViewEdit = (props: any) => {
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComplianceComment;
         addComment.comment = comment;
-        addComment.complianceId = props.tableRowSelected._id;
+        addComment.complianceId = updateCompliance._id;
         api.addComplianceComment(addComment)
             .then(() => {
                 toast.success("Successfully added comment", {
@@ -228,7 +263,7 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        api.deleteTaskComment(props.tableRowSelected._id, commentId)
+        api.deleteTaskComment(updateCompliance._id, commentId)
             .then((resp: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
@@ -253,7 +288,7 @@ const ComplianceViewEdit = (props: any) => {
             <div
                 style={{
                     display:
-                        Object.keys(props.tableRowSelected).length > 0
+                        Object.keys(updateCompliance).length > 0
                             ? "block"
                             : "none",
                 }}
@@ -268,7 +303,7 @@ const ComplianceViewEdit = (props: any) => {
                         >
                             {!isEdit && (
                                 <Title level={4} style={{ textAlign: "left" }}>
-                                    {props.tableRowSelected.title}
+                                    {updateCompliance.title}
                                 </Title>
                             )}
                             {isEdit && (
@@ -284,9 +319,7 @@ const ComplianceViewEdit = (props: any) => {
                                     <Input
                                         placeholder="Compliance"
                                         name="title"
-                                        defaultValue={
-                                            props.tableRowSelected.title
-                                        }
+                                        defaultValue={updateCompliance.title}
                                         onChange={(event) => {
                                             inputChangeHandler(event);
                                         }}
@@ -300,7 +333,7 @@ const ComplianceViewEdit = (props: any) => {
                             md={{ span: 5 }}
                         >
                             <Title level={5} style={{ textAlign: "right" }}>
-                                {capitalize(props.tableRowSelected.assignee)}
+                                {capitalize(updateCompliance.assignee)}
                             </Title>
                         </Col>
                         <Col
@@ -369,19 +402,32 @@ const ComplianceViewEdit = (props: any) => {
                             xs={{ span: 24 }}
                             sm={{ span: 12 }}
                             md={{ span: 16 }}
-                            lg={{ span: 14 }}
+                            lg={{ span: props.fullScreenMode ? 14 : 10 }}
                         >
                             <div className="timerbuttons">
-                                <Stopwatch
-                                    complianceId={props.tableRowSelected._id}
-                                />
+                                {subCompliances &&
+                                    subCompliances.length <= 0 && (
+                                        <Stopwatch
+                                            taskId={updateCompliance._id}
+                                            handleTaskStatus={handleTaskStatus}
+                                        />
+                                    )}
+                                {subCompliances &&
+                                    subCompliances.length > 0 && (
+                                        <span className="stopwatch-time">
+                                            00:
+                                            {"00".toString().padStart(2, "0")}:
+                                            {"00".toString().padStart(2, "0")}:
+                                            {"00".toString().padStart(2, "0")}
+                                        </span>
+                                    )}
                             </div>
                         </Col>
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 6 }}
                             md={{ span: 4 }}
-                            lg={{ span: 5 }}
+                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
                         >
                             {!isEdit && (
                                 <Title
@@ -391,15 +437,12 @@ const ComplianceViewEdit = (props: any) => {
                                         marginRight: "30px",
                                     }}
                                     className={`text-priority ${
-                                        props.tableRowSelected.priority ===
-                                        "high"
+                                        updateCompliance.priority === "high"
                                             ? "blink"
                                             : ""
                                     }`}
                                 >
-                                    {capitalize(
-                                        props.tableRowSelected.priority
-                                    )}
+                                    {capitalize(updateCompliance.priority)}
                                 </Title>
                             )}
                             {isEdit && (
@@ -407,7 +450,7 @@ const ComplianceViewEdit = (props: any) => {
                                     allowClear
                                     placeholder="Select Priority"
                                     options={priorityOpts}
-                                    value={props.tableRowSelected.priority}
+                                    value={updateCompliance.priority}
                                     className="w100"
                                     onChange={(value, event) => {
                                         statusChangeHandler(event, value);
@@ -419,13 +462,13 @@ const ComplianceViewEdit = (props: any) => {
                             xs={{ span: 24 }}
                             sm={{ span: 6 }}
                             md={{ span: 4 }}
-                            lg={{ span: 5 }}
+                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
                         >
                             <Select
                                 allowClear
                                 placeholder="Select Status"
                                 options={statusList}
-                                value={props.tableRowSelected.status}
+                                value={updateCompliance.status}
                                 className="w100"
                                 onChange={(value, event) => {
                                     statusChangeHandler(event, value);
@@ -448,7 +491,7 @@ const ComplianceViewEdit = (props: any) => {
                             {isEdit && (
                                 <ReactQuill
                                     theme="snow"
-                                    value={props.tableRowSelected.remark}
+                                    value={updateCompliance.remark}
                                     placeholder="Remark"
                                     onChange={(event) => {
                                         inputChangeHandler(event, "remark");
@@ -468,13 +511,13 @@ const ComplianceViewEdit = (props: any) => {
                                 sm={{ span: 24 }}
                                 md={{ span: 24 }}
                             >
-                                <Table
+                                {/* <Table
                                     id="complianceViewEdit"
-                                    dataSource={props.tableRowSelected.clients}
+                                    dataSource={updateCompliance.clients}
                                     columns={columns}
                                     size="small"
                                     onChange={onChange}
-                                />
+                                /> */}
                             </Col>
                         </Row>
                     )}
@@ -487,14 +530,10 @@ const ComplianceViewEdit = (props: any) => {
                                 md={{ span: 24 }}
                             >
                                 <ComplianceDetails
-                                    updateClients={
-                                        props.tableRowSelected.clients
-                                    }
+                                    updateClients={updateCompliance.clients}
                                     isAllowAdd={false}
                                     parentTitle={"sub_compliance"}
-                                    parentId={
-                                        props.tableRowSelected.subcompliance._id
-                                    }
+                                    parentId={updateCompliance._id}
                                 />
                             </Col>
                         </Row>
@@ -519,14 +558,149 @@ const ComplianceViewEdit = (props: any) => {
                                 Sub-Compliance
                             </Title>
                             {!isEdit && (
-                                <Collapse>
+                                <Collapse expandIconPosition="right">
                                     {props.tableRowSelected.subcompliance.map(
                                         (
                                             subComplianceItem: any,
                                             index: number
                                         ) => (
                                             <CollapsePanel
-                                                header={subComplianceItem.title}
+                                                //header={subComplianceItem.title}
+                                                header={
+                                                    <div className="sub-task-header">
+                                                        <div>
+                                                            <span
+                                                                style={{
+                                                                    marginRight:
+                                                                        "10px",
+                                                                }}
+                                                            >
+                                                                {index + 1}.
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className="task-header-cell"
+                                                            style={{
+                                                                flex: props.fullScreenMode
+                                                                    ? 5
+                                                                    : 7,
+                                                            }}
+                                                        >
+                                                            {
+                                                                subComplianceItem.title
+                                                            }
+                                                        </div>
+                                                        <div
+                                                            className="task-header-cell"
+                                                            style={{
+                                                                flex: props.fullScreenMode
+                                                                    ? 3
+                                                                    : 4,
+                                                            }}
+                                                        >
+                                                            <>
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faUser
+                                                                    }
+                                                                    className="timer-play"
+                                                                    style={{
+                                                                        marginRight:
+                                                                            "10px",
+                                                                    }}
+                                                                />
+                                                                20 / 30
+                                                            </>
+                                                        </div>
+                                                        {props.fullScreenMode && (
+                                                            <div className="task-header-cell">
+                                                                {
+                                                                    subComplianceItem.assigned_to
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        {props.fullScreenMode && (
+                                                            <div className="task-header-cell">
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faClock
+                                                                    }
+                                                                    className="timer-play"
+                                                                    style={{
+                                                                        marginRight:
+                                                                            "10px",
+                                                                    }}
+                                                                />
+                                                                {
+                                                                    subComplianceItem.budget_time
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        <div
+                                                            className="task-header-cell"
+                                                            style={{
+                                                                flex: props.fullScreenMode
+                                                                    ? 1
+                                                                    : 2,
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    faCommentDots
+                                                                }
+                                                                className="timer-play"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "10px",
+                                                                }}
+                                                            />
+                                                            {subComplianceItem.comments
+                                                                ? subComplianceItem
+                                                                      .comments
+                                                                      .length
+                                                                : 0}
+                                                        </div>
+                                                        <div className="task-header-cell">
+                                                            {props.fullScreenMode && (
+                                                                <Tag
+                                                                    color={
+                                                                        "red"
+                                                                    }
+                                                                    style={{
+                                                                        fontWeight:
+                                                                            "500",
+                                                                        fontSize:
+                                                                            "12px",
+                                                                    }}
+                                                                >
+                                                                    {capitalize(
+                                                                        subComplianceItem.status
+                                                                    )}
+                                                                </Tag>
+                                                            )}
+                                                        </div>
+                                                        <div
+                                                            className={`task-header-cell ${
+                                                                props.fullScreenMode
+                                                                    ? ""
+                                                                    : "task_priorty"
+                                                            } ${
+                                                                subComplianceItem.priority
+                                                            } ${
+                                                                subComplianceItem.priority ===
+                                                                "high"
+                                                                    ? "blink"
+                                                                    : ""
+                                                            }`}
+                                                        >
+                                                            {props.fullScreenMode
+                                                                ? capitalize(
+                                                                      subComplianceItem.priority
+                                                                  )
+                                                                : " "}
+                                                        </div>
+                                                    </div>
+                                                }
                                                 key={index}
                                             >
                                                 <SubComplianceViewEdit

@@ -749,10 +749,11 @@ const TaskViewEdit = (props: any) => {
                                                                             "10px",
                                                                     }}
                                                                 />
-                                                                {subTaskItem.comments &&
-                                                                    subTaskItem
-                                                                        .comments
-                                                                        .length}
+                                                                {subTaskItem.comments
+                                                                    ? subTaskItem
+                                                                          .comments
+                                                                          .length
+                                                                    : 0}
                                                             </div>
                                                             <div className="task-header-cell">
                                                                 {props.fullScreenMode && (
@@ -795,7 +796,7 @@ const TaskViewEdit = (props: any) => {
                                                             </div>
                                                         </div>
                                                     }
-                                                    key={"asdasd"}
+                                                    key={subTaskItem._id}
                                                 >
                                                     <SubTaskViewEdit
                                                         key={subTaskItem._id}
