@@ -45,12 +45,20 @@ const Stopwatch = (props: any) => {
 
     // Method to start and stop timer
     const startAndStop = () => {
-        setIsRunning(!isRunning);
+        const updatedStatus = !isRunning;
+        setIsRunning(updatedStatus);
+
+        if (props.handleTaskStatus && updatedStatus) {
+            props.handleTaskStatus(updatedStatus);
+        }
     };
 
     // Method to reset timer back to 0
     const reset = () => {
-        setTime(0);
+        setIsRunning(false);
+        if (props.handleTaskStatus) {
+            props.handleTaskStatus(false);
+        }
     };
     return (
         <div className="stopwatch-container">
