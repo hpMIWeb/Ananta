@@ -1,10 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import {
-  faEdit,
-  faSave,
-  faSleigh,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Tabs,
@@ -19,7 +14,6 @@ import {
   Input,
   Button,
   TimePicker,
-  Modal,
   Popconfirm,
 } from "antd";
 import type { TabsProps } from "antd";
@@ -36,27 +30,35 @@ import { workAreaOpts, clientOpts } from "../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import { time } from "console";
 const { Title } = Typography;
 const pageSize = 20;
 
-function onChange(sorter: any) {
-  console.log(sorter);
-}
-
 const TimeSheet = () => {
-  const formRef = useRef(null);
   const [current, setCurrent] = useState(1);
-  const [addTimesheet, setAddTimesheet] = useState<ITimesheet>(new Timesheet());
+  const [timesheetDate, setTimesheetDate] = useState(dayjs()); //set date in calender
+
   const [timesheet, setTimesheet] = useState<ITimesheet[]>([]);
-  const [form] = Form.useForm();
+  const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
+    {} as ITimesheet
+  );
+
+  //Time sheet List
+  useEffect(() => {
+    getTimeSheetData();
+    addNewTimesheetRow();
+  }, []);
+
+  function onChange(sorter: any) {
+    console.log(sorter);
+  }
+
   const columns = [
     {
       title: "Start Time",
       dataIndex: "start_time",
       key: "start_time",
-      render: (start_time: string, record: Timesheet) => {
+      width: "10%",
+      render: (createdAt: string, record: Timesheet) => {
         if (record.is_new) {
           return (
             <Form.Item
@@ -72,7 +74,6 @@ const TimeSheet = () => {
                 placeholder="Start Time"
                 name={`start_time_${record._id}`}
                 format="HH:mm"
-                className="w100"
                 onChange={(date, dateString) => {
                   inputChangeHandler(dateString, "start_time");
                 }}
@@ -83,19 +84,22 @@ const TimeSheet = () => {
         return (
           <Form.Item
             name={`start_time_${record._id}`}
-            rules={[
-              {
-                required: true,
-                message: "Please enter start time.",
-              },
-            ]}
+            rules={
+              record.start_time
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: "Please enter start time.",
+                    },
+                  ]
+            }
           >
             <TimePicker
               placeholder="Start Time"
               name={`start_time_${record._id}`}
               format="HH:mm"
-              className="w100"
-              defaultValue={dayjs(start_time, "HH:mm")}
+              defaultValue={dayjs(record.start_time, "HH:mm")}
               onChange={(date, dateString) => {
                 inputChangeHandler(dateString, "start_time");
               }}
@@ -109,6 +113,7 @@ const TimeSheet = () => {
       dataIndex: "end_time",
       key: "end_time",
       sorter: (a: any, b: any) => a.any - b.any,
+      width: "10%",
       render: (end_time: string, record: Timesheet) => {
         if (record.is_new) {
           return (
@@ -128,7 +133,6 @@ const TimeSheet = () => {
                 onChange={(date, dateString) => {
                   inputChangeHandler(dateString, "end_time");
                 }}
-                className="w100"
               />
             </Form.Item>
           );
@@ -136,12 +140,16 @@ const TimeSheet = () => {
         return (
           <Form.Item
             name={`end_time_${record._id}`}
-            rules={[
-              {
-                required: true,
-                message: "Please enter start time.",
-              },
-            ]}
+            rules={
+              record.end_time
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: "Please enter end time.",
+                    },
+                  ]
+            }
           >
             <TimePicker
               placeholder="End Time"
@@ -151,7 +159,6 @@ const TimeSheet = () => {
               onChange={(date, dateString) => {
                 inputChangeHandler(dateString, "end_time");
               }}
-              className="w100"
             />
           </Form.Item>
         );
@@ -161,16 +168,21 @@ const TimeSheet = () => {
       title: "Client Name",
       dataIndex: "client",
       key: "client",
+      width: "10%",
       sorter: (a: any, b: any) => a.any - b.any,
       render: (client: string, record: Timesheet) => (
         <Form.Item
           name={`client_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
+          rules={
+            record.client
+              ? []
+              : [
+                  {
+                    required: true,
+                    message: "Please enter client time.",
+                  },
+                ]
+          }
         >
           <Select
             allowClear
@@ -190,16 +202,21 @@ const TimeSheet = () => {
       title: "Work Area",
       dataIndex: "work_area",
       key: "work_area",
+      width: "10%",
       sorter: (a: any, b: any) => a.any - b.any,
       render: (work_area: string, record: Timesheet) => (
         <Form.Item
           name={`work_area_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
+          rules={
+            record.work_area
+              ? []
+              : [
+                  {
+                    required: true,
+                    message: "Please select work area.",
+                  },
+                ]
+          }
         >
           <Select
             allowClear
@@ -219,16 +236,21 @@ const TimeSheet = () => {
       title: "Particulars",
       dataIndex: "pariculars",
       key: "pariculars",
+      width: "10%",
       sorter: (a: any, b: any) => a.any - b.any,
       render: (pariculars: string, record: Timesheet) => (
         <Form.Item
           name={`pariculars_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
+          rules={
+            record.pariculars
+              ? [] // Exclude validation if `remark` is pre-filled
+              : [
+                  {
+                    required: true,
+                    message: "Please enter pariculars.",
+                  },
+                ]
+          }
         >
           <Input
             placeholder="Particulars"
@@ -247,16 +269,21 @@ const TimeSheet = () => {
       title: "Remark",
       dataIndex: "remark",
       key: "remark",
+      width: "10%",
       sorter: (a: any, b: any) => a.any - b.any,
       render: (remark: string, record: Timesheet) => (
         <Form.Item
           name={`remark_${record._id}`}
-          rules={[
-            {
-              required: true,
-              message: "Please enter start time.",
-            },
-          ]}
+          rules={
+            record.remark
+              ? [] // Exclude validation if `remark` is pre-filled
+              : [
+                  {
+                    required: true,
+                    message: "Please enter a remark.",
+                  },
+                ]
+          }
         >
           <Input
             placeholder="Remark"
@@ -275,37 +302,50 @@ const TimeSheet = () => {
       title: "Total Time",
       dataIndex: "total_time",
       key: "total_time",
+      width: "10%",
       sorter: (a: any, b: any) => a.any - b.any,
-      render: (total_time: string, record: Timesheet) => (
-        <Input
-          name="total_time"
-          className="w102"
-          defaultValue={total_time}
-          onChange={(value) => {
-            inputChangeHandler(value);
-          }}
-        />
-      ),
+      render: (total_time: string, record: Timesheet) => {
+        if (record.is_new || !record.start_time || !record.end_time) {
+          return null; // Hide the column for new entries or if start time or end time is empty
+        }
+
+        const startTime = dayjs(record.start_time, "HH:mm");
+        const endTime = dayjs(record.end_time, "HH:mm");
+
+        if (endTime.isBefore(startTime)) {
+          return null; // Hide the column if end time is before start time
+        }
+
+        const diffMinutes = endTime.diff(startTime, "minutes");
+        const hours = Math.floor(diffMinutes / 60);
+        const minutes = diffMinutes % 60;
+        const formattedDuration = `${hours}:${minutes
+          .toString()
+          .padStart(2, "0")}`;
+
+        return <span id={`total_time_${record._id}`}>{formattedDuration}</span>;
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      width: "10%",
       render: (_: any, record: Timesheet) => {
         if (record.is_new) {
           return (
             <span>
-              <Button onClick={addTimeSheetHandler}>
+              <Popconfirm
+                title="Sure to delete?"
+                onConfirm={() => removeRow(record._id)}
+              >
                 <FontAwesomeIcon
-                  icon={faSave}
+                  icon={faTrash}
                   className="btn-at"
-                  title="Save Timesheet"
-                  style={{
-                    color: "#5edd0a",
-                    marginLeft: "15px",
-                  }}
+                  title="Delete Timesheet"
+                  style={{ color: "#fa5c7c" }}
                 />
-              </Button>
+              </Popconfirm>
             </span>
           );
         }
@@ -340,33 +380,19 @@ const TimeSheet = () => {
   ];
 
   const addNewTimesheetRow = () => {
-    const hasDynamicRow = timesheet.some((row) => row.is_new);
-    const timeSheetList = localStorage.getItem("timesheet");
-    let allTimesheet =
-      timeSheetList && timeSheetList.length > 0
-        ? JSON.parse(timeSheetList)
-        : [];
+    const newAddTimesheet = new Timesheet();
 
-    if (hasDynamicRow) {
-      toast.error("Please complete old row action.", {
+    if (
+      !timesheet.some((row) => row.start_time === "" && row.end_time === "")
+    ) {
+      console.log(timesheet.length);
+      newAddTimesheet._id = (timesheet.length + 1).toString();
+      setTimesheet([newAddTimesheet, ...timesheet]);
+    } else {
+      toast.error("Please complete last row action.", {
         position: toast.POSITION.TOP_RIGHT,
       });
-      return;
     }
-    const newTimesheet = {
-      _id:
-        allTimesheet && allTimesheet.length > 0 ? allTimesheet.length + 1 : 1,
-      start_time: "",
-      end_time: "",
-      remark: "",
-      client: "",
-      work_area: "",
-      pariculars: "",
-      total_time: "",
-      is_new: true,
-    } as ITimesheet;
-    console.log(newTimesheet);
-    setTimesheet([newTimesheet, ...timesheet]);
   };
 
   const [activeTab, setActiveTab] = useState<string>("1");
@@ -377,8 +403,6 @@ const TimeSheet = () => {
 
   // Edit time sheet data
   const editClickHandler = (updateTimesheet: Timesheet) => {
-    console.log("Update task", updateTimesheet);
-
     api
       .updateTimesheet(updateTimesheet._id, updateTimesheet)
       .then((resp: any) => {
@@ -404,7 +428,7 @@ const TimeSheet = () => {
         );
         setTimesheet(updatedData);
         localStorage.setItem("timesheet", JSON.stringify(updatedData));
-        toast.success("Successfully Timesheet add.", {
+        toast.success("Successfully Timesheet Remove.", {
           position: toast.POSITION.TOP_RIGHT,
         });
       });
@@ -415,67 +439,61 @@ const TimeSheet = () => {
     }
   };
 
-  // save time sheet data
-  const addTimeSheetHandler = () => {
-    // Read all existing timesheet from `localStorage`
-    const timeSheetList = localStorage.getItem("timesheet");
+  const removeRow = (timeSheetId: string) => {
+    const updatedData = timesheet.filter(
+      (item: Timesheet) => item._id !== timeSheetId
+    );
 
-    if (
-      addTimesheet.start_time === "" ||
-      addTimesheet.end_time === "" ||
-      addTimesheet.client === "" ||
-      addTimesheet.work_area === "" ||
-      addTimesheet.pariculars === ""
-    ) {
-      // Show an error message
-      toast.error("Please fill in all fields", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      return;
-    }
-
-    // Parse the time values to compare
-    const startTime = dayjs(addTimesheet.start_time, "HH:mm");
-    const endTime = dayjs(addTimesheet.end_time, "HH:mm");
-
-    let allTimesheet =
-      timeSheetList && timeSheetList.length > 0
-        ? JSON.parse(timeSheetList)
-        : [];
-
-    // Check if the entered time range overlaps with any existing records
-    const overlappingRecord = allTimesheet.find((item: Timesheet) => {
-      const itemStartTime = dayjs(item.start_time, "HH:mm");
-      const itemEndTime = dayjs(item.end_time, "HH:mm");
-      return (
-        (startTime.isSame(itemEndTime) && endTime.isAfter(itemStartTime)) ||
-        (startTime.isAfter(itemStartTime) && endTime.isSame(itemEndTime)) ||
-        (startTime.isBefore(itemStartTime) && endTime.isAfter(itemEndTime))
-      );
+    setTimesheet(updatedData);
+    localStorage.setItem("timesheet", JSON.stringify(updatedData));
+    toast.success("Successfully Timesheet delete.", {
+      position: toast.POSITION.TOP_RIGHT,
     });
+  };
 
-    if (overlappingRecord) {
-      toast.error("Time entry overlaps with an existing record", {
+  // save time sheet data
+  const saveTimeSheetHandler = () => {
+    // Read all existing timesheet from `localStorage`
+    console.log("ssave call", timesheet);
+
+    const newTimesheets = timesheet.filter((entry) => entry.is_new);
+
+    // Check if any new timesheets are present
+    if (newTimesheets.length === 0) {
+      toast.error("No new timesheet entries to save.", {
         position: toast.POSITION.TOP_RIGHT,
       });
       return;
     }
 
-    addTimesheet._id =
-      allTimesheet && allTimesheet.length > 0 ? allTimesheet.length + 1 : 1;
+    // Check if every new timesheet entry has non-blank values
+    const isEveryEntryValid = newTimesheets.every((entry) =>
+      Object.values(entry).every((value) => value !== "")
+    );
 
-    allTimesheet.push(addTimesheet);
+    // If any entry is not valid, display an error message
+    if (!isEveryEntryValid) {
+      toast.error("Please complete all required fields.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    // Create an array of timesheet data
+    const timesheetPayload = newTimesheets.map((entry) => ({
+      start_time: entry.start_time,
+      end_time: entry.end_time,
+      remark: entry.remark,
+      client: entry.client,
+      work_area: entry.work_area,
+      pariculars: entry.pariculars,
+      total_time: entry.total_time,
+    }));
 
-    console.log("ALL timesheet", allTimesheet);
-    console.log("addTimesheet", addTimesheet);
-
-    // Save to DB
+    console.log(timesheetPayload);
+    //  Make a single API call to save the multiple timesheet entries
     try {
-      api.createTimesheet(addTimesheet).then((resp: any) => {
-        // Set timesheet to `localStorage`
-        localStorage.setItem("timesheet", JSON.stringify(allTimesheet));
-        setTimesheet(allTimesheet);
-        toast.success("Successfully Timesheet add.", {
+      api.createMultipleTimesheet(timesheetPayload).then((resp) => {
+        toast.success("Successfully saved timesheet entries", {
           position: toast.POSITION.TOP_RIGHT,
         });
       });
@@ -503,57 +521,89 @@ const TimeSheet = () => {
       value = event.value;
     }
 
-    if (name === "end_time") {
-      let endTime = dayjs(value, "HH:mm");
-      let startTime = dayjs(addTimesheet.start_time, "HH:mm");
-      let diff = 0;
+    Object.keys(selectedTableRow).map((keyItem: string) => {
+      if (keyItem === name) {
+        switch (keyItem) {
+          case "start_time": {
+            let startDate = timesheetDate + "T" + value;
+            let startDatetime = dayjs(startDate, "YYYY-MM-DD HH:mm");
+            selectedTableRow.start_time = value;
+            break;
+          }
+          case "end_time": {
+            selectedTableRow.end_time = value;
+            let endTime = dayjs(value, "HH:mm");
+            let startTime = dayjs(selectedTableRow.start_time, "HH:mm");
+            let diff = 0;
 
-      console.log(endTime.isBefore(startTime));
-      if (endTime.isBefore(startTime)) {
-        toast.error("End time should not be less than start time.", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        return;
+            if (endTime.isBefore(startTime)) {
+              toast.error("End time should not be less than start time.", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+            }
+
+            if (startTime) {
+              diff = dayjs(endTime).diff(
+                dayjs(selectedTableRow.start_time, "HH:mm"),
+                "minute"
+              );
+            }
+
+            const hours = Math.floor(diff / 60);
+            const minutes = diff % 60;
+            const formattedDuration = `${hours}:${minutes
+              .toString()
+              .padStart(2, "0")}`;
+            selectedTableRow.total_time = formattedDuration;
+
+            addNewTimesheetRow();
+            break;
+          }
+          case "client": {
+            selectedTableRow.client = value;
+
+            break;
+          }
+          case "pariculars": {
+            selectedTableRow.pariculars = value;
+            break;
+          }
+          case "remark": {
+            selectedTableRow.remark = value;
+            break;
+          }
+          case "work_area": {
+            selectedTableRow.work_area = value;
+            break;
+          }
+        }
       }
-
-      if (addTimesheet.start_time !== "") {
-        diff = dayjs(endTime).diff(
-          dayjs(addTimesheet.start_time, "HH:mm"),
-          "minute"
-        );
-      }
-
-      const hours = Math.floor(diff / 60 / 60);
-      const minutes = diff % 60;
-      const formattedDuration = `${hours}h ${minutes}m`;
-      addTimesheet.total_time = formattedDuration;
-    }
-    // console.log(addTimesheet);
-    //setAddTimesheet(selectedTableRow);
-    setAddTimesheet({
-      ...addTimesheet,
-      [name]: value,
     });
+
+    // update selected rows
+
+    setSelectedTableRow(selectedTableRow);
+    //setTimesheet()
+    //setTimesheetData(selectedTableRow);
   };
 
   // save time sheet code end
 
-  //Time sheet List
-  useEffect(() => {
-    getTaskData();
-  }, []);
-
-  const getTaskData = () => {
+  const getTimeSheetData = () => {
     api.getTimesheet().then((resp: any) => {
-      setTimesheet(resp.data);
+      const newBlankTimeSheet = new Timesheet();
+      newBlankTimeSheet._id = (timesheet.length + 1).toString();
+      const finalData = [newBlankTimeSheet, ...resp.data];
+      setTimesheet(finalData);
+
       localStorage.setItem("timesheet", JSON.stringify(resp.data));
     });
   };
   const getData = (current: number, pageSize: number) => {
-    let retVal: AddTimesheet[] = [];
-    retVal = timesheet;
+    console.log("all timesheet", timesheet);
 
-    return retVal
+    return timesheet
       .map((item: any, index: number) => {
         item.key = index;
         return item;
@@ -609,34 +659,49 @@ const TimeSheet = () => {
         </div>
       </div>
       <Form>
-        <div style={{ textAlign: "right" }}>
-          <DatePicker placeholder="Date" name="due_date" className="w101" />
-          <div>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={addNewTimesheetRow}
-              style={{ marginTop: "10px", marginBottom: "10px" }}
-            >
-              Add
-            </Button>
-          </div>
+        <div style={{ textAlign: "right", marginTop: "10px" }}>
+          <DatePicker
+            placeholder="Date"
+            name="due_date"
+            className="w101"
+            value={timesheetDate}
+          />
         </div>
 
-        <Row gutter={[8, 8]} className="form-row"></Row>
         <div>
-          <Row gutter={[8, 8]} className="form-row">
+          <Row
+            gutter={[8, 8]}
+            className="form-row"
+            style={{ marginTop: "10px" }}
+          >
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
               <Table
                 columns={columns}
-                //   dataSource={timesheet}
                 dataSource={getData(current, pageSize)}
                 pagination={{ pageSize: 100 }}
-                scroll={{ x: 1300 }}
                 onChange={onChange}
                 rowKey="_id"
+                onRow={(record, rowIndex) => {
+                  return {
+                    onClick: (event) => {
+                      setSelectedTableRow(record);
+                    },
+                  };
+                }}
               />
             </Col>
+          </Row>
+
+          <Row gutter={[8, 8]} className="form-row">
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<PlusOutlined />}
+              onClick={saveTimeSheetHandler}
+              style={{ marginTop: "10px", marginBottom: "10px" }}
+            >
+              Save
+            </Button>
           </Row>
         </div>
       </Form>
