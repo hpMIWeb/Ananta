@@ -346,4 +346,10 @@ export default {
         },
       ],
     }),
+  downloadTimesheetPDF: () =>
+    instance({
+      method: "POST",
+      url: "timesheet/create-multiple-timesheet",
+      data: [],
+    }),
 };
