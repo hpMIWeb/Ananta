@@ -160,7 +160,7 @@ const SubCompliance = (props: any) => {
                                             }
                                             rules={[
                                                 {
-                                                    required: false,
+                                                    required: true,
                                                     message:
                                                         "Please enter Compliance.",
                                                 },
@@ -258,21 +258,32 @@ const SubCompliance = (props: any) => {
                                         sm={{ span: 24 }}
                                         md={{ span: 18 }}
                                     >
-                                        <ReactQuill
-                                            theme="snow"
-                                            value={subComplianceItem.remark}
-                                            placeholder="Remark"
-                                            onChange={(event) => {
-                                                inputChangeHandler(
-                                                    event,
-                                                    subComplianceItem,
-                                                    "remark"
-                                                );
-                                            }}
-                                            style={{
-                                                minHeight: "0 !important",
-                                            }}
-                                        />
+                                        <Form.Item
+                                            name="remak"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    message:
+                                                        "Please entre remark.",
+                                                },
+                                            ]}
+                                        >
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={subComplianceItem.remark}
+                                                placeholder="Remark"
+                                                onChange={(event) => {
+                                                    inputChangeHandler(
+                                                        event,
+                                                        subComplianceItem,
+                                                        "remark"
+                                                    );
+                                                }}
+                                                style={{
+                                                    minHeight: "0 !important",
+                                                }}
+                                            />
+                                        </Form.Item>
                                     </Col>
                                     <Col
                                         xs={{ span: 24 }}
@@ -288,7 +299,7 @@ const SubCompliance = (props: any) => {
                                                 {
                                                     required: true,
                                                     message:
-                                                        "Please select work area.",
+                                                        "Please select priority.",
                                                 },
                                             ]}
                                         >
