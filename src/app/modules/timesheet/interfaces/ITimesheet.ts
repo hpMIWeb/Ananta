@@ -9,6 +9,7 @@ export interface AddTimesheet {
   total_time: string;
   is_new: boolean;
   is_edit: boolean;
+  timesheet_date: string;
 }
 
 export class Timesheet implements AddTimesheet {
@@ -22,4 +23,5 @@ export class Timesheet implements AddTimesheet {
   total_time: string = "";
   is_new: boolean = true;
   is_edit: boolean = false;
+  timesheet_date: string = "";
 }

@@ -42,8 +42,8 @@ const pageSize = 20;
 
 const TimeSheet = () => {
   const [current, setCurrent] = useState(1);
-  const [timesheetDate, setTimesheetDate] = useState(dayjs()); //set date in calender
-
+  const dateFormat = "YYYY-MM-DD";
+  const [timesheetDate, setTimesheetDate] = useState(dayjs(dateFormat)); //set date in calender
   const [timesheet, setTimesheet] = useState<ITimesheet[]>([]);
   const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
     {} as ITimesheet
@@ -469,7 +469,7 @@ const TimeSheet = () => {
           return (
             <span
               className="ant-col ant-form-item-control css-dev-only-do-not-override-w8mnev"
-              // style={{ display: "flex", justifyContent: "center" }}
+              style={{ display: "flex", justifyContent: "center" }}
             >
               <b>
                 <ClockCircleOutlined
@@ -589,6 +589,7 @@ const TimeSheet = () => {
   const addNewTimesheetRow = () => {
     const newAddTimesheet = new Timesheet();
     newAddTimesheet._id = (timesheet.length + 1).toString();
+    newAddTimesheet.timesheet_date = timesheetDate.toString();
 
     if (
       !timesheet.some((row) => row.start_time === "" && row.end_time === "")
@@ -696,13 +697,14 @@ const TimeSheet = () => {
 
     // Create an array of timesheet data
     const timesheetPayload = newTimesheets.map((entry) => ({
-      start_time: selectedDate + "T" + entry.start_time + ":00.000Z",
-      end_time: selectedDate + "T" + entry.end_time + ":00.000Z",
+      start_time: entry.start_time,
+      end_time: entry.end_time,
       remark: entry.remark,
       client: entry.client,
       work_area: entry.work_area,
       pariculars: entry.pariculars,
       total_time: entry.total_time,
+      timesheet_date: selectedDate,
     }));
 
     console.log(timesheetPayload);
@@ -741,9 +743,16 @@ const TimeSheet = () => {
       if (keyItem === name) {
         switch (keyItem) {
           case "start_time": {
-            let startDate = timesheetDate + "T" + value;
-            let startDatetime = dayjs(startDate, "YYYY-MM-DD HH:mm");
             selectedTableRow.start_time = value;
+
+            let startTime = dayjs(selectedTableRow.start_time, "HH:mm");
+            if (startTime.isAfter(startTime)) {
+              toast.error("Start time should not be greater than start time.", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+            }
+            selectedTableRow.total_time = calculateTotalTime(selectedTableRow);
             break;
           }
           case "end_time": {
@@ -789,6 +798,10 @@ const TimeSheet = () => {
     setSelectedTableRow(selectedTableRow);
   };
 
+  const dateChangeHandler = (date: string) => {
+    getTimeSheetData();
+  };
+
   const calculateTotalTime = (record: Timesheet) => {
     let endTime = dayjs(record.end_time, "HH:mm");
     let startTime = dayjs(record.start_time, "HH:mm");
@@ -815,8 +828,15 @@ const TimeSheet = () => {
   };
   const getData = (current: number, pageSize: number) => {
     console.log("all timesheet", timesheet);
+    let returnVal = timesheet;
 
-    return timesheet
+    returnVal = timesheet.filter((item: ITimesheet) => {
+      return dayjs(item.start_time, dateFormat).isSame(
+        dayjs().format(dateFormat)
+      );
+    });
+    console.log(returnVal);
+    return returnVal
       .map((item: any, index: number) => {
         item.key = index;
         return item;
@@ -877,7 +897,11 @@ const TimeSheet = () => {
             placeholder="Date"
             name="due_date"
             className="w101"
-            value={timesheetDate}
+            defaultValue={timesheetDate}
+            format={dateFormat}
+            onChange={(date, dateString) => {
+              inputChangeHandler(dateString, "start_time");
+            }}
           />
         </div>
 
