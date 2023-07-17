@@ -38,6 +38,7 @@ import {
     faXmark,
     faClock,
     faCommentDots,
+    faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
@@ -115,6 +116,19 @@ const TaskViewEdit = (props: any) => {
 
     const editClickHandler = () => {
         setIsEdit(!isEdit);
+    };
+
+    // event handler from `stopwatch` action - play & stop
+    const handleTaskStatus = (isRunning: boolean) => {
+        const taskUpdate = {} as AddTask;
+        taskUpdate.status = isRunning ? "in_progress" : "complete";
+
+        api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
+            toast.success("Successfully Updated Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
     };
 
     const priorityChangeHandler = (event: any, value: string) => {
@@ -222,24 +236,6 @@ const TaskViewEdit = (props: any) => {
         });
     };
 
-    const subTaskCollapse = taskSubTasks.map(
-        (subTaskItem: SubTask, index: number) => {
-            return {
-                key: index,
-                label: subTaskItem.title,
-                children: (
-                    <SubTaskViewEdit
-                        key={subTaskItem._id}
-                        tableRowSelected={subTaskItem}
-                        isEdit={isEdit}
-                    />
-                ),
-            };
-        }
-    );
-
-    //const subTaskCollapseItems: CollapseProps["items"] = subTaskCollapse;
-
     return (
         <>
             <div
@@ -289,7 +285,7 @@ const TaskViewEdit = (props: any) => {
                                 md={{ span: 5 }}
                             >
                                 <Title level={4} style={{ textAlign: "right" }}>
-                                    {capitalize(updateTask.assigned_to)}
+                                    {capitalize(updateTask.client)}
                                 </Title>
                             </Col>
                         )}
@@ -319,57 +315,72 @@ const TaskViewEdit = (props: any) => {
                                 }
                             />
                             {props.fullScreenMode && (
-                                <FontAwesomeIcon
-                                    icon={isEdit ? faXmark : faEdit}
-                                    style={{
-                                        fontSize: isEdit ? "25px" : "20px",
-                                        color: "#2c7be5",
-                                        cursor: "pointer",
-                                        marginRight: "15px",
-                                        float: "right",
-                                        marginTop: isEdit ? "-3px" : "0",
-                                    }}
-                                    title={
-                                        "Click here to " +
-                                        (isEdit ? "cancel" : "edit")
-                                    }
-                                    onClick={editClickHandler}
-                                />
+                                <>
+                                    <FontAwesomeIcon
+                                        icon={isEdit ? faXmark : faEdit}
+                                        style={{
+                                            fontSize: isEdit ? "25px" : "20px",
+                                            color: "#2c7be5",
+                                            cursor: "pointer",
+                                            marginRight: "15px",
+                                            float: "right",
+                                            marginTop: isEdit ? "-3px" : "0",
+                                        }}
+                                        title={
+                                            "Click here to " +
+                                            (isEdit ? "cancel" : "edit")
+                                        }
+                                        onClick={editClickHandler}
+                                    />
+                                    {isEdit && (
+                                        <FontAwesomeIcon
+                                            icon={faSave}
+                                            style={{
+                                                fontSize: "20px",
+                                                color: "#2c7be5",
+                                                cursor: "pointer",
+                                                marginRight: "15px",
+                                                float: "right",
+                                                marginTop: "0",
+                                            }}
+                                            title={"Click here to Save"}
+                                            onClick={handleUpdateTask}
+                                        />
+                                    )}
+                                </>
                             )}
                         </Col>
                     </Row>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: props.fullScreenMode ? 1 : 3 }}
-                    >
-                        {isEdit && (
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                onClick={handleUpdateTask}
-                            >
-                                Update
-                            </Button>
-                        )}
-                    </Col>
                     {dividerRow()}
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 12 }}
                             md={{ span: 16 }}
-                            lg={{ span: 14 }}
+                            lg={{ span: props.fullScreenMode ? 14 : 10 }}
                         >
                             <div className="timerbuttons">
-                                <Stopwatch taskId={updateTask._id} />
+                                {taskSubTasks && taskSubTasks.length <= 0 && (
+                                    <Stopwatch
+                                        taskId={updateTask._id}
+                                        handleTaskStatus={handleTaskStatus}
+                                    />
+                                )}
+                                {taskSubTasks && taskSubTasks.length > 0 && (
+                                    <span className="stopwatch-time">
+                                        00:
+                                        {"00".toString().padStart(2, "0")}:
+                                        {"00".toString().padStart(2, "0")}:
+                                        {"00".toString().padStart(2, "0")}
+                                    </span>
+                                )}
                             </div>
                         </Col>
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 6 }}
                             md={{ span: 4 }}
-                            lg={{ span: 5 }}
+                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
                         >
                             {!isEdit && (
                                 <>
@@ -406,7 +417,7 @@ const TaskViewEdit = (props: any) => {
                             xs={{ span: 24 }}
                             sm={{ span: 6 }}
                             md={{ span: 4 }}
-                            lg={{ span: 5 }}
+                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
                         >
                             <Select
                                 allowClear
@@ -425,7 +436,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 5 }}
-                            md={{ span: 4 }}
+                            md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             Assigned To
                             <div>
@@ -448,7 +459,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 6 }}
-                            md={{ span: 6 }}
+                            md={{ span: props.fullScreenMode ? 6 : 12 }}
                         >
                             Assigned Date
                             <div>
@@ -490,7 +501,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 5 }}
-                            md={{ span: 6 }}
+                            md={{ span: props.fullScreenMode ? 6 : 12 }}
                         >
                             Due Date
                             <div>
@@ -530,7 +541,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 4 }}
-                            md={{ span: 4 }}
+                            md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             Budget Time
                             <div>
@@ -568,7 +579,7 @@ const TaskViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 4 }}
-                            md={{ span: 4 }}
+                            md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             Actual Time
                             <div>
@@ -605,11 +616,25 @@ const TaskViewEdit = (props: any) => {
                                 )} */}
                             </div>
                         </Col>
+                        {!props.fullScreenMode && (
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 4 }}
+                                md={{ span: props.fullScreenMode ? 4 : 12 }}
+                            >
+                                Client
+                                <div>{<b>{updateTask.client.trim()}</b>}</div>
+                            </Col>
+                        )}
                     </Row>
                     <Row
                         gutter={[8, 8]}
                         className="form-row"
-                        style={{ border: "1px solid #d8e2ef", padding: "15px" }}
+                        style={{
+                            border: "1px solid #d8e2ef",
+                            padding: "15px",
+                            marginTop: "20px",
+                        }}
                     >
                         <Col
                             xs={{ span: 24 }}
@@ -650,11 +675,7 @@ const TaskViewEdit = (props: any) => {
                                 Sub-tasks
                             </Title>
                             {taskSubTasks.length > 0 && (
-                                <Collapse
-                                    accordion
-                                    //items={subTaskCollapseItems}
-                                    expandIconPosition="right"
-                                >
+                                <Collapse accordion expandIconPosition="end">
                                     {taskSubTasks.map(
                                         (
                                             subTaskItem: SubTask,
@@ -728,10 +749,11 @@ const TaskViewEdit = (props: any) => {
                                                                             "10px",
                                                                     }}
                                                                 />
-                                                                {subTaskItem.comments &&
-                                                                    subTaskItem
-                                                                        .comments
-                                                                        .length}
+                                                                {subTaskItem.comments
+                                                                    ? subTaskItem
+                                                                          .comments
+                                                                          .length
+                                                                    : 0}
                                                             </div>
                                                             <div className="task-header-cell">
                                                                 {props.fullScreenMode && (
@@ -774,7 +796,7 @@ const TaskViewEdit = (props: any) => {
                                                             </div>
                                                         </div>
                                                     }
-                                                    key={"asdasd"}
+                                                    key={subTaskItem._id}
                                                 >
                                                     <SubTaskViewEdit
                                                         key={subTaskItem._id}
@@ -806,23 +828,28 @@ const TaskViewEdit = (props: any) => {
                             )}
                         </Col>
                     </Row>
+                    {!isEdit && (
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <Title level={4} style={{ textAlign: "left" }}>
+                                    Comments
+                                </Title>
+                                <Comments
+                                    comments={taskComments}
+                                    parentId={updateTask._id}
+                                    addComment={addCommentHandler}
+                                    editComment={editCommentHandler}
+                                    deleteComment={deleteCommentHandler}
+                                />
+                            </Col>
+                        </Row>
+                    )}
                     <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
-                            <Title level={4} style={{ textAlign: "left" }}>
-                                Comments
-                            </Title>
-                            <Comments
-                                comments={taskComments}
-                                parentId={updateTask._id}
-                                addComment={addCommentHandler}
-                                editComment={editCommentHandler}
-                                deleteComment={deleteCommentHandler}
-                            />
-                        </Col>
+                        <div style={{ height: "30px" }}></div>
                     </Row>
                 </Form>
             </div>

@@ -235,7 +235,7 @@ const SubTaskViewEdit = (props: any) => {
                         </Title>
                     </Col>
                 </Row>
-                <Row gutter={[8, 8]} className="form-row">
+                {/* <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }}>
                         {isEdit && (
                             <Button
@@ -247,7 +247,7 @@ const SubTaskViewEdit = (props: any) => {
                             </Button>
                         )}
                     </Col>
-                </Row>
+                </Row> */}
                 {dividerRow()}
                 <Row gutter={[8, 8]} className="form-row">
                     <Col
@@ -427,20 +427,26 @@ const SubTaskViewEdit = (props: any) => {
                         </Title>
                     </Col>
                 </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <Title level={5} style={{ textAlign: "left" }}>
-                            Comments
-                        </Title>
-                        <Comments
-                            comments={taskComments}
-                            parentId={updateTask._id}
-                            addComment={addCommentHandler}
-                            editComment={editCommentHandler}
-                            deleteComment={deleteCommentHandler}
-                        />
-                    </Col>
-                </Row>
+                {!isEdit && (
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            <Title level={5} style={{ textAlign: "left" }}>
+                                Comments
+                            </Title>
+                            <Comments
+                                comments={taskComments}
+                                parentId={updateTask._id}
+                                addComment={addCommentHandler}
+                                editComment={editCommentHandler}
+                                deleteComment={deleteCommentHandler}
+                            />
+                        </Col>
+                    </Row>
+                )}
             </div>
         </>
     );
