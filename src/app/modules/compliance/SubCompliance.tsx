@@ -324,14 +324,14 @@ const SubCompliance = (props: any) => {
                                         sm={{ span: 24 }}
                                         md={{ span: 24 }}
                                     >
-                                        <ComplianceDetails
+                                        {/* <ComplianceDetails
                                             updateClients={
                                                 complianceDetailsHandler
                                             }
                                             isAllowAdd={false}
                                             parentTitle={"sub_compliance"}
                                             parentId={subComplianceItem._id}
-                                        />
+                                        /> */}
                                     </Col>
                                 </Row>
                             </div>

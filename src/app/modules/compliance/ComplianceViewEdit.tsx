@@ -20,8 +20,11 @@ import {
     assigneeOpts,
     capitalize,
     dateFormat,
+    formatTime,
     priorityOpts,
+    statusColors,
     statusList,
+    upperText,
 } from "../../utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
@@ -58,57 +61,6 @@ const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
 
-const columns: ColumnsType<DataType> = [
-    {
-        title: "Action",
-        dataIndex: "_id",
-        key: "_id",
-        render: (text: any, record: any, index: number) => (
-            <div className="timerbuttons">
-                <Stopwatch />
-            </div>
-        ),
-    },
-    {
-        title: "Client Name",
-        dataIndex: "client_name",
-        key: "client_name",
-        sorter: (a: any, b: any) => a.client_name - b.client_name,
-        sortDirections: ["descend", "ascend"],
-    },
-    {
-        title: "Assign To",
-        dataIndex: "assigned_to",
-        key: "assigned_to",
-        sorter: (a: any, b: any) => a.assigned_to - b.assigned_to,
-    },
-    {
-        title: "Remarks",
-        dataIndex: "remark",
-        key: "remark",
-        sorter: (a: any, b: any) => a.remark - b.remark,
-    },
-    {
-        title: "Budget Time",
-        dataIndex: "budget_time",
-        key: "budget_time",
-        sorter: (a: any, b: any) => a.budget_time - b.budget_time,
-    },
-    {
-        title: "Actual Time",
-        dataIndex: "budget_time",
-        key: "budget_time",
-        sorter: (a: any, b: any) => a.budget_time - b.budget_time,
-    },
-];
-
-interface DataType {
-    key: React.Key;
-    client_name: string;
-    remark: number;
-    budget_time: string;
-}
-
 const ComplianceViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
     const [updateCompliance, setUpdateCompliance] = useState<IAddCompliance>(
@@ -120,6 +72,100 @@ const ComplianceViewEdit = (props: any) => {
     const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
         props.tableRowSelected.subcompliance ?? []
     );
+
+    const columns = [
+        {
+            title: "Action",
+            dataIndex: "_id",
+            key: "_id",
+            render: (text: any, record: any, index: number) => (
+                <div className="timerbuttons">
+                    <Stopwatch />
+                </div>
+            ),
+        },
+        {
+            title: "Client Name",
+            dataIndex: "client_name",
+            key: "client_name",
+            sorter: (a: any, b: any) =>
+                a.client_name.localeCompare(b.client_name),
+            //sortDirections: ["descend", "ascend"],
+        },
+        {
+            title: "Assign To",
+            dataIndex: "assigned_to",
+            key: "assigned_to",
+            sorter: (a: any, b: any) =>
+                a.assigned_to.localeCompare(b.assigned_to),
+        },
+        {
+            title: "Sub Compliance",
+            dataIndex: "subCompliance",
+            key: "subCompliance",
+            render: (text: any, record: any) => {
+                let currentClientCount = 0;
+                let completedCount = 0;
+
+                // subcompliance count as per client
+                if (subCompliances) {
+                    subCompliances.map((item: ISubCompliance) => {
+                        const matchedItem = item.clients.filter(
+                            (client: any) => {
+                                return (
+                                    client.client_name === record.client_name
+                                );
+                            }
+                        );
+
+                        if (matchedItem && matchedItem.length > 0) {
+                            currentClientCount += matchedItem.length;
+                            if (matchedItem.length > 0) {
+                                if (item.status === "completed") {
+                                    completedCount++;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return `${completedCount} / ${currentClientCount}`;
+            },
+            sorter: (a: any, b: any) => a.subCompliances - b.subCompliances,
+        },
+        {
+            title: "Remarks",
+            dataIndex: "remark",
+            key: "remark",
+            sorter: (a: any, b: any) => a.remark.localeCompare(b.remark),
+        },
+        {
+            title: "Budget Time",
+            dataIndex: "budget_time",
+            key: "budget_time",
+            render: (item: string) => {
+                return formatTime(item);
+            },
+            //sorter: (a: any, b: any) => a.budget_time - b.budget_time,
+        },
+        {
+            title: "Actual Time",
+            dataIndex: "actual_time",
+            key: "actual_time",
+            render: (item: string) => {
+                return formatTime(item);
+            },
+            //sorter: (a: any, b: any) => a.actual_time - b.actual_time,
+        },
+    ];
+
+    interface DataType {
+        key: React.Key;
+        client_name: string;
+        remark: number;
+        budget_time: string;
+        actual_time: string;
+    }
 
     const fullScreenModeToggle = () => {
         if (props.handleScreenMode) {
@@ -191,6 +237,7 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     useEffect(() => {
+        console.log(props.tableRowSelected.clients);
         setUpdateCompliance(props.tableRowSelected);
         setSubCompliances(props.tableRowSelected.subcompliance);
         setComplianceComments(props.tableRowSelected.comments);
@@ -282,6 +329,29 @@ const ComplianceViewEdit = (props: any) => {
     /* comment code end */
 
     const handleUpdateTask = () => {};
+
+    // calculate client count
+    const getSubCompliancesCount = (data: any) => {
+        let totalCount = 0;
+        let completedCount = 0;
+
+        if (data.clients) {
+            totalCount = data.clients.length;
+            // const matchedItems = data.clients.filter((item: any) => {
+            //     item.status === "completed";
+            // });
+        }
+
+        return `${completedCount} / ${totalCount}`;
+    };
+
+    const convertTimeTest = (dateValue: string) => {
+        const date = dayjs(dateValue, "HH:mm");
+        const hours = date.format("HH");
+        const minutes = date.format("mm");
+
+        return `${hours} h ${minutes}m`;
+    };
 
     return (
         <>
@@ -480,7 +550,11 @@ const ComplianceViewEdit = (props: any) => {
                     <Row
                         gutter={[8, 8]}
                         className="form-row"
-                        style={{ border: "1px solid #d8e2ef", padding: "15px" }}
+                        style={{
+                            border: "1px solid #d8e2ef",
+                            padding: "15px",
+                            marginBottom: "20px",
+                        }}
                     >
                         <Col
                             xs={{ span: 24 }}
@@ -497,43 +571,22 @@ const ComplianceViewEdit = (props: any) => {
                                         inputChangeHandler(event, "remark");
                                     }}
                                 />
-                            )}{" "}
+                            )}
                         </Col>
                     </Row>
-                    {!props.isEdit && (
-                        <Row
-                            gutter={[8, 8]}
-                            className="form-row"
-                            style={{ marginTop: "15px" }}
-                        >
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                {/* <Table
-                                    id="complianceViewEdit"
-                                    dataSource={updateCompliance.clients}
-                                    columns={columns}
-                                    size="small"
-                                    onChange={onChange}
-                                /> */}
-                            </Col>
-                        </Row>
-                    )}
 
-                    {isEdit && (
+                    {!isEdit && (
                         <Row gutter={[8, 8]} className="form-row">
                             <Col
                                 xs={{ span: 24 }}
                                 sm={{ span: 24 }}
                                 md={{ span: 24 }}
                             >
-                                <ComplianceDetails
-                                    updateClients={updateCompliance.clients}
-                                    isAllowAdd={false}
-                                    parentTitle={"sub_compliance"}
-                                    parentId={updateCompliance._id}
+                                <Table
+                                    id="complianceClients"
+                                    dataSource={updateCompliance.clients}
+                                    columns={columns}
+                                    scroll={{ x: 1000 }}
                                 />
                             </Col>
                         </Row>
@@ -544,24 +597,14 @@ const ComplianceViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            {isEdit && <ComplianceDetails />}{" "}
-                        </Col>
-                    </Row>
-
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
                             <Title level={5} style={{ textAlign: "left" }}>
                                 Sub-Compliance
                             </Title>
                             {!isEdit && (
-                                <Collapse expandIconPosition="right">
-                                    {props.tableRowSelected.subcompliance.map(
+                                <Collapse expandIconPosition="end">
+                                    {updateCompliance.subcompliance.map(
                                         (
-                                            subComplianceItem: any,
+                                            subComplianceItem: ISubCompliance,
                                             index: number
                                         ) => (
                                             <CollapsePanel
@@ -609,16 +652,18 @@ const ComplianceViewEdit = (props: any) => {
                                                                             "10px",
                                                                     }}
                                                                 />
-                                                                20 / 30
+                                                                {getSubCompliancesCount(
+                                                                    subComplianceItem
+                                                                )}
                                                             </>
                                                         </div>
-                                                        {props.fullScreenMode && (
+                                                        {/* {props.fullScreenMode && (
                                                             <div className="task-header-cell">
                                                                 {
                                                                     subComplianceItem.assigned_to
                                                                 }
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                         {props.fullScreenMode && (
                                                             <div className="task-header-cell">
                                                                 <FontAwesomeIcon
@@ -631,9 +676,9 @@ const ComplianceViewEdit = (props: any) => {
                                                                             "10px",
                                                                     }}
                                                                 />
-                                                                {
+                                                                {formatTime(
                                                                     subComplianceItem.budget_time
-                                                                }
+                                                                )}
                                                             </div>
                                                         )}
                                                         <div
@@ -663,9 +708,9 @@ const ComplianceViewEdit = (props: any) => {
                                                         <div className="task-header-cell">
                                                             {props.fullScreenMode && (
                                                                 <Tag
-                                                                    color={
-                                                                        "red"
-                                                                    }
+                                                                    color={statusColors(
+                                                                        subComplianceItem.status
+                                                                    )}
                                                                     style={{
                                                                         fontWeight:
                                                                             "500",
@@ -673,7 +718,7 @@ const ComplianceViewEdit = (props: any) => {
                                                                             "12px",
                                                                     }}
                                                                 >
-                                                                    {capitalize(
+                                                                    {upperText(
                                                                         subComplianceItem.status
                                                                     )}
                                                                 </Tag>
@@ -709,8 +754,7 @@ const ComplianceViewEdit = (props: any) => {
                                                     }
                                                     isEdit={isEdit}
                                                     complianceId={
-                                                        props.tableRowSelected
-                                                            ._id
+                                                        updateCompliance._id
                                                     }
                                                 />
                                             </CollapsePanel>
@@ -720,7 +764,7 @@ const ComplianceViewEdit = (props: any) => {
                             )}
                             {isEdit && (
                                 <div>
-                                    {props.tableRowSelected.subcompliance.map(
+                                    {updateCompliance.subcompliance.map(
                                         (
                                             subComplianceItem: any,
                                             index: number
@@ -731,7 +775,7 @@ const ComplianceViewEdit = (props: any) => {
                                                 }
                                                 isEdit={isEdit}
                                                 complianceId={
-                                                    props.tableRowSelected._id
+                                                    updateCompliance._id
                                                 }
                                             />
                                         )
@@ -751,8 +795,8 @@ const ComplianceViewEdit = (props: any) => {
                                     Comments
                                 </Title>
                                 <Comments
-                                    comments={props.tableRowSelected.comments}
-                                    parentId={props.tableRowSelected._id}
+                                    comments={updateCompliance.comments}
+                                    parentId={updateCompliance._id}
                                     addComment={addCommentHandler}
                                     editComment={editCommentHandler}
                                     deleteComment={deleteCommentHandler}

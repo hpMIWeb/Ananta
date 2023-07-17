@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const dateFormat = "YYYY-MM-DD";
 
 export const modeOptions = [
@@ -115,6 +117,13 @@ export const capitalize = (value: string) => {
     return value;
 };
 
+export const upperText = (value: string) => {
+    if (value) {
+        return value.toUpperCase();
+    }
+    return value;
+};
+
 // set, get and remove items from `localStorage`
 export const setLocalstorage = (key: string, value: string) => {
     localStorage.setItem(key, value);
@@ -126,4 +135,54 @@ export const removeLocalstorage = (key: string) => {
 
 export const getLocalStorage = (key: string) => {
     return localStorage.getItem(key);
+};
+
+export const formatTime = (dateValue: string) => {
+    if (dateValue === undefined || dateValue === "") return "";
+
+    const date = dayjs(dateValue, "HH:mm");
+    const hours = date.format("HH");
+    const minutes = date.format("mm");
+
+    let retVal = "";
+
+    if (hours && minutes) {
+        retVal = `${hours}h `;
+
+        if (minutes && parseInt(minutes) > 0) {
+            retVal += `${minutes}m`;
+        }
+    }
+
+    return retVal;
+};
+
+export const statusColors = (status: string) => {
+    let color = "#fb275d";
+    let retVal = status;
+    switch (status) {
+        case "completed": {
+            color = "#00ca72";
+            break;
+        }
+        case "in_progress": {
+            color = "#ffcc00";
+            break;
+        }
+        case "cancelled": {
+            color = "#5e6e82";
+            break;
+        }
+        case "1":
+        case "pending": {
+            retVal = "pending";
+            break;
+        }
+        case "2": {
+            color = "#40fb27";
+            retVal = "completed";
+        }
+    }
+
+    return color;
 };

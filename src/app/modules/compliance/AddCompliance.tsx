@@ -216,6 +216,7 @@ const AddCompliance = () => {
                               priority: item.priority,
                               workArea: item.workArea,
                               clients: item.clients,
+                              comments: [],
                           };
                       })
                     : [];

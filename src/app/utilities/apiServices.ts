@@ -10,6 +10,7 @@ import {
     AddCompliance,
     SubCompliance,
     SaveComplianceComment,
+    UpdateSubCompliance,
 } from "../modules/compliance/interfaces/ICompliance";
 
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
@@ -280,15 +281,11 @@ export default {
                 },
             ],
         }),
-    updateSubCompliance: (updateSubCompliance: SubCompliance) =>
+    updateSubCompliance: (subCompliance: UpdateSubCompliance) =>
         instance({
             method: "PUT",
             url: "subcompliance/update-subcompliance",
-            data: {
-                subComplianceId: updateSubCompliance._id,
-                ComplianceId: updateSubCompliance.complianceId,
-                mode: updateSubCompliance.mode,
-            },
+            data: subCompliance,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -327,6 +324,18 @@ export default {
                 complianceId +
                 "&commentId=" +
                 commentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createMultipleTimesheet: (timesheet: any[]) =>
+        instance({
+            method: "POST",
+            url: "timesheet/create-multiple-timesheet",
+            data: timesheet,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);

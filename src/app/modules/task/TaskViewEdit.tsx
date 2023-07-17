@@ -675,7 +675,7 @@ const TaskViewEdit = (props: any) => {
                                 Sub-tasks
                             </Title>
                             {taskSubTasks.length > 0 && (
-                                <Collapse accordion expandIconPosition="right">
+                                <Collapse accordion expandIconPosition="end">
                                     {taskSubTasks.map(
                                         (
                                             subTaskItem: SubTask,

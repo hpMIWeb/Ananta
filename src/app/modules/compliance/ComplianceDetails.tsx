@@ -16,18 +16,21 @@ import TextArea from "antd/es/input/TextArea";
 import { ClientDetails as IClientDetails } from "./interfaces/ICompliance";
 
 const ComplianceDetails = (props: any) => {
-    const [clientDetails, setClientDetails] = useState<IClientDetails[]>([
-        {
-            complianceDetailId: "1",
-            client_name: "",
-            actual_time: "",
-            assignee_to: "",
-            budget_time: "",
-            priority: "",
-            remark: "",
-            parentId: props.parentId,
-        } as IClientDetails,
-    ]);
+    const [clientDetails, setClientDetails] = useState<IClientDetails[]>(
+        props.data
+    );
+    // [
+    //     {
+    //         complianceDetailId: "1",
+    //         client_name: "",
+    //         actual_time: "",
+    //         assignee_to: "",
+    //         budget_time: "",
+    //         priority: "",
+    //         remark: "",
+    //         parentId: props.parentId,
+    //     } as IClientDetails,
+    // ]
     const [selectedTableRow, setSelectedTableRow] = useState({
         complianceDetailId: "1",
         client_name: "",
@@ -311,7 +314,7 @@ const ComplianceDetails = (props: any) => {
                 </Button>
             </div>
             <Table
-                dataSource={clientDetails}
+                dataSource={props.data}
                 columns={columns}
                 pagination={false}
                 onRow={(record, rowIndex) => {

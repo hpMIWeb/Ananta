@@ -30,6 +30,21 @@ export interface SubCompliance {
     workArea: string;
     complianceId?: string;
     clients: ClientDetails[];
+    comments: [];
+}
+
+export interface UpdateSubCompliance {
+    ComplianceId: string;
+    subComplianceId: string;
+    title: string;
+    status: string;
+    mode: string;
+    budget_time: string;
+    remark: string;
+    priority: string;
+    workArea: string;
+    clients: ClientDetails[];
+    // comments: [];
 }
 
 export interface Attachment {

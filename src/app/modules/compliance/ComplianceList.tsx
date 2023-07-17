@@ -30,7 +30,11 @@ import {
     faUser,
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { complianceReportOpts, clientOpts } from "../../utilities/utility";
+import {
+    complianceReportOpts,
+    clientOpts,
+    upperText,
+} from "../../utilities/utility";
 import Fillter from "../fillter/Fillter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
@@ -164,7 +168,7 @@ const ComplianceList = () => {
                                 key={item}
                                 style={{ fontWeight: "500", fontSize: "12px" }}
                             >
-                                {title.toUpperCase()}
+                                {upperText(title)}
                             </Tag>
                         );
                     })}
@@ -383,9 +387,10 @@ const ComplianceList = () => {
         switch (rangeMode) {
             case "today": {
                 retVal = allCompliance.filter((item: IAddCompliance) => {
-                    return dayjs(item.start_date, dateFormat).isSame(
-                        dayjs().format(dateFormat)
-                    );
+                    // return dayjs(item.start_date, dateFormat).isSame(
+                    //     dayjs().format(dateFormat)
+                    // );
+                    return item;
                 });
                 break;
             }
