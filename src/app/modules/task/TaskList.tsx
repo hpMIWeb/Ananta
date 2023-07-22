@@ -454,6 +454,7 @@ const TaskList = () => {
                         pagination={{
                             defaultPageSize: 10,
                         }}
+                        style={{ width: "100%" }}
                     />
                 </Row>
             </div>
@@ -550,6 +551,7 @@ const TaskList = () => {
                         pagination={{
                             defaultPageSize: 10,
                         }}
+                        style={{ width: "100%" }}
                     />
                 </Row>
             </div>

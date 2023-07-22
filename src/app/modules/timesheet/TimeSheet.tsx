@@ -7,6 +7,8 @@ import {
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { nanoid } from "nanoid";
+
 import {
     Tabs,
     Typography,
@@ -51,17 +53,14 @@ const TimeSheet = () => {
     const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
         {} as ITimesheet
     );
+    const [isNewRow, setIsNewRow] = useState<boolean>(true);
 
     //Time sheet List
     useEffect(() => {
-        console.log(timesheetDate);
         getTimeSheetData();
-        addNewTimesheetRow();
     }, []);
 
-    function onChange(sorter: any) {
-        console.log(sorter);
-    }
+    function onChange(sorter: any) {}
 
     const columns = [
         {
@@ -70,33 +69,7 @@ const TimeSheet = () => {
             key: "start_time",
             width: "10%",
             render: (start_time: string, record: Timesheet) => {
-                if (record.is_new) {
-                    return (
-                        <Form.Item
-                            name={`start_time_${record._id}`}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter start time.",
-                                },
-                            ]}
-                        >
-                            <TimePicker
-                                placeholder="Start Time"
-                                name={`start_time_${record._id}`}
-                                format="HH:mm"
-                                changeOnBlur={true}
-                                showNow={false}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "start_time"
-                                    );
-                                }}
-                            />
-                        </Form.Item>
-                    );
-                } else if (!record.is_edit) {
+                if (!record.is_edit && !record.is_new) {
                     return (
                         <b>
                             <ClockCircleOutlined
@@ -105,7 +78,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(start_time).format("HH:mm")}
+                            {record.start_time}
                         </b>
                     );
                 }
@@ -114,14 +87,14 @@ const TimeSheet = () => {
                     <Form.Item
                         name={`start_time_${record._id}`}
                         rules={
-                            record.start_time
-                                ? []
-                                : [
+                            record.is_new
+                                ? [
                                       {
                                           required: true,
-                                          message: "Please enter start time.",
+                                          message: "Please enter Start Time.",
                                       },
                                   ]
+                                : []
                         }
                     >
                         <TimePicker
@@ -130,7 +103,6 @@ const TimeSheet = () => {
                             format="HH:mm"
                             changeOnBlur={true}
                             showNow={false}
-                            defaultValue={dayjs(record.start_time, "HH:mm")}
                             onChange={(date, dateString) => {
                                 inputChangeHandler(dateString, "start_time");
                             }}
@@ -143,7 +115,8 @@ const TimeSheet = () => {
             title: "End Time",
             dataIndex: "end_time",
             key: "end_time",
-            sorter: (a: any, b: any) => a.any - b.any,
+            sorter: (a: Timesheet, b: Timesheet) =>
+                dayjs(a.start_time).unix() - dayjs(b.start_time).unix(),
             width: "10%",
             render: (end_time: string, record: Timesheet) => {
                 if (record.is_new) {
@@ -153,7 +126,7 @@ const TimeSheet = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Please enter start time.",
+                                    message: "Please enter End Time.",
                                 },
                             ]}
                         >
@@ -178,7 +151,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(record.end_time).format("HH:mm")}
+                            {record.end_time}
                         </b>
                     );
                 }
@@ -191,7 +164,7 @@ const TimeSheet = () => {
                                 : [
                                       {
                                           required: true,
-                                          message: "Please enter end time.",
+                                          message: "Please enter End time.",
                                       },
                                   ]
                         }
@@ -216,21 +189,18 @@ const TimeSheet = () => {
             dataIndex: "client",
             key: "client",
             width: "10%",
-            sorter: (a: any, b: any) => a.any - b.any,
+            sorter: (a: Timesheet, b: Timesheet) =>
+                a.client.localeCompare(b.client),
             render: (client: string, record: Timesheet) => {
                 if (record.is_new) {
                     <Form.Item
                         name={`client_${record._id}`}
-                        rules={
-                            record.client
-                                ? []
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please enter client time.",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter Client.",
+                            },
+                        ]}
                     >
                         <Select
                             allowClear
@@ -256,7 +226,7 @@ const TimeSheet = () => {
                                 : [
                                       {
                                           required: true,
-                                          message: "Please enter client time.",
+                                          message: "Please enter Client.",
                                       },
                                   ]
                         }
@@ -281,7 +251,8 @@ const TimeSheet = () => {
             dataIndex: "work_area",
             key: "work_area",
             width: "10%",
-            sorter: (a: any, b: any) => a.any - b.any,
+            sorter: (a: Timesheet, b: Timesheet) =>
+                a.work_area.localeCompare(b.work_area),
             render: (work_area: string, record: Timesheet) => {
                 if (record.is_new) {
                     return (
@@ -294,7 +265,7 @@ const TimeSheet = () => {
                                           {
                                               required: true,
                                               message:
-                                                  "Please select work area.",
+                                                  "Please select Work Area.",
                                           },
                                       ]
                             }
@@ -324,7 +295,7 @@ const TimeSheet = () => {
                                 : [
                                       {
                                           required: true,
-                                          message: "Please select work area.",
+                                          message: "Please select Work Area.",
                                       },
                                   ]
                         }
@@ -349,7 +320,8 @@ const TimeSheet = () => {
             dataIndex: "pariculars",
             key: "pariculars",
             width: "10%",
-            sorter: (a: any, b: any) => a.any - b.any,
+            sorter: (a: Timesheet, b: Timesheet) =>
+                a.pariculars.localeCompare(b.pariculars),
             render: (pariculars: string, record: Timesheet) => {
                 if (record.is_new) {
                     return (
@@ -362,7 +334,7 @@ const TimeSheet = () => {
                                           {
                                               required: true,
                                               message:
-                                                  "Please enter pariculars.",
+                                                  "Please enter Particulars.",
                                           },
                                       ]
                             }
@@ -391,7 +363,7 @@ const TimeSheet = () => {
                                 : [
                                       {
                                           required: true,
-                                          message: "Please enter pariculars.",
+                                          message: "Please enter Particulars .",
                                       },
                                   ]
                         }
@@ -415,7 +387,8 @@ const TimeSheet = () => {
             dataIndex: "remark",
             key: "remark",
             width: "10%",
-            sorter: (a: any, b: any) => a.any - b.any,
+            sorter: (a: Timesheet, b: Timesheet) =>
+                a.remark.localeCompare(b.remark),
             render: (remark: string, record: Timesheet) => {
                 if (record.is_new) {
                     return (
@@ -480,11 +453,16 @@ const TimeSheet = () => {
             dataIndex: "total_time",
             key: "total_time",
             width: "10%",
-            sorter: (a: any, b: any) => a.any - b.any,
+
+            sorter: (a: Timesheet, b: Timesheet) => {
+                const aMinutes = convertTimeToMinutes(a.total_time);
+                const bMinutes = convertTimeToMinutes(b.total_time);
+                return aMinutes - bMinutes;
+            },
             render: (total_time: string, record: Timesheet) => {
                 if (!record.is_edit) {
                     return (
-                        <span>
+                        <span className="totalTimeDisplay">
                             <b>
                                 <ClockCircleOutlined
                                     style={{
@@ -515,7 +493,14 @@ const TimeSheet = () => {
                     .toString()
                     .padStart(2, "0")}`;
 
-                // return <span id={`total_time_${record._id}`}>{formattedDuration}</span>;
+                return (
+                    <span
+                        className="totalTimeDisplay"
+                        id={`total_time_${record._id}`}
+                    >
+                        {formattedDuration}
+                    </span>
+                );
             },
         },
         {
@@ -527,12 +512,7 @@ const TimeSheet = () => {
             render: (_: any, record: Timesheet) => {
                 if (record.is_new) {
                     return (
-                        <span
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
+                        <span className="totalTimeDisplay">
                             <Popconfirm
                                 title="Sure to delete?"
                                 onConfirm={() => removeRow(record._id)}
@@ -549,12 +529,7 @@ const TimeSheet = () => {
                 }
                 if (record.is_edit) {
                     return (
-                        <span
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
+                        <span className="totalTimeDisplay">
                             <FontAwesomeIcon
                                 icon={faXmark}
                                 className="btn-at"
@@ -581,7 +556,10 @@ const TimeSheet = () => {
                     );
                 }
                 return (
-                    <span style={{ display: "flex", justifyContent: "center" }}>
+                    <span
+                        className="totalTimeDisplay"
+                        style={{ display: "flex", justifyContent: "center" }}
+                    >
                         <FontAwesomeIcon
                             icon={faEdit}
                             className="btn-at"
@@ -610,11 +588,17 @@ const TimeSheet = () => {
         },
     ];
 
+    const convertTimeToMinutes = (time: any) => {
+        const [hours, minutes] = time.split(":");
+        return parseInt(hours) * 60 + parseInt(minutes);
+    };
+
     const addNewTimesheetRow = () => {
         const newAddTimesheet = new Timesheet();
-        newAddTimesheet._id = (timesheet.length + 1).toString();
+        newAddTimesheet._id = nanoid();
         newAddTimesheet.date = timesheetDate;
 
+        console.log(timesheet);
         if (
             !timesheet.some(
                 (row) => row.start_time === "" && row.end_time === ""
@@ -691,13 +675,10 @@ const TimeSheet = () => {
     };
 
     // save time sheet data
-    // save time sheet data
     const saveTimeSheetHandler = () => {
         const selectedDate = dayjs(timesheetDate).format(dateFormat);
 
         // Read all existing timesheet from `localStorage`
-        console.log("save call", timesheet);
-
         const newTimesheets = timesheet.filter((entry) => entry.is_new);
 
         // Check if any new timesheets are present
@@ -734,13 +715,13 @@ const TimeSheet = () => {
             date: selectedDate,
         }));
 
-        console.log(timesheetPayload);
         // Make a single API call to save the multiple timesheet entries
         try {
             api.createMultipleTimesheet(timesheetPayload).then((resp) => {
                 toast.success("Successfully saved timesheet entries", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                getTimeSheetData();
             });
         } catch (ex) {
             toast.error("Technical error while creating Task", {
@@ -754,7 +735,6 @@ const TimeSheet = () => {
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
         let value = "";
-        let start;
         if (event && event.target) {
             name = event.target.name;
             value = event.target.value;
@@ -766,10 +746,11 @@ const TimeSheet = () => {
             value = event.value;
         }
 
-        Object.keys(selectedTableRow).map((keyItem: string) => {
-            if (keyItem === name) {
-                switch (keyItem) {
+        Object.keys(selectedTableRow).map((recordItem: string) => {
+            if (recordItem === name) {
+                switch (recordItem) {
                     case "start_time": {
+                        console.log(selectedTableRow);
                         selectedTableRow.start_time = value;
 
                         let startTime = dayjs(
@@ -787,6 +768,14 @@ const TimeSheet = () => {
                         }
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
+
+                        // update the `is_new` if `start_time` and `end_time` are not empty
+                        if (
+                            selectedTableRow.start_time != "" &&
+                            selectedTableRow.end_time != ""
+                        ) {
+                            selectedTableRow.is_new = false;
+                        }
                         break;
                     }
                     case "end_time": {
@@ -839,7 +828,15 @@ const TimeSheet = () => {
         setSelectedTableRow(selectedTableRow);
     };
 
-    const onfocusHandler = (record: any, dataString: string = "") => {
+    const dateFilter = (date: string) => {
+        const newBlankTimeSheet = new Timesheet();
+        setTimesheetDate(date);
+        newBlankTimeSheet._id = nanoid();
+        newBlankTimeSheet.date = date.toString();
+        //const finalData = [newBlankTimeSheet, ...timesheet];
+        //setTimesheet(finalData);
+        getData(current, pageSize);
+
         getTimeSheetData();
     };
 
@@ -864,23 +861,23 @@ const TimeSheet = () => {
 
     const getTimeSheetData = () => {
         const newBlankTimeSheet = new Timesheet();
-        newBlankTimeSheet._id = (timesheet.length + 1).toString();
+        newBlankTimeSheet._id = nanoid();
         newBlankTimeSheet.date = timesheetDate.toString();
         setTimesheet([newBlankTimeSheet]);
         api.getTimesheet().then((resp: any) => {
             const finalData = [newBlankTimeSheet, ...resp.data];
+            localStorage.setItem("timesheet", JSON.stringify(finalData));
             setTimesheet(finalData);
-            localStorage.setItem("timesheet", JSON.stringify(resp.data));
         });
+        addNewTimesheetRow();
     };
     const getData = (current: number, pageSize: number) => {
-        console.log("all timesheet", timesheet);
         let returnVal = timesheet;
+        console.log(timesheet);
 
         returnVal = timesheet.filter((item: ITimesheet) => {
             return dayjs(item.date, dateFormat).isSame(timesheetDate);
         });
-        console.log(returnVal);
         return returnVal
             .map((item: any, index: number) => {
                 item.key = index;
@@ -940,12 +937,12 @@ const TimeSheet = () => {
                 <div style={{ textAlign: "right", marginTop: "10px" }}>
                     <DatePicker
                         placeholder="Date"
-                        name="due_date"
+                        name="date"
                         className="w101"
                         defaultValue={dayjs()}
                         format={dateFormat}
                         onChange={(date, dateString) => {
-                            inputChangeHandler(dateString, "start_time");
+                            dateFilter(dateString);
                         }}
                     />
                 </div>
@@ -964,7 +961,6 @@ const TimeSheet = () => {
                             <Table
                                 columns={columns}
                                 dataSource={getData(current, pageSize)}
-                                pagination={{ pageSize: 100 }}
                                 onChange={onChange}
                                 rowKey="_id"
                                 onRow={(record, rowIndex) => {

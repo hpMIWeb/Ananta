@@ -20,113 +20,118 @@ import {
 } from "@ant-design/icons";
 import "./EmpTimeSheet.scss";
 import { Link } from "react-router-dom";
-import { workAreaOpts, clientOpts } from "../../utilities/utility";
+import {
+  workAreaOpts,
+  clientOpts,
+  employeeOpts,
+} from "../../utilities/utility";
+import { EmployeeReport } from "./interfaces/IEmployeeReport";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 
 const { Title } = Typography;
+const pageSize = 20;
 
-const columns = [
-  {
-    title: "Date",
-    dataIndex: "starttime",
-    key: "starttime",
-    ellipsis: true,
-    width: 110,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="03-08-2022" className="Et4" />,
-  },
-  {
-    title: "Client Name",
-    dataIndex: "clientname",
-    key: "cliename",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="Trusha Bhanderi" className="Et4" />,
-  },
-  {
-    title: "Task",
-    dataIndex: "Task",
-    key: "Task",
-    width: 240,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => (
-      <div className="scrollabletd">
-        organic lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo
-        retro fanny pack lo-fi farm-to-table readymade.organic lomo retro fanny
-        pack lo-fi farm-to-table readymade.
-      </div>
-    ),
-  },
-
-  {
-    title: "Work Area",
-    dataIndex: "workarea",
-    key: "workarea",
-    width: 120,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="GST" className="Et4" />,
-  },
-  {
-    title: "Budget Time",
-    dataIndex: "Budget Time",
-    key: "Budget Time",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="02h 30m" className="Et4" />,
-  },
-  {
-    title: "Actual Time",
-    dataIndex: "Actual Time",
-    key: "Actual Time",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="02h 00m" className="Et4" />,
-  },
-  {
-    title: "Differance",
-    dataIndex: "Differance",
-    key: "Differance",
-    width: 120,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => (
-      <Input value="30+" style={{ color: "green" }} className="Et4" />
-    ),
-  },
-];
-
-const data = [
-  {
-    key: "1",
-  },
-  {
-    key: "2",
-  },
-  {
-    key: "3",
-  },
-  {
-    key: "4",
-  },
-  {
-    key: "5",
-  },
-  {
-    key: "6",
-  },
-];
-
-function onChange(sorter: any) {
-  console.log(sorter);
-}
 const EmpTimeSheet = () => {
+  const [current, setCurrent] = useState(1);
   const [activeTab, setActiveTab] = useState<string>("2");
+  const [employeeReport, setEmployeeReport] = useState<[]>([]);
 
-  const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+  const columns = [
+    {
+      title: "Date",
+      dataIndex: "starttime",
+      key: "starttime",
+      ellipsis: true,
+      width: 110,
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => <Input value="03-08-2022" className="Et4" />,
+    },
+    {
+      title: "Client Name",
+      dataIndex: "clientname",
+      key: "cliename",
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => <Input value="Trusha Bhanderi" className="Et4" />,
+    },
+    {
+      title: "Task",
+      dataIndex: "Task",
+      key: "Task",
+      width: 240,
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => (
+        <div className="scrollabletd">
+          organic lomo retro fanny pack lo-fi farm-to-table readymade.organic
+          lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo retro
+          fanny pack lo-fi farm-to-table readymade.
+        </div>
+      ),
+    },
 
+    {
+      title: "Work Area",
+      dataIndex: "workarea",
+      key: "workarea",
+      width: 120,
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => <Input value="GST" className="Et4" />,
+    },
+    {
+      title: "Budget Time",
+      dataIndex: "Budget Time",
+      key: "Budget Time",
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => <Input value="02h 30m" className="Et4" />,
+    },
+    {
+      title: "Actual Time",
+      dataIndex: "Actual Time",
+      key: "Actual Time",
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => <Input value="02h 00m" className="Et4" />,
+    },
+    {
+      title: "Differance",
+      dataIndex: "Differance",
+      key: "Differance",
+      width: 120,
+      sorter: (a: any, b: any) => a.any - b.any,
+      render: () => (
+        <Input value="30+" style={{ color: "green" }} className="Et4" />
+      ),
+    },
+  ];
+
+  const data = [
+    {
+      key: "1",
+    },
+    {
+      key: "2",
+    },
+    {
+      key: "3",
+    },
+    {
+      key: "4",
+    },
+    {
+      key: "5",
+    },
+    {
+      key: "6",
+    },
+  ];
   const onTabChange = (key: string) => {
     setActiveTab(key);
-    setFullScreenMode(false);
   };
+
+  function onChange(sorter: any) {
+    console.log(sorter);
+  }
 
   const downloadPDF = () => {
     // manage down load()
@@ -166,9 +171,75 @@ const EmpTimeSheet = () => {
     // }
   };
 
+  let parameters: string[] = [];
+  const getEmployeeReport = (event: any, nameItem: string = "") => {
+    let name = "";
+    let value = "";
+
+    if (event && event.target) {
+      name = event.target.name;
+      value = event.target.value;
+    } else if (nameItem !== "" && event !== "" && event !== undefined) {
+      name = nameItem;
+      value = event.value ?? event;
+    } else if (event) {
+      name = event.name;
+      value = event.value;
+    }
+
+    if (name === "employeeName") {
+      if (value === "") {
+      }
+      toast.error("Please select employee.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+
+    switch (name) {
+      case "employeeName": {
+        if (value !== "") {
+          parameters.push(`employeeName=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "clientName": {
+        if (value !== "") {
+          parameters.push(`clientName=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "workArea": {
+        if (value !== "") {
+          parameters.push(`workArea=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "date": {
+        if (value !== "") {
+          parameters.push(`date=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      default:
+        break;
+    }
+
+    const queryString = parameters.join("&");
+    console.log(queryString);
+    try {
+      api.getEmployeeReport(queryString).then((resp: any) => {
+        localStorage.setItem("employeeReport", JSON.stringify(resp.data));
+        setEmployeeReport(resp.data);
+      });
+    } catch (ex) {
+      toast.error("Technical error while Download.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
   const printData = () => {
     // manage down load()
-
     window.print();
   };
 
@@ -228,10 +299,44 @@ const EmpTimeSheet = () => {
             <PrinterTwoTone className="Et2" onClick={printData} />
           </span>
         </div>
-        <Select value="Employee Name*" className="Et3" />
-        <Select value="Client Name" className="Et3" />
-        <Select value="Work Area" className="Et3" />
-        <DatePicker placeholder="Date" className="Et3" />
+        <Select
+          allowClear
+          showSearch
+          placeholder="Employee"
+          options={employeeOpts}
+          className="Et3"
+          onChange={(value, event) => {
+            getEmployeeReport(event, "employeeName");
+          }}
+        />
+        <Select
+          allowClear
+          showSearch
+          placeholder="clientName"
+          options={clientOpts}
+          className="Et3"
+          onChange={(value, event) => {
+            getEmployeeReport(event, "clientName");
+          }}
+        />
+        <Select
+          allowClear
+          showSearch
+          placeholder="Work Area"
+          options={workAreaOpts}
+          className="Et3"
+          onChange={(value, event) => {
+            getEmployeeReport(event, "workArea");
+          }}
+        />
+        <DatePicker
+          placeholder="Date"
+          className="Et3"
+          name="name"
+          onChange={(value, event) => {
+            getEmployeeReport(event, "date");
+          }}
+        />
         <div className="summery">
           <ul className="summery1">
             <li className="Et7">
@@ -270,6 +375,7 @@ const EmpTimeSheet = () => {
         <div>
           <Table
             columns={columns}
+            //dataSource={getData(current, pageSize)}
             dataSource={data}
             pagination={{ defaultCurrent: 1, total: 2 }}
             onChange={onChange}

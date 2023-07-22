@@ -14,6 +14,8 @@ import {
 } from "../modules/compliance/interfaces/ICompliance";
 
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
+import { AddLeave } from "../modules/aproval/interfaces/IApproval";
+import { Settings } from "../modules/Setting/interfaces/Isetting";
 
 const token = getLocalStorage("authtoken");
 const apiURL = "http://localhost:8005/api/v1/";
@@ -340,6 +342,67 @@ export default {
                 function (data) {
                     const json = JSON.parse(data);
                     return json.payload;
+                },
+            ],
+        }),
+    downloadTimesheetPDF: () =>
+        instance({
+            method: "POST",
+            url: "timesheet/create-multiple-timesheet",
+            data: [],
+        }),
+    getEmployeeReport: (queryString: string) =>
+        instance({
+            method: "GET",
+            url: "timesheet/employee-timesheet-report" + queryString,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    getClientTimesheetReport: (queryString: string) =>
+        instance({
+            method: "GET",
+            url: "timesheet/client-timesheet-report" + queryString,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    applyLeave: (leave: AddLeave) =>
+        instance({
+            method: "POST",
+            url: "leaveapprovals/create-leave-approvals",
+            data: leave,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    getSettings: () =>
+        instance({
+            method: "GET",
+            url: "settings/get-settings",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createSetting: (setting: Settings) =>
+        instance({
+            method: "POST",
+            url: "settings/create-settings",
+            data: setting,
+            transformResponse: [
+                function (data) {
+                    return data;
                 },
             ],
         }),

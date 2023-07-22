@@ -93,7 +93,7 @@ const SubComplianceViewEdit = (props: any) => {
         setSubCompliance(updatedCompliance);
     };
 
-    const subComplianceStatusChangeHandler = (
+    const statusChangeHandler = (
         event: any,
         value: string,
         subCompliance: SubCompliance
@@ -208,7 +208,7 @@ const SubComplianceViewEdit = (props: any) => {
                                     value={subComplianceItem.priority}
                                     className="w100"
                                     onChange={(value, event) => {
-                                        subComplianceStatusChangeHandler(
+                                        statusChangeHandler(
                                             event,
                                             value,
                                             subComplianceItem
@@ -229,7 +229,7 @@ const SubComplianceViewEdit = (props: any) => {
                                     value={subComplianceItem.status}
                                     className="w100"
                                     onChange={(value, event) => {
-                                        subComplianceStatusChangeHandler(
+                                        statusChangeHandler(
                                             event,
                                             value,
                                             subComplianceItem

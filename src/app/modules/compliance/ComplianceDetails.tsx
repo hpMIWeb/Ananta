@@ -4,6 +4,7 @@ import {
     priorityOpts,
     assigneeOpts,
     clientOpts,
+    formatTime,
 } from "../../utilities/utility";
 import "react-quill/dist/quill.snow.css";
 
@@ -13,24 +14,27 @@ import { PlusOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextArea from "antd/es/input/TextArea";
-import { ClientDetails as IClientDetails } from "./interfaces/ICompliance";
+import {
+    ClientDetails as IClientDetails,
+    SubCompliance as ISubCompliance,
+} from "./interfaces/ICompliance";
+import Stopwatch from "../../components/Stockwatch/Stopwatch";
+import dayjs from "dayjs";
 
 const ComplianceDetails = (props: any) => {
-    const [clientDetails, setClientDetails] = useState<IClientDetails[]>(
-        props.data
-    );
-    // [
-    //     {
-    //         complianceDetailId: "1",
-    //         client_name: "",
-    //         actual_time: "",
-    //         assignee_to: "",
-    //         budget_time: "",
-    //         priority: "",
-    //         remark: "",
-    //         parentId: props.parentId,
-    //     } as IClientDetails,
-    // ]
+    const [clients, setClients] = useState<IClientDetails[]>(props.data);
+    //[
+    // {
+    //     complianceDetailId: "1",
+    //     client_name: "",
+    //     actual_time: "",
+    //     assignee_to: "",
+    //     budget_time: "",
+    //     priority: "",
+    //     remark: "",
+    //     parentId: props.parentId,
+    // } as IClientDetails,
+    //]
     const [selectedTableRow, setSelectedTableRow] = useState({
         complianceDetailId: "1",
         client_name: "",
@@ -41,12 +45,18 @@ const ComplianceDetails = (props: any) => {
         remark: "",
         parentId: props.parentId,
     } as IClientDetails);
+    const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
 
-    const columns = [
+    const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
+        props.subcompliance ?? []
+    );
+
+    const editColumns = [
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
+            align: "center",
             render: (text: any, record: any, index: number) => (
                 <FontAwesomeIcon
                     icon={faTrashAlt}
@@ -54,9 +64,6 @@ const ComplianceDetails = (props: any) => {
                         fontSize: "15px",
                         color: "#ec0033",
                         cursor: "pointer",
-                        marginLeft: "10px",
-                        marginTop: "0",
-                        alignSelf: "center",
                     }}
                     title={"Click here to Delete"}
                     onClick={() => {
@@ -94,7 +101,14 @@ const ComplianceDetails = (props: any) => {
                         className="w100"
                         onChange={(value, event) => {
                             inputChangeHandler(event, "client_name");
+                            const emptyRowExist = clients.find((item) => {
+                                return item.client_name === "";
+                            });
+                            if (!emptyRowExist) {
+                                addNewComplianceDetails();
+                            }
                         }}
+                        defaultValue={record.client_name}
                     />
                 </Form.Item>
             ),
@@ -129,6 +143,7 @@ const ComplianceDetails = (props: any) => {
                         onChange={(value, event) => {
                             inputChangeHandler(event, "assignee_to");
                         }}
+                        defaultValue={record.assigned_to}
                     />
                 </Form.Item>
             ),
@@ -162,6 +177,7 @@ const ComplianceDetails = (props: any) => {
                         onChange={(date, dateString) => {
                             inputChangeHandler(dateString, "budget_time");
                         }}
+                        defaultValue={dayjs(record.budget_time, "HH:mm")}
                     />
                 </Form.Item>
             ),
@@ -195,6 +211,7 @@ const ComplianceDetails = (props: any) => {
                         onChange={(value, event) => {
                             inputChangeHandler(event, "priority");
                         }}
+                        defaultValue={record.priority}
                     />
                 </Form.Item>
             ),
@@ -205,13 +222,100 @@ const ComplianceDetails = (props: any) => {
             key: "remark",
             render: (text: any, record: any, index: number) => (
                 <TextArea
-                    rows={2}
+                    rows={1}
                     name="remark"
                     onChange={(value) => {
                         inputChangeHandler(value);
                     }}
+                    value={record.remak}
                 />
             ),
+        },
+    ];
+
+    const columns = [
+        {
+            title: "Action",
+            dataIndex: "_id",
+            key: "_id",
+            render: (text: any, record: any, index: number) => (
+                <div className="timerbuttons">
+                    <Stopwatch />
+                </div>
+            ),
+        },
+        {
+            title: "Client Name",
+            dataIndex: "client_name",
+            key: "client_name",
+            sorter: (a: any, b: any) =>
+                a.client_name.localeCompare(b.client_name),
+            //sortDirections: ["descend", "ascend"],
+        },
+        {
+            title: "Assign To",
+            dataIndex: "assigned_to",
+            key: "assigned_to",
+            sorter: (a: any, b: any) =>
+                a.assigned_to.localeCompare(b.assigned_to),
+        },
+        {
+            title: "Sub Compliance",
+            dataIndex: "subCompliance",
+            key: "subCompliance",
+            render: (text: any, record: any) => {
+                let currentClientCount = 0;
+                let completedCount = 0;
+
+                // subcompliance count as per client
+                if (subCompliances) {
+                    subCompliances.map((item: ISubCompliance) => {
+                        const matchedItem = item.clients.filter(
+                            (client: any) => {
+                                return (
+                                    client.client_name === record.client_name
+                                );
+                            }
+                        );
+
+                        if (matchedItem && matchedItem.length > 0) {
+                            currentClientCount += matchedItem.length;
+                            if (matchedItem.length > 0) {
+                                if (item.status === "completed") {
+                                    completedCount++;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return `${completedCount} / ${currentClientCount}`;
+            },
+            sorter: (a: any, b: any) => a.subCompliances - b.subCompliances,
+        },
+        {
+            title: "Remarks",
+            dataIndex: "remark",
+            key: "remark",
+            sorter: (a: any, b: any) => a.remark.localeCompare(b.remark),
+        },
+        {
+            title: "Budget Time",
+            dataIndex: "budget_time",
+            key: "budget_time",
+            render: (item: string) => {
+                return formatTime(item);
+            },
+            //sorter: (a: any, b: any) => a.budget_time - b.budget_time,
+        },
+        {
+            title: "Actual Time",
+            dataIndex: "actual_time",
+            key: "actual_time",
+            render: (item: string) => {
+                return formatTime(item);
+            },
+            //sorter: (a: any, b: any) => a.actual_time - b.actual_time,
         },
     ];
 
@@ -262,24 +366,24 @@ const ComplianceDetails = (props: any) => {
 
         // update parent component
         if (props.updateClients) {
-            props.updateClients(clientDetails);
+            props.updateClients(clients);
         }
     };
 
     const removeComplianceDetails = (item: IClientDetails) => {
-        const index = clientDetails.indexOf(item);
+        const index = clients.indexOf(item);
         if (index > -1) {
-            const compliance = [...clientDetails].filter((compliance: any) => {
+            const compliance = clients.filter((compliance: any) => {
                 return (
                     compliance.complianceDetailId !== item.complianceDetailId
                 );
             });
-            setClientDetails(compliance);
+            setClients(compliance);
         }
     };
 
     const addNewComplianceDetails = () => {
-        const new_id = clientDetails.length + 1;
+        const new_id = clients.length + 1;
         const newClient = {
             complianceDetailId: new_id.toString(),
             client_name: "",
@@ -290,13 +394,17 @@ const ComplianceDetails = (props: any) => {
             remark: "",
             parentId: props.parentId,
         } as IClientDetails;
-        setClientDetails([...clientDetails, newClient]);
+        setClients([...clients, newClient]);
 
         // update parent component
         if (props.updateClients) {
-            props.updateClients(clientDetails);
+            props.updateClients(clients);
         }
     };
+
+    useEffect(() => {
+        setIsEdit(props.isEdit);
+    }, [props.isEdit]);
 
     return (
         <>
@@ -304,18 +412,19 @@ const ComplianceDetails = (props: any) => {
                 className="sub-task-add"
                 style={{ display: props.isAllowAdd ? "block" : "none" }}
             >
-                <Button
+                {/* <Button
                     type="primary"
                     icon={<PlusOutlined />}
                     onClick={addNewComplianceDetails}
                     style={{ float: "right", marginBottom: "10px" }}
                 >
                     Add
-                </Button>
+                </Button> */}
             </div>
             <Table
-                dataSource={props.data}
-                columns={columns}
+                rowKey={(record) => record.complianceDetailId}
+                dataSource={clients}
+                columns={isEdit ? editColumns : columns}
                 pagination={false}
                 onRow={(record, rowIndex) => {
                     return {
@@ -324,6 +433,7 @@ const ComplianceDetails = (props: any) => {
                         },
                     };
                 }}
+                {...props}
             />
         </>
     );
