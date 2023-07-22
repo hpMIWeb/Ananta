@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, BrowserRouter, Router, Route, Link } from "react-router-dom";
 import {
     DesktopOutlined,
     FileOutlined,
@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
+import MenuItem from "antd/es/menu/MenuItem";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -64,7 +65,8 @@ const LayoutComponent = () => {
                     defaultSelectedKeys={["6"]}
                     mode="inline"
                     items={items}
-                />
+                    //onClick={({ keyPath }) => Router.push(`/${keyPath}`)}
+                ></Menu>
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, background: colorBgContainer }} />

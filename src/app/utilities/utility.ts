@@ -45,6 +45,16 @@ export const clientOpts = ["Jack John", "Sohan Varani"].map((item: string) => {
     };
 });
 
+export const employeeOpts = ["EMP 1", "EMP 2", "EMP 3", "EMP 4", "EMP 5"].map(
+    (item: string) => {
+        return {
+            value: item.toLowerCase(),
+            label: item,
+            name: "client",
+        };
+    }
+);
+
 export const complianceReportOpts = ["Client Wise", "Compliance Wise"].map(
     (item: string) => {
         return {
@@ -107,6 +117,49 @@ export const leaveTypeOpts = [
         value: item.toLowerCase(),
         label: item,
         name: "workArea",
+    };
+});
+
+export const departmentOpts = ["HR", "Account", "IT", "Design"].map(
+    (item: string) => {
+        return {
+            value: item.toLowerCase(),
+            label: item,
+            name: "workArea",
+        };
+    }
+);
+
+export const taskSettingFields = ["Clients", "Sub Task", "Budget Time"].map(
+    (item: string) => {
+        return {
+            value: item.replace(" ", "_").toLowerCase(),
+            label: item,
+        };
+    }
+);
+
+export const taskSettingTemplates = ["Task Template", "Project Template"].map(
+    (item: string) => {
+        return {
+            value: item.replace(" ", "_").toLowerCase(),
+            label: item,
+        };
+    }
+);
+
+export const taskSettingFieldsArr = ["Clients", "SubTask", "BudgetTime"];
+
+export const complianceSettingFields = [
+    "Remarks",
+    "Data Path",
+    "Budget Time",
+    "Billable",
+    "Sub Compliance",
+].map((item: string) => {
+    return {
+        value: item.replace(" ", "_").toLowerCase(),
+        label: item,
     };
 });
 

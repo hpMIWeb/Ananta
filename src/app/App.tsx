@@ -19,6 +19,7 @@ import AddCompliance from "./modules/compliance/AddCompliance";
 import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
+import Setting from "./modules/Setting/Setting";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -66,6 +67,7 @@ const App = () => {
                                 path="client-time-sheet"
                                 element={<ClientTimeSheet />}
                             />
+                            <Route path="Setting" element={<Setting />} />
                             <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Routes>
