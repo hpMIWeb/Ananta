@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Outlet, BrowserRouter, Router, Route, Link } from "react-router-dom";
+import {
+    Outlet,
+    BrowserRouter,
+    Router,
+    Route,
+    Link,
+    useNavigate,
+} from "react-router-dom";
 import {
     DesktopOutlined,
     FileOutlined,
@@ -37,12 +44,12 @@ const items: MenuItem[] = [
         getItem("Bill", "4"),
         getItem("Alex", "5"),
     ]),
-    getItem("Task Master", "sub2", <TeamOutlined />, [
-        getItem("Task", "6"),
-        getItem("Compliance", "8"),
-        getItem("Timesheet", "9"),
-        getItem("Approval", "10"),
-        getItem("Settings", "11"),
+    getItem("Task Master", "/task", <TeamOutlined />, [
+        getItem("Task", "/task"),
+        getItem("Compliance", "/compliance"),
+        getItem("Timesheet", "/timesheet"),
+        getItem("Approval", "/approval"),
+        getItem("Settings", "/setting"),
     ]),
     getItem("Files", "12", <FileOutlined />),
 ];
@@ -52,6 +59,13 @@ const LayoutComponent = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+
+    const navigate = useNavigate();
+
+    const handleClick = (e: any) => {
+        navigate(e.key);
+    };
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Sider
@@ -65,7 +79,7 @@ const LayoutComponent = () => {
                     defaultSelectedKeys={["6"]}
                     mode="inline"
                     items={items}
-                    //onClick={({ keyPath }) => Router.push(`/${keyPath}`)}
+                    onClick={handleClick}
                 ></Menu>
             </Sider>
             <Layout>
