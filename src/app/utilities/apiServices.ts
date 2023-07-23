@@ -131,7 +131,7 @@ export default {
                 },
             ],
         }),
-    updateSubTask: (subTask: UpdateSubTask, subTaskId: string) =>
+    updateSubTask: (subTaskId: string, subTask: UpdateSubTask) =>
         instance({
             method: "PUT",
             url: "subtask/update-subtask/" + subTaskId,

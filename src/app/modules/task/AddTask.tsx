@@ -310,10 +310,9 @@ const AddTask = () => {
                                     inputChangeHandler(event);
                                 }}
                                 value={addTask.mode}
+                                showSearch={true}
                                 onInputKeyDown={(event) => {
                                     if (event.keyCode === 9) {
-                                        // console.log(event.keyCode, event);
-                                        // inputChangeHandler(event);
                                         handleInputKeyDown();
                                     }
                                 }}
@@ -364,6 +363,7 @@ const AddTask = () => {
                                 options={workAreaOpts}
                                 value={addTask.workArea}
                                 className="w100"
+                                showSearch={true}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event);
                                 }}
@@ -433,6 +433,7 @@ const AddTask = () => {
                                 placeholder="Priority"
                                 options={priorityOpts}
                                 value={addTask.priority}
+                                showSearch={true}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event);
                                 }}
@@ -455,6 +456,7 @@ const AddTask = () => {
                                 placeholder="Billable"
                                 value={addTask.billable}
                                 options={chargesOpts}
+                                showSearch={true}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event);
                                 }}

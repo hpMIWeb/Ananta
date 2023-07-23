@@ -25,6 +25,7 @@ import {
     statusColors,
     statusList,
     upperText,
+    Status,
 } from "../../utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
@@ -109,7 +110,9 @@ const ComplianceViewEdit = (props: any) => {
     // event handler from `stopwatch` action - play & stop
     const handleTaskStatus = (isRunning: boolean) => {
         const complianceUpdate = {} as IAddCompliance;
-        complianceUpdate.status = isRunning ? "in_progress" : "complete";
+        complianceUpdate.status = isRunning
+            ? Status.in_progress
+            : Status.completed;
 
         api.updateCompliance(updateCompliance._id, complianceUpdate).then(
             (resp: any) => {

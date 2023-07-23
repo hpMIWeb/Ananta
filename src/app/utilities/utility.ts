@@ -2,6 +2,13 @@ import dayjs from "dayjs";
 
 export const dateFormat = "YYYY-MM-DD";
 
+export const Status = {
+    completed: "completed",
+    in_progress: "inprogress",
+    pending: "pending",
+    cancelled: "cancelled",
+};
+
 export const modeOptions = [
     "Repetitive",
     "Never",
@@ -91,10 +98,10 @@ export const workAreaOpts = ["GST", "TDS", "Audit", "Accounting"].map(
 );
 
 export const statusList = [
-    "pending",
-    "in_progress",
-    "complete",
-    "cancelled",
+    "Pending",
+    "Inprogress",
+    "Completed",
+    "Cancelled",
 ].map((item: string) => {
     return {
         value: item.toLowerCase(),
@@ -214,11 +221,13 @@ export const statusColors = (status: string) => {
     let color = "#fb275d";
     let retVal = status;
     switch (status) {
-        case "completed": {
+        case "completed":
+        case "complete": {
             color = "#00ca72";
             break;
         }
-        case "in_progress": {
+        case "in_progress":
+        case "inprogress": {
             color = "#ffcc00";
             break;
         }
@@ -238,4 +247,40 @@ export const statusColors = (status: string) => {
     }
 
     return color;
+};
+
+export const getTotalTime = (actualTimes: string[]) => {
+    let sum_minutes = 0;
+
+    if (actualTimes.length > 0) {
+        actualTimes.map((actualTime: string) => {
+            const splitTime = actualTime.split(":");
+            const hours_item = parseInt(splitTime[0]);
+            const minute_item = parseInt(splitTime[1]);
+
+            sum_minutes += minute_item;
+
+            // Convert hours into minutes and add into total minutes
+            if (hours_item > 0) {
+                const min_from_hours = hours_item * 60;
+                sum_minutes += min_from_hours;
+            }
+        });
+    }
+
+    return sum_minutes && sum_minutes > 0 ? timeConvert(sum_minutes) : "00:00";
+};
+
+const timeConvert = (mins: number) => {
+    var num = mins;
+    var hours = num / 60;
+    var rhours = Math.floor(hours);
+    var minutes = (hours - rhours) * 60;
+    var rminutes = Math.round(minutes);
+
+    return `${padStartNumber(rhours, 2)}:${padStartNumber(rminutes, 2)}`;
+};
+
+const padStartNumber = (num: number, digit: number) => {
+    return num.toString().padStart(digit, "0");
 };

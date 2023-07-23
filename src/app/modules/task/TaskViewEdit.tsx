@@ -15,11 +15,15 @@ import {
 } from "antd";
 import type { CollapseProps } from "antd";
 import {
+    Status,
     assigneeOpts,
     capitalize,
     dateFormat,
+    getTotalTime,
     priorityOpts,
+    statusColors,
     statusList,
+    upperText,
 } from "../../utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
@@ -74,6 +78,10 @@ const TaskViewEdit = (props: any) => {
         setTaskComments(props.tableRowSelected.comments);
     }, [props.tableRowSelected]);
 
+    const updateCurrentTask = (subTasks: SubTask[]) => {
+        setTaskSubTasks(subTasks);
+    };
+
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
         let value = "";
@@ -119,9 +127,14 @@ const TaskViewEdit = (props: any) => {
     };
 
     // event handler from `stopwatch` action - play & stop
-    const handleTaskStatus = (isRunning: boolean) => {
+    const handleTaskStatus = (
+        isRunning: boolean,
+        time: string,
+        isStop: boolean
+    ) => {
         const taskUpdate = {} as AddTask;
-        taskUpdate.status = isRunning ? "in_progress" : "complete";
+        taskUpdate.status = isStop ? Status.completed : Status.in_progress;
+        if (!isRunning) taskUpdate.actual_time = time;
 
         api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
@@ -237,488 +250,488 @@ const TaskViewEdit = (props: any) => {
     };
 
     return (
-        <>
-            <div
-                style={{
-                    display:
-                        Object.keys(updateTask).length > 0 ? "block" : "none",
-                }}
-            >
-                <ToastContainer />
-                <Form style={{ padding: "15px 0 0 0" }}>
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 17 : 20 }}
-                        >
-                            {!isEdit && (
-                                <Title level={4} style={{ textAlign: "left" }}>
-                                    {updateTask.title}
-                                </Title>
-                            )}
-                            {isEdit && (
-                                <Form.Item
-                                    name="title"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: "Please enter title.",
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder="Task"
-                                        name="title"
-                                        defaultValue={updateTask.title}
-                                        onChange={(event) => {
-                                            inputChangeHandler(event);
-                                        }}
-                                    />
-                                </Form.Item>
-                            )}
-                        </Col>
-                        {props.fullScreenMode && (
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 5 }}
-                            >
-                                <Title level={4} style={{ textAlign: "right" }}>
-                                    {capitalize(updateTask.client)}
-                                </Title>
-                            </Col>
+        <div
+            style={{
+                display: Object.keys(updateTask).length > 0 ? "block" : "none",
+            }}
+        >
+            <ToastContainer />
+            <Form style={{ padding: "15px 0 0 0" }}>
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: props.fullScreenMode ? 17 : 20 }}
+                    >
+                        {!isEdit && (
+                            <Title level={4} style={{ textAlign: "left" }}>
+                                {updateTask.title}
+                            </Title>
                         )}
+                        {isEdit && (
+                            <Form.Item
+                                name="title"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter title.",
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    placeholder="Task"
+                                    name="title"
+                                    defaultValue={updateTask.title}
+                                    onChange={(event) => {
+                                        inputChangeHandler(event);
+                                    }}
+                                />
+                            </Form.Item>
+                        )}
+                    </Col>
+                    {props.fullScreenMode && (
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 2 : 4 }}
+                            md={{ span: 4 }}
                         >
-                            <FontAwesomeIcon
-                                icon={
-                                    props.fullScreenMode
-                                        ? faCompressArrowsAlt
-                                        : faExpandArrowsAlt
-                                }
-                                onClick={fullScreenModeToggle}
-                                style={{
-                                    fontSize: "20px",
-                                    color: "#2c7be5",
-                                    float: "right",
-                                    cursor: "pointer",
-                                }}
-                                title={
-                                    "Click here to" +
-                                    (props.fullScreenMode
-                                        ? "minimize"
-                                        : "maximize")
-                                }
-                            />
-                            {props.fullScreenMode && (
-                                <>
+                            <Title level={4} style={{ textAlign: "right" }}>
+                                {capitalize(updateTask.client)}
+                            </Title>
+                        </Col>
+                    )}
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: props.fullScreenMode ? 3 : 4 }}
+                    >
+                        <FontAwesomeIcon
+                            icon={
+                                props.fullScreenMode
+                                    ? faCompressArrowsAlt
+                                    : faExpandArrowsAlt
+                            }
+                            onClick={fullScreenModeToggle}
+                            style={{
+                                fontSize: "20px",
+                                color: "#2c7be5",
+                                float: "right",
+                                cursor: "pointer",
+                            }}
+                            title={
+                                "Click here to" +
+                                (props.fullScreenMode ? "minimize" : "maximize")
+                            }
+                        />
+                        {props.fullScreenMode && (
+                            <>
+                                <FontAwesomeIcon
+                                    icon={isEdit ? faXmark : faEdit}
+                                    style={{
+                                        fontSize: isEdit ? "25px" : "20px",
+                                        color: "#2c7be5",
+                                        cursor: "pointer",
+                                        marginRight: "15px",
+                                        float: "right",
+                                        marginTop: isEdit ? "-3px" : "0",
+                                    }}
+                                    title={
+                                        "Click here to " +
+                                        (isEdit ? "cancel" : "edit")
+                                    }
+                                    onClick={editClickHandler}
+                                />
+                                {isEdit && (
                                     <FontAwesomeIcon
-                                        icon={isEdit ? faXmark : faEdit}
+                                        icon={faSave}
                                         style={{
-                                            fontSize: isEdit ? "25px" : "20px",
+                                            fontSize: "20px",
                                             color: "#2c7be5",
                                             cursor: "pointer",
                                             marginRight: "15px",
                                             float: "right",
-                                            marginTop: isEdit ? "-3px" : "0",
+                                            marginTop: "0",
                                         }}
-                                        title={
-                                            "Click here to " +
-                                            (isEdit ? "cancel" : "edit")
-                                        }
-                                        onClick={editClickHandler}
+                                        title={"Click here to Save"}
+                                        onClick={handleUpdateTask}
                                     />
-                                    {isEdit && (
-                                        <FontAwesomeIcon
-                                            icon={faSave}
-                                            style={{
-                                                fontSize: "20px",
-                                                color: "#2c7be5",
-                                                cursor: "pointer",
-                                                marginRight: "15px",
-                                                float: "right",
-                                                marginTop: "0",
-                                            }}
-                                            title={"Click here to Save"}
-                                            onClick={handleUpdateTask}
-                                        />
+                                )}
+                            </>
+                        )}
+                    </Col>
+                </Row>
+                {dividerRow()}
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 12 }}
+                        md={{ span: 16 }}
+                        lg={{ span: props.fullScreenMode ? 14 : 10 }}
+                    >
+                        <div className="timerbuttons">
+                            {taskSubTasks && taskSubTasks.length <= 0 && (
+                                <Stopwatch
+                                    taskId={updateTask._id}
+                                    handleTaskStatus={handleTaskStatus}
+                                    status={updateTask.status}
+                                />
+                            )}
+                            {taskSubTasks && taskSubTasks.length > 0 && (
+                                <span className="stopwatch-time">
+                                    {getTotalTime(
+                                        taskSubTasks.map((item: SubTask) => {
+                                            return item.actual_time;
+                                        })
                                     )}
-                                </>
+                                </span>
                             )}
-                        </Col>
-                    </Row>
-                    {dividerRow()}
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 12 }}
-                            md={{ span: 16 }}
-                            lg={{ span: props.fullScreenMode ? 14 : 10 }}
-                        >
-                            <div className="timerbuttons">
-                                {taskSubTasks && taskSubTasks.length <= 0 && (
-                                    <Stopwatch
-                                        taskId={updateTask._id}
-                                        handleTaskStatus={handleTaskStatus}
-                                    />
-                                )}
-                                {taskSubTasks && taskSubTasks.length > 0 && (
-                                    <span className="stopwatch-time">
-                                        00:
-                                        {"00".toString().padStart(2, "0")}:
-                                        {"00".toString().padStart(2, "0")}:
-                                        {"00".toString().padStart(2, "0")}
-                                    </span>
-                                )}
-                            </div>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 6 }}
-                            md={{ span: 4 }}
-                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
-                        >
-                            {!isEdit && (
-                                <>
-                                    <Title
-                                        level={4}
-                                        style={{
-                                            textAlign: "right",
-                                            marginRight: "30px",
-                                        }}
-                                        className={`text-priority ${
-                                            updateTask.priority === "high"
-                                                ? "blink"
-                                                : ""
-                                        }`}
-                                    >
-                                        {capitalize(updateTask.priority)}
-                                    </Title>
-                                </>
-                            )}
+                        </div>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 6 }}
+                        md={{ span: 4 }}
+                        lg={{ span: props.fullScreenMode ? 5 : 7 }}
+                    >
+                        {!isEdit && (
+                            <>
+                                <Title
+                                    level={4}
+                                    style={{
+                                        textAlign: "right",
+                                        marginRight: "30px",
+                                    }}
+                                    className={`text-priority ${
+                                        updateTask.priority === "high"
+                                            ? "blink"
+                                            : ""
+                                    }`}
+                                >
+                                    {capitalize(updateTask.priority)}
+                                </Title>
+                            </>
+                        )}
+                        {isEdit && (
+                            <Select
+                                allowClear
+                                placeholder="Select Priority"
+                                options={priorityOpts}
+                                defaultValue={updateTask.priority}
+                                className="w100"
+                                onChange={(value, event) => {
+                                    priorityChangeHandler(event, value);
+                                }}
+                            />
+                        )}
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 6 }}
+                        md={{ span: 4 }}
+                        lg={{ span: props.fullScreenMode ? 5 : 7 }}
+                    >
+                        <Select
+                            allowClear
+                            placeholder="Select Status"
+                            options={statusList}
+                            defaultValue={updateTask.status}
+                            className="w100"
+                            onChange={(value, event) => {
+                                statusChangeHandler(event, value);
+                            }}
+                        />
+                    </Col>
+                </Row>
+                {dividerRow()}
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 5 }}
+                        md={{ span: props.fullScreenMode ? 4 : 12 }}
+                    >
+                        Assigned To
+                        <div>
+                            {!isEdit && <b>{updateTask.assigned_to}</b>}
                             {isEdit && (
                                 <Select
                                     allowClear
-                                    placeholder="Select Priority"
-                                    options={priorityOpts}
-                                    defaultValue={updateTask.priority}
+                                    showSearch
+                                    placeholder="Assign Person"
+                                    defaultValue={updateTask.assigned_to}
+                                    options={assigneeOpts}
                                     className="w100"
                                     onChange={(value, event) => {
-                                        priorityChangeHandler(event, value);
+                                        inputChangeHandler(event);
+                                    }}
+                                ></Select>
+                            )}
+                        </div>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 6 }}
+                        md={{ span: props.fullScreenMode ? 6 : 12 }}
+                    >
+                        Assigned Date
+                        <div>
+                            {!isEdit && (
+                                <b>
+                                    <CalendarOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {dayjs(updateTask.start_date).format(
+                                        "YYYY-MM-DD, HH:mm A"
+                                    )}
+                                </b>
+                            )}
+
+                            {isEdit && (
+                                <DatePicker
+                                    placeholder="Start Date"
+                                    name="start_date"
+                                    defaultValue={dayjs(updateTask.start_date)}
+                                    className="w100"
+                                    // format={dateFormat}
+                                    // className="w100"
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "start_date"
+                                        );
+                                    }}
+                                    onPanelChange={() => {}}
+                                />
+                            )}
+                        </div>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 5 }}
+                        md={{ span: props.fullScreenMode ? 6 : 12 }}
+                    >
+                        Due Date
+                        <div>
+                            {!isEdit && (
+                                <b>
+                                    <CalendarOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {dayjs(updateTask.due_date).format(
+                                        "YYYY-MM-DD, HH:mm A"
+                                    )}
+                                </b>
+                            )}
+                            {isEdit && (
+                                <DatePicker
+                                    placeholder="Due Date"
+                                    name="due_date"
+                                    defaultValue={dayjs(updateTask.due_date)}
+                                    format={dateFormat}
+                                    onPanelChange={() => {}}
+                                    className="w100"
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "due_date"
+                                        );
                                     }}
                                 />
                             )}
-                        </Col>
+                        </div>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 4 }}
+                        md={{ span: props.fullScreenMode ? 4 : 12 }}
+                    >
+                        Budget Time
+                        <div>
+                            {!isEdit && (
+                                <b>
+                                    <ClockCircleOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {updateTask.budget_time}
+                                </b>
+                            )}
+                            {isEdit && (
+                                <TimePicker
+                                    placeholder="Budget Time"
+                                    name="budget_time"
+                                    defaultValue={dayjs(
+                                        updateTask.budget_time,
+                                        "HH:mm"
+                                    )}
+                                    format={"HH:mm"}
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "budget_time"
+                                        );
+                                    }}
+                                    className="w100"
+                                />
+                            )}
+                        </div>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 4 }}
+                        md={{ span: props.fullScreenMode ? 4 : 12 }}
+                    >
+                        Actual Time
+                        <div>
+                            {
+                                <b>
+                                    <ClockCircleOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {taskSubTasks &&
+                                        taskSubTasks.length <= 0 &&
+                                        updateTask.actual_time.trim()}
+                                    {taskSubTasks &&
+                                        taskSubTasks.length > 0 && (
+                                            <span>
+                                                {getTotalTime(
+                                                    taskSubTasks.map(
+                                                        (item: SubTask) => {
+                                                            return item.actual_time;
+                                                        }
+                                                    )
+                                                )}
+                                            </span>
+                                        )}
+                                </b>
+                            }
+                        </div>
+                    </Col>
+                    {!props.fullScreenMode && (
                         <Col
                             xs={{ span: 24 }}
-                            sm={{ span: 6 }}
-                            md={{ span: 4 }}
-                            lg={{ span: props.fullScreenMode ? 5 : 7 }}
+                            sm={{ span: 4 }}
+                            md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
-                            <Select
-                                allowClear
-                                placeholder="Select Status"
-                                options={statusList}
-                                defaultValue={updateTask.status}
-                                className="w100"
-                                onChange={(value, event) => {
-                                    statusChangeHandler(event, value);
+                            Client
+                            <div>{<b>{updateTask.client.trim()}</b>}</div>
+                        </Col>
+                    )}
+                </Row>
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{
+                        border: "1px solid #d8e2ef",
+                        padding: "15px",
+                        marginTop: "20px",
+                    }}
+                >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        {!isEdit && getRemark()}
+                        {isEdit && (
+                            <ReactQuill
+                                theme="snow"
+                                value={updateTask.remarks}
+                                placeholder="Remark"
+                                onChange={(event) => {
+                                    inputChangeHandler(event, "remarks");
                                 }}
                             />
-                        </Col>
-                    </Row>
-                    {dividerRow()}
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 5 }}
-                            md={{ span: props.fullScreenMode ? 4 : 12 }}
-                        >
-                            Assigned To
-                            <div>
-                                {!isEdit && <b>{updateTask.assigned_to}</b>}
-                                {isEdit && (
-                                    <Select
-                                        allowClear
-                                        showSearch
-                                        placeholder="Assign Person"
-                                        defaultValue={updateTask.assigned_to}
-                                        options={assigneeOpts}
-                                        className="w100"
-                                        onChange={(value, event) => {
-                                            inputChangeHandler(event);
-                                        }}
-                                    ></Select>
-                                )}
-                            </div>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 6 }}
-                            md={{ span: props.fullScreenMode ? 6 : 12 }}
-                        >
-                            Assigned Date
-                            <div>
-                                {!isEdit && (
-                                    <b>
-                                        <CalendarOutlined
-                                            style={{
-                                                color: "#2c7be5",
-                                                marginRight: "10px",
-                                            }}
-                                        />
-                                        {dayjs(updateTask.start_date).format(
-                                            "YYYY-MM-DD, HH:mm A"
-                                        )}
-                                    </b>
-                                )}
-
-                                {isEdit && (
-                                    <DatePicker
-                                        placeholder="Start Date"
-                                        name="start_date"
-                                        defaultValue={dayjs(
-                                            updateTask.start_date
-                                        )}
-                                        className="w100"
-                                        // format={dateFormat}
-                                        // className="w100"
-                                        onChange={(date, dateString) => {
-                                            inputChangeHandler(
-                                                dateString,
-                                                "start_date"
-                                            );
-                                        }}
-                                        onPanelChange={() => {}}
-                                    />
-                                )}
-                            </div>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 5 }}
-                            md={{ span: props.fullScreenMode ? 6 : 12 }}
-                        >
-                            Due Date
-                            <div>
-                                {!isEdit && (
-                                    <b>
-                                        <CalendarOutlined
-                                            style={{
-                                                color: "#2c7be5",
-                                                marginRight: "10px",
-                                            }}
-                                        />
-                                        {dayjs(updateTask.due_date).format(
-                                            "YYYY-MM-DD, HH:mm A"
-                                        )}
-                                    </b>
-                                )}
-                                {isEdit && (
-                                    <DatePicker
-                                        placeholder="Due Date"
-                                        name="due_date"
-                                        defaultValue={dayjs(
-                                            updateTask.due_date
-                                        )}
-                                        format={dateFormat}
-                                        onPanelChange={() => {}}
-                                        className="w100"
-                                        onChange={(date, dateString) => {
-                                            inputChangeHandler(
-                                                dateString,
-                                                "due_date"
-                                            );
-                                        }}
-                                    />
-                                )}
-                            </div>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 4 }}
-                            md={{ span: props.fullScreenMode ? 4 : 12 }}
-                        >
-                            Budget Time
-                            <div>
-                                {!isEdit && (
-                                    <b>
-                                        <ClockCircleOutlined
-                                            style={{
-                                                color: "#2c7be5",
-                                                marginRight: "10px",
-                                            }}
-                                        />
-                                        {updateTask.budget_time}
-                                    </b>
-                                )}
-                                {isEdit && (
-                                    <TimePicker
-                                        placeholder="Budget Time"
-                                        name="budget_time"
-                                        defaultValue={dayjs(
-                                            updateTask.budget_time,
-                                            "HH:mm"
-                                        )}
-                                        format={"HH:mm"}
-                                        onChange={(date, dateString) => {
-                                            inputChangeHandler(
-                                                dateString,
-                                                "budget_time"
-                                            );
-                                        }}
-                                        className="w100"
-                                    />
-                                )}
-                            </div>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 4 }}
-                            md={{ span: props.fullScreenMode ? 4 : 12 }}
-                        >
-                            Actual Time
-                            <div>
-                                {
-                                    <b>
-                                        <ClockCircleOutlined
-                                            style={{
-                                                color: "#2c7be5",
-                                                marginRight: "10px",
-                                            }}
-                                        />
-                                        {updateTask.actual_time.trim() === ""
-                                            ? "00:00"
-                                            : ""}
-                                    </b>
-                                }
-                                {/* {isEdit && (
-                                    <TimePicker
-                                        placeholder="Actual Time"
-                                        name="actual_time"
-                                        defaultValue={dayjs(
-                                            updateTask.actual_time,
-                                            "HH:mm"
-                                        )}
-                                        format={"HH:mm"}
-                                        onChange={(date, dateString) => {
-                                            inputChangeHandler(
-                                                dateString,
-                                                "budget_time"
-                                            );
-                                        }}
-                                        className="w100"
-                                    />
-                                )} */}
-                            </div>
-                        </Col>
-                        {!props.fullScreenMode && (
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 4 }}
-                                md={{ span: props.fullScreenMode ? 4 : 12 }}
-                            >
-                                Client
-                                <div>{<b>{updateTask.client.trim()}</b>}</div>
-                            </Col>
                         )}
-                    </Row>
-                    <Row
-                        gutter={[8, 8]}
-                        className="form-row"
-                        style={{
-                            border: "1px solid #d8e2ef",
-                            padding: "15px",
-                            marginTop: "20px",
-                        }}
-                    >
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
-                            {!isEdit && getRemark()}
-                            {isEdit && (
-                                <ReactQuill
-                                    theme="snow"
-                                    value={updateTask.remarks}
-                                    placeholder="Remark"
-                                    onChange={(event) => {
-                                        inputChangeHandler(event, "remarks");
-                                    }}
-                                />
-                            )}
-                        </Col>
-                    </Row>
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
-                            <Title level={4} style={{ textAlign: "left" }}>
-                                Attachments
-                            </Title>
-                        </Col>
-                    </Row>
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
-                            <Title level={4} style={{ textAlign: "left" }}>
-                                Sub-tasks
-                            </Title>
-                            {taskSubTasks.length > 0 && (
-                                <Collapse accordion expandIconPosition="end">
-                                    {taskSubTasks.map(
-                                        (
-                                            subTaskItem: SubTask,
-                                            index: number
-                                        ) => {
-                                            return (
-                                                <CollapsePanel
-                                                    header={
-                                                        <div className="sub-task-header">
-                                                            <div>
-                                                                <span
+                    </Col>
+                </Row>
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        <Title level={4} style={{ textAlign: "left" }}>
+                            Attachments
+                        </Title>
+                    </Col>
+                </Row>
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        <Title level={4} style={{ textAlign: "left" }}>
+                            Sub-tasks
+                        </Title>
+                        {taskSubTasks.length > 0 && (
+                            <Collapse accordion expandIconPosition="end">
+                                {taskSubTasks.map(
+                                    (subTaskItem: SubTask, index: number) => {
+                                        return (
+                                            <CollapsePanel
+                                                header={
+                                                    !isEdit ? (
+                                                        <>
+                                                            <div className="sub-task-header">
+                                                                <div>
+                                                                    <span
+                                                                        style={{
+                                                                            marginRight:
+                                                                                "10px",
+                                                                        }}
+                                                                    >
+                                                                        {index +
+                                                                            1}
+                                                                        .
+                                                                    </span>
+                                                                </div>
+                                                                <div
+                                                                    className="task-header-cell"
                                                                     style={{
-                                                                        marginRight:
-                                                                            "10px",
+                                                                        flex: props.fullScreenMode
+                                                                            ? 5
+                                                                            : 14,
                                                                     }}
                                                                 >
-                                                                    {index + 1}.
-                                                                </span>
-                                                            </div>
-                                                            <div
-                                                                className="task-header-cell"
-                                                                style={{
-                                                                    flex: props.fullScreenMode
-                                                                        ? 5
-                                                                        : 14,
-                                                                }}
-                                                            >
-                                                                {
-                                                                    subTaskItem.title
-                                                                }
-                                                            </div>
-                                                            {props.fullScreenMode && (
-                                                                <div className="task-header-cell">
                                                                     {
-                                                                        subTaskItem.assigned_to
+                                                                        subTaskItem.title
                                                                     }
                                                                 </div>
-                                                            )}
-                                                            {props.fullScreenMode && (
-                                                                <div className="task-header-cell">
+                                                                {props.fullScreenMode && (
+                                                                    <div className="task-header-cell">
+                                                                        {
+                                                                            subTaskItem.assigned_to
+                                                                        }
+                                                                    </div>
+                                                                )}
+                                                                {props.fullScreenMode && (
+                                                                    <div className="task-header-cell">
+                                                                        <FontAwesomeIcon
+                                                                            icon={
+                                                                                faClock
+                                                                            }
+                                                                            className="timer-play"
+                                                                            style={{
+                                                                                marginRight:
+                                                                                    "10px",
+                                                                            }}
+                                                                        />
+                                                                        {
+                                                                            subTaskItem.budget_time
+                                                                        }
+                                                                    </div>
+                                                                )}
+                                                                <div
+                                                                    className="task-header-cell"
+                                                                    style={{
+                                                                        flex: props.fullScreenMode
+                                                                            ? 1
+                                                                            : 2,
+                                                                    }}
+                                                                >
                                                                     <FontAwesomeIcon
                                                                         icon={
-                                                                            faClock
+                                                                            faCommentDots
                                                                         }
                                                                         className="timer-play"
                                                                         style={{
@@ -726,134 +739,115 @@ const TaskViewEdit = (props: any) => {
                                                                                 "10px",
                                                                         }}
                                                                     />
-                                                                    {
-                                                                        subTaskItem.budget_time
-                                                                    }
+                                                                    {subTaskItem.comments
+                                                                        ? subTaskItem
+                                                                              .comments
+                                                                              .length
+                                                                        : 0}
                                                                 </div>
-                                                            )}
-                                                            <div
-                                                                className="task-header-cell"
-                                                                style={{
-                                                                    flex: props.fullScreenMode
-                                                                        ? 1
-                                                                        : 2,
-                                                                }}
-                                                            >
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faCommentDots
-                                                                    }
-                                                                    className="timer-play"
-                                                                    style={{
-                                                                        marginRight:
-                                                                            "10px",
-                                                                    }}
-                                                                />
-                                                                {subTaskItem.comments
-                                                                    ? subTaskItem
-                                                                          .comments
-                                                                          .length
-                                                                    : 0}
+                                                                <div className="task-header-cell">
+                                                                    {props.fullScreenMode && (
+                                                                        <Tag
+                                                                            color={statusColors(
+                                                                                subTaskItem.status
+                                                                            )}
+                                                                            style={{
+                                                                                fontWeight:
+                                                                                    "500",
+                                                                                fontSize:
+                                                                                    "12px",
+                                                                            }}
+                                                                        >
+                                                                            {upperText(
+                                                                                subTaskItem.status
+                                                                            )}
+                                                                        </Tag>
+                                                                    )}
+                                                                </div>
+                                                                <div
+                                                                    className={`task-header-cell ${
+                                                                        props.fullScreenMode
+                                                                            ? ""
+                                                                            : "task_priorty"
+                                                                    } ${
+                                                                        subTaskItem.priority
+                                                                    } ${
+                                                                        subTaskItem.priority ===
+                                                                        "high"
+                                                                            ? "blink"
+                                                                            : ""
+                                                                    }`}
+                                                                >
+                                                                    {props.fullScreenMode
+                                                                        ? capitalize(
+                                                                              subTaskItem.priority
+                                                                          )
+                                                                        : " "}
+                                                                </div>
                                                             </div>
-                                                            <div className="task-header-cell">
-                                                                {props.fullScreenMode && (
-                                                                    <Tag
-                                                                        color={
-                                                                            "red"
-                                                                        }
-                                                                        style={{
-                                                                            fontWeight:
-                                                                                "500",
-                                                                            fontSize:
-                                                                                "12px",
-                                                                        }}
-                                                                    >
-                                                                        {capitalize(
-                                                                            subTaskItem.status
-                                                                        )}
-                                                                    </Tag>
-                                                                )}
-                                                            </div>
-                                                            <div
-                                                                className={`task-header-cell ${
-                                                                    props.fullScreenMode
-                                                                        ? ""
-                                                                        : "task_priorty"
-                                                                } ${
-                                                                    subTaskItem.priority
-                                                                } ${
-                                                                    subTaskItem.priority ===
-                                                                    "high"
-                                                                        ? "blink"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                {props.fullScreenMode
-                                                                    ? capitalize(
-                                                                          subTaskItem.priority
-                                                                      )
-                                                                    : " "}
-                                                            </div>
-                                                        </div>
-                                                    }
+                                                        </>
+                                                    ) : (
+                                                        subTaskItem.title
+                                                    )
+                                                }
+                                                key={subTaskItem._id}
+                                            >
+                                                <SubTaskViewEdit
                                                     key={subTaskItem._id}
-                                                >
-                                                    <SubTaskViewEdit
-                                                        key={subTaskItem._id}
-                                                        tableRowSelected={
-                                                            subTaskItem
-                                                        }
-                                                        isEdit={isEdit}
-                                                        parentId={
-                                                            updateTask._id
-                                                        }
-                                                    />
-                                                </CollapsePanel>
-                                            );
-                                        }
-                                    )}
-                                </Collapse>
-                            )}
-                            {taskSubTasks.length <= 0 && (
-                                <Title
-                                    style={{
-                                        textAlign: "left",
-                                        fontSize: "12px",
-                                        fontWeight: "normal",
-                                        textIndent: "5px",
-                                    }}
-                                >
-                                    No Sub Tasks
-                                </Title>
-                            )}
+                                                    tableRowSelected={
+                                                        subTaskItem
+                                                    }
+                                                    isEdit={isEdit}
+                                                    parentId={updateTask._id}
+                                                    handleListUpdate={
+                                                        updateCurrentTask
+                                                    }
+                                                />
+                                            </CollapsePanel>
+                                        );
+                                    }
+                                )}
+                            </Collapse>
+                        )}
+                        {taskSubTasks.length <= 0 && (
+                            <Title
+                                style={{
+                                    textAlign: "left",
+                                    fontSize: "12px",
+                                    fontWeight: "normal",
+                                    textIndent: "5px",
+                                }}
+                            >
+                                No Sub Tasks
+                            </Title>
+                        )}
+                    </Col>
+                </Row>
+                {!isEdit && (
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            <Title level={4} style={{ textAlign: "left" }}>
+                                Comments
+                            </Title>
+                            <Comments
+                                comments={taskComments}
+                                parentId={updateTask._id}
+                                addComment={addCommentHandler}
+                                editComment={editCommentHandler}
+                                deleteComment={deleteCommentHandler}
+                            />
                         </Col>
                     </Row>
-                    {!isEdit && (
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                <Title level={4} style={{ textAlign: "left" }}>
-                                    Comments
-                                </Title>
-                                <Comments
-                                    comments={taskComments}
-                                    parentId={updateTask._id}
-                                    addComment={addCommentHandler}
-                                    editComment={editCommentHandler}
-                                    deleteComment={deleteCommentHandler}
-                                />
-                            </Col>
-                        </Row>
-                    )}
-                    <Row gutter={[8, 8]} className="form-row">
-                        <div style={{ height: "30px" }}></div>
-                    </Row>
-                </Form>
-            </div>
-        </>
+                )}
+                <Row gutter={[8, 8]} className="form-row">
+                    <div style={{ height: "30px" }}></div>
+                </Row>
+            </Form>
+        </div>
     );
 };
 export default TaskViewEdit;

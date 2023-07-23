@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./stopwatch.scss";
-import { setLocalstorage, getLocalStorage } from "../../utilities/utility";
+import {
+    setLocalstorage,
+    getLocalStorage,
+    Status,
+} from "../../utilities/utility";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 
 const Stopwatch = (props: any) => {
     // state to store time
     const [time, setTime] = useState<number>(0);
+    const [status, setStatus] = useState<string>("");
+    const [showButtons, setShowButtons] = useState<Boolean>(true);
+    const [showSeconds, setShowSeconds] = useState<Boolean>(props.showSeconds);
 
     useEffect(() => {
         if (props.taskId) {
@@ -15,6 +22,16 @@ const Stopwatch = (props: any) => {
             setTime(parseInt(taskTiming));
         }
     }, [props.taskId]);
+
+    useEffect(() => {
+        if (props.status) {
+            setStatus(props.status);
+            setShowButtons(
+                [Status.completed, Status.cancelled].indexOf(props.status) ===
+                    -1
+            );
+        }
+    }, [props.status]);
 
     // state to check stopwatch running or not
     const [isRunning, setIsRunning] = useState(false);
@@ -43,54 +60,62 @@ const Stopwatch = (props: any) => {
     // Milliseconds calculation
     const milliseconds = time % 100;
 
+    const getTime = () => {
+        return `${hours}:${minutes.toString().padStart(2, "0")}`;
+    };
+
     // Method to start and stop timer
-    const startAndStop = () => {
+    const startAndPause = () => {
         const updatedStatus = !isRunning;
         setIsRunning(updatedStatus);
 
-        if (props.handleTaskStatus && updatedStatus) {
-            props.handleTaskStatus(updatedStatus);
+        if (props.handleTaskStatus) {
+            props.handleTaskStatus(updatedStatus, getTime(), false);
         }
     };
 
     // Method to reset timer back to 0
-    const reset = () => {
+    const stopEvent = () => {
         setIsRunning(false);
+        setShowButtons(false);
         if (props.handleTaskStatus) {
-            props.handleTaskStatus(false);
+            props.handleTaskStatus(false, getTime(), true);
         }
     };
     return (
         <div className="stopwatch-container">
             <div className="stopwatch-buttons">
-                <FontAwesomeIcon
-                    icon={faPlay}
-                    onClick={startAndStop}
-                    className="timer-play"
-                    title="Click here to start task"
-                    style={{
-                        display: !isRunning ? "block" : "none",
-                    }}
-                />
-                <FontAwesomeIcon
-                    icon={faPause}
-                    onClick={startAndStop}
-                    className="timer-pause"
-                    title="Click here to pause task"
-                    style={{
-                        display: isRunning ? "block" : "none",
-                    }}
-                />
-                <FontAwesomeIcon
-                    icon={faStop}
-                    onClick={reset}
-                    className="timer-stop"
-                    title="Click here to stop task"
-                />
+                {showButtons && (
+                    <>
+                        <FontAwesomeIcon
+                            icon={faPlay}
+                            onClick={startAndPause}
+                            className="timer-play"
+                            title="Click here to start task"
+                            style={{
+                                display: !isRunning ? "block" : "none",
+                            }}
+                        />
+                        <FontAwesomeIcon
+                            icon={faPause}
+                            onClick={startAndPause}
+                            className="timer-pause"
+                            title="Click here to pause task"
+                            style={{
+                                display: isRunning ? "block" : "none",
+                            }}
+                        />
+                        <FontAwesomeIcon
+                            icon={faStop}
+                            onClick={stopEvent}
+                            className="timer-stop"
+                            title="Click here to stop task"
+                        />
+                    </>
+                )}
                 <span className="stopwatch-time">
-                    {hours}:{minutes.toString().padStart(2, "0")}:
-                    {seconds.toString().padStart(2, "0")}:
-                    {milliseconds.toString().padStart(2, "0")}
+                    {hours}:{minutes.toString().padStart(2, "0")}
+                    {showSeconds && ":" + seconds.toString().padStart(2, "0")}
                 </span>
             </div>
         </div>
