@@ -12,6 +12,7 @@ import {
     Button,
 } from "antd";
 import {
+    Status,
     assigneeOpts,
     capitalize,
     dateFormat,
@@ -41,7 +42,7 @@ dayjs.extend(customParseFormat);
 const SubTaskViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
     const [parentId, setParentId] = useState(props.parentId);
-    const [updateTask, setUpdateTask] = useState<UpdateSubTask>(
+    const [updateSubTask, setUpdateSubTask] = useState<UpdateSubTask>(
         props.tableRowSelected
     );
     const [taskComments, setTaskComments] = useState<Comment>(
@@ -50,15 +51,16 @@ const SubTaskViewEdit = (props: any) => {
 
     useEffect(() => {
         setIsEdit(props.isEdit);
-        console.log("isEdit - ", props.isEdit, isEdit);
     }, [props.isEdit]);
 
     useEffect(() => {
-        setParentId(props.parentId);
-        setUpdateTask(props.tableRowSelected);
-        setUpdateTask(props.tableRowSelected);
+        setUpdateSubTask(props.tableRowSelected);
         setTaskComments(props.tableRowSelected.comments);
-    }, [props.tableRowSelected, props.parentId]);
+    }, [props.tableRowSelected]);
+
+    useEffect(() => {
+        setParentId(props.parentId);
+    }, [props.parentId]);
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
@@ -91,23 +93,25 @@ const SubTaskViewEdit = (props: any) => {
     };
 
     const getRemark = () => {
-        if (updateTask.remarks) {
-            return parse(updateTask.remarks);
+        if (updateSubTask.remarks) {
+            return parse(updateSubTask.remarks);
         } else {
             return "";
         }
     };
 
     const handleUpdateTask = () => {
-        console.log("Update task", updateTask);
+        console.log("Update task", updateSubTask);
 
-        api.updateSubTask(updateTask, updateTask._id).then((resp: any) => {
-            toast.success("Successfully Updated Task", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-            setIsEdit(false);
-            if (props.handleListUpdate) props.handleListUpdate();
-        });
+        api.updateSubTask(updateSubTask._id, updateSubTask).then(
+            (resp: any) => {
+                toast.success("Successfully Updated Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                setIsEdit(false);
+                if (props.handleListUpdate) props.handleListUpdate();
+            }
+        );
     };
 
     const priorityChangeHandler = (event: any, value: string) => {
@@ -118,11 +122,14 @@ const SubTaskViewEdit = (props: any) => {
         // taskUpdate._id = updateTask._id;
         taskUpdate.taskId = parentId;
 
-        api.updateSubTask(taskUpdate, updateTask._id).then((resp: any) => {
+        api.updateSubTask(updateSubTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            if (props.handleListUpdate) props.handleListUpdate();
+            // render updated tasks
+            if (resp.data.subtask && props.handleListUpdate) {
+                props.handleListUpdate(resp.data.subtask);
+            }
         });
     };
 
@@ -131,20 +138,24 @@ const SubTaskViewEdit = (props: any) => {
 
         const taskUpdate = {} as UpdateSubTask;
         taskUpdate.status = value;
-        // taskUpdate._id = updateTask._id;
         taskUpdate.taskId = parentId;
 
-        api.updateSubTask(taskUpdate, updateTask._id).then((resp: any) => {
+        api.updateSubTask(updateSubTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
                 position: toast.POSITION.TOP_RIGHT,
             });
+
+            // render updated tasks
+            if (resp.data.subtask && props.handleListUpdate) {
+                props.handleListUpdate(resp.data.subtask);
+            }
         });
     };
 
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComment;
         addComment.comment = comment;
-        addComment.taskId = updateTask._id;
+        addComment.taskId = updateSubTask._id;
         api.addTaskComment(addComment)
             .then((resp: any) => {
                 toast.success("Successfully added comment", {
@@ -186,7 +197,7 @@ const SubTaskViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        api.deleteTaskComment(updateTask._id, commentId)
+        api.deleteTaskComment(updateSubTask._id, commentId)
             .then((resp: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
@@ -201,12 +212,37 @@ const SubTaskViewEdit = (props: any) => {
             });
     };
 
+    // event handler from `stopwatch` action - play & stop
+    const handleTaskStatus = (
+        isRunning: boolean,
+        time: string,
+        isStop: boolean
+    ) => {
+        const taskUpdate = {} as UpdateSubTask;
+        taskUpdate.taskId = parentId;
+        taskUpdate.status = isStop ? Status.completed : Status.in_progress;
+        if (!isRunning) taskUpdate.actual_time = time;
+
+        api.updateSubTask(updateSubTask._id, taskUpdate).then((resp: any) => {
+            toast.success("Successfully Updated Sub Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+
+            // render updated tasks
+            if (resp.data.subtask && props.handleListUpdate) {
+                props.handleListUpdate(resp.data.subtask);
+            }
+        });
+    };
+
     return (
         <>
             <div
                 style={{
                     display:
-                        Object.keys(updateTask).length > 0 ? "block" : "none",
+                        Object.keys(updateSubTask).length > 0
+                            ? "block"
+                            : "none",
                 }}
             >
                 <ToastContainer />
@@ -215,39 +251,23 @@ const SubTaskViewEdit = (props: any) => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
                         {!isEdit && (
                             <Title level={5} style={{ textAlign: "left" }}>
-                                {updateTask.title}
+                                {updateSubTask.title}
                             </Title>
                         )}
                         {isEdit && (
                             <Input
                                 placeholder="Task"
                                 name="task"
-                                defaultValue={updateTask.title}
-                                // onChange={(event) => {
-                                //     inputChangeHandler(event);
-                                // }}
+                                defaultValue={updateSubTask.title}
                             />
                         )}
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
                         <Title level={5} style={{ textAlign: "right" }}>
-                            {capitalize(updateTask.assigned_to)}
+                            {capitalize(updateSubTask.assigned_to)}
                         </Title>
                     </Col>
                 </Row>
-                {/* <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }}>
-                        {isEdit && (
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                onClick={handleUpdateTask}
-                            >
-                                Update
-                            </Button>
-                        )}
-                    </Col>
-                </Row> */}
                 {dividerRow()}
                 <Row gutter={[8, 8]} className="form-row">
                     <Col
@@ -257,7 +277,12 @@ const SubTaskViewEdit = (props: any) => {
                         lg={{ span: 14 }}
                     >
                         <div className="timerbuttons">
-                            <Stopwatch taskId={updateTask._id} />
+                            <Stopwatch
+                                taskId={updateSubTask._id}
+                                handleTaskStatus={handleTaskStatus}
+                                status={updateSubTask.status}
+                                showSeconds={true}
+                            />
                         </div>
                     </Col>
                     <Col
@@ -275,12 +300,12 @@ const SubTaskViewEdit = (props: any) => {
                                         marginRight: "30px",
                                     }}
                                     className={`text-priority ${
-                                        updateTask.priority === "high"
+                                        updateSubTask.priority === "high"
                                             ? "blink"
                                             : ""
                                     }`}
                                 >
-                                    {capitalize(updateTask.priority)}
+                                    {capitalize(updateSubTask.priority)}
                                 </Title>
                             </>
                         )}
@@ -289,7 +314,7 @@ const SubTaskViewEdit = (props: any) => {
                                 allowClear
                                 placeholder="Select Priority"
                                 options={priorityOpts}
-                                defaultValue={updateTask.priority}
+                                defaultValue={updateSubTask.priority}
                                 className="w100"
                                 onChange={(value, event) => {
                                     priorityChangeHandler(event, value);
@@ -307,7 +332,8 @@ const SubTaskViewEdit = (props: any) => {
                             allowClear
                             placeholder="Select Status"
                             options={statusList}
-                            defaultValue={updateTask.status}
+                            defaultValue={updateSubTask.status}
+                            value={props.tableRowSelected.status}
                             className="w100"
                             onChange={(value, event) => {
                                 statusChangeHandler(event, value);
@@ -320,13 +346,13 @@ const SubTaskViewEdit = (props: any) => {
                     <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
                         Assigned To
                         <div>
-                            {!isEdit && <b>{updateTask.assigned_to}</b>}
+                            {!isEdit && <b>{updateSubTask.assigned_to}</b>}
                             {isEdit && (
                                 <Select
                                     allowClear
                                     showSearch
                                     placeholder="Assign Person"
-                                    defaultValue={updateTask.assigned_to}
+                                    defaultValue={updateSubTask.assigned_to}
                                     options={assigneeOpts}
                                     className="w100"
                                     onChange={(value, event) => {
@@ -347,7 +373,7 @@ const SubTaskViewEdit = (props: any) => {
                                             marginRight: "10px",
                                         }}
                                     />
-                                    {updateTask.budget_time}
+                                    {updateSubTask.budget_time}
                                 </b>
                             )}
                             {isEdit && (
@@ -355,7 +381,7 @@ const SubTaskViewEdit = (props: any) => {
                                     placeholder="Budget Time"
                                     name="budgetTime"
                                     defaultValue={dayjs(
-                                        updateTask.budget_time,
+                                        updateSubTask.budget_time,
                                         "HH:mm"
                                     )}
                                     format={"HH:mm"}
@@ -378,9 +404,9 @@ const SubTaskViewEdit = (props: any) => {
                                             marginRight: "10px",
                                         }}
                                     />
-                                    {updateTask.actual_time.trim() === ""
+                                    {updateSubTask.actual_time === ""
                                         ? "00:00"
-                                        : ""}
+                                        : updateSubTask.actual_time}
                                 </b>
                             )}
                             {/* {isEdit && (
@@ -411,7 +437,7 @@ const SubTaskViewEdit = (props: any) => {
                         {isEdit && (
                             <ReactQuill
                                 theme="snow"
-                                value={updateTask.remarks}
+                                value={updateSubTask.remarks}
                                 placeholder="Remark"
                                 onChange={(event) => {
                                     inputChangeHandler(event, "remarks");
@@ -439,7 +465,7 @@ const SubTaskViewEdit = (props: any) => {
                             </Title>
                             <Comments
                                 comments={taskComments}
-                                parentId={updateTask._id}
+                                parentId={updateSubTask._id}
                                 addComment={addCommentHandler}
                                 editComment={editCommentHandler}
                                 deleteComment={deleteCommentHandler}
