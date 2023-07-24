@@ -21,7 +21,8 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Select a client"
             options={clientOpts}
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           />
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -30,7 +31,8 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Assign By"
             options={assigneeOpts}
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           ></Select>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -39,7 +41,8 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Assign To"
             options={assigneeOpts}
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           ></Select>
         </Col>
       </Row>
@@ -52,7 +55,8 @@ const Fillter = (prop: any) => {
           <DatePicker
             placeholder="Due Date"
             name="due_date_search"
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           />
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
@@ -61,7 +65,8 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Status"
             options={statusList}
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           ></Select>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
@@ -70,7 +75,8 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Priority"
             options={priorityOpts}
-            className="w100"
+            className="w100 border-bottom"
+            bordered={false}
           ></Select>
         </Col>
         <Col

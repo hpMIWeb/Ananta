@@ -15,3 +15,9 @@
   font-weight: 600;
   line-height: 18px;
 }
+
+.border-bottom {
+  border-radius: 0px !important ;
+  border-bottom: 1px solid black;
+  box-shadow: none !important;
+}
