@@ -5,7 +5,7 @@ export interface AddTimesheet {
   remark: string;
   client: string;
   work_area: string;
-  pariculars: string;
+  particulars: string;
   total_time: string;
   is_new: boolean;
   is_edit: boolean;
@@ -19,7 +19,7 @@ export class Timesheet implements AddTimesheet {
   remark: string = "";
   client: string = "";
   work_area: string = "";
-  pariculars: string = "";
+  particulars: string = "";
   total_time: string = "";
   is_new: boolean = true;
   is_edit: boolean = false;

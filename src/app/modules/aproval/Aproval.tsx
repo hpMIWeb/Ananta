@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { UserAddOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { UserAddOutlined, UserDeleteOutlined } from "@ant-design/icons";
 import {
   Table,
   Tabs,
@@ -13,6 +13,7 @@ import {
   DatePicker,
   Select,
   Form,
+  Tag,
 } from "antd";
 import "./Aproval.scss";
 import {
@@ -26,89 +27,132 @@ import dayjs from "dayjs";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const { Title } = Typography;
+const pageSize = 20;
 
 const Approval = () => {
+  const [current, setCurrent] = useState(1);
   const [activeTab, setActiveTab] = useState<string>("2");
 
   const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
   const [leave, setLeave] = useState<boolean>(false);
   const [addLeaveObj, setAddLeaveObj] = useState<AddLeave>(new Leave());
+  const [leaveList, setLeaveList] = useState<AddLeave[]>([]);
   const [leaveDate, setLeaveDate] = useState<LeaveDates>(new LeaveDate());
   const [form] = Form.useForm();
 
   const columns = [
     {
       title: "Employee Name",
-      dataIndex: "starttime",
-      key: "starttime",
+      dataIndex: "employee_name",
+      key: "employee_name",
       ellipsis: true,
-      width: 160,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="Trusha Bhandari" className="At5" />,
+      width: "15%", // Use percentage instead of fixed width
+      sorter: (a: any, b: any) =>
+        a.employee_name.localeCompare(b.employee_name),
+      render: (employee_name: string) => employee_name,
     },
     {
       title: "Department",
-      dataIndex: "clientname",
-      key: "cliename",
-      width: 150,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="Designing" className="At5" />,
+      dataIndex: "department",
+      key: "department",
+      width: "10%",
+      sorter: (a: any, b: any) => a.department.localeCompare(b.department),
+      render: (department: string) => department,
     },
     {
       title: "Leave Date",
-      dataIndex: "Task",
-      key: "Task",
-      width: 200,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="05-10-2022 To 10-10-2022" className="At5" />,
+      dataIndex: "leave_date",
+      key: "leave_date",
+      width: "25%",
+      sorter: (a: any, b: any) =>
+        a.leave_date.start_date - b.leave_date.start_date,
+      render: (leave_date: LeaveDates) =>
+        dayjs(leave_date.start_date).format("YYYY-MM-DD") +
+        " To " +
+        dayjs(leave_date.end_date).format("YYYY-MM-DD"),
     },
 
     {
       title: "Reason",
-      dataIndex: "workarea",
-      key: "workarea",
-      width: 240,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <div className="scrollabletd">
-          organic lomo retro fanny pack lo-fi farm-to-table readymade.organic
-          lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo retro
-          fanny pack lo-fi farm-to-table readymade.
-        </div>
+      dataIndex: "leave_reason",
+      key: "leave_reason",
+      width: "35%",
+      sorter: (a: any, b: any) => a.leave_reason.localeCompare(b.leave_reason),
+      render: (leave_reason: string) => (
+        <div className="scrollabletd">{leave_reason}</div>
       ),
     },
     {
       title: "Status",
-      dataIndex: "Budget Time",
-      key: "Budget Time",
-      width: 100,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <UserAddOutlined className="At4" />,
+      dataIndex: "status",
+      key: "status",
+      width: "10%",
+      render: (leave_status: string, record: AddLeave) => {
+        if (record.leave_status === "pending") {
+          return (
+            <span>
+              <UserAddOutlined
+                style={{ color: "green", cursor: "pointer" }}
+                onClick={() => handleUpdateStatus(record._id, "approve")}
+              />
+              <UserDeleteOutlined
+                style={{ color: "red", cursor: "pointer" }}
+                onClick={() => handleUpdateStatus(record._id, "reject")}
+              />
+            </span>
+          );
+        } else {
+          const statusText =
+            record.leave_status === "approve" ? "Approve" : "Reject";
+          const statusColor =
+            record.leave_status === "approve" ? "green" : "red";
+          return (
+            <Tag color={statusColor} key={statusText}>
+              {statusText.toUpperCase()}
+            </Tag>
+          );
+        }
+      },
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      name: "John",
-      age: 32,
-      address: "New York",
-    },
-    {
-      key: "2",
-      name: "Jane",
-      age: 28,
-      address: "London",
-    },
-    {
-      key: "3",
-      name: "Jim",
-      age: 34,
-      address: "Paris",
-    },
-  ];
+  useEffect(() => {
+    getLeaveList();
+  }, []);
+
+  const getLeaveList = () => {
+    api.getLeave().then((resp: any) => {
+      setLeaveList(resp.data);
+    });
+  };
+
+  const handleUpdateStatus = (id: string, status: string) => {
+    try {
+      console.log(id);
+      api.updateLeaveStatus(id, status).then((resp: any) => {
+        toast.success("Successfully Status change.", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        getLeaveList();
+      });
+    } catch (ex) {
+      toast.error("Technical error while updating status.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+  const getData = (current: number, pageSize: number) => {
+    let returnVal = leaveList;
+    console.log(leaveList);
+
+    return returnVal
+      .map((item: any, index: number) => {
+        item.key = index;
+        return item;
+      })
+      .slice((current - 1) * pageSize, current * pageSize);
+  };
 
   function onChange(sorter: any) {
     console.log(sorter);
@@ -172,21 +216,45 @@ const Approval = () => {
         dates.start_date = leaveDate.start_date;
         dates.end_date = leaveDate.end_date;
         addLeaveObj.leave_date = dates;
-        console.log("values", values);
-        console.log("addLeaveObj", addLeaveObj);
-        // Save to DB
-        try {
-          api.applyLeave(addLeaveObj).then((resp: any) => {
-            toast.success("Successfully Leave Apply.", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            form.resetFields();
-            setIsModalOpen(false);
-          });
-        } catch (ex) {
-          toast.error("Technical error while creating Task", {
+        addLeaveObj.employee_name = "Pinank Soni";
+        addLeaveObj.department = "Development";
+
+        // Check if there is any leave already added for the selected dates
+        const isLeaveConflict = leaveList.some((leaveItem) => {
+          const startDate1 = new Date(leaveItem.leave_date.start_date);
+          const endDate1 = new Date(leaveItem.leave_date.end_date);
+          const startDate2 = new Date(leaveDate.start_date);
+          const endDate2 = new Date(leaveDate.end_date);
+
+          return (
+            (startDate1 <= startDate2 && endDate1 >= startDate2) || // new leave start date is between existing leave range
+            (startDate1 <= endDate2 && endDate1 >= endDate2) || // new leave end date is between existing leave range
+            (startDate1 >= startDate2 && endDate1 <= endDate2) // new leave range completely overlaps with existing leave range
+          );
+        });
+
+        if (isLeaveConflict) {
+          toast.error("Leave already added for the selected dates.", {
             position: toast.POSITION.TOP_RIGHT,
           });
+          setIsModalOpen(true);
+          return Promise.reject();
+        } else {
+          // Save to DB
+          try {
+            api.applyLeave(addLeaveObj).then((resp: any) => {
+              toast.success("Successfully Leave Apply.", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              form.resetFields();
+              setIsModalOpen(false);
+              getLeaveList();
+            });
+          } catch (ex) {
+            toast.error("Technical error while creating Task", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          }
         }
       })
       .catch((errorInfo) => {
@@ -229,10 +297,16 @@ const Approval = () => {
 
         <div>
           <Table
+            id="leaveApprovalTable"
             columns={columns}
-            dataSource={data}
-            pagination={{ defaultCurrent: 1, total: 2 }}
+            size="small"
+            dataSource={getData(current, pageSize)}
             onChange={onChange}
+            style={{ width: "100%" }}
+            showSorterTooltip
+            pagination={{
+              defaultPageSize: 10,
+            }}
           />
         </div>
       </div>
@@ -243,44 +317,6 @@ const Approval = () => {
         onCancel={handleCancel}
       >
         <Form form={form}>
-          <Row gutter={[8, 8]} className="form-row">
-            <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 12 }}>
-              <Form.Item
-                name="employee_name"
-                rules={[
-                  { required: true, message: "Please select a leave date!" },
-                ]}
-              >
-                <Select
-                  allowClear
-                  placeholder="Employee"
-                  className="w100"
-                  options={employeeOpts}
-                  onChange={(value, event) => {
-                    inputChangeHandler(event, "employee_name");
-                  }}
-                ></Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 12 }}>
-              <Form.Item
-                name="department"
-                rules={[
-                  { required: true, message: "Please select a leave type!" },
-                ]}
-              >
-                <Select
-                  allowClear
-                  placeholder="Department"
-                  className="w100"
-                  options={departmentOpts}
-                  onChange={(value, event) => {
-                    inputChangeHandler(event, "department");
-                  }}
-                ></Select>
-              </Form.Item>
-            </Col>
-          </Row>
           <Row gutter={[8, 8]} className="form-row">
             <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 12 }}>
               <Form.Item

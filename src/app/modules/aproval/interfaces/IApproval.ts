@@ -4,6 +4,7 @@ export interface AddLeave {
   department: string;
   leave_reason: string;
   leave_type: string;
+  leave_status: string;
   leave_date: LeaveDates;
 }
 
@@ -13,6 +14,7 @@ export class Leave implements AddLeave {
   department: string = "";
   leave_reason: string = "";
   leave_type: string = "";
+  leave_status: string = "";
   leave_date: LeaveDates = {} as LeaveDates;
 }
 

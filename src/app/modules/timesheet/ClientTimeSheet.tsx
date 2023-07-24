@@ -20,111 +20,97 @@ import {
 } from "@ant-design/icons";
 import "./ClientTimeSheet.scss";
 import { Link } from "react-router-dom";
-import { workAreaOpts, clientOpts } from "../../utilities/utility";
+import {
+  workAreaOpts,
+  clientOpts,
+  employeeOpts,
+  chargesOpts,
+} from "../../utilities/utility";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 const { Title } = Typography;
+const pageSize = 20;
 
-const columns = [
-  {
-    title: "Date",
-    dataIndex: "starttime",
-    key: "starttime",
-    ellipsis: true,
-    width: 110,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="03-08-2022" className="Et4" />,
-  },
-  {
-    title: "Client Name",
-    dataIndex: "clientname",
-    key: "cliename",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="Trusha Bhanderi" className="Et4" />,
-  },
-  {
-    title: "Task",
-    dataIndex: "Task",
-    key: "Task",
-    width: 240,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => (
-      <div className="scrollabletd">
-        organic lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo
-        retro fanny pack lo-fi farm-to-table readymade.organic lomo retro fanny
-        pack lo-fi farm-to-table readymade.
-      </div>
-    ),
-  },
-
-  {
-    title: "Work Area",
-    dataIndex: "workarea",
-    key: "workarea",
-    width: 120,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="GST" className="Et4" />,
-  },
-  {
-    title: "Budget Time",
-    dataIndex: "Budget Time",
-    key: "Budget Time",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="02h 30m" className="Et4" />,
-  },
-  {
-    title: "Actual Time",
-    dataIndex: "Actual Time",
-    key: "Actual Time",
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => <Input value="02h 00m" className="Et4" />,
-  },
-  {
-    title: "Differance",
-    dataIndex: "Differance",
-    key: "Differance",
-    width: 120,
-    sorter: (a: any, b: any) => a.any - b.any,
-    render: () => (
-      <Input value="30+" style={{ color: "green" }} className="Et4" />
-    ),
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: "John",
-    age: 32,
-    address: "New York",
-  },
-  {
-    key: "2",
-    name: "Jane",
-    age: 28,
-    address: "London",
-  },
-  {
-    key: "3",
-    name: "Jim",
-    age: 34,
-    address: "Paris",
-  },
-];
-
-function onChange(sorter: any) {
-  console.log(sorter);
-}
 const ClientTimeSheet = () => {
+  const [current, setCurrent] = useState(1);
   const [activeTab, setActiveTab] = useState<string>("2");
+  const [clientReport, setClientReport] = useState<[]>([]);
 
-  const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+  const columns = [
+    {
+      title: "Date",
+      dataIndex: "starttime",
+      key: "starttime",
+      ellipsis: true,
+      width: 110,
+      sorter: (a: string, b: string) => dayjs(a).unix() - dayjs(b).unix(),
+      render: (date: string) => (
+        <Input value={dayjs(date).format("YYYY-MM-DD")} className="Et4" />
+      ),
+    },
+    {
+      title: "Client Name",
+      dataIndex: "client",
+      key: "client",
+      sorter: (a: any, b: any) => a.client.localeCompare(b.client),
+      render: (client: string) => <Input value={client} className="Et4" />,
+    },
+    {
+      title: "Task",
+      dataIndex: "remark",
+      key: "remark",
+      width: 240,
+      sorter: (a: any, b: any) => a.remark.localCompare(b.remark),
+      render: (remark: string) => <div className="scrollabletd">{remark}</div>,
+    },
+    {
+      title: "Work Area",
+      dataIndex: "work_area",
+      key: "work_area",
+      width: 120,
+      sorter: (a: any, b: any) => a.work_area.localCompare(b.work_area),
+      render: (work_area: string) => (
+        <Input value={work_area} className="Et4" />
+      ),
+    },
+    {
+      title: "Budget Time",
+      dataIndex: "start_time",
+      key: "start_time",
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
+      render: (start_time: string) => (
+        <Input value={start_time} className="Et4" />
+      ),
+    },
+    {
+      title: "Actual Time",
+      dataIndex: "start_time",
+      key: "start_time",
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
+      render: (start_time: string) => (
+        <Input value={start_time} className="Et4" />
+      ),
+    },
+    {
+      title: "Differance",
+      dataIndex: "total_time",
+      key: "total_time",
+      width: 120,
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.total_time),
+      render: (total_time: string) => (
+        <Input value={total_time} className="Et4" />
+      ),
+    },
+  ];
+
+  function onChange(sorter: any) {
+    console.log(sorter);
+  }
 
   const onTabChange = (key: string) => {
     setActiveTab(key);
-    setFullScreenMode(false);
   };
 
   const downloadPDF = () => {
@@ -169,6 +155,91 @@ const ClientTimeSheet = () => {
     // manage down load()
 
     window.print();
+  };
+
+  let parameters: string[] = [];
+  const getClientReport = (event: any, nameItem: string = "") => {
+    let name = "";
+    let value = "";
+
+    if (event && event.target) {
+      name = event.target.name;
+      value = event.target.value;
+    } else if (nameItem !== "" && event !== "" && event !== undefined) {
+      name = nameItem;
+      value = event.value ?? event;
+    } else if (event) {
+      name = event.name;
+      value = event.value;
+    }
+
+    if (name === "employeeName") {
+      if (value === "") {
+      }
+      toast.error("Please select employee.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+
+    switch (name) {
+      case "employeeName": {
+        if (value !== "") {
+          parameters.push(`employeeName=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "clientName": {
+        if (value !== "") {
+          parameters.push(`clientName=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "workArea": {
+        if (value !== "") {
+          parameters.push(`workArea=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "billable": {
+        if (value !== "") {
+          parameters.push(`billable=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      case "date": {
+        if (value !== "") {
+          parameters.push(`date=${encodeURIComponent(value)}`);
+        }
+        break;
+      }
+      default:
+        break;
+    }
+
+    const queryString = parameters.join("&");
+    console.log(queryString);
+    try {
+      api.getClientTimesheetReport("?" + queryString).then((resp: any) => {
+        localStorage.setItem("clientReport", JSON.stringify(resp.data));
+        setClientReport(resp.data);
+      });
+    } catch (ex) {
+      toast.error("Technical error while Download.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const getData = (current: number, pageSize: number) => {
+    let returnVal = clientReport;
+    console.log(clientReport);
+
+    return returnVal
+      .map((item: any, index: number) => {
+        item.key = index;
+        return item;
+      })
+      .slice((current - 1) * pageSize, current * pageSize);
   };
 
   const tabContent: TabsProps["items"] = [
@@ -227,12 +298,55 @@ const ClientTimeSheet = () => {
             <PrinterTwoTone className="Et2" onClick={printData} />
           </span>
         </div>
-        <Select value="Client Name*" className="Et3" />
-        <Select value="Employee Name" className="Ct1" />
-        <Select value="Work Area" className="Ct1" />
-        <DatePicker className="Et3" placeholder="Date" />
-        <Select value="All" className="Ct1" />
-        <div className="summery">
+        <Select
+          allowClear
+          showSearch
+          placeholder="clientName*"
+          options={clientOpts}
+          className="Et3"
+          onChange={(value, event) => {
+            getClientReport(event, "clientName");
+          }}
+        />
+        <Select
+          allowClear
+          showSearch
+          placeholder="Employee"
+          options={employeeOpts}
+          className="Ct1"
+          onChange={(value, event) => {
+            getClientReport(event, "employeeName");
+          }}
+        />
+        <Select
+          allowClear
+          showSearch
+          placeholder="Work Area"
+          options={workAreaOpts}
+          className="Et3"
+          onChange={(value, event) => {
+            getClientReport(event, "workArea");
+          }}
+        />
+        <DatePicker
+          placeholder="Date"
+          className="Et3"
+          name="name"
+          onChange={(value, event) => {
+            getClientReport(event, "date");
+          }}
+        />
+        <Select
+          allowClear
+          showSearch
+          placeholder="Charges"
+          options={chargesOpts}
+          className="Ct1"
+          onChange={(value, event) => {
+            getClientReport(event, "billable");
+          }}
+        />
+        {/* <div className="summery">
           <ul className="summery1">
             <li className="Et7">
               <div>
@@ -266,11 +380,11 @@ const ClientTimeSheet = () => {
               <p className="Et8">Total Difference</p>
             </li>
           </ul>
-        </div>
+        </div> */}
         <div>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={getData(current, pageSize)}
             pagination={{ defaultCurrent: 1, total: 2 }}
             onChange={onChange}
           />

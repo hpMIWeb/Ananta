@@ -25,7 +25,6 @@ import {
   clientOpts,
   employeeOpts,
 } from "../../utilities/utility";
-import { EmployeeReport } from "./interfaces/IEmployeeReport";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,89 +41,70 @@ const EmpTimeSheet = () => {
   const columns = [
     {
       title: "Date",
-      dataIndex: "starttime",
-      key: "starttime",
-      ellipsis: true,
-      width: 110,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="03-08-2022" className="Et4" />,
+      dataIndex: "date",
+      key: "date",
+      width: "10%",
+      sorter: (a: string, b: string) => dayjs(a).unix() - dayjs(b).unix(),
+      render: (date: string) => (
+        <Input value={dayjs(date).format("YYYY-MM-DD")} className="Et4" />
+      ),
     },
     {
       title: "Client Name",
-      dataIndex: "clientname",
-      key: "cliename",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="Trusha Bhanderi" className="Et4" />,
+      dataIndex: "client",
+      key: "client",
+      sorter: (a: any, b: any) => a.client.localeCompare(b.client),
+      render: (client: string) => <Input value={client} className="Et4" />,
     },
     {
       title: "Task",
-      dataIndex: "Task",
-      key: "Task",
+      dataIndex: "remark",
+      key: "remark",
       width: 240,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <div className="scrollabletd">
-          organic lomo retro fanny pack lo-fi farm-to-table readymade.organic
-          lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo retro
-          fanny pack lo-fi farm-to-table readymade.
-        </div>
-      ),
+      sorter: (a: any, b: any) => a.remark.localCompare(b.remark),
+      render: (remark: string) => <div className="scrollabletd">{remark}</div>,
     },
 
     {
       title: "Work Area",
-      dataIndex: "workarea",
-      key: "workarea",
+      dataIndex: "work_area",
+      key: "work_area",
       width: 120,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="GST" className="Et4" />,
+      sorter: (a: any, b: any) => a.work_area.localCompare(b.work_area),
+      render: (work_area: string) => (
+        <Input value={work_area} className="Et4" />
+      ),
     },
     {
       title: "Budget Time",
-      dataIndex: "Budget Time",
-      key: "Budget Time",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="02h 30m" className="Et4" />,
+      dataIndex: "start_time",
+      key: "start_time",
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
+      render: (start_time: string) => (
+        <Input value={start_time} className="Et4" />
+      ),
     },
     {
       title: "Actual Time",
-      dataIndex: "Actual Time",
-      key: "Actual Time",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="02h 00m" className="Et4" />,
+      dataIndex: "start_time",
+      key: "start_time",
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
+      render: (start_time: string) => (
+        <Input value={start_time} className="Et4" />
+      ),
     },
     {
       title: "Differance",
-      dataIndex: "Differance",
-      key: "Differance",
+      dataIndex: "total_time",
+      key: "total_time",
       width: 120,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <Input value="30+" style={{ color: "green" }} className="Et4" />
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.total_time),
+      render: (total_time: string) => (
+        <Input value={total_time} className="Et4" />
       ),
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-    },
-    {
-      key: "2",
-    },
-    {
-      key: "3",
-    },
-    {
-      key: "4",
-    },
-    {
-      key: "5",
-    },
-    {
-      key: "6",
-    },
-  ];
   const onTabChange = (key: string) => {
     setActiveTab(key);
   };
@@ -227,7 +207,7 @@ const EmpTimeSheet = () => {
     const queryString = parameters.join("&");
     console.log(queryString);
     try {
-      api.getEmployeeReport(queryString).then((resp: any) => {
+      api.getEmployeeTimesheetReport("?" + queryString).then((resp: any) => {
         localStorage.setItem("employeeReport", JSON.stringify(resp.data));
         setEmployeeReport(resp.data);
       });
@@ -236,6 +216,18 @@ const EmpTimeSheet = () => {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
+  };
+
+  const getData = (current: number, pageSize: number) => {
+    let returnVal = employeeReport;
+    console.log(employeeReport);
+
+    return returnVal
+      .map((item: any, index: number) => {
+        item.key = index;
+        return item;
+      })
+      .slice((current - 1) * pageSize, current * pageSize);
   };
 
   const printData = () => {
@@ -375,8 +367,7 @@ const EmpTimeSheet = () => {
         <div>
           <Table
             columns={columns}
-            //dataSource={getData(current, pageSize)}
-            dataSource={data}
+            dataSource={getData(current, pageSize)}
             pagination={{ defaultCurrent: 1, total: 2 }}
             onChange={onChange}
           />
