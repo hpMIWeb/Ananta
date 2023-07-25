@@ -14,6 +14,7 @@ import {
   Select,
   Form,
   Tag,
+  Popconfirm,
 } from "antd";
 import "./Aproval.scss";
 import {
@@ -28,7 +29,7 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const { Title } = Typography;
-const pageSize = 20;
+const pageSize = 25;
 
 const Approval = () => {
   const [current, setCurrent] = useState(1);
@@ -92,14 +93,23 @@ const Approval = () => {
         if (record.leave_status === "pending") {
           return (
             <span>
-              <UserAddOutlined
-                style={{ color: "green", cursor: "pointer" }}
-                onClick={() => handleUpdateStatus(record._id, "approve")}
-              />
-              <UserDeleteOutlined
-                style={{ color: "red", cursor: "pointer" }}
-                onClick={() => handleUpdateStatus(record._id, "reject")}
-              />
+              <Popconfirm
+                title="Sure to Approve.?"
+                onConfirm={() => handleUpdateStatus(record._id, "approve")}
+              >
+                <UserAddOutlined
+                  style={{ color: "green", cursor: "pointer" }}
+                />
+              </Popconfirm>
+
+              <Popconfirm
+                title="Sure to Reject?"
+                onConfirm={() => handleUpdateStatus(record._id, "reject")}
+              >
+                <UserDeleteOutlined
+                  style={{ color: "red", cursor: "pointer" }}
+                />
+              </Popconfirm>
             </span>
           );
         } else {
@@ -143,15 +153,16 @@ const Approval = () => {
     }
   };
   const getData = (current: number, pageSize: number) => {
-    let returnVal = leaveList;
+    // let returnVal = leaveList;
+    const returnVal = leaveList.slice().reverse();
+
     console.log(leaveList);
 
-    return returnVal
-      .map((item: any, index: number) => {
-        item.key = index;
-        return item;
-      })
-      .slice((current - 1) * pageSize, current * pageSize);
+    return returnVal.map((item: any, index: number) => {
+      item.key = index;
+      return item;
+    });
+    //   .slice((current - 1) * pageSize, current * pageSize);
   };
 
   function onChange(sorter: any) {
@@ -258,6 +269,7 @@ const Approval = () => {
         }
       })
       .catch((errorInfo) => {
+        setIsModalOpen(true);
         console.log("Validation failed:", errorInfo);
       });
     setIsModalOpen(false);
