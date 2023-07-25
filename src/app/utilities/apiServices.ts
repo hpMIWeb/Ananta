@@ -32,10 +32,10 @@ const instance = axios.create({
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  getAllTask: () =>
+  getAllTask: (queryString: string) =>
     instance({
       method: "GET",
-      url: "task/get-task",
+      url: "task/get-task/" + queryString,
       transformResponse: [
         function (data) {
           const json = JSON.parse(data);

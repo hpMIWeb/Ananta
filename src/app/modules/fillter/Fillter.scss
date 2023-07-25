@@ -21,3 +21,20 @@
   border-bottom: 1px solid black;
   box-shadow: none !important;
 }
+.form-row {
+  // Your other styles for the form-row element here...
+
+  &.fade-up {
+    opacity: 1;
+    max-height: 100%;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+  }
+
+  &.fade-down {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+  }
+
+  // Add transition properties for opacity and max-height here...
+}

@@ -57,7 +57,7 @@ const TaskList = () => {
   };
 
   const getTaskData = () => {
-    api.getAllTask().then((resp: any) => {
+    api.getAllTask("").then((resp: any) => {
       setAllTask(resp.data);
     });
   };
@@ -223,6 +223,14 @@ const TaskList = () => {
     return rowClassName;
   };
 
+  const filterHandler = (queryString: string) => {
+    console.log("clientFilterHandler", queryString);
+
+    api.getAllTask(queryString).then((resp: any) => {
+      setAllTask(resp.data);
+    });
+    getContentRender();
+  };
   const getData = (current: number, pageSize: number, rangeMode: string) => {
     let retVal: AddTask[] = [];
 
@@ -333,7 +341,10 @@ const TaskList = () => {
             </a>
           </Col>
         </Row>
-        <Fillter showMoreFilter={showMoreFilter} />
+        <Fillter
+          showMoreFilter={showMoreFilter}
+          filterHandler={filterHandler}
+        />
 
         <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
           <Table
@@ -419,7 +430,10 @@ const TaskList = () => {
             </a>
           </Col>
         </Row>
-        <Fillter showMoreFilter={showMoreFilter} />
+        <Fillter
+          showMoreFilter={showMoreFilter}
+          filterHandler={filterHandler}
+        />
         <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
           <Table
             dataSource={getData(current, pageSize, "upcoming")}
@@ -503,7 +517,10 @@ const TaskList = () => {
             </a>
           </Col>
         </Row>
-        <Fillter showMoreFilter={showMoreFilter} />
+        <Fillter
+          showMoreFilter={showMoreFilter}
+          filterHandler={filterHandler}
+        />
         <Row gutter={[8, 8]} className="form-row" style={{ marginTop: "10px" }}>
           <Table
             dataSource={getData(current, pageSize, "history")}
