@@ -505,7 +505,7 @@ const TimeSheet = () => {
       render: (_: any, record: Timesheet) => {
         if (record.is_new) {
           return (
-            <span className="totalTimeDisplay">
+            <span className="totalTimeDisplay" style={{ float: "right" }}>
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => removeRow(record._id)}

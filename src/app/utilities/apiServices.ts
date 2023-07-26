@@ -184,10 +184,10 @@ export default {
         },
       ],
     }),
-  getAllCompliance: () =>
+  getAllCompliance: (queryString: string) =>
     instance({
       method: "GET",
-      url: "compliance/get-compliance",
+      url: "compliance/get-compliance/" + queryString,
       transformResponse: [
         function (data) {
           const json = JSON.parse(data);

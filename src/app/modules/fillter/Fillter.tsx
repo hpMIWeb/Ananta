@@ -131,6 +131,7 @@ const Fillter = (prop: any) => {
             name="due_date_search"
             className="w100 border-bottom"
             bordered={false}
+            style={{ borderBottom: "1px solid" }}
             onChange={(value, event) => {
               filterHandler(event, "dueDate");
             }}

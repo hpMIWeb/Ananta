@@ -25,6 +25,7 @@ import {
   clientOpts,
   employeeOpts,
   chargesOpts,
+  calculateTimeDifference,
 } from "../../utilities/utility";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
@@ -46,16 +47,13 @@ const ClientTimeSheet = () => {
       ellipsis: true,
       width: 110,
       sorter: (a: string, b: string) => dayjs(a).unix() - dayjs(b).unix(),
-      render: (date: string) => (
-        <Input value={dayjs(date).format("YYYY-MM-DD")} className="Et4" />
-      ),
+      render: (date: string) => dayjs(date).format("DD-MM-YYYY"),
     },
     {
       title: "Client Name",
       dataIndex: "client",
       key: "client",
       sorter: (a: any, b: any) => a.client.localeCompare(b.client),
-      render: (client: string) => <Input value={client} className="Et4" />,
     },
     {
       title: "Task",
@@ -71,27 +69,18 @@ const ClientTimeSheet = () => {
       key: "work_area",
       width: 120,
       sorter: (a: any, b: any) => a.work_area.localCompare(b.work_area),
-      render: (work_area: string) => (
-        <Input value={work_area} className="Et4" />
-      ),
     },
     {
       title: "Budget Time",
-      dataIndex: "start_time",
-      key: "start_time",
-      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
-      render: (start_time: string) => (
-        <Input value={start_time} className="Et4" />
-      ),
+      dataIndex: "budget_time",
+      key: "budget_time",
+      sorter: (a: any, b: any) => a.budget_time.localCompare(b.budget_time),
     },
     {
       title: "Actual Time",
-      dataIndex: "start_time",
-      key: "start_time",
-      sorter: (a: any, b: any) => a.start_time.localCompare(b.start_time),
-      render: (start_time: string) => (
-        <Input value={start_time} className="Et4" />
-      ),
+      dataIndex: "actual_time",
+      key: "actual_time",
+      sorter: (a: any, b: any) => a.actual_time.localCompare(b.actual_time),
     },
     {
       title: "Differance",
@@ -99,9 +88,18 @@ const ClientTimeSheet = () => {
       key: "total_time",
       width: 120,
       sorter: (a: any, b: any) => a.start_time.localCompare(b.total_time),
-      render: (total_time: string) => (
-        <Input value={total_time} className="Et4" />
-      ),
+      render: (total_time: string, record: any) => {
+        const { budget_time, actual_time } = record;
+        const formattedDiff = calculateTimeDifference(budget_time, actual_time);
+        // Extract the sign of the difference (+ or -)
+        const diffSign = formattedDiff.charAt(0);
+
+        // Apply different styles based on the sign of the difference
+        const textStyle = {
+          color: diffSign === "+" ? "green" : "red",
+        };
+        return <span style={textStyle}>{formattedDiff}</span>;
+      },
     },
   ];
 
