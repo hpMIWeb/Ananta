@@ -1,28 +1,28 @@
 body {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 }
 
 .ant-btn-primary:hover {
-    background: #2569c3 !important;
-    border-color: #fff !important;
+  background: #2569c3 !important;
+  border-color: #fff !important;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .ant-btn-dangerous {
-    color: #fff;
-    background-color: #e63757 !important;
-    border-color: #e63757 !important;
+  color: #fff;
+  background-color: #e63757 !important;
+  border-color: #e63757 !important;
 }
 
 .ant-btn-dangerous:hover {
-    color: #fff;
-    background-color: #c42f4a !important;
-    border-color: #b82c46 !important;
+  color: #fff;
+  background-color: #c42f4a !important;
+  border-color: #b82c46 !important;
 }
 
 .ant-picker,
@@ -31,8 +31,8 @@ body {
 .ant-btn,
 .ant-select-selector,
 .quill {
-    border-radius: 3px !important;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  border-radius: 3px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
 }
 
 // .form-row {
@@ -40,177 +40,183 @@ body {
 // }
 
 .w100 {
-    width: 100%;
-    //box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  width: 100%;
+  //box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
 }
 
 .ql-container {
-    min-height: 6rem;
-    height: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
+  min-height: 6rem;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .ql-editor {
-    height: 100%;
-    flex: 1;
-    overflow-y: auto;
-    width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .ql-toolbar {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
 
 .data-row-pending {
-    background-color: rgb(255 0 0 / 30%);
+  background-color: rgb(255 0 0 / 30%);
 }
 
 .data-row-pending td:first-child {
-    background-color: #ff0000 !important;
+  background-color: #ff0000 !important;
 }
 
 .data-row-completed {
-    background-color: rgb(79 153 76 / 10%);
+  background-color: rgb(79 153 76 / 10%);
 }
 
 .data-row-completed td:first-child {
-    background-color: #00ca72 !important;
+  background-color: #00ca72 !important;
 }
 
 .data-row-in-progress {
-    background-color: rgb(255 204 0 / 10%);
+  background-color: rgb(255 204 0 / 10%);
 }
 
 .data-row-in-progress td:first-child {
-    background-color: #ffcc00 !important;
+  background-color: #ffcc00 !important;
 }
 
 .data-row-cancel {
-    background-color: rgb(128 128 128 / 30%);
-    opacity: 0.5;
-    text-decoration: line-through;
+  background-color: rgb(128 128 128 / 30%);
+  opacity: 0.5;
+  text-decoration: line-through;
 }
 
 .data-row-cancel td:first-child {
-    background-color: #808080 !important;
+  background-color: #808080 !important;
 }
 
 .triangle {
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 20px solid red;
-    background-color: transparent;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 20px solid red;
+  background-color: transparent;
 }
 
 .square {
-    width: 50px;
-    height: 50px;
-    background-color: #555;
+  width: 50px;
+  height: 50px;
+  background-color: #555;
 }
 
 .ant-divider-horizontal {
-    margin: 10px 0 !important;
+  margin: 10px 0 !important;
 }
 
 .timerbuttons {
-    display: inline-block;
-    padding: 0 10px 0 0;
-    font-size: 23px;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
+  display: inline-block;
+  padding: 0 10px 0 0;
+  font-size: 23px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 
-    .timer-play,
-    .timer-pause {
-        margin: 8px 20px 0 0;
-        color: #2c7be5;
-        float: left;
-        width: 17px;
-    }
+  .timer-play,
+  .timer-pause {
+    margin: 8px 20px 0 0;
+    color: #2c7be5;
+    float: left;
+    width: 17px;
+  }
 
-    .timer-stop {
-        color: #00ca72;
-        margin: 8px 20px 0 0;
-        float: left;
-        width: 17px;
-    }
+  .timer-stop {
+    color: #00ca72;
+    margin: 8px 20px 0 0;
+    float: left;
+    width: 17px;
+  }
 }
 
 .fLeft {
-    float: left;
+  float: left;
 }
 
 .fRight {
-    float: right;
+  float: right;
 }
 
 .ant-form-item {
-    // margin-bottom: 1rem !important;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  // margin-bottom: 1rem !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
 }
 
 .ant-table-row {
-    border-bottom: 6px solid #ffffff !important;
-    padding-bottom: 6px !important;
-    cursor: pointer;
+  border-bottom: 6px solid #ffffff !important;
+  padding-bottom: 6px !important;
+  cursor: pointer;
 }
 
 .ant-table-cell-row-hover {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }
 
 .ant-table-cell {
-    padding: 5px !important;
-    border-bottom: 6px solid #fff !important;
+  padding: 5px !important;
+  border-bottom: 6px solid #fff !important;
 }
 
 .ant-table-cell:first-child {
-    background-color: transparent;
-    padding: 1.2px !important;
+  background-color: transparent;
+  padding: 1.2px !important;
 }
 
 .title {
-    display: inline-block;
-    width: 350px;
-    white-space: nowrap;
-    overflow: hidden !important;
-    text-overflow: ellipsis;
+  display: inline-block;
+  width: 350px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 }
 
 .blink {
-    animation: blinker 1.5s linear infinite;
-    color: red !important;
-    font-family: sans-serif;
+  animation: blinker 1.5s linear infinite;
+  color: red !important;
+  font-family: sans-serif;
 }
 @keyframes blinker {
-    50% {
-        opacity: 0;
-    }
+  50% {
+    opacity: 0;
+  }
 }
 
 .text-priority {
-    font-size: 16px !important;
-    margin-top: 7px;
+  font-size: 16px !important;
+  margin-top: 7px;
 }
 
 .mb-10 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .mb-20 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .mt-10 {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .mt-20 {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+
+.border-bottom {
+  border-radius: 0 !important ;
+  border-bottom: 1px solid black;
+  box-shadow: none !important;
 }

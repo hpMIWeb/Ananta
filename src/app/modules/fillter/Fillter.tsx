@@ -19,11 +19,28 @@ let parameters: string[] = [];
 const pageSize = 20;
 
 const Fillter = (prop: any) => {
-  const [current, setCurrent] = useState(1);
-  const [allTask, setAllTask] = useState<[]>([]);
-  const dateFormat = "YYYY-MM-DD";
-  const actionTab = prop.actionTab ? prop.actionTab : "";
-  const rangeMode = prop.rangeMode ? prop.rangeMode : "";
+  // State variables for each dropdown filter
+  const [clientValue, setClientValue] = useState<any>(null);
+  const [assignedByValue, setAssignedByValue] = useState<any>(null);
+  const [assignedToValue, setAssignedToValue] = useState<any>(null);
+  const [dueDateValue, setDueDateValue] = useState<any>(null);
+  const [statusValue, setStatusValue] = useState<any>(null);
+  const [priorityValue, setPriorityValue] = useState<any>(null);
+
+  // Function to clear all filter values
+  const clearAllFilters = () => {
+    setClientValue(null);
+    setAssignedByValue(null);
+    setAssignedToValue(null);
+    setDueDateValue(null);
+    setStatusValue(null);
+    setPriorityValue(null);
+
+    // Reset the parameters array
+    parameters = [];
+    filterHandler("", "");
+  };
+
   useEffect(() => {
     // Get the current URL
     console.log(prop);
@@ -35,6 +52,10 @@ const Fillter = (prop: any) => {
 
     console.log("Last part of the URL:", lastPart);
   }, []); // Empty
+
+  const onClearData = (data: any) => {
+    console.log(data);
+  };
   const filterHandler = (event: any, nameItem: string = "") => {
     let name = "";
     let value = "";
@@ -50,7 +71,8 @@ const Fillter = (prop: any) => {
       value = event.value;
     }
 
-    console.log("parameters", parameters);
+    console.log("name", name);
+    console.log("value", value);
     // Check if the filter parameter already exists in the parameters array
     const parameterExists = parameters.some((param) =>
       param.startsWith(`${name}=`)
@@ -74,10 +96,11 @@ const Fillter = (prop: any) => {
     <>
       <Row
         gutter={[8, 8]}
-        className={`form-row ${prop.showMoreFilter ? "fade-up" : "fade-down"}`}
-        style={{
-          marginTop: "10px",
-        }}
+        className={`mt-f10 orm-row ${
+          prop.showMoreFilter
+            ? "fade-down-enter-active"
+            : "fade-up-enter-active"
+        }`}
       >
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
           <Select
@@ -85,9 +108,15 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Select a client"
             options={clientOpts}
+            value={clientValue}
             className="w100 border-bottom"
             bordered={false}
+            onDeselect={(value, event) => {
+              setClientValue(value);
+              filterHandler(value, "client");
+            }}
             onChange={(value, event) => {
+              setClientValue(value);
               filterHandler(value, "client");
             }}
           />
@@ -98,9 +127,11 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Assign By"
             options={assigneeOpts}
+            value={assignedByValue}
             className="w100 border-bottom"
             bordered={false}
             onChange={(value, event) => {
+              setAssignedByValue(value);
               filterHandler(event, "assignedBy");
             }}
           ></Select>
@@ -111,9 +142,11 @@ const Fillter = (prop: any) => {
             showSearch
             placeholder="Assign To"
             options={assigneeOpts}
+            value={assignedToValue}
             className="w100 border-bottom"
             bordered={false}
             onChange={(value, event) => {
+              setAssignedToValue(value);
               filterHandler(event, "assignedTo");
             }}
           ></Select>
@@ -122,17 +155,27 @@ const Fillter = (prop: any) => {
 
       <Row
         gutter={[8, 8]}
-        className={`form-row ${prop.showMoreFilter ? "fade-up" : "fade-down"}`}
-        style={{ marginTop: "10px" }}
+        className={`mt-f10 form-row ${
+          prop.showMoreFilter
+            ? "fade-down-enter-active"
+            : "fade-up-enter-active"
+        }`}
       >
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+        <Col
+          xs={{ span: 24 }}
+          sm={{ span: 24 }}
+          md={{ span: 8 }}
+          className="border-bottom"
+        >
           <DatePicker
             placeholder="Due Date"
             name="due_date_search"
             className="w100 border-bottom"
             bordered={false}
+            value={dueDateValue}
             style={{ borderBottom: "1px solid" }}
             onChange={(value, event) => {
+              setDueDateValue(value);
               filterHandler(event, "dueDate");
             }}
           />
@@ -142,10 +185,12 @@ const Fillter = (prop: any) => {
             allowClear
             showSearch
             placeholder="Status"
+            value={statusValue}
             options={statusList}
             className="w100 border-bottom"
             bordered={false}
             onChange={(value, event) => {
+              setStatusValue(value);
               filterHandler(event, "status");
             }}
           ></Select>
@@ -158,7 +203,9 @@ const Fillter = (prop: any) => {
             options={priorityOpts}
             className="w100 border-bottom"
             bordered={false}
+            value={priorityValue}
             onChange={(value, event) => {
+              setPriorityValue(value);
               filterHandler(event, "priority");
             }}
           ></Select>
@@ -170,10 +217,10 @@ const Fillter = (prop: any) => {
           style={{ textAlign: "right" }}
         >
           <Button
-            href="#"
             title="Clear"
             className="clearlink"
             style={{ border: "none" }}
+            onClick={clearAllFilters}
           >
             Clear
           </Button>
