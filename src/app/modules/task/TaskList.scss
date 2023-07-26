@@ -1,14 +1,65 @@
 .task-list-header {
-    display: flex;
-    flex-wrap: nowrap;
-    //margin-bottom: 15px;
+  display: flex;
+  flex-wrap: nowrap;
+  //margin-bottom: 15px;
 }
 
 .task-list-add {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .ant-tabs {
-    width: 100%;
-    height: 46px;
+  width: 100%;
+  height: 46px;
+}
+
+#taskTable {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol" !important;
+  color: #5e6e82 !important;
+  cursor: pointer;
+  margin: 0;
+  --falcon-gutter-x: 0.5rem;
+  list-style-type: none;
+  position: relative;
+  font-size: 15px;
+  text-align: left;
+  border-radius: 0 !important;
+
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 1px 3px;
+}
+
+.clientDiv {
+  font-size: 13px !important;
+  white-space: nowrap;
+}
+
+.assigneeContainer {
+  display: flex;
+  align-items: center;
+}
+
+.assigneeImage {
+  width: 24px; /* Set the desired width of the round image */
+  height: 24px; /* Set the desired height of the round image */
+  border-radius: 50%; /* Make the image round */
+  margin-right: 8px; /* Add some spacing between the image and the name */
+}
+
+.title {
+  display: inline-block;
+  width: 220px !important;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+.dueDate {
+  display: inline-block;
+  font-size: 13px;
+  padding-right: 10px;
 }
