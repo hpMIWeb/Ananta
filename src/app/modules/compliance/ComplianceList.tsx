@@ -90,19 +90,21 @@ const ComplianceList = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      render: (text: string) => (
-        <p className="text-truncate tasklist button p nav-link">{text}</p>
-      ),
+      width: "30%",
+      render: (text: string) => <span className="title">{text}</span>,
     },
     {
       title: "Compliance date",
       dataIndex: "start_date",
       key: "start_date",
       render: (start_date: string) => (
-        <div className="dateDisplay">
-          <FontAwesomeIcon icon={faCalendarAlt} style={{}} />
-          &nbsp; {dayjs(start_date).format(dateFormat)}
-        </div>
+        <span className="clientDiv dueDate">
+          <FontAwesomeIcon
+            icon={faCalendarAlt}
+            style={{ marginRight: "5px" }}
+          />
+          <span>{dayjs(start_date).format("DD MMM h:mma")}</span>
+        </span>
       ),
     },
     {
@@ -110,7 +112,7 @@ const ComplianceList = () => {
       dataIndex: "start1_date",
       key: "start1_date",
       render: (start_date1: string) => (
-        <div className="dateDisplay">
+        <div className="clientDiv">
           <FontAwesomeIcon icon={faUser} style={{}} />
           &nbsp; 0/10
         </div>
@@ -121,7 +123,7 @@ const ComplianceList = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (start_date: string) => (
-        <div className="dateDisplay">
+        <div className="clientDiv">
           <FontAwesomeIcon icon={faAlignLeft} style={{}} />
           &nbsp; 0/10
         </div>
@@ -132,7 +134,7 @@ const ComplianceList = () => {
       key: "status",
       dataIndex: "status",
       render: (status: string) => (
-        <span>
+        <span style={{ float: "right" }}>
           {[status].map((item) => {
             let color = "#fb275d";
             let title = item;
@@ -164,7 +166,12 @@ const ComplianceList = () => {
               <Tag
                 color={color}
                 key={item}
-                style={{ fontWeight: "500", fontSize: "12px" }}
+                style={{
+                  fontWeight: "500",
+                  fontSize: "12px",
+                  textAlign: "center",
+                  minWidth: "100px",
+                }}
               >
                 {upperText(title)}
               </Tag>
@@ -335,19 +342,19 @@ const ComplianceList = () => {
     switch (record.status.toLowerCase()) {
       case "pending":
       case "1": {
-        rowClassName = "tasklist complianceListRow data-row-pending";
+        rowClassName = "tasklist  data-row-pending";
         break;
       }
       case "completed": {
-        rowClassName = "tasklist complianceListRow data-row-completed";
+        rowClassName = "tasklist  data-row-completed";
         break;
       }
       case "in_progress": {
-        rowClassName = "tasklist complianceListRow data-row-in-progress";
+        rowClassName = "tasklist  data-row-in-progress";
         break;
       }
       case "cancelled": {
-        rowClassName = "tasklist complianceListRow data-row-cancel";
+        rowClassName = "tasklist  data-row-cancel";
         break;
       }
     }
