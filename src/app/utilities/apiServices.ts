@@ -26,16 +26,16 @@ const instance = axios.create({
         "content-type": "application/json;charset=utf-8",
         Authorization: `Bearer ${token}`,
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH",
     },
 });
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    getAllTask: () =>
+    getAllTask: (queryString: string) =>
         instance({
             method: "GET",
-            url: "task/get-task",
+            url: "task/get-task/" + queryString,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -184,10 +184,10 @@ export default {
                 },
             ],
         }),
-    getAllCompliance: () =>
+    getAllCompliance: (queryString: string) =>
         instance({
             method: "GET",
-            url: "compliance/get-compliance",
+            url: "compliance/get-compliance/" + queryString,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -251,7 +251,7 @@ export default {
                 remark: timesheet.remark,
                 client: timesheet.client,
                 work_area: timesheet.work_area,
-                pariculars: timesheet.pariculars,
+                particulars: timesheet.particulars,
                 total_time: timesheet.total_time,
             },
             transformResponse: [
@@ -351,7 +351,7 @@ export default {
             url: "timesheet/create-multiple-timesheet",
             data: [],
         }),
-    getEmployeeReport: (queryString: string) =>
+    getEmployeeTimesheetReport: (queryString: string) =>
         instance({
             method: "GET",
             url: "timesheet/employee-timesheet-report" + queryString,
@@ -381,6 +381,29 @@ export default {
             transformResponse: [
                 function (data) {
                     return data;
+                },
+            ],
+        }),
+    getLeave: () =>
+        instance({
+            method: "GET",
+            url: "leaveapprovals/get-leave-approvals",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateLeaveStatus: (id: string, status: string) =>
+        instance({
+            method: "PATCH",
+            url: "leaveapprovals/update-leave-approvals/id=" + id,
+            data: { leave_status: status },
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),

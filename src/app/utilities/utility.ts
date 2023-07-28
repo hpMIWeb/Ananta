@@ -115,15 +115,16 @@ export const leaveTypeOpts = [
     "Privilege Leave",
     "Sick Leave",
     "Maternity Leave",
-    "Paternity leaves",
+    "Paternity Leave",
     "Sabbatical Leave",
-    "Bereavement leave",
-    "Marriage leave",
+    "Bereavement Leave",
+    "Marriage Leave",
 ].map((item: string) => {
     return {
-        value: item.toLowerCase(),
+        key: item.toLowerCase().replace(" ", "_"),
+        value: item.toLowerCase().replace(" ", "_"),
         label: item,
-        name: "workArea",
+        name: "leave_type",
     };
 });
 
@@ -285,4 +286,22 @@ const timeConvert = (mins: number) => {
 
 const padStartNumber = (num: number, digit: number) => {
     return num.toString().padStart(digit, "0");
+};
+
+// Function to calculate the time difference in hours and minutes
+export const calculateTimeDifference = (startTime: string, endTime: string) => {
+    const format = "HH:mm"; // Assuming the time strings are in HH:mm format.
+    const start = dayjs(startTime, format);
+    const end = dayjs(endTime, format);
+
+    if (!start.isValid() || !end.isValid()) {
+        return "Invalid Time";
+    }
+
+    const diffMinutes = end.diff(start, "minute");
+    const prefix = diffMinutes >= 0 ? "+" : "-"; // Use + sign for positive difference, - sign for negative difference.
+    const diffHours = Math.abs(Math.floor(diffMinutes / 60));
+    const diffMins = Math.abs(diffMinutes % 60);
+
+    return `${prefix}${diffHours}h ${diffMins}m`;
 };

@@ -73,7 +73,7 @@ const ComplianceList = () => {
     }, []);
 
     const getComplianceData = () => {
-        api.getAllCompliance().then((resp: any) => {
+        api.getAllCompliance("").then((resp: any) => {
             console.log(resp.data);
             setAllCompliance(resp.data);
         });
@@ -90,21 +90,21 @@ const ComplianceList = () => {
             title: "Title",
             dataIndex: "title",
             key: "title",
-            render: (text: string) => (
-                <p className="text-truncate tasklist button p nav-link">
-                    {text}
-                </p>
-            ),
+            width: "40%",
+            render: (text: string) => <span className="title">{text}</span>,
         },
         {
             title: "Compliance date",
             dataIndex: "start_date",
             key: "start_date",
             render: (start_date: string) => (
-                <div className="dateDisplay">
-                    <FontAwesomeIcon icon={faCalendarAlt} style={{}} />
-                    &nbsp; {dayjs(start_date).format(dateFormat)}
-                </div>
+                <span className="clientDiv dueDate">
+                    <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        style={{ marginRight: "5px" }}
+                    />
+                    <span>{dayjs(start_date).format("DD MMM h:mma")}</span>
+                </span>
             ),
         },
         {
@@ -112,7 +112,7 @@ const ComplianceList = () => {
             dataIndex: "start1_date",
             key: "start1_date",
             render: (start_date1: string) => (
-                <div className="dateDisplay">
+                <div className="clientDiv">
                     <FontAwesomeIcon icon={faUser} style={{}} />
                     &nbsp; 0/10
                 </div>
@@ -123,7 +123,7 @@ const ComplianceList = () => {
             dataIndex: "start_date",
             key: "start_date",
             render: (start_date: string) => (
-                <div className="dateDisplay">
+                <div className="clientDiv">
                     <FontAwesomeIcon icon={faAlignLeft} style={{}} />
                     &nbsp; 0/10
                 </div>
@@ -134,7 +134,7 @@ const ComplianceList = () => {
             key: "status",
             dataIndex: "status",
             render: (status: string) => (
-                <span>
+                <span style={{ float: "right" }}>
                     {[status].map((item) => {
                         let color = "#fb275d";
                         let title = item;
@@ -166,7 +166,12 @@ const ComplianceList = () => {
                             <Tag
                                 color={color}
                                 key={item}
-                                style={{ fontWeight: "500", fontSize: "12px" }}
+                                style={{
+                                    fontWeight: "500",
+                                    fontSize: "12px",
+                                    textAlign: "center",
+                                    minWidth: "100px",
+                                }}
                             >
                                 {upperText(title)}
                             </Tag>
@@ -337,20 +342,19 @@ const ComplianceList = () => {
         switch (record.status.toLowerCase()) {
             case "pending":
             case "1": {
-                rowClassName = "tasklist complianceListRow data-row-pending";
+                rowClassName = "tasklist  data-row-pending";
                 break;
             }
             case "completed": {
-                rowClassName = "tasklist complianceListRow data-row-completed";
+                rowClassName = "tasklist  data-row-completed";
                 break;
             }
             case "in_progress": {
-                rowClassName =
-                    "tasklist complianceListRow data-row-in-progress";
+                rowClassName = "tasklist  data-row-in-progress";
                 break;
             }
             case "cancelled": {
-                rowClassName = "tasklist complianceListRow data-row-cancel";
+                rowClassName = "tasklist  data-row-cancel";
                 break;
             }
         }
@@ -427,7 +431,7 @@ const ComplianceList = () => {
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 8 }}
+                        md={{ span: 10 }}
                         style={{
                             float: "right",
                             marginBottom: "10px",
@@ -437,14 +441,15 @@ const ComplianceList = () => {
                         <Input
                             placeholder="Search"
                             prefix={<SearchOutlined />}
+                            className="w100 border-bottom"
+                            bordered={false}
                         />
                     </Col>
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 8 }}
+                        md={{ span: 4 }}
                         style={{
-                            float: "right",
                             marginBottom: "10px",
                             marginTop: "10px",
                         }}
@@ -485,7 +490,10 @@ const ComplianceList = () => {
                         </a>
                     </Col>
                 </Row>
-                <Fillter showMoreFilter={showMoreFilter} />
+                <Fillter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                />
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
@@ -505,7 +513,6 @@ const ComplianceList = () => {
                         className=""
                         columns={colInfo}
                         showHeader={false}
-                        pagination={false}
                         style={{ width: "100%" }}
                         size="small"
                         showSorterTooltip
@@ -529,7 +536,8 @@ const ComplianceList = () => {
                             showSearch
                             placeholder="Client"
                             options={clientOpts}
-                            className="w100"
+                            className="w100 border-bottom"
+                            bordered={false}
                         />
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -538,10 +546,16 @@ const ComplianceList = () => {
                             showSearch
                             placeholder="Report Type"
                             options={complianceReportOpts}
-                            className="w100"
+                            className="w100 border-bottom"
+                            bordered={false}
                         />
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{ float: "right" }}
+                    >
                         <a
                             className="btn-link expanddiv"
                             href="#"
@@ -611,6 +625,14 @@ const ComplianceList = () => {
                 </Row>
             </div>
         );
+    };
+
+    const filterHandler = (queryString: string) => {
+        console.log("clientFilterHandler", queryString);
+        api.getAllCompliance(queryString).then((resp: any) => {
+            setAllCompliance(resp.data);
+        });
+        getContentRender();
     };
 
     const getContentRender = () => {

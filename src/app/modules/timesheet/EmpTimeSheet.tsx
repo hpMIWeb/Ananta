@@ -24,8 +24,8 @@ import {
   workAreaOpts,
   clientOpts,
   employeeOpts,
+  calculateTimeDifference,
 } from "../../utilities/utility";
-import { EmployeeReport } from "./interfaces/IEmployeeReport";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,89 +42,70 @@ const EmpTimeSheet = () => {
   const columns = [
     {
       title: "Date",
-      dataIndex: "starttime",
-      key: "starttime",
-      ellipsis: true,
-      width: 110,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="03-08-2022" className="Et4" />,
+      dataIndex: "date",
+      key: "date",
+      width: "10%",
+      sorter: (a: string, b: string) => dayjs(a).unix() - dayjs(b).unix(),
+      render: (date: string) => dayjs(date).format("DD-MM-YYYY"),
     },
     {
       title: "Client Name",
-      dataIndex: "clientname",
-      key: "cliename",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="Trusha Bhanderi" className="Et4" />,
+      dataIndex: "client",
+      key: "client",
+      sorter: (a: any, b: any) => a.client.localeCompare(b.client),
     },
     {
       title: "Task",
-      dataIndex: "Task",
-      key: "Task",
+      dataIndex: "remark",
+      key: "remark",
       width: 240,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <div className="scrollabletd">
-          organic lomo retro fanny pack lo-fi farm-to-table readymade.organic
-          lomo retro fanny pack lo-fi farm-to-table readymade.organic lomo retro
-          fanny pack lo-fi farm-to-table readymade.
-        </div>
-      ),
+      sorter: (a: any, b: any) => a.remark.localCompare(b.remark),
+      render: (remark: string) => <div className="scrollabletd">{remark}</div>,
     },
 
     {
       title: "Work Area",
-      dataIndex: "workarea",
-      key: "workarea",
+      dataIndex: "work_area",
+      key: "work_area",
       width: 120,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="GST" className="Et4" />,
+      sorter: (a: any, b: any) => a.work_area.localCompare(b.work_area),
+      render: (work_area: string) => (
+        <Input value={work_area} className="Et4" />
+      ),
     },
     {
       title: "Budget Time",
-      dataIndex: "Budget Time",
-      key: "Budget Time",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="02h 30m" className="Et4" />,
+      dataIndex: "budget_time",
+      key: "budget_time",
+      sorter: (a: any, b: any) => a.budget_time.localCompare(b.budget_time),
     },
     {
       title: "Actual Time",
-      dataIndex: "Actual Time",
-      key: "Actual Time",
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => <Input value="02h 00m" className="Et4" />,
+      dataIndex: "actual_time",
+      key: "actual_time",
+      sorter: (a: any, b: any) => a.actual_time.localCompare(b.actual_time),
     },
     {
       title: "Differance",
-      dataIndex: "Differance",
-      key: "Differance",
+      dataIndex: "total_time",
+      key: "total_time",
       width: 120,
-      sorter: (a: any, b: any) => a.any - b.any,
-      render: () => (
-        <Input value="30+" style={{ color: "green" }} className="Et4" />
-      ),
+      sorter: (a: any, b: any) => a.start_time.localCompare(b.total_time),
+      render: (total_time: string, record: any) => {
+        const { budget_time, actual_time } = record;
+        const formattedDiff = calculateTimeDifference(budget_time, actual_time);
+        // Extract the sign of the difference (+ or -)
+        const diffSign = formattedDiff.charAt(0);
+
+        // Apply different styles based on the sign of the difference
+        const textStyle = {
+          color: diffSign === "+" ? "green" : "red",
+        };
+        return <span style={textStyle}>{formattedDiff}</span>;
+      },
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-    },
-    {
-      key: "2",
-    },
-    {
-      key: "3",
-    },
-    {
-      key: "4",
-    },
-    {
-      key: "5",
-    },
-    {
-      key: "6",
-    },
-  ];
   const onTabChange = (key: string) => {
     setActiveTab(key);
   };
@@ -227,7 +208,7 @@ const EmpTimeSheet = () => {
     const queryString = parameters.join("&");
     console.log(queryString);
     try {
-      api.getEmployeeReport(queryString).then((resp: any) => {
+      api.getEmployeeTimesheetReport("?" + queryString).then((resp: any) => {
         localStorage.setItem("employeeReport", JSON.stringify(resp.data));
         setEmployeeReport(resp.data);
       });
@@ -236,6 +217,18 @@ const EmpTimeSheet = () => {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
+  };
+
+  const getData = (current: number, pageSize: number) => {
+    let returnVal = employeeReport;
+    console.log(employeeReport);
+
+    return returnVal
+      .map((item: any, index: number) => {
+        item.key = index;
+        return item;
+      })
+      .slice((current - 1) * pageSize, current * pageSize);
   };
 
   const printData = () => {
@@ -299,49 +292,76 @@ const EmpTimeSheet = () => {
             <PrinterTwoTone className="Et2" onClick={printData} />
           </span>
         </div>
-        <Select
-          allowClear
-          showSearch
-          placeholder="Employee"
-          options={employeeOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "employeeName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="clientName"
-          options={clientOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "clientName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="Work Area"
-          options={workAreaOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "workArea");
-          }}
-        />
-        <DatePicker
-          placeholder="Date"
-          className="Et3"
-          name="name"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "date");
-          }}
-        />
+        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Employee"
+              options={employeeOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "employeeName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="clientName"
+              options={clientOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "clientName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Work Area"
+              options={workAreaOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "workArea");
+              }}
+            />
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 6 }}
+            className="border-bottom"
+          >
+            <DatePicker
+              placeholder="Date"
+              className="w100 border-bottom"
+              bordered={false}
+              name="name"
+              onChange={(value, event) => {
+                getEmployeeReport(event, "date");
+              }}
+              style={{ borderBottom: "1px solid" }}
+            />
+          </Col>
+        </Row>
+
         <div className="summery">
           <ul className="summery1">
             <li className="Et7">
               <div>
-                <Image> </Image>
+                <img
+                  src={
+                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                  }
+                  alt="Assignee"
+                  className="assigneeImage"
+                />
               </div>
               <p className="Et6">Trusha Bhanderi</p>
             </li>
@@ -375,8 +395,7 @@ const EmpTimeSheet = () => {
         <div>
           <Table
             columns={columns}
-            //dataSource={getData(current, pageSize)}
-            dataSource={data}
+            dataSource={getData(current, pageSize)}
             pagination={{ defaultCurrent: 1, total: 2 }}
             onChange={onChange}
           />
