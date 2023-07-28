@@ -13,15 +13,19 @@ const Stopwatch = (props: any) => {
     const [time, setTime] = useState<number>(0);
     const [status, setStatus] = useState<string>("");
     const [showButtons, setShowButtons] = useState<Boolean>(true);
-    const [showSeconds, setShowSeconds] = useState<Boolean>(props.showSeconds);
+    const [showSeconds, setShowSeconds] = useState<Boolean>(
+        true
+        //props.showSeconds || true
+    );
+    const [label, setLabel] = useState<String>(props.label);
 
     useEffect(() => {
-        if (props.taskId) {
-            let taskTiming = getLocalStorage("task_" + props.taskId);
+        if (props.parentId) {
+            let taskTiming = getLocalStorage(label + "_" + props.parentId);
             taskTiming = taskTiming ?? "0";
             setTime(parseInt(taskTiming));
         }
-    }, [props.taskId]);
+    }, [props.parentId]);
 
     useEffect(() => {
         if (props.status) {
@@ -42,7 +46,7 @@ const Stopwatch = (props: any) => {
             // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
             intervalId = setInterval(() => {
                 setTime(time + 1);
-                setLocalstorage("task_" + props.taskId, time.toString());
+                setLocalstorage(label + "_" + props.parentId, time.toString());
             }, 10);
         }
         return () => clearInterval(intervalId);

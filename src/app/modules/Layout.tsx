@@ -37,13 +37,6 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem("Option 1", "1", <PieChartOutlined />),
-    getItem("Option 2", "2", <DesktopOutlined />),
-    getItem("User", "sub1", <UserOutlined />, [
-        getItem("Tom", "3"),
-        getItem("Bill", "4"),
-        getItem("Alex", "5"),
-    ]),
     getItem("Task Master", "/task", <TeamOutlined />, [
         getItem("Task", "/task"),
         getItem("Compliance", "/compliance"),

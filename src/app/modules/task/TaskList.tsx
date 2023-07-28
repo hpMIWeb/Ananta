@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { TabsProps } from "antd";
+import { TabsProps, Tooltip } from "antd";
 import {
     Button,
     Space,
@@ -57,7 +57,7 @@ const TaskList = () => {
     };
 
     const getTaskData = () => {
-        api.getAllTask().then((resp: any) => {
+        api.getAllTask("").then((resp: any) => {
             setAllTask(resp.data);
         });
     };
@@ -81,46 +81,61 @@ const TaskList = () => {
             dataIndex: "title",
             key: "title",
             render: (text: string) => <span className="title">{text}</span>,
-            width: "350px",
+            width: "20%",
         },
         {
             title: "client",
             dataIndex: "client",
             key: "client",
+            width: "30%",
+            render: (client: string) => (
+                <span className="clientDiv">{client}</span>
+            ),
         },
         {
             title: "assignee",
             dataIndex: "assigned_to",
             key: "assigned_to",
+            width: "20%",
+            render: (assigned_to: string) => (
+                <Tooltip title={assigned_to}>
+                    {" "}
+                    {/* Add the Tooltip component */}
+                    <div className="assigneeContainer">
+                        <img
+                            src={
+                                "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                            }
+                            alt="Assignee"
+                            className="assigneeImage"
+                        />
+                    </div>
+                </Tooltip>
+            ),
         },
         {
             title: "calendaricon",
-            key: "start_date",
-            dataIndex: "start_Date",
-            render: () => {
+            key: "due_date",
+            dataIndex: "due_date",
+            width: "10%",
+            render: (due_date: string) => {
                 return (
-                    <FontAwesomeIcon
-                        icon={faCalendarAlt}
-                        style={{
-                            fontSize: "13px",
-                        }}
-                    />
+                    <span className="clientDiv dueDate">
+                        <FontAwesomeIcon
+                            icon={faCalendarAlt}
+                            style={{ marginRight: "5px" }}
+                        />
+                        <span>{dayjs(due_date).format("DD MMM h:mma")}</span>
+                    </span>
                 );
             },
-        },
-        {
-            title: "task date",
-            dataIndex: "start_date",
-            key: "start_date",
-            render: (start_date: string) => (
-                <span>{dayjs(start_date).format(dateFormat)}</span>
-            ),
         },
 
         {
             title: "lefticon",
             key: "subtask",
             dataIndex: "subtask",
+            width: "10%",
             render: () => {
                 return (
                     <FontAwesomeIcon
@@ -136,10 +151,11 @@ const TaskList = () => {
             title: "subtask",
             key: "subtask",
             dataIndex: "subtask",
+            width: "10%",
             render: (subtask: []) => {
                 if (subtask && subtask.length > 0) {
                     return (
-                        <div key={subtask.length}>
+                        <div key={subtask.length} className="clientDiv">
                             {subtask.filter((item: ISubTask) => {
                                 return (
                                     item.status === "Completed" ||
@@ -151,7 +167,7 @@ const TaskList = () => {
                         </div>
                     );
                 } else {
-                    return <span>0/0</span>;
+                    return <span className="clientDiv">0/0</span>;
                 }
             },
         },
@@ -159,8 +175,9 @@ const TaskList = () => {
             title: "Status",
             key: "status",
             dataIndex: "status",
+
             render: (status: string) => (
-                <span>
+                <span style={{ float: "right" }}>
                     {[status].map((item) => {
                         let color = "#fb275d";
                         let title = item;
@@ -168,6 +185,10 @@ const TaskList = () => {
                             case "completed":
                             case "complete": {
                                 color = "#00ca72";
+                                break;
+                            }
+                            case "inprogress": {
+                                color = "#ffcc00";
                                 break;
                             }
                             case "in_progress": {
@@ -188,7 +209,12 @@ const TaskList = () => {
                             <Tag
                                 color={color}
                                 key={item}
-                                style={{ fontWeight: "500", fontSize: "12px" }}
+                                style={{
+                                    fontWeight: "500",
+                                    fontSize: "12px",
+                                    textAlign: "center",
+                                    minWidth: "100px",
+                                }}
                             >
                                 {title.toUpperCase()}
                             </Tag>
@@ -212,6 +238,10 @@ const TaskList = () => {
                 rowClassName = "data-row-completed";
                 break;
             }
+            case "inprogress": {
+                rowClassName = "data-row-in-progress";
+                break;
+            }
             case "in_progress": {
                 rowClassName = "data-row-in-progress";
                 break;
@@ -224,6 +254,14 @@ const TaskList = () => {
         return rowClassName;
     };
 
+    const filterHandler = (queryString: string) => {
+        console.log("clientFilterHandler", queryString);
+
+        api.getAllTask(queryString).then((resp: any) => {
+            setAllTask(resp.data);
+        });
+        getContentRender();
+    };
     const getData = (current: number, pageSize: number, rangeMode: string) => {
         let retVal: AddTask[] = [];
 
@@ -285,6 +323,8 @@ const TaskList = () => {
                     >
                         <Input
                             placeholder="Search"
+                            className="inp"
+                            bordered={false}
                             prefix={<SearchOutlined />}
                         />
                     </Col>
@@ -334,7 +374,10 @@ const TaskList = () => {
                         </a>
                     </Col>
                 </Row>
-                <Fillter showMoreFilter={showMoreFilter} />
+                <Fillter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                />
 
                 <Row
                     gutter={[8, 8]}
@@ -342,6 +385,7 @@ const TaskList = () => {
                     style={{ marginTop: "10px" }}
                 >
                     <Table
+                        id={"taskTable"}
                         showSorterTooltip={{ title: "testing functionality" }}
                         dataSource={getData(current, pageSize, "today")}
                         rowClassName={rowClassHandler}
@@ -357,6 +401,7 @@ const TaskList = () => {
                         pagination={{
                             defaultPageSize: 10,
                         }}
+                        size="small"
                         style={{ width: "100%" }}
                     />
                 </Row>
@@ -433,13 +478,17 @@ const TaskList = () => {
                         </a>
                     </Col>
                 </Row>
-                <Fillter showMoreFilter={showMoreFilter} />
+                <Fillter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                />
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
                     style={{ marginTop: "10px" }}
                 >
                     <Table
+                        id={"taskTable"}
                         dataSource={getData(current, pageSize, "upcoming")}
                         rowClassName={rowClassHandler}
                         onRow={(record, rowIndex) => {
@@ -530,13 +579,17 @@ const TaskList = () => {
                         </a>
                     </Col>
                 </Row>
-                <Fillter showMoreFilter={showMoreFilter} />
+                <Fillter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                />
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
                     style={{ marginTop: "10px" }}
                 >
                     <Table
+                        id={"taskTable"}
                         dataSource={getData(current, pageSize, "history")}
                         rowClassName={rowClassHandler}
                         onRow={(record, rowIndex) => {

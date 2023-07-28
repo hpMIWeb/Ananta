@@ -371,9 +371,10 @@ const TaskViewEdit = (props: any) => {
                         <div className="timerbuttons">
                             {taskSubTasks && taskSubTasks.length <= 0 && (
                                 <Stopwatch
-                                    taskId={updateTask._id}
+                                    parentId={updateTask._id}
                                     handleTaskStatus={handleTaskStatus}
                                     status={updateTask.status}
+                                    label={"task"}
                                 />
                             )}
                             {taskSubTasks && taskSubTasks.length > 0 && (
@@ -449,9 +450,20 @@ const TaskViewEdit = (props: any) => {
                         sm={{ span: 5 }}
                         md={{ span: props.fullScreenMode ? 4 : 12 }}
                     >
-                        Assigned To
+                        <span className="dataLabel">Assigned To</span>
                         <div>
-                            {!isEdit && <b>{updateTask.assigned_to}</b>}
+                            {!isEdit && (
+                                <div className="assigneeContainer">
+                                    <img
+                                        src={
+                                            "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                                        }
+                                        alt="Assignee"
+                                        className="assigneeImage"
+                                    />
+                                    <b>{updateTask.assigned_to}</b>
+                                </div>
+                            )}
                             {isEdit && (
                                 <Select
                                     allowClear
@@ -472,7 +484,7 @@ const TaskViewEdit = (props: any) => {
                         sm={{ span: 6 }}
                         md={{ span: props.fullScreenMode ? 6 : 12 }}
                     >
-                        Assigned Date
+                        <span className="dataLabel">Assigned Date</span>
                         <div>
                             {!isEdit && (
                                 <b>
@@ -512,7 +524,7 @@ const TaskViewEdit = (props: any) => {
                         sm={{ span: 5 }}
                         md={{ span: props.fullScreenMode ? 6 : 12 }}
                     >
-                        Due Date
+                        <span className="dataLabel">Due Date</span>
                         <div>
                             {!isEdit && (
                                 <b>
@@ -550,7 +562,7 @@ const TaskViewEdit = (props: any) => {
                         sm={{ span: 4 }}
                         md={{ span: props.fullScreenMode ? 4 : 12 }}
                     >
-                        Budget Time
+                        <span className="dataLabel">Budget Time</span>
                         <div>
                             {!isEdit && (
                                 <b>
@@ -588,7 +600,7 @@ const TaskViewEdit = (props: any) => {
                         sm={{ span: 4 }}
                         md={{ span: props.fullScreenMode ? 4 : 12 }}
                     >
-                        Actual Time
+                        <span className="dataLabel">Actual Time</span>
                         <div>
                             {
                                 <b>
@@ -623,7 +635,7 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 4 }}
                             md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
-                            Client
+                            <span className="dataLabel">Client</span>
                             <div>{<b>{updateTask.client.trim()}</b>}</div>
                         </Col>
                     )}

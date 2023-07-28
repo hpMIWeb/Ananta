@@ -10,41 +10,32 @@ import "react-quill/dist/quill.snow.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
-import { PlusOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextArea from "antd/es/input/TextArea";
 import {
-    ClientDetails as IClientDetails,
+    IClientDetails,
+    ClientDetail,
     SubCompliance as ISubCompliance,
 } from "./interfaces/ICompliance";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import dayjs from "dayjs";
 
 const ComplianceDetails = (props: any) => {
-    const [clients, setClients] = useState<IClientDetails[]>(props.data);
-    //[
-    // {
-    //     complianceDetailId: "1",
-    //     client_name: "",
-    //     actual_time: "",
-    //     assignee_to: "",
-    //     budget_time: "",
-    //     priority: "",
-    //     remark: "",
-    //     parentId: props.parentId,
-    // } as IClientDetails,
-    //]
-    const [selectedTableRow, setSelectedTableRow] = useState({
-        complianceDetailId: "1",
+    const newClientItem = {
+        complianceDetailId: "-1",
+        budget_time: "00:00",
+        parentId: props.parentId ?? -1,
         client_name: "",
-        actual_time: "",
-        assignee_to: "",
-        budget_time: "",
         priority: "",
+        assigned_to: "",
         remark: "",
-        parentId: props.parentId,
-    } as IClientDetails);
+    } as IClientDetails;
+
+    const [clients, setClients] = useState<IClientDetails[]>(
+        props.data && props.data.length > 0 ? props.data : [newClientItem]
+    );
+    const [selectedTableRow, setSelectedTableRow] = useState(newClientItem);
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
 
     const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
@@ -53,7 +44,7 @@ const ComplianceDetails = (props: any) => {
 
     const editColumns = [
         {
-            title: "Action",
+            title: "Actions",
             dataIndex: "action",
             key: "action",
             align: "center",
@@ -76,6 +67,7 @@ const ComplianceDetails = (props: any) => {
             title: "Client",
             dataIndex: "client",
             key: "client",
+            width: "20%",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
                     name={
@@ -117,6 +109,7 @@ const ComplianceDetails = (props: any) => {
             title: "Assign To",
             dataIndex: "assignTo",
             key: "assignTo",
+            width: "20%",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
                     name={
@@ -141,7 +134,7 @@ const ComplianceDetails = (props: any) => {
                         options={assigneeOpts}
                         className="w100"
                         onChange={(value, event) => {
-                            inputChangeHandler(event, "assignee_to");
+                            inputChangeHandler(event, "assigned_to");
                         }}
                         defaultValue={record.assigned_to}
                     />
@@ -152,6 +145,7 @@ const ComplianceDetails = (props: any) => {
             title: "Budget Time",
             dataIndex: "budgetTime",
             key: "budgetTime",
+            width: "8rem",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
                     name={
@@ -186,6 +180,7 @@ const ComplianceDetails = (props: any) => {
             title: "Priority",
             dataIndex: "priority",
             key: "priority",
+            width: "10rem",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
                     name={
@@ -238,9 +233,17 @@ const ComplianceDetails = (props: any) => {
             title: "Action",
             dataIndex: "_id",
             key: "_id",
+            align: "center",
+            width: "15rem",
             render: (text: any, record: any, index: number) => (
                 <div className="timerbuttons">
-                    <Stopwatch />
+                    <Stopwatch
+                        label={"compliance"}
+                        parentId={record._id}
+                        handleTaskStatus={props.handleTaskStatus} //TODO: need to implement
+                        status={record.status}
+                        showSeconds={true}
+                    />
                 </div>
             ),
         },
@@ -248,6 +251,7 @@ const ComplianceDetails = (props: any) => {
             title: "Client Name",
             dataIndex: "client_name",
             key: "client_name",
+            width: "15rem",
             sorter: (a: any, b: any) =>
                 a.client_name.localeCompare(b.client_name),
             //sortDirections: ["descend", "ascend"],
@@ -256,6 +260,7 @@ const ComplianceDetails = (props: any) => {
             title: "Assign To",
             dataIndex: "assigned_to",
             key: "assigned_to",
+            width: "15rem",
             sorter: (a: any, b: any) =>
                 a.assigned_to.localeCompare(b.assigned_to),
         },
@@ -263,6 +268,7 @@ const ComplianceDetails = (props: any) => {
             title: "Sub Compliance",
             dataIndex: "subCompliance",
             key: "subCompliance",
+            width: "12rem",
             render: (text: any, record: any) => {
                 let currentClientCount = 0;
                 let completedCount = 0;
@@ -303,6 +309,8 @@ const ComplianceDetails = (props: any) => {
             title: "Budget Time",
             dataIndex: "budget_time",
             key: "budget_time",
+            align: "center",
+            width: "10rem",
             render: (item: string) => {
                 return formatTime(item);
             },
@@ -312,6 +320,8 @@ const ComplianceDetails = (props: any) => {
             title: "Actual Time",
             dataIndex: "actual_time",
             key: "actual_time",
+            align: "center",
+            width: "10rem",
             render: (item: string) => {
                 return formatTime(item);
             },
@@ -333,15 +343,15 @@ const ComplianceDetails = (props: any) => {
             value = event.value;
         }
 
-        Object.keys(selectedTableRow).map((keyItem: string) => {
+        Object.keys(new ClientDetail()).map((keyItem: string) => {
             if (keyItem === name) {
                 switch (keyItem) {
                     case "client_name": {
                         selectedTableRow.client_name = value;
                         break;
                     }
-                    case "assignee_to": {
-                        selectedTableRow.assignee_to = value;
+                    case "assigned_to": {
+                        selectedTableRow.assigned_to = value;
                         break;
                     }
                     case "budget_time": {
@@ -373,27 +383,24 @@ const ComplianceDetails = (props: any) => {
     const removeComplianceDetails = (item: IClientDetails) => {
         const index = clients.indexOf(item);
         if (index > -1) {
-            const compliance = clients.filter((compliance: any) => {
+            const selectedClients = clients.filter((compliance: any) => {
                 return (
                     compliance.complianceDetailId !== item.complianceDetailId
                 );
             });
-            setClients(compliance);
+            setClients(selectedClients);
+
+            // update parent component
+            if (props.updateClients) {
+                props.updateClients(selectedClients);
+            }
         }
     };
 
     const addNewComplianceDetails = () => {
         const new_id = clients.length + 1;
-        const newClient = {
-            complianceDetailId: new_id.toString(),
-            client_name: "",
-            actual_time: "",
-            assignee_to: "",
-            budget_time: "",
-            priority: "",
-            remark: "",
-            parentId: props.parentId,
-        } as IClientDetails;
+        const newClient = newClientItem;
+        newClient.complianceDetailId = new_id.toString();
         setClients([...clients, newClient]);
 
         // update parent component
@@ -408,10 +415,7 @@ const ComplianceDetails = (props: any) => {
 
     return (
         <>
-            <div
-                className="sub-task-add"
-                style={{ display: props.isAllowAdd ? "block" : "none" }}
-            >
+            <div style={{ display: props.isAllowAdd ? "block" : "none" }}>
                 {/* <Button
                     type="primary"
                     icon={<PlusOutlined />}
@@ -421,20 +425,24 @@ const ComplianceDetails = (props: any) => {
                     Add
                 </Button> */}
             </div>
-            <Table
-                rowKey={(record) => record.complianceDetailId}
-                dataSource={clients}
-                columns={isEdit ? editColumns : columns}
-                pagination={false}
-                onRow={(record, rowIndex) => {
-                    return {
-                        onClick: (event) => {
-                            setSelectedTableRow(record);
-                        },
-                    };
-                }}
-                {...props}
-            />
+            <div className="client-details">
+                <Table
+                    rowKey={(record) => record.complianceDetailId}
+                    dataSource={clients}
+                    columns={isEdit ? editColumns : columns}
+                    pagination={false}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => {
+                                setSelectedTableRow(record);
+                            },
+                        };
+                    }}
+                    className="table-striped-rows"
+                    bordered
+                    {...props}
+                />
+            </div>
         </>
     );
 };

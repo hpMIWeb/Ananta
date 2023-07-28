@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import type { CollapseProps } from "antd";
 import {
     Select,
     Form,
@@ -7,32 +6,25 @@ import {
     Col,
     Divider,
     Typography,
-    DatePicker,
-    TimePicker,
-    Input,
-    Button,
     Collapse,
-    Table,
     Tag,
+    Input,
 } from "antd";
 
 import {
-    assigneeOpts,
     capitalize,
-    dateFormat,
     formatTime,
     priorityOpts,
     statusColors,
     statusList,
     upperText,
     Status,
+    getTotalTime,
 } from "../../utilities/utility";
 import parse from "html-react-parser";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
-
 import {
     faEdit,
     faExpandArrowsAlt,
@@ -49,16 +41,15 @@ import api from "../../utilities/apiServices";
 import {
     AddCompliance as IAddCompliance,
     SubCompliance as ISubCompliance,
-    ClientDetails as IClientDetails,
+    IClientDetails,
     SaveComplianceComment,
 } from "./interfaces/ICompliance";
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
-import SubCompliance from "./SubCompliance";
 import SubComplianceViewEdit from "./SubComplianceViewEdit";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
 import Comments from "../../components/Comments/Comments";
-import type { ColumnsType, TableProps } from "antd/es/table";
+import type { TableProps } from "antd/es/table";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -74,6 +65,7 @@ const ComplianceViewEdit = (props: any) => {
     const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
         props.tableRowSelected.subcompliance ?? []
     );
+    const [currentCollapse, setCurrentCollapse] = useState<string>("");
 
     interface DataType {
         key: React.Key;
@@ -129,8 +121,6 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const statusChangeHandler = (event: any, value: string) => {
-        console.log("Status change - ", event);
-
         const complianceUpdate = {} as IAddCompliance;
         complianceUpdate.status = value;
 
@@ -155,7 +145,6 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     useEffect(() => {
-        console.log(props.tableRowSelected.clients);
         setUpdateCompliance(props.tableRowSelected);
         setSubCompliances(props.tableRowSelected.subcompliance);
         setComplianceComments(props.tableRowSelected.comments);
@@ -174,8 +163,6 @@ const ComplianceViewEdit = (props: any) => {
             name = event.name;
             value = event.value;
         }
-
-        console.log(name, value);
 
         const taskUpdate = {} as IAddCompliance;
         taskUpdate.status = value;
@@ -286,7 +273,11 @@ const ComplianceViewEdit = (props: any) => {
                 <div
                     className="task-header-cell"
                     style={{
-                        flex: props.fullScreenMode ? 5 : 7,
+                        flex: props.fullScreenMode
+                            ? index.toString() !== currentCollapse
+                                ? 5
+                                : 15
+                            : 7,
                     }}
                 >
                     {subComplianceItem.title}
@@ -308,68 +299,73 @@ const ComplianceViewEdit = (props: any) => {
                         {getSubCompliancesCount(subComplianceItem)}
                     </>
                 </div>
-                {/* {props.fullScreenMode && (
+                {props.fullScreenMode &&
+                    index.toString() !== currentCollapse && (
                         <div className="task-header-cell">
-                            {
-                                subComplianceItem.assigned_to
-                            }
+                            <FontAwesomeIcon
+                                icon={faClock}
+                                className="timer-play"
+                                style={{
+                                    marginRight: "10px",
+                                }}
+                            />
+                            {formatTime(subComplianceItem.budget_time)}
                         </div>
-                    )} */}
-                {props.fullScreenMode && (
-                    <div className="task-header-cell">
+                    )}
+                {index.toString() !== currentCollapse && (
+                    <div
+                        className="task-header-cell"
+                        style={{
+                            flex: props.fullScreenMode ? 1 : 2,
+                        }}
+                    >
                         <FontAwesomeIcon
-                            icon={faClock}
+                            icon={faCommentDots}
                             className="timer-play"
                             style={{
                                 marginRight: "10px",
                             }}
                         />
-                        {formatTime(subComplianceItem.budget_time)}
+                        {subComplianceItem.comments
+                            ? subComplianceItem.comments.length
+                            : 0}
                     </div>
                 )}
-                <div
-                    className="task-header-cell"
-                    style={{
-                        flex: props.fullScreenMode ? 1 : 2,
-                    }}
-                >
-                    <FontAwesomeIcon
-                        icon={faCommentDots}
-                        className="timer-play"
-                        style={{
-                            marginRight: "10px",
-                        }}
-                    />
-                    {subComplianceItem.comments
-                        ? subComplianceItem.comments.length
-                        : 0}
-                </div>
-                <div className="task-header-cell">
-                    {props.fullScreenMode && (
-                        <Tag
-                            color={statusColors(subComplianceItem.status)}
-                            style={{
-                                fontWeight: "500",
-                                fontSize: "12px",
-                            }}
-                        >
-                            {upperText(subComplianceItem.status)}
-                        </Tag>
-                    )}
-                </div>
-                <div
-                    className={`task-header-cell ${
-                        props.fullScreenMode ? "" : "task_priorty"
-                    } ${subComplianceItem.priority} ${
-                        subComplianceItem.priority === "high" ? "blink" : ""
-                    }`}
-                >
-                    {props.fullScreenMode
-                        ? capitalize(subComplianceItem.priority)
-                        : " "}
-                </div>
+                {index.toString() !== currentCollapse && (
+                    <div className="task-header-cell">
+                        {props.fullScreenMode && (
+                            <Tag
+                                color={statusColors(subComplianceItem.status)}
+                                style={{
+                                    fontWeight: "500",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {upperText(subComplianceItem.status)}
+                            </Tag>
+                        )}
+                    </div>
+                )}
+                {index.toString() !== currentCollapse && (
+                    <div
+                        className={`task-header-cell ${
+                            props.fullScreenMode ? "" : "task_priorty"
+                        } ${subComplianceItem.priority} ${
+                            subComplianceItem.priority === "high" ? "blink" : ""
+                        }`}
+                    >
+                        {props.fullScreenMode
+                            ? capitalize(subComplianceItem.priority)
+                            : " "}
+                    </div>
+                )}
             </div>
         );
+    };
+
+    const collapseChangeHandler = (key: string | string[]) => {
+        const selectedKey = key.length > 0 ? key[0] : "";
+        setCurrentCollapse(selectedKey);
     };
 
     return (
@@ -419,7 +415,7 @@ const ComplianceViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: 5 }}
+                            md={{ span: props.fullScreenMode ? 4 : 5 }}
                         >
                             <Title level={5} style={{ textAlign: "right" }}>
                                 {capitalize(updateCompliance.assignee)}
@@ -428,7 +424,7 @@ const ComplianceViewEdit = (props: any) => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: props.fullScreenMode ? 2 : 4 }}
+                            md={{ span: props.fullScreenMode ? 3 : 4 }}
                         >
                             <FontAwesomeIcon
                                 icon={
@@ -501,17 +497,22 @@ const ComplianceViewEdit = (props: any) => {
                                 {subCompliances &&
                                     subCompliances.length <= 0 && (
                                         <Stopwatch
-                                            taskId={updateCompliance._id}
+                                            parentId={updateCompliance._id}
                                             handleTaskStatus={handleTaskStatus}
+                                            status={updateCompliance.status}
+                                            label={"compliance"}
                                         />
                                     )}
                                 {subCompliances &&
                                     subCompliances.length > 0 && (
                                         <span className="stopwatch-time">
-                                            00:
-                                            {"00".toString().padStart(2, "0")}:
-                                            {"00".toString().padStart(2, "0")}:
-                                            {"00".toString().padStart(2, "0")}
+                                            {getTotalTime(
+                                                subCompliances.map(
+                                                    (item: ISubCompliance) => {
+                                                        return item.actual_time;
+                                                    }
+                                                )
+                                            )}
                                         </span>
                                     )}
                             </div>
@@ -530,6 +531,8 @@ const ComplianceViewEdit = (props: any) => {
                                         marginRight: "30px",
                                     }}
                                     className={`text-priority ${
+                                        updateCompliance.priority
+                                    } ${
                                         updateCompliance.priority === "high"
                                             ? "blink"
                                             : ""
@@ -603,12 +606,6 @@ const ComplianceViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            {/* <Table
-                                id="complianceClients"
-                                dataSource={updateCompliance.clients}
-                                columns={isEdit ? editColumns : columns}
-                                scroll={{ x: 1000 }}
-                            /> */}
                             <ComplianceDetails
                                 id="complianceClients"
                                 isEdit={isEdit}
@@ -628,7 +625,11 @@ const ComplianceViewEdit = (props: any) => {
                                 Sub-Compliance
                             </Title>
 
-                            <Collapse expandIconPosition="end">
+                            <Collapse
+                                expandIconPosition="end"
+                                onChange={collapseChangeHandler}
+                                accordion
+                            >
                                 {updateCompliance.subcompliance.map(
                                     (
                                         subComplianceItem: ISubCompliance,
