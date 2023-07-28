@@ -292,49 +292,76 @@ const EmpTimeSheet = () => {
             <PrinterTwoTone className="Et2" onClick={printData} />
           </span>
         </div>
-        <Select
-          allowClear
-          showSearch
-          placeholder="Employee"
-          options={employeeOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "employeeName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="clientName"
-          options={clientOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "clientName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="Work Area"
-          options={workAreaOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "workArea");
-          }}
-        />
-        <DatePicker
-          placeholder="Date"
-          className="Et3"
-          name="name"
-          onChange={(value, event) => {
-            getEmployeeReport(event, "date");
-          }}
-        />
+        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Employee"
+              options={employeeOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "employeeName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="clientName"
+              options={clientOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "clientName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Work Area"
+              options={workAreaOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getEmployeeReport(event, "workArea");
+              }}
+            />
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 6 }}
+            className="border-bottom"
+          >
+            <DatePicker
+              placeholder="Date"
+              className="w100 border-bottom"
+              bordered={false}
+              name="name"
+              onChange={(value, event) => {
+                getEmployeeReport(event, "date");
+              }}
+              style={{ borderBottom: "1px solid" }}
+            />
+          </Col>
+        </Row>
+
         <div className="summery">
           <ul className="summery1">
             <li className="Et7">
               <div>
-                <Image> </Image>
+                <img
+                  src={
+                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                  }
+                  alt="Assignee"
+                  className="assigneeImage"
+                />
               </div>
               <p className="Et6">Trusha Bhanderi</p>
             </li>

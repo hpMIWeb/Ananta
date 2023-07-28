@@ -457,19 +457,21 @@ const TimeSheet = () => {
       },
       render: (total_time: string, record: Timesheet) => {
         if (!record.is_edit) {
-          return (
-            <span className="totalTimeDisplay">
-              <b>
-                <ClockCircleOutlined
-                  style={{
-                    color: "#2c7be5",
-                    marginRight: "10px",
-                  }}
-                />
-                {record.total_time}
-              </b>
-            </span>
-          );
+          if (record.total_time !== "") {
+            return (
+              <span className="totalTimeDisplay">
+                <b>
+                  <ClockCircleOutlined
+                    style={{
+                      color: "#2c7be5",
+                      marginRight: "10px",
+                    }}
+                  />
+                  {record.total_time}
+                </b>
+              </span>
+            );
+          }
         }
         if (record.is_new || !record.start_time || !record.end_time) {
           return null; // Hide the column for new entries or if start time or end time is empty
@@ -489,11 +491,13 @@ const TimeSheet = () => {
           .toString()
           .padStart(2, "0")}`;
 
-        return (
-          <span className="totalTimeDisplay" id={`total_time_${record._id}`}>
-            {formattedDuration}
-          </span>
-        );
+        if (formattedDuration !== "") {
+          return (
+            <span className="totalTimeDisplay" id={`total_time_${record._id}`}>
+              {formattedDuration}
+            </span>
+          );
+        }
       },
     },
     {

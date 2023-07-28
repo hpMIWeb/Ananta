@@ -296,89 +296,114 @@ const ClientTimeSheet = () => {
             <PrinterTwoTone className="Et2" onClick={printData} />
           </span>
         </div>
-        <Select
-          allowClear
-          showSearch
-          placeholder="clientName*"
-          options={clientOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getClientReport(event, "clientName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="Employee"
-          options={employeeOpts}
-          className="Ct1"
-          onChange={(value, event) => {
-            getClientReport(event, "employeeName");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="Work Area"
-          options={workAreaOpts}
-          className="Et3"
-          onChange={(value, event) => {
-            getClientReport(event, "workArea");
-          }}
-        />
-        <DatePicker
-          placeholder="Date"
-          className="Et3"
-          name="name"
-          onChange={(value, event) => {
-            getClientReport(event, "date");
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          placeholder="Charges"
-          options={chargesOpts}
-          className="Ct1"
-          onChange={(value, event) => {
-            getClientReport(event, "billable");
-          }}
-        />
-        {/* <div className="summery">
-          <ul className="summery1">
-            <li className="Et7">
-              <div>
-                <Image src="" />
-              </div>
-              <p className="Et6">Trusha Bhanderi</p>
-            </li>
-            <Divider type="vertical" />
-            <li className="Et7">
-              <p className="Et6">23-05-2022 To 30-05-2022</p>
-              <p className="Et8">Time Period</p>
-            </li>
-            <Divider type="vertical" />
-            <li className="Et7">
-              <p className="Et6">20</p>
-              <p className="Et8">Total Task</p>
-            </li>
-            <Divider type="vertical" />
-            <li className="Et7">
-              <p className="Et6">25h 30m</p>
-              <p className="Et8">Total Budget Time</p>
-            </li>
-            <Divider type="vertical" />
-            <li className="Et7">
-              <p className="Et6">35h 30m</p>
-              <p className="Et8">Total Actual Time</p>
-            </li>
-            <Divider type="vertical" />
-            <li className="Et7">
-              <p className="Et6">35h 30m</p>
-              <p className="Et8">Total Difference</p>
-            </li>
-          </ul>
-        </div> */}
+        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="clientName*"
+              options={clientOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getClientReport(event, "clientName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+            {" "}
+            <Select
+              allowClear
+              showSearch
+              placeholder="Employee"
+              options={employeeOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getClientReport(event, "employeeName");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Work Area"
+              options={workAreaOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getClientReport(event, "workArea");
+              }}
+            />
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 4 }}
+            className="border-bottom"
+          >
+            <DatePicker
+              placeholder="Date"
+              className="w100 border-bottom"
+              bordered={false}
+              name="name"
+              onChange={(value, event) => {
+                getClientReport(event, "date");
+              }}
+            />
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
+            <Select
+              allowClear
+              showSearch
+              placeholder="Charges"
+              options={chargesOpts}
+              className="w100 border-bottom"
+              bordered={false}
+              onChange={(value, event) => {
+                getClientReport(event, "billable");
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+          <div className="summery">
+            <ul className="summery1">
+              <li className="Et7">
+                <div>
+                  <Image src="" />
+                </div>
+                <p className="Et6">Trusha Bhanderi</p>
+              </li>
+              <Divider type="vertical" />
+              <li className="Et7">
+                <p className="Et6">23-05-2022 To 30-05-2022</p>
+                <p className="Et8">Time Period</p>
+              </li>
+              <Divider type="vertical" />
+              <li className="Et7">
+                <p className="Et6">20</p>
+                <p className="Et8">Total Task</p>
+              </li>
+              <Divider type="vertical" />
+              <li className="Et7">
+                <p className="Et6">25h 30m</p>
+                <p className="Et8">Total Budget Time</p>
+              </li>
+              <Divider type="vertical" />
+              <li className="Et7">
+                <p className="Et6">35h 30m</p>
+                <p className="Et8">Total Actual Time</p>
+              </li>
+              <Divider type="vertical" />
+              <li className="Et7">
+                <p className="Et6">35h 30m</p>
+                <p className="Et8">Total Difference</p>
+              </li>
+            </ul>
+          </div>
+        </Row>
         <div>
           <Table
             columns={columns}

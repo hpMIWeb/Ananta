@@ -90,7 +90,7 @@ const ComplianceList = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      width: "30%",
+      width: "40%",
       render: (text: string) => <span className="title">{text}</span>,
     },
     {
@@ -427,21 +427,25 @@ const ComplianceList = () => {
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 8 }}
+            md={{ span: 10 }}
             style={{
               float: "right",
               marginBottom: "10px",
               marginTop: "10px",
             }}
           >
-            <Input placeholder="Search" prefix={<SearchOutlined />} />
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              className="w100 border-bottom"
+              bordered={false}
+            />
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 8 }}
+            md={{ span: 4 }}
             style={{
-              float: "right",
               marginBottom: "10px",
               marginTop: "10px",
             }}
@@ -499,7 +503,6 @@ const ComplianceList = () => {
             className=""
             columns={colInfo}
             showHeader={false}
-            pagination={false}
             style={{ width: "100%" }}
             size="small"
             showSorterTooltip
@@ -519,7 +522,8 @@ const ComplianceList = () => {
               showSearch
               placeholder="Client"
               options={clientOpts}
-              className="w100"
+              className="w100 border-bottom"
+              bordered={false}
             />
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
@@ -528,10 +532,16 @@ const ComplianceList = () => {
               showSearch
               placeholder="Report Type"
               options={complianceReportOpts}
-              className="w100"
+              className="w100 border-bottom"
+              bordered={false}
             />
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            style={{ float: "right" }}
+          >
             <a
               className="btn-link expanddiv"
               href="#"

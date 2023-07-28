@@ -96,7 +96,7 @@ const Fillter = (prop: any) => {
     <>
       <Row
         gutter={[8, 8]}
-        className={`mt-f10 orm-row ${
+        className={`mt-10 form-row ${
           prop.showMoreFilter
             ? "fade-down-enter-active"
             : "fade-up-enter-active"
