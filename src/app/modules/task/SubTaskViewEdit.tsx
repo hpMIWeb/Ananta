@@ -278,10 +278,11 @@ const SubTaskViewEdit = (props: any) => {
                     >
                         <div className="timerbuttons">
                             <Stopwatch
-                                taskId={updateSubTask._id}
+                                parentId={updateSubTask._id}
                                 handleTaskStatus={handleTaskStatus}
                                 status={updateSubTask.status}
                                 showSeconds={true}
+                                label={"task"}
                             />
                         </div>
                     </Col>

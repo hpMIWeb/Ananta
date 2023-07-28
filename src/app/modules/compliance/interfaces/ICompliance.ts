@@ -14,7 +14,7 @@ export interface AddCompliance {
     billable: string;
     assignee: string;
     dataPath: string;
-    clients: ClientDetails[];
+    clients: IClientDetails[];
     subcompliance: SubCompliance[];
     comments: [];
 }
@@ -25,11 +25,12 @@ export interface SubCompliance {
     status: string;
     mode: string;
     budget_time: string;
+    actual_time: string;
     remark: string;
     priority: string;
     workArea: string;
     complianceId?: string;
-    clients: ClientDetails[];
+    clients: IClientDetails[];
     comments: [];
 }
 
@@ -40,10 +41,11 @@ export interface UpdateSubCompliance {
     status: string;
     mode: string;
     budget_time: string;
+    actual_time: string;
     remark: string;
     priority: string;
     workArea: string;
-    clients: ClientDetails[];
+    clients: IClientDetails[];
     // comments: [];
 }
 
@@ -81,13 +83,24 @@ export interface TimerDetail {
     milliseconds: number;
 }
 
-export interface ClientDetails {
+export interface IClientDetails {
     complianceDetailId: string;
     client_name: string;
-    assignee_to: string;
+    assigned_to: string;
     budget_time: string;
     actual_time: string;
     priority: string;
     remark: string;
     parentId: string;
+}
+
+export class ClientDetail implements IClientDetails {
+    complianceDetailId: string = "";
+    client_name: string = "";
+    assigned_to: string = "";
+    budget_time: string = "";
+    actual_time: string = "";
+    priority: string = "";
+    remark: string = "";
+    parentId: string = "";
 }

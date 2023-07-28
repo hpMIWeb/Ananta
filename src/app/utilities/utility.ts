@@ -253,17 +253,19 @@ export const getTotalTime = (actualTimes: string[]) => {
     let sum_minutes = 0;
 
     if (actualTimes.length > 0) {
-        actualTimes.map((actualTime: string) => {
-            const splitTime = actualTime.split(":");
-            const hours_item = parseInt(splitTime[0]);
-            const minute_item = parseInt(splitTime[1]);
+        actualTimes.forEach((actualTime: string) => {
+            if (actualTime !== "" && actualTime !== undefined) {
+                const splitTime = actualTime.split(":");
+                const hours_item = parseInt(splitTime[0]);
+                const minute_item = parseInt(splitTime[1]);
 
-            sum_minutes += minute_item;
+                sum_minutes += minute_item;
 
-            // Convert hours into minutes and add into total minutes
-            if (hours_item > 0) {
-                const min_from_hours = hours_item * 60;
-                sum_minutes += min_from_hours;
+                // Convert hours into minutes and add into total minutes
+                if (hours_item > 0) {
+                    const min_from_hours = hours_item * 60;
+                    sum_minutes += min_from_hours;
+                }
             }
         });
     }
@@ -272,11 +274,11 @@ export const getTotalTime = (actualTimes: string[]) => {
 };
 
 const timeConvert = (mins: number) => {
-    var num = mins;
-    var hours = num / 60;
-    var rhours = Math.floor(hours);
-    var minutes = (hours - rhours) * 60;
-    var rminutes = Math.round(minutes);
+    const num = mins;
+    const hours = num / 60;
+    const rhours = Math.floor(hours);
+    const minutes = (hours - rhours) * 60;
+    const rminutes = Math.round(minutes);
 
     return `${padStartNumber(rhours, 2)}:${padStartNumber(rminutes, 2)}`;
 };

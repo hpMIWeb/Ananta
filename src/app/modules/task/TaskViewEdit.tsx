@@ -371,9 +371,10 @@ const TaskViewEdit = (props: any) => {
                         <div className="timerbuttons">
                             {taskSubTasks && taskSubTasks.length <= 0 && (
                                 <Stopwatch
-                                    taskId={updateTask._id}
+                                    parentId={updateTask._id}
                                     handleTaskStatus={handleTaskStatus}
                                     status={updateTask.status}
+                                    label={"task"}
                                 />
                             )}
                             {taskSubTasks && taskSubTasks.length > 0 && (

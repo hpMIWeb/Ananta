@@ -37,7 +37,7 @@ const Comments = (props: any) => {
     const { Title } = Typography;
 
     useEffect(() => {
-        console.log("render", "test");
+        // console.log("render", "test");
     }, []);
 
     const inputChangeHandler = (event: any) => {

@@ -14,7 +14,7 @@ import {
     Divider,
     Table,
 } from "antd";
-import SubCompliance from "./SubCompliance";
+import AddSubCompliance from "./AddSubCompliance";
 import {
     priorityOpts,
     chargesOpts,
@@ -29,7 +29,7 @@ import "react-quill/dist/quill.snow.css";
 import {
     AddCompliance as IAddCompliance,
     SubCompliance as ISubCompliance,
-    ClientDetails as IClientDetails,
+    IClientDetails,
     ComplianceTimer,
     TimerOpts,
 } from "./interfaces/ICompliance";
@@ -57,7 +57,7 @@ const AddCompliance = () => {
     // local states
     const [showSubCompliance, setShowSubCompliance] = useState<boolean>(false);
     const [addCompliance, setAddCompliance] = useState<IAddCompliance>({
-        status: "Pending",
+        status: "pending",
         start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
         title: "",
         actual_time: "",
@@ -96,7 +96,7 @@ const AddCompliance = () => {
             value = event.value;
         }
 
-        console.log(name, value);
+        console.log("Compliance Remark");
 
         setAddCompliance({
             ...addCompliance,
@@ -212,6 +212,7 @@ const AddCompliance = () => {
                               status: item.status,
                               mode: item.status,
                               budget_time: item.budget_time,
+                              actual_time: "",
                               remark: item.remark,
                               priority: item.priority,
                               workArea: item.workArea,
@@ -223,24 +224,30 @@ const AddCompliance = () => {
 
             setAddCompliance(addCompliance);
 
-            console.log("before same subCompliance - ", subCompliance);
+            console.log(
+                "before same subCompliance - ",
+                subCompliance,
+                addCompliance
+            );
+
+            alert("Save compliance");
 
             // Save to DB
-            try {
-                api.createCompliance(addCompliance).then((resp: any) => {
-                    const fields = form.getFieldsValue();
-                    Object.keys(fields).forEach((field) => {
-                        form.setFieldsValue({ [field]: undefined });
-                    });
-                    toast.success("Successfully Created Compliance", {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
-                });
-            } catch (ex) {
-                toast.error("Technical error while creating Compliance", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            }
+            // try {
+            //     api.createCompliance(addCompliance).then((resp: any) => {
+            //         const fields = form.getFieldsValue();
+            //         Object.keys(fields).forEach((field) => {
+            //             form.setFieldsValue({ [field]: undefined });
+            //         });
+            //         toast.success("Successfully Created Compliance", {
+            //             position: toast.POSITION.TOP_RIGHT,
+            //         });
+            //     });
+            // } catch (ex) {
+            //     toast.error("Technical error while creating Compliance", {
+            //         position: toast.POSITION.TOP_RIGHT,
+            //     });
+            // }
         }
     };
 
@@ -345,6 +352,7 @@ const AddCompliance = () => {
                                     inputChangeHandler(event);
                                 }}
                                 value={addCompliance.mode}
+                                showSearch={true}
                                 onInputKeyDown={(event) => {
                                     if (event.keyCode === 9) {
                                         // console.log(event.keyCode, event);
@@ -372,7 +380,7 @@ const AddCompliance = () => {
                             ]}
                         >
                             <Input
-                                placeholder="Compliance"
+                                placeholder="Compliance Name"
                                 name="title"
                                 value={addCompliance.title}
                                 onChange={(event) => {
@@ -397,6 +405,7 @@ const AddCompliance = () => {
                                 options={workAreaOpts}
                                 value={addCompliance.workArea}
                                 className="w100"
+                                showSearch={true}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event);
                                 }}
@@ -416,12 +425,13 @@ const AddCompliance = () => {
                             ]}
                         >
                             <ReactQuill
+                                id={"compliance_" + addCompliance._id}
                                 theme="snow"
                                 value={addCompliance.remark}
-                                placeholder="Remark"
-                                onChange={(event) => {
-                                    inputChangeHandler(event, "remark");
-                                }}
+                                placeholder="Compliance Remark"
+                                // onChange={(event) => {
+                                //     inputChangeHandler(event, "remark");
+                                // }}
                             />
                         </Form.Item>
                     </Col>
@@ -470,6 +480,7 @@ const AddCompliance = () => {
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
+                                showSearch={true}
                             />
                         </Form.Item>
                     </Col>
@@ -492,6 +503,7 @@ const AddCompliance = () => {
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
+                                showSearch={true}
                             ></Select>
                         </Form.Item>
                     </Col>
@@ -503,6 +515,9 @@ const AddCompliance = () => {
                             isAllowAdd={true}
                             parentTitle="compliance"
                             parentId={addCompliance._id}
+                            scroll={{ x: 1000 }}
+                            data={[]}
+                            isEdit={true}
                         />
                     </Col>
                 </Row>
@@ -522,7 +537,7 @@ const AddCompliance = () => {
                     className={"form-row " + (!showSubCompliance ? "hide" : "")}
                 >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <SubCompliance
+                        <AddSubCompliance
                             subComponentsHandler={updateSubComponents}
                         />
                     </Col>

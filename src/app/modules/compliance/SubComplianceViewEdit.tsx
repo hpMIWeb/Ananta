@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from "react";
-import {
-    Form,
-    Input,
-    Button,
-    Select,
-    Row,
-    Col,
-    Divider,
-    TimePicker,
-    Table,
-} from "antd";
+import { Input, Select, Row, Col, Divider, Table, Typography } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
+    Status,
+    capitalize,
+    getTotalTime,
     priorityOpts,
-    workAreaOpts,
     statusList,
 } from "../../utilities/utility";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
     SubCompliance as ISubCompliance,
-    ClientDetails as IClientDetails,
-    AddCompliance,
+    IClientDetails,
     SubCompliance,
     UpdateSubCompliance,
 } from "./interfaces/ICompliance";
 import "./subCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
+import parse from "html-react-parser";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
 import type { ColumnsType, TableProps } from "antd/es/table";
+import Comments from "../../components/Comments/Comments";
+const { Title } = Typography;
 
 const SubComplianceViewEdit = (props: any) => {
     const [subCompliances, setSubCompliance] = useState<ISubCompliance[]>([
@@ -40,17 +34,20 @@ const SubComplianceViewEdit = (props: any) => {
         } as ISubCompliance,
     ]);
 
-    const [complianceDetails, setComplianceDetails] = useState<
-        IClientDetails[]
-    >([]);
+    // const [subComplianceClients, setSubComplianceClients] = useState<
+    //     IClientDetails[]
+    // >([]);
 
     useEffect(() => {
-        console.log(props);
         if (props.subComplianceData) {
             setSubCompliance([props.subComplianceData]);
-            setComplianceDetails([props.subComplianceData.clients]);
+            //setSubComplianceClients([props.subComplianceData.clients]);
         }
-    }, []);
+    }, [props.subComplianceData]);
+
+    useEffect(() => {
+        console.log(subCompliances);
+    }, [subCompliances]);
 
     const dividerRow = () => {
         return (
@@ -88,8 +85,6 @@ const SubComplianceViewEdit = (props: any) => {
             return item;
         });
 
-        console.log(name, value, updatedCompliance);
-
         setSubCompliance(updatedCompliance);
     };
 
@@ -113,50 +108,6 @@ const SubComplianceViewEdit = (props: any) => {
         });
     };
 
-    const columns: ColumnsType<DataType> = [
-        {
-            title: "Action",
-            dataIndex: "_id",
-            key: "_id",
-            render: (text: any, record: any, index: number) => (
-                <div className="timerbuttons">
-                    <Stopwatch />
-                </div>
-            ),
-        },
-        {
-            title: "Client Name",
-            dataIndex: "client_name",
-            key: "client_name",
-            sorter: (a: any, b: any) => a.client_name - b.client_name,
-            sortDirections: ["descend", "ascend"],
-        },
-        {
-            title: "Assign To",
-            dataIndex: "assigned_to",
-            key: "assigned_to",
-            sorter: (a: any, b: any) => a.assigned_to - b.assigned_to,
-        },
-        {
-            title: "Remarks",
-            dataIndex: "remark",
-            key: "remark",
-            sorter: (a: any, b: any) => a.remark - b.remark,
-        },
-        {
-            title: "Budget Time",
-            dataIndex: "budget_time",
-            key: "budget_time",
-            sorter: (a: any, b: any) => a.budget_time - b.budget_time,
-        },
-        {
-            title: "Actual Time",
-            dataIndex: "budget_time",
-            key: "budget_time",
-            sorter: (a: any, b: any) => a.budget_time - b.budget_time,
-        },
-    ];
-
     interface DataType {
         key: React.Key;
         client_name: string;
@@ -171,6 +122,32 @@ const SubComplianceViewEdit = (props: any) => {
         extra
     ) => {
         console.log("params", sorter);
+    };
+
+    // event handler from `stopwatch` action - play & stop
+    const handleTaskStatus = (
+        isRunning: boolean,
+        time: string,
+        isStop: boolean,
+        subCompliance: SubCompliance
+    ) => {
+        const complianceUpdate = {} as UpdateSubCompliance;
+        complianceUpdate.status = isStop
+            ? Status.completed
+            : Status.in_progress;
+        if (!isRunning) complianceUpdate.actual_time = time;
+
+        complianceUpdate.ComplianceId = props.complianceId;
+        complianceUpdate.subComplianceId = subCompliance._id!;
+
+        console.log(complianceUpdate);
+
+        api.updateSubCompliance(complianceUpdate).then((resp: any) => {
+            toast.success("Successfully Updated Sub Compliance", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            if (props.handleListUpdate) props.handleListUpdate();
+        });
     };
 
     return (
@@ -190,9 +167,45 @@ const SubComplianceViewEdit = (props: any) => {
                                 lg={{ span: 14 }}
                             >
                                 <div className="timerbuttons">
-                                    <Stopwatch
-                                        complianceId={subComplianceItem._id}
-                                    />
+                                    {subComplianceItem.clients &&
+                                        subComplianceItem.clients.length <=
+                                            0 && (
+                                            <Stopwatch
+                                                parentId={subComplianceItem._id}
+                                                handleTaskStatus={(
+                                                    isRunning: boolean,
+                                                    time: string,
+                                                    isStop: boolean
+                                                ) => {
+                                                    handleTaskStatus(
+                                                        isRunning,
+                                                        time,
+                                                        isStop,
+                                                        subComplianceItem
+                                                    );
+                                                }}
+                                                status={
+                                                    subComplianceItem.status
+                                                }
+                                                label={"subCompliance"}
+                                                showSeconds={true}
+                                            />
+                                        )}
+                                    {subComplianceItem.clients &&
+                                        subComplianceItem.clients.length >
+                                            0 && (
+                                            <span className="stopwatch-time">
+                                                {getTotalTime(
+                                                    subComplianceItem.clients.map(
+                                                        (
+                                                            item: ISubCompliance
+                                                        ) => {
+                                                            return item.actual_time;
+                                                        }
+                                                    )
+                                                )}
+                                            </span>
+                                        )}
                                 </div>
                             </Col>
                             <Col
@@ -201,20 +214,41 @@ const SubComplianceViewEdit = (props: any) => {
                                 md={{ span: 4 }}
                                 lg={{ span: 5 }}
                             >
-                                <Select
-                                    allowClear
-                                    placeholder="Select Priority"
-                                    options={priorityOpts}
-                                    value={subComplianceItem.priority}
-                                    className="w100"
-                                    onChange={(value, event) => {
-                                        statusChangeHandler(
-                                            event,
-                                            value,
-                                            subComplianceItem
-                                        );
-                                    }}
-                                />
+                                {!props.isEdit && (
+                                    <Title
+                                        level={4}
+                                        style={{
+                                            textAlign: "right",
+                                            marginRight: "30px",
+                                        }}
+                                        className={`text-priority ${
+                                            subComplianceItem.priority
+                                        } ${
+                                            subComplianceItem.priority ===
+                                            "high"
+                                                ? "blink"
+                                                : ""
+                                        }`}
+                                    >
+                                        {capitalize(subComplianceItem.priority)}
+                                    </Title>
+                                )}
+                                {props.isEdit && (
+                                    <Select
+                                        allowClear
+                                        placeholder="Select Priority"
+                                        options={priorityOpts}
+                                        value={subComplianceItem.priority}
+                                        className="w100"
+                                        onChange={(value, event) => {
+                                            statusChangeHandler(
+                                                event,
+                                                value,
+                                                subComplianceItem
+                                            );
+                                        }}
+                                    />
+                                )}
                             </Col>
                             <Col
                                 xs={{ span: 24 }}
@@ -264,8 +298,52 @@ const SubComplianceViewEdit = (props: any) => {
                                 md={{ span: 24 }}
                             >
                                 {!props.isEdit && (
-                                    <b>{subComplianceItem.remark}</b>
+                                    <b>
+                                        {subComplianceItem.remark &&
+                                            parse(subComplianceItem.remark)}
+                                    </b>
                                 )}
+                                {props.isEdit && (
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={subComplianceItem.remark}
+                                        placeholder="Remark"
+                                        onChange={(event) => {
+                                            // inputChangeHandler(
+                                            //     event,
+                                            //     "remark"
+                                            // );
+                                        }}
+                                    />
+                                )}
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <ComplianceDetails
+                                    handleTaskStatus={(
+                                        isRunning: boolean,
+                                        time: string,
+                                        isStop: boolean
+                                    ) => {
+                                        handleTaskStatus(
+                                            isRunning,
+                                            time,
+                                            isStop,
+                                            subComplianceItem
+                                        );
+                                    }}
+                                    isAllowAdd={false}
+                                    parentTitle={"sub_compliance"}
+                                    parentId={subComplianceItem._id}
+                                    data={subComplianceItem.clients}
+                                    scroll={{ x: 1000 }}
+                                    isEdit={props.isEdit}
+                                />
                             </Col>
                         </Row>
                         {!props.isEdit && (
@@ -275,31 +353,22 @@ const SubComplianceViewEdit = (props: any) => {
                                     sm={{ span: 24 }}
                                     md={{ span: 24 }}
                                 >
-                                    <Table
-                                        id="complianceViewEdit"
-                                        dataSource={subComplianceItem.clients}
-                                        columns={columns}
-                                        size="small"
-                                        onChange={onChange}
-                                    />
-                                </Col>
-                            </Row>
-                        )}
-                        {props.isEdit && (
-                            <Row gutter={[8, 8]} className="form-row">
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                >
-                                    {/* <ComplianceDetails
-                                        updateClients={
-                                            subComplianceItem.clients
-                                        }
-                                        isAllowAdd={false}
-                                        parentTitle={"sub_compliance"}
+                                    <Title
+                                        level={5}
+                                        style={{
+                                            textAlign: "left",
+                                            marginTop: "10px",
+                                        }}
+                                    >
+                                        Comments
+                                    </Title>
+                                    <Comments
+                                        comments={subComplianceItem.comments}
                                         parentId={subComplianceItem._id}
-                                    /> */}
+                                        addComment={() => {}}
+                                        editComment={() => {}}
+                                        deleteComment={() => {}}
+                                    />
                                 </Col>
                             </Row>
                         )}
