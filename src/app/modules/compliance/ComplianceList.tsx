@@ -460,7 +460,7 @@ const ComplianceList = () => {
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 10 }}
+                        md={{ span: 8 }}
                         style={{
                             float: "right",
                             marginBottom: "10px",
@@ -478,7 +478,7 @@ const ComplianceList = () => {
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 4 }}
+                        md={{ span: 8 }}
                         style={{
                             marginBottom: "10px",
                             marginTop: "10px",
@@ -744,8 +744,6 @@ const ComplianceList = () => {
                                 float: "right",
                                 width: fullScreenMode ? "100%" : "33%",
                                 display: reportTab ? "none" : "",
-                                //textAlign: "right",
-                                //border: "1px solid #d8e2ef",
                             }}
                         >
                             <ComplianceViewEdit

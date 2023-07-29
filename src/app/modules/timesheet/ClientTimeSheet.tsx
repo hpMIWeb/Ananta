@@ -180,14 +180,6 @@ const ClientTimeSheet = () => {
             value = event.value;
         }
 
-        if (name === "employeeName") {
-            if (value === "") {
-            }
-            toast.error("Please select employee.", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-        }
-
         switch (name) {
             case "employeeName": {
                 if (value !== "") {
