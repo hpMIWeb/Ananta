@@ -345,30 +345,21 @@ const ComplianceList = () => {
 
     const rowClassHandler = (record: IAddCompliance) => {
         let rowClassName = "";
-        switch (record.status.toLowerCase()) {
-            case "pending":
-            case "1": {
-                rowClassName = "tasklist  data-row-pending";
+        switch (record.priority.toLowerCase()) {
+            case "high": {
+                rowClassName = "tasklist  data-row-high";
                 break;
             }
-            case "2": {
-                rowClassName = "tasklist  data-row-completed";
+            case "medium": {
+                rowClassName = "tasklist  data-row-medium";
                 break;
             }
-            case "completed": {
-                rowClassName = "tasklist  data-row-completed";
+            case "low": {
+                rowClassName = "tasklist  data-row-low";
                 break;
             }
-            case "in_progress": {
-                rowClassName = "tasklist  data-row-in-progress";
-                break;
-            }
-            case "inprogress": {
-                rowClassName = "tasklist  data-row-in-progress";
-                break;
-            }
-            case "cancelled": {
-                rowClassName = "tasklist  data-row-cancel";
+            case "moderate": {
+                rowClassName = "tasklist  data-row-moderate";
                 break;
             }
         }

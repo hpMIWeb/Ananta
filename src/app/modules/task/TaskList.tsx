@@ -100,8 +100,6 @@ const TaskList = () => {
             width: "20%",
             render: (assigned_to: string) => (
                 <Tooltip title={assigned_to}>
-                    {" "}
-                    {/* Add the Tooltip component */}
                     <div className="assigneeContainer">
                         <img
                             src={
@@ -197,7 +195,7 @@ const TaskList = () => {
                                 break;
                             }
                             case "cancelled": {
-                                color = "#5e6e82";
+                                color = "#808080";
                                 break;
                             }
                             case "1": {
@@ -228,27 +226,21 @@ const TaskList = () => {
 
     const rowClassHandler = (record: IAddTask) => {
         let rowClassName = "";
-        switch (record.status.toLowerCase()) {
-            case "pending":
-            case "1": {
-                rowClassName = "data-row-pending";
+        switch (record.priority.toLowerCase()) {
+            case "high": {
+                rowClassName = "data-row-high";
                 break;
             }
-            case "completed":
-            case "complete": {
-                rowClassName = "data-row-completed";
+            case "medium": {
+                rowClassName = "data-row-medium";
                 break;
             }
-            case "inprogress": {
-                rowClassName = "data-row-in-progress";
+            case "low": {
+                rowClassName = "data-row-low";
                 break;
             }
-            case "in_progress": {
-                rowClassName = "data-row-in-progress";
-                break;
-            }
-            case "cancelled": {
-                rowClassName = "data-row-cancel";
+            case "moderate": {
+                rowClassName = "data-row-moderate";
                 break;
             }
         }

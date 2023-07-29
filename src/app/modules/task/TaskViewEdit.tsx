@@ -438,7 +438,7 @@ const TaskViewEdit = (props: any) => {
                             allowClear
                             placeholder="Select Status"
                             options={statusList}
-                            defaultValue={updateTask.status}
+                            value={updateTask.status}
                             className="w100"
                             onChange={(value, event) => {
                                 statusChangeHandler(event, value);
