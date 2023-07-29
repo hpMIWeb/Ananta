@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import tz from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { Input, Button, Typography, Divider } from "antd";
+import { Input, Button, Typography, Divider, Popconfirm } from "antd";
 import "./Comments.scss";
 
 dayjs.extend(customParseFormat);
@@ -156,18 +156,22 @@ const Comments = (props: any) => {
                                     />
                                 </span>
                                 <span>
-                                    <FontAwesomeIcon
-                                        icon={faTrash}
-                                        className="btn-at"
-                                        title="Delete comment"
-                                        style={{ color: "#fa5c7c" }}
-                                        onClick={() => {
+                                    <Popconfirm
+                                        title="Sure to delete?"
+                                        onConfirm={() =>
                                             deleteCommentHandler(
                                                 commentItem._id,
                                                 props.parentId
-                                            );
-                                        }}
-                                    />
+                                            )
+                                        }
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faTrash}
+                                            className="btn-at"
+                                            title="Delete comment"
+                                            style={{ color: "#fa5c7c" }}
+                                        />
+                                    </Popconfirm>
                                 </span>
                             </strong>
                         </Title>
