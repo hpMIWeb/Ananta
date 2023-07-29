@@ -155,13 +155,20 @@ const SubTaskViewEdit = (props: any) => {
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComment;
         addComment.comment = comment;
-        addComment.taskId = updateSubTask._id;
+        addComment.taskId = props.parentId;
+        addComment.subtaskId = updateSubTask._id;
         api.addTaskComment(addComment)
             .then((resp: any) => {
                 toast.success("Successfully added comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                setTaskComments(resp.data.comments);
+                const respData = resp.data;
+                const subTask = respData.subtask.find((respItem: any) => {
+                    return respItem._id === updateSubTask._id;
+                });
+                setTaskComments(subTask.comments);
+                if (props.handleListUpdate)
+                    props.handleListUpdate(respData.subtask);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -179,14 +186,19 @@ const SubTaskViewEdit = (props: any) => {
         const updateComment = {} as SaveComment;
         updateComment.commentId = commentId;
         updateComment.comment = comment;
-        updateComment.taskId = parentId;
+        updateComment.taskId = props.parentId;
+        updateComment.subtaskId = updateSubTask._id;
 
         api.updateTaskComment(updateComment)
             .then((resp: any) => {
                 toast.success("Successfully updated comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                setTaskComments(resp.data.comments);
+                const respData = resp.data;
+                const subTask = respData.subtask.find((respItem: any) => {
+                    return respItem._id === updateSubTask._id;
+                });
+                setTaskComments(subTask.comments);
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -202,7 +214,8 @@ const SubTaskViewEdit = (props: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                setTaskComments(resp.data.comments);
+                if (resp && resp.data) setTaskComments(resp.data.comments);
+                if (props.handleListUpdate) props.handleListUpdate();
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -248,7 +261,7 @@ const SubTaskViewEdit = (props: any) => {
                 <ToastContainer />
 
                 <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
                         {!isEdit && (
                             <Title level={5} style={{ textAlign: "left" }}>
                                 {updateSubTask.title}
@@ -262,7 +275,7 @@ const SubTaskViewEdit = (props: any) => {
                             />
                         )}
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <Title level={5} style={{ textAlign: "right" }}>
                             {capitalize(updateSubTask.assigned_to)}
                         </Title>
@@ -301,6 +314,8 @@ const SubTaskViewEdit = (props: any) => {
                                         marginRight: "30px",
                                     }}
                                     className={`text-priority ${
+                                        updateSubTask.priority
+                                    } ${
                                         updateSubTask.priority === "high"
                                             ? "blink"
                                             : ""
@@ -344,7 +359,7 @@ const SubTaskViewEdit = (props: any) => {
                 </Row>
                 {dividerRow()}
                 <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 6 }}>
                         Assigned To
                         <div>
                             {!isEdit && <b>{updateSubTask.assigned_to}</b>}
@@ -363,7 +378,7 @@ const SubTaskViewEdit = (props: any) => {
                             )}
                         </div>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 6 }}>
                         Budget Time
                         <div>
                             {!isEdit && (
@@ -394,7 +409,7 @@ const SubTaskViewEdit = (props: any) => {
                             )}
                         </div>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 6 }}>
                         Actual Time
                         <div>
                             {!isEdit && (

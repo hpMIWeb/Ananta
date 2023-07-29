@@ -118,7 +118,8 @@ const Stopwatch = (props: any) => {
                     </>
                 )}
                 <span className="stopwatch-time">
-                    {hours}:{minutes.toString().padStart(2, "0")}
+                    {hours.toString().padStart(2, "0")}:
+                    {minutes.toString().padStart(2, "0")}
                     {showSeconds && ":" + seconds.toString().padStart(2, "0")}
                 </span>
             </div>

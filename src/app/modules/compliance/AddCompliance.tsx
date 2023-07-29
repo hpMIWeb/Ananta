@@ -230,24 +230,22 @@ const AddCompliance = () => {
                 addCompliance
             );
 
-            alert("Save compliance");
-
             // Save to DB
-            // try {
-            //     api.createCompliance(addCompliance).then((resp: any) => {
-            //         const fields = form.getFieldsValue();
-            //         Object.keys(fields).forEach((field) => {
-            //             form.setFieldsValue({ [field]: undefined });
-            //         });
-            //         toast.success("Successfully Created Compliance", {
-            //             position: toast.POSITION.TOP_RIGHT,
-            //         });
-            //     });
-            // } catch (ex) {
-            //     toast.error("Technical error while creating Compliance", {
-            //         position: toast.POSITION.TOP_RIGHT,
-            //     });
-            // }
+            try {
+                api.createCompliance(addCompliance).then((resp: any) => {
+                    const fields = form.getFieldsValue();
+                    Object.keys(fields).forEach((field) => {
+                        form.setFieldsValue({ [field]: undefined });
+                    });
+                    toast.success("Successfully Created Compliance", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                });
+            } catch (ex) {
+                toast.error("Technical error while creating Compliance", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
         }
     };
 
@@ -429,9 +427,9 @@ const AddCompliance = () => {
                                 theme="snow"
                                 value={addCompliance.remark}
                                 placeholder="Compliance Remark"
-                                // onChange={(event) => {
-                                //     inputChangeHandler(event, "remark");
-                                // }}
+                                onChange={(event) => {
+                                    inputChangeHandler(event, "remark");
+                                }}
                             />
                         </Form.Item>
                     </Col>

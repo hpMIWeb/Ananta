@@ -67,8 +67,6 @@ const SubTask = (props: any) => {
             return item;
         });
 
-        // console.log(name, value, updatedTasks);
-
         setSubTasks(updatedTasks);
     };
 
@@ -134,19 +132,30 @@ const SubTask = (props: any) => {
                                     sm={{ span: 24 }}
                                     md={{ span: 3 }}
                                 >
-                                    <TimePicker
-                                        placeholder="Time"
-                                        name="budget_time"
-                                        onChange={(date, dateString) => {
-                                            inputChangeHandler(
-                                                dateString,
-                                                subTaskItem,
-                                                "budget_time"
-                                            );
-                                        }}
-                                        format={"HH:mm"}
-                                        className="w100"
-                                    />
+                                    <Form.Item
+                                        name={"budget_time_" + index}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select budget time.",
+                                            },
+                                        ]}
+                                    >
+                                        <TimePicker
+                                            placeholder="Time"
+                                            name="budget_time"
+                                            onChange={(date, dateString) => {
+                                                inputChangeHandler(
+                                                    dateString,
+                                                    subTaskItem,
+                                                    "budget_time"
+                                                );
+                                            }}
+                                            format={"HH:mm"}
+                                            className="w100"
+                                        />
+                                    </Form.Item>
                                 </Col>
                                 <Col
                                     xs={{ span: 24 }}
@@ -154,7 +163,7 @@ const SubTask = (props: any) => {
                                     md={{ span: 6 }}
                                 >
                                     <Form.Item
-                                        name="workArea"
+                                        name={"workArea_" + index}
                                         rules={[
                                             {
                                                 required: true,
@@ -188,28 +197,20 @@ const SubTask = (props: any) => {
                                     sm={{ span: 24 }}
                                     md={{ span: 24 }}
                                 >
-                                    {/* <Input
+                                    <Form.Item name={"remark_" + index}>
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={subTaskItem.remarks}
                                             placeholder="Remark"
-                                            name="remark"
                                             onChange={(event) => {
                                                 inputChangeHandler(
                                                     event,
-                                                    subTaskItem
+                                                    subTaskItem,
+                                                    "remarks"
                                                 );
                                             }}
-                                        /> */}
-                                    <ReactQuill
-                                        theme="snow"
-                                        value={subTaskItem.remarks}
-                                        placeholder="Remark"
-                                        onChange={(event) => {
-                                            inputChangeHandler(
-                                                event,
-                                                subTaskItem,
-                                                "remarks"
-                                            );
-                                        }}
-                                    />
+                                        />
+                                    </Form.Item>
                                 </Col>
                             </Row>
                             <Row
@@ -221,56 +222,89 @@ const SubTask = (props: any) => {
                                     sm={{ span: 24 }}
                                     md={{ span: 8 }}
                                 >
-                                    <Select
-                                        allowClear
-                                        showSearch
-                                        placeholder="Client"
-                                        options={clientOpts}
-                                        onChange={(value, event) => {
-                                            inputChangeHandler(
-                                                event,
-                                                subTaskItem
-                                            );
-                                        }}
-                                        className="w100"
-                                    />
+                                    <Form.Item
+                                        name={"client_" + index}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select client.",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            placeholder="Client"
+                                            options={clientOpts}
+                                            onChange={(value, event) => {
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
+                                            className="w100"
+                                        />
+                                    </Form.Item>
                                 </Col>
                                 <Col
                                     xs={{ span: 24 }}
                                     sm={{ span: 24 }}
                                     md={{ span: 8 }}
                                 >
-                                    <Select
-                                        allowClear
-                                        showSearch
-                                        placeholder="Assign Person"
-                                        options={assigneeOpts}
-                                        onChange={(value, event) => {
-                                            inputChangeHandler(
-                                                event,
-                                                subTaskItem
-                                            );
-                                        }}
-                                        className="w100"
-                                    ></Select>
+                                    <Form.Item
+                                        name={"assigned_to_" + index}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select assignee.",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            placeholder="Assign Person"
+                                            options={assigneeOpts}
+                                            onChange={(value, event) => {
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
+                                            className="w100"
+                                        />
+                                    </Form.Item>
                                 </Col>
                                 <Col
                                     xs={{ span: 24 }}
                                     sm={{ span: 24 }}
                                     md={{ span: 8 }}
                                 >
-                                    <Select
-                                        allowClear
-                                        placeholder="Priority"
-                                        options={priorityOpts}
-                                        onChange={(value, event) => {
-                                            inputChangeHandler(
-                                                event,
-                                                subTaskItem
-                                            );
-                                        }}
-                                        className="w100"
-                                    />
+                                    <Form.Item
+                                        name={"priority_" + index}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select priority.",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                            placeholder="Priority"
+                                            options={priorityOpts}
+                                            onChange={(value, event) => {
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
+                                            className="w100"
+                                        />
+                                    </Form.Item>
                                 </Col>
                             </Row>
                             <Row

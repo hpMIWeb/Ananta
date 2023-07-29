@@ -88,8 +88,6 @@ const AddSubCompliance = (props: any) => {
             return item;
         });
 
-        console.log("SubCompliance Remark");
-
         setSubCompliance(updatedCompliance);
     };
 
@@ -155,7 +153,7 @@ const AddSubCompliance = (props: any) => {
                                             <Form.Item
                                                 name={
                                                     "sub_compliance_title" +
-                                                    subComplianceItem._id
+                                                    index
                                                 }
                                                 rules={[
                                                     {
@@ -189,7 +187,7 @@ const AddSubCompliance = (props: any) => {
                                             <Form.Item
                                                 name={
                                                     "sub_compliance_budget_time" +
-                                                    subComplianceItem._id
+                                                    index
                                                 }
                                                 rules={[
                                                     {
@@ -225,7 +223,7 @@ const AddSubCompliance = (props: any) => {
                                             <Form.Item
                                                 name={
                                                     "sub_compliance_work_area" +
-                                                    subComplianceItem._id
+                                                    index
                                                 }
                                                 rules={[
                                                     {
@@ -263,7 +261,7 @@ const AddSubCompliance = (props: any) => {
                                             md={{ span: 18 }}
                                         >
                                             <Form.Item
-                                                name="remak"
+                                                name={"remak_" + index}
                                                 rules={[
                                                     {
                                                         required: false,
@@ -273,10 +271,7 @@ const AddSubCompliance = (props: any) => {
                                                 ]}
                                             >
                                                 <ReactQuill
-                                                    id={
-                                                        "subCompliance" +
-                                                        subComplianceItem._id
-                                                    }
+                                                    id={"subCompliance" + index}
                                                     theme="snow"
                                                     value={
                                                         subComplianceItem.remark ||
@@ -305,7 +300,7 @@ const AddSubCompliance = (props: any) => {
                                             <Form.Item
                                                 name={
                                                     "sub_compliance_priority" +
-                                                    subComplianceItem._id
+                                                    index
                                                 }
                                                 rules={[
                                                     {

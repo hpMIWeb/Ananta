@@ -308,12 +308,9 @@ const SubComplianceViewEdit = (props: any) => {
                                         theme="snow"
                                         value={subComplianceItem.remark}
                                         placeholder="Remark"
-                                        onChange={(event) => {
-                                            // inputChangeHandler(
-                                            //     event,
-                                            //     "remark"
-                                            // );
-                                        }}
+                                        // onChange={(event) => {
+                                        //     inputChangeHandler(event, "remark");
+                                        // }}
                                     />
                                 )}
                             </Col>

@@ -247,7 +247,7 @@ export const statusColors = (status: string) => {
             break;
         }
         case "2": {
-            color = "#40fb27";
+            color = "#00ca72";
             retVal = "completed";
         }
     }
@@ -276,7 +276,9 @@ export const getTotalTime = (actualTimes: string[]) => {
         });
     }
 
-    return sum_minutes && sum_minutes > 0 ? timeConvert(sum_minutes) : "00:00";
+    return sum_minutes && sum_minutes > 0
+        ? timeConvert(sum_minutes)
+        : "00:00:00";
 };
 
 const timeConvert = (mins: number) => {
@@ -285,6 +287,7 @@ const timeConvert = (mins: number) => {
     const rhours = Math.floor(hours);
     const minutes = (hours - rhours) * 60;
     const rminutes = Math.round(minutes);
+    const rseconds = rminutes * 60;
 
     return `${padStartNumber(rhours, 2)}:${padStartNumber(rminutes, 2)}`;
 };

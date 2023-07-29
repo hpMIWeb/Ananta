@@ -39,7 +39,7 @@ import Fillter from "../fillter/Fillter";
 import ComplianceFilter from "../fillter/ComplianceFilter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
-const pageSize = 20;
+const pageSize = 50;
 
 const ComplianceList = () => {
     const [showMoreFilter, setShowMoreFilterTask] = useState<boolean>(false);
@@ -163,7 +163,7 @@ const ComplianceList = () => {
                                 break;
                             }
                             case "2": {
-                                color = "#40fb27";
+                                color = "#00ca72";
                                 title = "completed";
                             }
                         }

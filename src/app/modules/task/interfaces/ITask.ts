@@ -106,6 +106,7 @@ export interface Comment {
 
 export interface SaveComment {
     taskId: string;
+    subtaskId?: string;
     comment: string;
     commentId: string;
 }
