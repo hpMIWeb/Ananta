@@ -157,7 +157,7 @@ const Comments = (props: any) => {
                                 </span>
                                 <span>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Sure to Delete?"
                                         onConfirm={() =>
                                             deleteCommentHandler(
                                                 commentItem._id,
