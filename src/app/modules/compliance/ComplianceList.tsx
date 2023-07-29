@@ -351,6 +351,10 @@ const ComplianceList = () => {
                 rowClassName = "tasklist  data-row-pending";
                 break;
             }
+            case "2": {
+                rowClassName = "tasklist  data-row-completed";
+                break;
+            }
             case "completed": {
                 rowClassName = "tasklist  data-row-completed";
                 break;
@@ -376,6 +380,10 @@ const ComplianceList = () => {
         switch (record.status.toLowerCase()) {
             case "pending":
             case "1": {
+                rowClassName = "tasklist complianceReportRow ";
+                break;
+            }
+            case "2": {
                 rowClassName = "tasklist complianceReportRow ";
                 break;
             }
