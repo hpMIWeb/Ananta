@@ -258,6 +258,7 @@ const AddMultipleTask = () => {
                         />
                     </Col>
                 </Row> */}
+
                 <Row gutter={[8, 8]} className="form-row">
                     <Col>
                         <Title level={5}>Create new task for each client</Title>

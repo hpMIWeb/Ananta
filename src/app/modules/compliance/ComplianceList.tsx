@@ -36,6 +36,7 @@ import {
     upperText,
 } from "../../utilities/utility";
 import Fillter from "../fillter/Fillter";
+import ComplianceFilter from "../fillter/ComplianceFilter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 50;
@@ -53,7 +54,8 @@ const ComplianceList = () => {
     const [reportTab, setReportTab] = useState<boolean>(false);
     const [tableRowSelected, setTableRowSelected] = useState<any>({});
     const [allCompliance, setAllCompliance] = useState<[]>([]);
-
+    const [reportType, setReportType] = useState<string>("Compliance Wise");
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const screenModeToggle = () => {
         setFullScreenMode(!fullScreenMode);
     };
@@ -144,6 +146,10 @@ const ComplianceList = () => {
                                 break;
                             }
                             case "in_progress": {
+                                color = "#ffcc00";
+                                break;
+                            }
+                            case "inprogress": {
                                 color = "#ffcc00";
                                 break;
                             }
@@ -353,6 +359,10 @@ const ComplianceList = () => {
                 rowClassName = "tasklist  data-row-in-progress";
                 break;
             }
+            case "inprogress": {
+                rowClassName = "tasklist  data-row-in-progress";
+                break;
+            }
             case "cancelled": {
                 rowClassName = "tasklist  data-row-cancel";
                 break;
@@ -385,6 +395,12 @@ const ComplianceList = () => {
         return rowClassName;
     };
 
+    // Search input change handler
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+    };
+
     const getData = (current: number, pageSize: number, rangeMode: string) => {
         let retVal: AddCompliance[] = [];
 
@@ -412,12 +428,25 @@ const ComplianceList = () => {
             }
         }
 
+        if (searchQuery.trim() !== "") {
+            retVal = retVal.filter((item) => {
+                return item.title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
+            });
+        }
+
         return retVal
             .map((item: any, index: number) => {
                 item.key = index;
                 return item;
             })
             .slice((current - 1) * pageSize, current * pageSize);
+    };
+
+    const handelReportType = (value: string) => {
+        console.log(value);
+        setReportType(value);
     };
 
     const todayContent = () => {
@@ -440,9 +469,10 @@ const ComplianceList = () => {
                     >
                         <Input
                             placeholder="Search"
-                            prefix={<SearchOutlined />}
                             className="w100 border-bottom"
                             bordered={false}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined />}
                         />
                     </Col>
                     <Col
@@ -534,22 +564,26 @@ const ComplianceList = () => {
                         <Select
                             allowClear
                             showSearch
+                            placeholder="Report Type"
+                            options={complianceReportOpts}
+                            className="w100 border-bottom"
+                            bordered={false}
+                            value={reportType}
+                            onChange={handelReportType}
+                        />
+                    </Col>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Select
+                            allowClear
+                            showSearch
                             placeholder="Client"
                             options={clientOpts}
                             className="w100 border-bottom"
                             bordered={false}
                         />
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Report Type"
-                            options={complianceReportOpts}
-                            className="w100 border-bottom"
-                            bordered={false}
-                        />
-                    </Col>
+
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
@@ -588,18 +622,12 @@ const ComplianceList = () => {
                     </Col>
                 </Row>
 
-                <Row
-                    gutter={[8, 8]}
-                    className={"form-row " + (!showMoreFilter ? "hide" : "")}
-                    style={{ marginTop: "10px" }}
-                >
-                    <Row gutter={[8, 8]} className=""></Row>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 24 }}
-                    ></Col>
-                </Row>
+                <ComplianceFilter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                    reportType={reportType}
+                />
+
                 <Row
                     gutter={[8, 8]}
                     className={"form-row "}
