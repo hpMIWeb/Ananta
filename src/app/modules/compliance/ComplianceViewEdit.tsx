@@ -501,6 +501,7 @@ const ComplianceViewEdit = (props: any) => {
                                             handleTaskStatus={handleTaskStatus}
                                             status={updateCompliance.status}
                                             label={"compliance"}
+                                            showSeconds={true}
                                         />
                                     )}
                                 {subCompliances &&

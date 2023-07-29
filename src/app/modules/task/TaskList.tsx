@@ -41,6 +41,7 @@ const TaskList = () => {
         {} as IAddTask
     );
     const [showMoreFilter, setShowMoreFilterTask] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const onSwitchMoreFilter = () => {
         setShowMoreFilterTask(!showMoreFilter);
@@ -158,8 +159,8 @@ const TaskList = () => {
                         <div key={subtask.length} className="clientDiv">
                             {subtask.filter((item: ISubTask) => {
                                 return (
-                                    item.status === "Completed" ||
-                                    item.status === "Complete"
+                                    item.status === "completed" ||
+                                    item.status === "complete"
                                 );
                             }).length +
                                 "/" +
@@ -262,9 +263,15 @@ const TaskList = () => {
         });
         getContentRender();
     };
+
+    // Search input change handler
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+    };
+
     const getData = (current: number, pageSize: number, rangeMode: string) => {
         let retVal: AddTask[] = [];
-
         switch (rangeMode) {
             case "today": {
                 retVal = allTask.filter((item: IAddTask) => {
@@ -295,6 +302,14 @@ const TaskList = () => {
             }
         }
 
+        if (searchQuery.trim() !== "") {
+            retVal = retVal.filter((item) => {
+                return item.title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
+            });
+        }
+
         return retVal
             .map((item: any, index: number) => {
                 item.key = index;
@@ -323,8 +338,9 @@ const TaskList = () => {
                     >
                         <Input
                             placeholder="Search"
-                            className="inp"
+                            className="inp border-bottom"
                             bordered={false}
+                            onChange={handleSearch}
                             prefix={<SearchOutlined />}
                         />
                     </Col>
@@ -429,6 +445,9 @@ const TaskList = () => {
                     >
                         <Input
                             placeholder="Search"
+                            className="inp border-bottom"
+                            bordered={false}
+                            onChange={handleSearch}
                             prefix={<SearchOutlined />}
                         />
                     </Col>
@@ -531,6 +550,9 @@ const TaskList = () => {
                         <Input
                             placeholder="Search"
                             prefix={<SearchOutlined />}
+                            className="inp border-bottom"
+                            bordered={false}
+                            onChange={handleSearch}
                         />
                     </Col>
                     <Col

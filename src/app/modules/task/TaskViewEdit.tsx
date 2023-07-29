@@ -375,6 +375,7 @@ const TaskViewEdit = (props: any) => {
                                     handleTaskStatus={handleTaskStatus}
                                     status={updateTask.status}
                                     label={"task"}
+                                    showSeconds={true}
                                 />
                             )}
                             {taskSubTasks && taskSubTasks.length > 0 && (
@@ -403,6 +404,8 @@ const TaskViewEdit = (props: any) => {
                                         marginRight: "30px",
                                     }}
                                     className={`text-priority ${
+                                        updateTask.priority
+                                    } ${
                                         updateTask.priority === "high"
                                             ? "blink"
                                             : ""

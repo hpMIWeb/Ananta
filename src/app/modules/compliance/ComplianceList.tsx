@@ -36,9 +36,10 @@ import {
     upperText,
 } from "../../utilities/utility";
 import Fillter from "../fillter/Fillter";
+import ComplianceFilter from "../fillter/ComplianceFilter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
-const pageSize = 20;
+const pageSize = 50;
 
 const ComplianceList = () => {
     const [showMoreFilter, setShowMoreFilterTask] = useState<boolean>(false);
@@ -53,7 +54,8 @@ const ComplianceList = () => {
     const [reportTab, setReportTab] = useState<boolean>(false);
     const [tableRowSelected, setTableRowSelected] = useState<any>({});
     const [allCompliance, setAllCompliance] = useState<[]>([]);
-
+    const [reportType, setReportType] = useState<string>("Compliance Wise");
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const screenModeToggle = () => {
         setFullScreenMode(!fullScreenMode);
     };
@@ -147,6 +149,10 @@ const ComplianceList = () => {
                                 color = "#ffcc00";
                                 break;
                             }
+                            case "inprogress": {
+                                color = "#ffcc00";
+                                break;
+                            }
                             case "cancelled": {
                                 color = "#5e6e82";
                                 break;
@@ -157,7 +163,7 @@ const ComplianceList = () => {
                                 break;
                             }
                             case "2": {
-                                color = "#40fb27";
+                                color = "#00ca72";
                                 title = "completed";
                             }
                         }
@@ -345,11 +351,19 @@ const ComplianceList = () => {
                 rowClassName = "tasklist  data-row-pending";
                 break;
             }
+            case "2": {
+                rowClassName = "tasklist  data-row-completed";
+                break;
+            }
             case "completed": {
                 rowClassName = "tasklist  data-row-completed";
                 break;
             }
             case "in_progress": {
+                rowClassName = "tasklist  data-row-in-progress";
+                break;
+            }
+            case "inprogress": {
                 rowClassName = "tasklist  data-row-in-progress";
                 break;
             }
@@ -369,6 +383,10 @@ const ComplianceList = () => {
                 rowClassName = "tasklist complianceReportRow ";
                 break;
             }
+            case "2": {
+                rowClassName = "tasklist complianceReportRow ";
+                break;
+            }
             case "completed": {
                 rowClassName = "tasklist complianceReportRow ";
                 break;
@@ -383,6 +401,12 @@ const ComplianceList = () => {
             }
         }
         return rowClassName;
+    };
+
+    // Search input change handler
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchQuery(query);
     };
 
     const getData = (current: number, pageSize: number, rangeMode: string) => {
@@ -412,12 +436,25 @@ const ComplianceList = () => {
             }
         }
 
+        if (searchQuery.trim() !== "") {
+            retVal = retVal.filter((item) => {
+                return item.title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
+            });
+        }
+
         return retVal
             .map((item: any, index: number) => {
                 item.key = index;
                 return item;
             })
             .slice((current - 1) * pageSize, current * pageSize);
+    };
+
+    const handelReportType = (value: string) => {
+        console.log(value);
+        setReportType(value);
     };
 
     const todayContent = () => {
@@ -431,7 +468,7 @@ const ComplianceList = () => {
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 10 }}
+                        md={{ span: 8 }}
                         style={{
                             float: "right",
                             marginBottom: "10px",
@@ -440,15 +477,16 @@ const ComplianceList = () => {
                     >
                         <Input
                             placeholder="Search"
-                            prefix={<SearchOutlined />}
-                            className="w100 border-bottom"
+                            className="inp border-bottom"
                             bordered={false}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined />}
                         />
                     </Col>
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
-                        md={{ span: 4 }}
+                        md={{ span: 8 }}
                         style={{
                             marginBottom: "10px",
                             marginTop: "10px",
@@ -534,22 +572,26 @@ const ComplianceList = () => {
                         <Select
                             allowClear
                             showSearch
+                            placeholder="Report Type"
+                            options={complianceReportOpts}
+                            className="w100 border-bottom"
+                            bordered={false}
+                            value={reportType}
+                            onChange={handelReportType}
+                        />
+                    </Col>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Select
+                            allowClear
+                            showSearch
                             placeholder="Client"
                             options={clientOpts}
                             className="w100 border-bottom"
                             bordered={false}
                         />
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Report Type"
-                            options={complianceReportOpts}
-                            className="w100 border-bottom"
-                            bordered={false}
-                        />
-                    </Col>
+
                     <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
@@ -588,18 +630,12 @@ const ComplianceList = () => {
                     </Col>
                 </Row>
 
-                <Row
-                    gutter={[8, 8]}
-                    className={"form-row " + (!showMoreFilter ? "hide" : "")}
-                    style={{ marginTop: "10px" }}
-                >
-                    <Row gutter={[8, 8]} className=""></Row>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 24 }}
-                    ></Col>
-                </Row>
+                <ComplianceFilter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                    reportType={reportType}
+                />
+
                 <Row
                     gutter={[8, 8]}
                     className={"form-row "}
@@ -716,8 +752,6 @@ const ComplianceList = () => {
                                 float: "right",
                                 width: fullScreenMode ? "100%" : "33%",
                                 display: reportTab ? "none" : "",
-                                //textAlign: "right",
-                                //border: "1px solid #d8e2ef",
                             }}
                         >
                             <ComplianceViewEdit
