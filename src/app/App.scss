@@ -320,3 +320,12 @@ body {
     border-bottom: 1px solid black;
     box-shadow: none !important;
 }
+
+.search-box {
+    border-bottom: 1px solid !important;
+    box-shadow: unset !important;
+
+    .ant-input {
+        box-shadow: unset !important;
+    }
+}

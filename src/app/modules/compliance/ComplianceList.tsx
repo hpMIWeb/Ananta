@@ -477,7 +477,7 @@ const ComplianceList = () => {
                     >
                         <Input
                             placeholder="Search"
-                            className="inp border-bottom"
+                            className="search-box border-bottom"
                             bordered={false}
                             onChange={handleSearch}
                             prefix={<SearchOutlined />}
