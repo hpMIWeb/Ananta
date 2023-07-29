@@ -55,6 +55,7 @@ const TimeSheet = () => {
         {} as ITimesheet
     );
     const [isNewRow, setIsNewRow] = useState<boolean>(true);
+    const [newRowCount, setNewRowCount] = useState<number>(1);
     const [form] = Form.useForm();
 
     //Time sheet List
@@ -71,7 +72,33 @@ const TimeSheet = () => {
             key: "start_time",
             width: "10%",
             render: (start_time: string, record: Timesheet) => {
-                if (!record.is_edit && !record.is_new) {
+                if (record.is_new) {
+                    return (
+                        <Form.Item
+                            name={`start_time_${record._id}`}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter start time.",
+                                },
+                            ]}
+                        >
+                            <TimePicker
+                                placeholder="Start Time"
+                                name="start_time"
+                                changeOnBlur={true}
+                                showNow={false}
+                                format={"HH:mm"}
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(
+                                        dateString,
+                                        "start_time"
+                                    );
+                                }}
+                            />
+                        </Form.Item>
+                    );
+                } else if (!record.is_edit) {
                     return (
                         <b>
                             <ClockCircleOutlined
@@ -80,11 +107,10 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {record.start_time}
+                            {dayjs(record.start_time).format("HH:mm")}
                         </b>
                     );
                 }
-
                 return (
                     <Form.Item
                         name={`start_time_${record._id}`}
@@ -105,6 +131,7 @@ const TimeSheet = () => {
                             format="HH:mm"
                             changeOnBlur={true}
                             showNow={false}
+                            defaultValue={dayjs(record.start_time)}
                             onChange={(date, dateString) => {
                                 inputChangeHandler(dateString, "start_time");
                             }}
@@ -153,7 +180,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {record.end_time}
+                            {dayjs(record.end_time).format("HH:mm")}
                         </b>
                     );
                 }
@@ -174,7 +201,7 @@ const TimeSheet = () => {
                         <TimePicker
                             placeholder="End Time"
                             name="end_time"
-                            defaultValue={dayjs(end_time, "HH:mm")}
+                            defaultValue={dayjs(end_time)}
                             format={"HH:mm"}
                             changeOnBlur={true}
                             showNow={false}
@@ -519,8 +546,12 @@ const TimeSheet = () => {
                 if (record.is_new) {
                     return (
                         <span
-                            className="totalTimeDisplay"
-                            style={{ float: "right" }}
+                            className=""
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                float: "right",
+                            }}
                         >
                             <Popconfirm
                                 title="Sure to delete?"
@@ -538,7 +569,14 @@ const TimeSheet = () => {
                 }
                 if (record.is_edit) {
                     return (
-                        <span className="totalTimeDisplay">
+                        <span
+                            className="totalTimeDisplay"
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                float: "right",
+                            }}
+                        >
                             <FontAwesomeIcon
                                 icon={faXmark}
                                 className="btn-at"
@@ -567,7 +605,11 @@ const TimeSheet = () => {
                 return (
                     <span
                         className="totalTimeDisplay"
-                        style={{ display: "flex", justifyContent: "center" }}
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            float: "right",
+                        }}
                     >
                         <FontAwesomeIcon
                             icon={faEdit}
@@ -622,10 +664,11 @@ const TimeSheet = () => {
                 ...timesheet.slice(selectedRowIndex + 1),
             ];
             setTimesheet(updatedTimesheet);
+            setNewRowCount(newRowCount + 1);
         } else {
-            toast.error("Please complete the last row action.", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
+            // toast.error("Please complete the last row action.", {
+            //     position: toast.POSITION.TOP_RIGHT,
+            // });
         }
     };
 
@@ -666,7 +709,8 @@ const TimeSheet = () => {
     };
 
     const removeRow = (timeSheetId: string) => {
-        if (timeSheetId === "1") {
+        console.log(newRowCount);
+        if (newRowCount === 1) {
             toast.error("Cannot delete the first new row.", {
                 position: toast.POSITION.TOP_RIGHT,
             });
@@ -677,6 +721,7 @@ const TimeSheet = () => {
         );
 
         setTimesheet(updatedData);
+        setNewRowCount(newRowCount - 1);
         localStorage.setItem("timesheet", JSON.stringify(updatedData));
         toast.success("Successfully Timesheet delete.", {
             position: toast.POSITION.TOP_RIGHT,
@@ -685,69 +730,58 @@ const TimeSheet = () => {
 
     // save time sheet data
     const saveTimeSheetHandler = () => {
-        console.log(timesheetAction);
+        console.log(timesheet);
 
-        form.validateFields()
-            .then((values) => {
-                const selectedDate = dayjs(timesheetDate).format(dateFormat);
-                // Read all existing timesheet from `localStorage`
-                const newTimesheets = timesheet.filter((entry) => entry.is_new);
-                // Check if any new timesheets are present
-                if (newTimesheets.length === 0) {
-                    toast.error("No new timesheet entries to save.", {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
-                    return;
-                }
-
-                // Check if every new timesheet entry has non-blank values
-                const isEveryEntryValid = newTimesheets.every((entry) =>
-                    Object.values(entry).every((value) => value !== "")
-                );
-
-                console.log(newTimesheets);
-                // If any entry is not valid, display an error message
-                if (!isEveryEntryValid) {
-                    toast.error("Please complete all required fields.", {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
-                    return;
-                }
-
-                // Create an array of timesheet data
-                const timesheetPayload = newTimesheets.map((entry) => ({
-                    start_time: entry.start_time,
-                    end_time: entry.end_time,
-                    remark: entry.remark,
-                    client: entry.client,
-                    work_area: entry.work_area,
-                    particulars: entry.particulars,
-                    total_time: entry.total_time,
-                    date: selectedDate,
-                }));
-
-                // Make a single API call to save the multiple timesheet entries
-                try {
-                    api.createMultipleTimesheet(timesheetPayload).then(
-                        (resp) => {
-                            toast.success(
-                                "Successfully saved timesheet entries",
-                                {
-                                    position: toast.POSITION.TOP_RIGHT,
-                                }
-                            );
-                            getTimeSheetData();
-                        }
-                    );
-                } catch (ex) {
-                    toast.error("Technical error while creating Task", {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
-                }
-            })
-            .catch((errorInfo) => {
-                console.log("Validation failed:", errorInfo);
+        const selectedDate = dayjs(timesheetDate).format(dateFormat);
+        // Read all existing timesheet from `localStorage`
+        const newTimesheets = timesheet.filter((entry) => entry.is_new);
+        // Check if any new timesheets are present
+        if (newTimesheets.length === 0) {
+            toast.error("No new timesheet entries to save.", {
+                position: toast.POSITION.TOP_RIGHT,
             });
+            return;
+        }
+
+        // Check if every new timesheet entry has non-blank values
+        const isEveryEntryValid = newTimesheets.every((entry) =>
+            Object.values(entry).every((value) => value !== "")
+        );
+
+        console.log(newTimesheets);
+        // If any entry is not valid, display an error message
+        if (!isEveryEntryValid) {
+            toast.error("Please complete all required fields.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+        // Create an array of timesheet data
+        const timesheetPayload = newTimesheets.map((entry) => ({
+            start_time: selectedDate + " " + entry.start_time,
+            end_time: selectedDate + " " + entry.end_time,
+            remark: entry.remark,
+            client: entry.client,
+            work_area: entry.work_area,
+            particulars: entry.particulars,
+            total_time: entry.total_time,
+            date: selectedDate,
+        }));
+
+        // Make a single API call to save the multiple timesheet entries
+        try {
+            api.createMultipleTimesheet(timesheetPayload).then((resp) => {
+                toast.success("Successfully saved timesheet entries", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                getTimeSheetData();
+            });
+        } catch (ex) {
+            toast.error("Technical error while creating Task", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
 
         // old code
     };
@@ -892,7 +926,7 @@ const TimeSheet = () => {
             localStorage.setItem("timesheet", JSON.stringify(finalData));
             setTimesheet(finalData);
         });
-        addNewTimesheetRow();
+        // addNewTimesheetRow();
     };
     const getData = (current: number, pageSize: number) => {
         let returnVal = timesheet;
@@ -970,13 +1004,17 @@ const TimeSheet = () => {
             </div>
 
             <div>
-                <Row
-                    gutter={[8, 8]}
-                    className="form-row"
-                    style={{ marginTop: "10px" }}
-                >
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <Form form={form}>
+                <Form>
+                    <Row
+                        gutter={[8, 8]}
+                        className="form-row"
+                        style={{ marginTop: "10px" }}
+                    >
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
                             <Table
                                 columns={columns}
                                 dataSource={getData(current, pageSize)}
@@ -990,21 +1028,21 @@ const TimeSheet = () => {
                                     };
                                 }}
                             />
-                        </Form>
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
 
-                <Row gutter={[8, 8]} className="form-row">
-                    <Button
-                        type="primary"
-                        //htmlType="submit"
-                        icon={<PlusOutlined />}
-                        onClick={saveTimeSheetHandler}
-                        style={{ marginTop: "10px", marginBottom: "10px" }}
-                    >
-                        Save
-                    </Button>
-                </Row>
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            icon={<PlusOutlined />}
+                            onClick={saveTimeSheetHandler}
+                            style={{ marginTop: "10px", marginBottom: "10px" }}
+                        >
+                            Save
+                        </Button>
+                    </Row>
+                </Form>
             </div>
         </>
     );
