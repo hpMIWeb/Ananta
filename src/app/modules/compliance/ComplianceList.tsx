@@ -38,7 +38,7 @@ import {
 import Fillter from "../fillter/Fillter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
-const pageSize = 20;
+const pageSize = 50;
 
 const ComplianceList = () => {
     const [showMoreFilter, setShowMoreFilterTask] = useState<boolean>(false);
