@@ -63,25 +63,30 @@ const Fillter = (prop: any) => {
             value = event.value;
         }
 
+        console.log("nameItem", nameItem);
         console.log("name", name);
         console.log("value", value);
         // Check if the filter parameter already exists in the parameters array
         const parameterExists = parameters.some((param) =>
-            param.startsWith(`${name}=`)
+            param.startsWith(`${nameItem}=`)
         );
 
         // If the parameter already exists, remove it from the array
         if (parameterExists) {
-            parameters = parameters.filter(
-                (param) => !param.startsWith(`${name}=`)
-            );
+            parameters = parameters.filter((param) => {
+                return !param.startsWith(`${nameItem}=`);
+            });
         }
 
         // Push the new parameter to the array
         if (value !== "") {
-            parameters.push(`${name}=${encodeURIComponent(value)}`);
+            parameters.push(`${nameItem}=${encodeURIComponent(value)}`);
         }
-        const queryString = "?" + parameters.join("&");
+
+        let queryString = "";
+        if (parameters && parameters.length > 0) {
+            queryString = "?" + parameters.join("&");
+        }
         console.log(queryString);
         prop.filterHandler(queryString);
     };
@@ -105,10 +110,6 @@ const Fillter = (prop: any) => {
                         value={clientValue}
                         className="w100 border-bottom"
                         bordered={false}
-                        onDeselect={(value, event) => {
-                            setClientValue(value);
-                            filterHandler(value, "client");
-                        }}
                         onChange={(value, event) => {
                             setClientValue(value);
                             filterHandler(value, "client");

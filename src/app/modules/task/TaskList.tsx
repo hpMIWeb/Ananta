@@ -272,7 +272,6 @@ const TaskList = () => {
 
     const getData = (current: number, pageSize: number, rangeMode: string) => {
         let retVal: AddTask[] = [];
-        let filteredData = [];
         switch (rangeMode) {
             case "today": {
                 retVal = allTask.filter((item: IAddTask) => {

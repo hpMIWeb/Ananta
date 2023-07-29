@@ -389,43 +389,47 @@ const ClientTimeSheet = () => {
                         />
                     </Col>
                 </Row>
-                <Row gutter={[8, 8]} className={"mt-10 form-row"}>
-                    <div className="summery">
-                        <ul className="summery1">
-                            <li className="Et7">
-                                <div>
-                                    <Image src="" />
-                                </div>
-                                <p className="Et6">Trusha Bhanderi</p>
-                            </li>
-                            <Divider type="vertical" />
-                            <li className="Et7">
-                                <p className="Et6">23-05-2022 To 30-05-2022</p>
-                                <p className="Et8">Time Period</p>
-                            </li>
-                            <Divider type="vertical" />
-                            <li className="Et7">
-                                <p className="Et6">20</p>
-                                <p className="Et8">Total Task</p>
-                            </li>
-                            <Divider type="vertical" />
-                            <li className="Et7">
-                                <p className="Et6">25h 30m</p>
-                                <p className="Et8">Total Budget Time</p>
-                            </li>
-                            <Divider type="vertical" />
-                            <li className="Et7">
-                                <p className="Et6">35h 30m</p>
-                                <p className="Et8">Total Actual Time</p>
-                            </li>
-                            <Divider type="vertical" />
-                            <li className="Et7">
-                                <p className="Et6">35h 30m</p>
-                                <p className="Et8">Total Difference</p>
-                            </li>
-                        </ul>
-                    </div>
-                </Row>
+                <div className="summery">
+                    <ul className="summery1">
+                        <li className="Et7">
+                            <div>
+                                <img
+                                    src={
+                                        "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                                    }
+                                    alt="Assignee"
+                                    className="assigneeImage"
+                                />
+                            </div>
+                            <p className="Et6">Trusha Bhanderi</p>
+                        </li>
+                        <Divider type="vertical" />
+                        <li className="Et7">
+                            <p className="Et6">23-05-2022 To 30-05-2022</p>
+                            <p className="Et8">Time Period</p>
+                        </li>
+                        <Divider type="vertical" />
+                        <li className="Et7">
+                            <p className="Et6">20</p>
+                            <p className="Et8">Total Task</p>
+                        </li>
+                        <Divider type="vertical" />
+                        <li className="Et7">
+                            <p className="Et6">25h 30m</p>
+                            <p className="Et8">Total Budget Time</p>
+                        </li>
+                        <Divider type="vertical" />
+                        <li className="Et7">
+                            <p className="Et6">35h 30m</p>
+                            <p className="Et8">Total Actual Time</p>
+                        </li>
+                        <Divider type="vertical" />
+                        <li className="Et7">
+                            <p className="Et6">35h 30m</p>
+                            <p className="Et8">Total Difference</p>
+                        </li>
+                    </ul>
+                </div>
                 <div>
                     <Table
                         columns={columns}

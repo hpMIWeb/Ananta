@@ -926,7 +926,7 @@ const TimeSheet = () => {
             localStorage.setItem("timesheet", JSON.stringify(finalData));
             setTimesheet(finalData);
         });
-        // addNewTimesheetRow();
+        //   addNewTimesheetRow();
     };
     const getData = (current: number, pageSize: number) => {
         let returnVal = timesheet;

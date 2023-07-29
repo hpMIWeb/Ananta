@@ -52,15 +52,20 @@ export const clientOpts = ["Jack John", "Sohan Varani"].map((item: string) => {
     };
 });
 
-export const employeeOpts = ["EMP 1", "EMP 2", "EMP 3", "EMP 4", "EMP 5"].map(
-    (item: string) => {
-        return {
-            value: item.toLowerCase(),
-            label: item,
-            name: "client",
-        };
-    }
-);
+export const employeeOpts = [
+    "EMP 1",
+    "EMP 2",
+    "EMP 3",
+    "EMP 4",
+    "EMP 5",
+    "patil",
+].map((item: string) => {
+    return {
+        value: item.toLowerCase(),
+        label: item,
+        name: "client",
+    };
+});
 
 export const complianceReportOpts = ["Client Wise", "Compliance Wise"].map(
     (item: string) => {
