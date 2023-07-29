@@ -247,7 +247,7 @@ export const statusColors = (status: string) => {
             break;
         }
         case "2": {
-            color = "#40fb27";
+            color = "#00ca72";
             retVal = "completed";
         }
     }

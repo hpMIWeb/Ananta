@@ -163,7 +163,7 @@ const ComplianceList = () => {
                                 break;
                             }
                             case "2": {
-                                color = "#40fb27";
+                                color = "#00ca72";
                                 title = "completed";
                             }
                         }
@@ -351,6 +351,10 @@ const ComplianceList = () => {
                 rowClassName = "tasklist  data-row-pending";
                 break;
             }
+            case "2": {
+                rowClassName = "tasklist  data-row-completed";
+                break;
+            }
             case "completed": {
                 rowClassName = "tasklist  data-row-completed";
                 break;
@@ -376,6 +380,10 @@ const ComplianceList = () => {
         switch (record.status.toLowerCase()) {
             case "pending":
             case "1": {
+                rowClassName = "tasklist complianceReportRow ";
+                break;
+            }
+            case "2": {
                 rowClassName = "tasklist complianceReportRow ";
                 break;
             }
@@ -469,7 +477,7 @@ const ComplianceList = () => {
                     >
                         <Input
                             placeholder="Search"
-                            className="w100 border-bottom"
+                            className="inp border-bottom"
                             bordered={false}
                             onChange={handleSearch}
                             prefix={<SearchOutlined />}
