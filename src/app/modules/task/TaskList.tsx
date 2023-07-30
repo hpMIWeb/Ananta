@@ -326,7 +326,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "10px",
-                            marginTop: "5px",
+                            marginTop: "7px",
                         }}
                     >
                         <Input
@@ -398,7 +398,7 @@ const TaskList = () => {
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Table
                         id={"taskTable"}
@@ -440,7 +440,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "0",
-                            marginTop: "5px",
+                            marginTop: "7px",
                         }}
                     >
                         <Input
@@ -552,7 +552,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "0",
-                            marginTop: "5px",
+                            marginTop: "7px",
                         }}
                     >
                         <Input
