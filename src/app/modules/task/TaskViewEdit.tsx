@@ -665,6 +665,12 @@ const TaskViewEdit = (props: any) => {
                             />
                         )}
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        <Title level={5} style={{ textAlign: "left" }}>
+                            Data Path
+                        </Title>
+                        <span>{updateTask.datapath}</span>
+                    </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
