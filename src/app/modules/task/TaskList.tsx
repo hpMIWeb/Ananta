@@ -25,7 +25,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAlignLeft,
     faCalendarAlt,
-    faCalendar,
+    faAngleDown,
+    faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import Fillter from "../fillter/Fillter";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
@@ -315,8 +316,8 @@ const TaskList = () => {
             <div>
                 <Row
                     gutter={[8, 8]}
-                    className="form-row "
-                    style={{ marginTop: "10px" }}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
                 >
                     <Col
                         xs={{ span: 24 }}
@@ -325,7 +326,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "10px",
-                            marginTop: "10px",
+                            marginTop: "5px",
                         }}
                     >
                         <Input
@@ -343,7 +344,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "10px",
-                            marginTop: "10px",
+                            marginTop: "0",
                         }}
                     ></Col>
                     <Col
@@ -352,7 +353,7 @@ const TaskList = () => {
                         md={{ span: 8 }}
                         style={{ paddingTop: "20px", textAlign: "right" }}
                     >
-                        <a
+                        <div
                             className="btn-link expanddiv"
                             title="Show Filters"
                             onClick={onSwitchMoreFilter}
@@ -362,31 +363,38 @@ const TaskList = () => {
                                     ? "Show Filters "
                                     : "Hide Filters "}
                             </span>
-                            <svg
-                                className="svg-inline--fa fa-angle-down fa-w-10"
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="angle-down"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                                data-fa-i2svg=""
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
-                                ></path>
-                            </svg>
-                            <i className="fas fa-angle-down"></i>
-                        </a>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
                     </Col>
                 </Row>
-                <Fillter
-                    showMoreFilter={showMoreFilter}
-                    filterHandler={filterHandler}
-                />
-
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
@@ -423,7 +431,7 @@ const TaskList = () => {
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Col
                         xs={{ span: 24 }}
@@ -431,8 +439,8 @@ const TaskList = () => {
                         md={{ span: 8 }}
                         style={{
                             float: "right",
-                            marginBottom: "10px",
-                            marginTop: "10px",
+                            marginBottom: "0",
+                            marginTop: "5px",
                         }}
                     >
                         <Input
@@ -450,7 +458,7 @@ const TaskList = () => {
                         style={{
                             float: "right",
                             marginBottom: "10px",
-                            marginTop: "10px",
+                            marginTop: "0",
                         }}
                     ></Col>
                     <Col
@@ -459,7 +467,7 @@ const TaskList = () => {
                         md={{ span: 8 }}
                         style={{ paddingTop: "20px", textAlign: "right" }}
                     >
-                        <a
+                        <div
                             className="btn-link expanddiv"
                             title="Show Filters"
                             onClick={onSwitchMoreFilter}
@@ -469,34 +477,42 @@ const TaskList = () => {
                                     ? "Show Filters "
                                     : "Hide Filters "}
                             </span>
-                            <svg
-                                className="svg-inline--fa fa-angle-down fa-w-10"
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="angle-down"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                                data-fa-i2svg=""
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
-                                ></path>
-                            </svg>
-                            <i className="fas fa-angle-down"></i>
-                        </a>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
                     </Col>
                 </Row>
-                <Fillter
-                    showMoreFilter={showMoreFilter}
-                    filterHandler={filterHandler}
-                />
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Table
                         id={"taskTable"}
@@ -527,7 +543,7 @@ const TaskList = () => {
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Col
                         xs={{ span: 24 }}
@@ -535,8 +551,8 @@ const TaskList = () => {
                         md={{ span: 8 }}
                         style={{
                             float: "right",
-                            marginBottom: "10px",
-                            marginTop: "10px",
+                            marginBottom: "0",
+                            marginTop: "5px",
                         }}
                     >
                         <Input
@@ -563,7 +579,7 @@ const TaskList = () => {
                         md={{ span: 8 }}
                         style={{ paddingTop: "20px", textAlign: "right" }}
                     >
-                        <a
+                        <div
                             className="btn-link expanddiv"
                             title="Show Filters"
                             onClick={onSwitchMoreFilter}
@@ -573,34 +589,42 @@ const TaskList = () => {
                                     ? "Show Filters "
                                     : "Hide Filters "}
                             </span>
-                            <svg
-                                className="svg-inline--fa fa-angle-down fa-w-10"
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="angle-down"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                                data-fa-i2svg=""
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
-                                ></path>
-                            </svg>
-                            <i className="fas fa-angle-down"></i>
-                        </a>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
                     </Col>
                 </Row>
-                <Fillter
-                    showMoreFilter={showMoreFilter}
-                    filterHandler={filterHandler}
-                />
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Table
                         id={"taskTable"}
