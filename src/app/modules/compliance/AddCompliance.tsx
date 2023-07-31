@@ -98,6 +98,9 @@ const AddCompliance = () => {
 
         console.log("Compliance Remark");
 
+        if (nameItem === "due_date") {
+        }
+
         setAddCompliance({
             ...addCompliance,
             [name]: value,
@@ -160,6 +163,26 @@ const AddCompliance = () => {
             returnFlag = false;
         }
 
+        // Due date validation against the start date
+        const startDateValue = dayjs(addCompliance.start_date);
+        const dueDateValue = dayjs(addCompliance.due_date);
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (dueDateValue.isBefore(startDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        // Start date validation against the due date
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (startDateValue.isAfter(dueDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
         // Clients validation
         if (complianceDetails === undefined || complianceDetails.length === 0) {
             returnFlag = false;
@@ -174,7 +197,7 @@ const AddCompliance = () => {
             toast.error("Please set mandatory fields", {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            return false;
+            return;
         } else {
             // // Read all existing task from `localStorage`
             // const complianceList = localStorage.getItem("compliance");
@@ -294,6 +317,24 @@ const AddCompliance = () => {
                                     required: true,
                                     message: "Please select start date.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const dueDateValue =
+                                            getFieldValue("due_date");
+                                        if (
+                                            !value ||
+                                            !dueDateValue ||
+                                            dayjs(value).isBefore(dueDateValue)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Start date should be before the due date."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
                             <DatePicker
@@ -319,6 +360,24 @@ const AddCompliance = () => {
                                     required: true,
                                     message: "Please select due date.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const startDate =
+                                            getFieldValue("start_date");
+                                        if (
+                                            !value ||
+                                            !startDate ||
+                                            !dayjs(value).isBefore(startDate)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Due date should be on or after the start date."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
                             <DatePicker
