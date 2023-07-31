@@ -1,4 +1,4 @@
-export interface EmployeeReport {
+export interface ClientReport {
     _id: string;
     date: string;
     employeeName: string;
@@ -10,7 +10,7 @@ export interface EmployeeReport {
     billable: string;
 }
 
-export class EmployeeReport implements EmployeeReport {
+export class ClientReport implements ClientReport {
     _id: string = "";
     date: string = "";
     employeeName: string = "";
@@ -22,14 +22,14 @@ export class EmployeeReport implements EmployeeReport {
     actual_time: string = "";
 }
 
-export interface EmployeeReportSummary {
+export interface ClientReportSummary {
     employeeName: string;
     totalBudgetTime: string;
     totalActualTime: string;
     taskCount: string;
 }
 
-export class EmployeeReportSummary implements EmployeeReportSummary {
+export class ClientReportSummary implements ClientReportSummary {
     employeeName: string = "";
     totalBudgetTime: string = "00h 00m";
     totalActualTime: string = "00h 00m";

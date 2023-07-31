@@ -54,8 +54,8 @@ const TimeSheet = () => {
     const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
         {} as ITimesheet
     );
-    const [isNewRow, setIsNewRow] = useState<boolean>(true);
     const [newRowCount, setNewRowCount] = useState<number>(1);
+    const [lastRowIndexId, setLastRowIndexId] = useState<string>();
     const [form] = Form.useForm();
 
     //Time sheet List
@@ -664,6 +664,7 @@ const TimeSheet = () => {
                 ...timesheet.slice(selectedRowIndex + 1),
             ];
             setTimesheet(updatedTimesheet);
+            setLastRowIndexId(newAddTimesheet._id);
             setNewRowCount(newRowCount + 1);
         } else {
             // toast.error("Please complete the last row action.", {
