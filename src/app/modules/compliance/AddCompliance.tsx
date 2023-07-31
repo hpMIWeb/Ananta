@@ -98,9 +98,6 @@ const AddCompliance = () => {
 
         console.log("Compliance Remark");
 
-        if (nameItem === "due_date") {
-        }
-
         setAddCompliance({
             ...addCompliance,
             [name]: value,
@@ -394,6 +391,60 @@ const AddCompliance = () => {
                                     required: true,
                                     message: "Please select due date.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const startDate =
+                                            getFieldValue("start_date");
+                                        if (
+                                            !value ||
+                                            !startDate ||
+                                            !dayjs(value).isBefore(startDate)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Due date should be on or after the start date."
+                                            )
+                                        );
+                                    },
+                                }),
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const startDate =
+                                            getFieldValue("start_date");
+                                        if (
+                                            !value ||
+                                            !startDate ||
+                                            !dayjs(value).isBefore(startDate)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Due date should be on or after the start date."
+                                            )
+                                        );
+                                    },
+                                }),
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const startDate =
+                                            getFieldValue("start_date");
+                                        if (
+                                            !value ||
+                                            !startDate ||
+                                            !dayjs(value).isBefore(startDate)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Due date should be on or after the start date."
+                                            )
+                                        );
+                                    },
+                                }),
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
                                         const startDate =

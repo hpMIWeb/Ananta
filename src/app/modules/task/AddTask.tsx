@@ -127,6 +127,26 @@ const AddTask = () => {
             returnFlag = false;
         }
 
+        // Due date validation against the start date
+        const startDateValue = dayjs(addTask.start_date);
+        const dueDateValue = dayjs(addTask.due_date);
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (dueDateValue.isBefore(startDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        // Start date validation against the due date
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (startDateValue.isAfter(dueDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
         console.log(returnFlag);
         return returnFlag;
     };
@@ -253,6 +273,24 @@ const AddTask = () => {
                                     required: true,
                                     message: "Please select start date.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const dueDateValue =
+                                            getFieldValue("due_date");
+                                        if (
+                                            !value ||
+                                            !dueDateValue ||
+                                            dayjs(value).isBefore(dueDateValue)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Start date should be before the due date."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
                             <DatePicker
@@ -278,6 +316,24 @@ const AddTask = () => {
                                     required: true,
                                     message: "Please select due date.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const startDate =
+                                            getFieldValue("start_date");
+                                        if (
+                                            !value ||
+                                            !startDate ||
+                                            !dayjs(value).isBefore(startDate)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Due date should be on or after the start date."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
                             <DatePicker
