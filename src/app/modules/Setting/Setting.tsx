@@ -126,14 +126,12 @@ const Setting = () => {
     const getSetting = () => {
         api.getSettings().then((resp: any) => {
             //TODO: taking only first record of the array, `payload` should not be an array
-            if (resp.data && resp.data.length > 0) {
-                var respData = resp.data[0];
-
-                setSettingData(respData);
-                setValue(respData.task.select_template);
-                setComplianceData(respData.compliance);
-                setTaskData(respData.task);
-            }
+            console.log(resp.data);
+            var respData = resp.data;
+            setSettingData(respData);
+            setValue(respData.task.select_template);
+            setComplianceData(respData.compliance);
+            setTaskData(respData.task);
         });
     };
 
