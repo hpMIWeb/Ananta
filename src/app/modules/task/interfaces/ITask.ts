@@ -16,7 +16,7 @@ export interface AddTask {
     client: string;
     assigned_to: string;
     datapath: string;
-    subTask: AddSubTask[];
+    subtask: AddSubTask[];
     attachments: Attachment[];
     comments: Comment[];
 }
@@ -38,7 +38,7 @@ export class Task implements AddTask {
     client: string = "";
     assigned_to: string = "";
     datapath: string = "";
-    subTask: SubTask[] = [];
+    subtask: SubTask[] = [];
     attachments: Attachment[] = [];
     comments: Comment[] = [];
 }

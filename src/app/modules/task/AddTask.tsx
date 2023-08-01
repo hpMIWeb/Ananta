@@ -177,7 +177,7 @@ const AddTask = () => {
     };
 
     const updateSubComponents = (subTasks: AddSubTask[]) => {
-        addTask.subTask = !showSubTask
+        addTask.subtask = !showSubTask
             ? []
             : subTasks.map((subTaskItem: AddSubTask) => {
                   return {
