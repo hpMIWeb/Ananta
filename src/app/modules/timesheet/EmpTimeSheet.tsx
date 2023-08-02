@@ -26,6 +26,10 @@ import {
     employeeOpts,
     calculateTimeDifference,
 } from "../../utilities/utility";
+import {
+    EmployeeReport,
+    EmployeeReportSummary,
+} from "./interfaces/IEmployeeReport";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,7 +41,9 @@ const pageSize = 20;
 const EmpTimeSheet = () => {
     const [current, setCurrent] = useState(1);
     const [activeTab, setActiveTab] = useState<string>("2");
-    const [employeeReport, setEmployeeReport] = useState<[]>([]);
+    const [employeeReport, setEmployeeReport] = useState<EmployeeReport[]>([]);
+    const [employeeReportSummary, setEmployeeReportSummary] =
+        useState<EmployeeReportSummary>(new EmployeeReportSummary());
 
     const columns = [
         {
@@ -105,7 +111,7 @@ const EmpTimeSheet = () => {
             },
         },
         {
-            title: "Differance",
+            title: "Difference",
             dataIndex: "total_time",
             key: "total_time",
             width: 120,
@@ -194,7 +200,9 @@ const EmpTimeSheet = () => {
             case "employeeName": {
                 if (value !== "") {
                     parameters.push(
-                        `employeeName=${encodeURIComponent(value)}`
+                        `employeeName=${encodeURIComponent(
+                            "64995ea32247b2567c76e015"
+                        )}`
                     );
                 }
                 break;
@@ -226,11 +234,9 @@ const EmpTimeSheet = () => {
         try {
             api.getEmployeeTimesheetReport("?" + queryString).then(
                 (resp: any) => {
-                    localStorage.setItem(
-                        "employeeReport",
-                        JSON.stringify(resp.data)
-                    );
-                    setEmployeeReport(resp.data);
+                    setEmployeeReport(resp.data["data"]);
+                    setEmployeeReportSummary(resp.data["header"]);
+                    // employeeReportSummary.employeeName = "Pinank Soni";
                 }
             );
         } catch (ex) {
@@ -380,8 +386,8 @@ const EmpTimeSheet = () => {
 
                 <div className="summery">
                     <ul className="summery1">
-                        <li className="Et7">
-                            <div>
+                        <li className="w100  employeeLi">
+                            <div className="employeeSummaryLable">
                                 <img
                                     src={
                                         "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
@@ -390,32 +396,53 @@ const EmpTimeSheet = () => {
                                     className="assigneeImage"
                                 />
                             </div>
-                            <p className="Et6">Trusha Bhanderi</p>
+                            <p className="employeeSummaryData w100">Pinank</p>
                         </li>
-                        <Divider type="vertical" />
-                        <li className="Et7">
-                            <p className="Et6">23-05-2022 To 30-05-2022</p>
-                            <p className="Et8">Time Period</p>
+                        <Divider type="vertical" className="divider" />
+                        <li className="w100 employeeLi">
+                            <p className="employeeSummaryData w100">
+                                {employeeReportSummary.taskCount}
+                            </p>
+                            <p className="employeeSummaryLable w100">
+                                Time Period
+                            </p>
                         </li>
-                        <Divider type="vertical" />
-                        <li className="Et7">
-                            <p className="Et6">20</p>
-                            <p className="Et8">Total Task</p>
+                        <Divider type="vertical" className="divider" />
+                        <li className="w100 employeeLi">
+                            <p className="employeeSummaryData">
+                                {employeeReportSummary.taskCount}
+                            </p>
+                            <p className="employeeSummaryLable">Total Task</p>
                         </li>
-                        <Divider type="vertical" />
-                        <li className="Et7">
-                            <p className="Et6">25h 30m</p>
-                            <p className="Et8">Total Budget Time</p>
+                        <Divider type="vertical" className="divider" />
+                        <li className="w100 employeeLi">
+                            <p className="employeeSummaryData">
+                                {employeeReportSummary.totalBudgetTime}
+                            </p>
+                            <p className="employeeSummaryLable">
+                                Total Budget Time
+                            </p>
                         </li>
-                        <Divider type="vertical" />
-                        <li className="Et7">
-                            <p className="Et6">35h 30m</p>
-                            <p className="Et8">Total Actual Time</p>
+                        <Divider type="vertical" className="divider" />
+                        <li className="w100 employeeLi">
+                            <p className="employeeSummaryData">
+                                {employeeReportSummary.totalActualTime}
+                            </p>
+                            <p className="employeeSummaryLable">
+                                Total Actual Time
+                            </p>
                         </li>
-                        <Divider type="vertical" />
-                        <li className="Et7">
-                            <p className="Et6">35h 30m</p>
-                            <p className="Et8">Total Difference</p>
+                        <Divider type="vertical" className="divider" />
+                        <li className="w100 employeeLi">
+                            <p className="employeeSummaryData">
+                                {calculateTimeDifference(
+                                    employeeReportSummary.totalBudgetTime,
+                                    employeeReportSummary.totalActualTime
+                                )}
+                            </p>
+                            <p className="employeeSummaryLable">
+                                Total Difference
+                            </p>
                         </li>
                     </ul>
                 </div>
