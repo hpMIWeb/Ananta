@@ -804,13 +804,19 @@ const TimeSheet = () => {
 
         // Make a single API call to save the multiple timesheet entries
         try {
-            api.createMultipleTimesheet(timesheetPayload).then((resp) => {
-                console.log("after save timesheet", resp);
-                toast.success("Successfully saved timesheet entries", {
-                    position: toast.POSITION.TOP_RIGHT,
+            api.createMultipleTimesheet(timesheetPayload)
+                .then((resp) => {
+                    console.log("after save timesheet", resp);
+                    toast.success("Successfully saved timesheet entries", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    getTimeSheetData();
+                })
+                .catch((error) => {
+                    toast.error("Technical error while creating Task", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
                 });
-                getTimeSheetData();
-            });
         } catch (ex) {
             toast.error("Technical error while creating Task", {
                 position: toast.POSITION.TOP_RIGHT,
