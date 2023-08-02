@@ -98,7 +98,7 @@ const TaskList = () => {
             title: "assignee",
             dataIndex: "assigned_to",
             key: "assigned_to",
-            width: "20%",
+            width: "10%",
             render: (assigned_to: string) => (
                 <Tooltip title={assigned_to}>
                     <div className="assigneeContainer">
@@ -175,7 +175,7 @@ const TaskList = () => {
             title: "Status",
             key: "status",
             dataIndex: "status",
-
+            width: "10%",
             render: (status: string) => (
                 <span style={{ float: "right" }}>
                     {[status].map((item) => {
@@ -229,19 +229,19 @@ const TaskList = () => {
         let rowClassName = "";
         switch (record.priority.toLowerCase()) {
             case "high": {
-                rowClassName = "data-row-high";
+                rowClassName = "tasklist data-row-high";
                 break;
             }
             case "medium": {
-                rowClassName = "data-row-medium";
+                rowClassName = "tasklist data-row-medium";
                 break;
             }
             case "low": {
-                rowClassName = "data-row-low";
+                rowClassName = "tasklist data-row-low";
                 break;
             }
             case "moderate": {
-                rowClassName = "data-row-moderate";
+                rowClassName = "tasklist data-row-moderate";
                 break;
             }
         }

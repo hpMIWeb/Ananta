@@ -75,7 +75,7 @@ const EmpTimeSheet = () => {
                 return remarkA.localeCompare(remarkB);
             },
             render: (remark: string) => (
-                <div className="scrollabletd">{remark}</div>
+                <div className="scrollbar-td">{remark}</div>
             ),
         },
 
@@ -231,7 +231,6 @@ const EmpTimeSheet = () => {
                 (resp: any) => {
                     setEmployeeReport(resp.data["data"]);
                     setEmployeeReportSummary(resp.data["header"]);
-                    // employeeReportSummary.employeeName = "Pinank Soni";
                 }
             );
         } catch (ex) {

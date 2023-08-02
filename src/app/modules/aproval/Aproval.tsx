@@ -83,7 +83,7 @@ const Approval = () => {
             sorter: (a: any, b: any) =>
                 a.leave_reason.localeCompare(b.leave_reason),
             render: (leave_reason: string) => (
-                <div className="scrollabletd">{leave_reason}</div>
+                <div className="scrollbar-td">{leave_reason}</div>
             ),
         },
         {

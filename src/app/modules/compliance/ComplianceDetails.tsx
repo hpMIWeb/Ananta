@@ -42,6 +42,19 @@ const ComplianceDetails = (props: any) => {
         props.subcompliance ?? []
     );
 
+    // Custom Validation for Client row
+    const customValidationRule = (rule: any, value: any, record: any) => {
+        if (record.client === "") {
+            return Promise.resolve();
+        }
+
+        if (value === undefined) {
+            return Promise.reject(new Error(rule.message));
+        } else {
+            return Promise.resolve();
+        }
+    };
+
     const editColumns = [
         {
             title: "Actions",
@@ -82,6 +95,13 @@ const ComplianceDetails = (props: any) => {
                         {
                             required: true,
                             message: "Please select Client.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
                         },
                     ]}
                 >
@@ -124,6 +144,13 @@ const ComplianceDetails = (props: any) => {
                         {
                             required: true,
                             message: "Please select Assignee.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
                         },
                     ]}
                 >
@@ -160,6 +187,13 @@ const ComplianceDetails = (props: any) => {
                         {
                             required: true,
                             message: "Please set Budget Time.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
                         },
                     ]}
                 >
@@ -195,6 +229,13 @@ const ComplianceDetails = (props: any) => {
                         {
                             required: true,
                             message: "Please set Priority.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
                         },
                     ]}
                 >

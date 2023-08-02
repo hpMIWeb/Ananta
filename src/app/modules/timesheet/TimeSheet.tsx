@@ -118,8 +118,6 @@ const TimeSheet = () => {
             title: "Start Time",
             dataIndex: "start_time",
             key: "start_time",
-            sorter: (a: Timesheet, b: Timesheet) =>
-                dayjs(a.start_time).unix() - dayjs(b.start_time).unix(),
             width: "10%",
             render: (start_time: string, record: Timesheet) => {
                 if (record.is_new) {
@@ -157,7 +155,7 @@ const TimeSheet = () => {
                     );
                 } else if (!record.is_edit) {
                     return (
-                        <b>
+                        <span className="start-time">
                             <ClockCircleOutlined
                                 style={{
                                     color: "#2c7be5",
@@ -165,7 +163,7 @@ const TimeSheet = () => {
                                 }}
                             />
                             {dayjs(record.start_time).format("HH:mm")}
-                        </b>
+                        </span>
                     );
                 }
                 return (
@@ -236,7 +234,7 @@ const TimeSheet = () => {
                     );
                 } else if (!record.is_edit) {
                     return (
-                        <b>
+                        <span className="start-time">
                             <ClockCircleOutlined
                                 style={{
                                     color: "#2c7be5",
@@ -244,7 +242,7 @@ const TimeSheet = () => {
                                 }}
                             />
                             {dayjs(record.end_time).format("HH:mm")}
-                        </b>
+                        </span>
                     );
                 }
                 return (
@@ -315,7 +313,7 @@ const TimeSheet = () => {
                         </Form.Item>
                     );
                 } else if (!record.is_edit) {
-                    return <b>{record.client}</b>;
+                    return <span>{record.client}</span>;
                 }
                 return (
                     <Form.Item
@@ -385,7 +383,7 @@ const TimeSheet = () => {
                         </Form.Item>
                     );
                 } else if (!record.is_edit) {
-                    return <b>{record.work_area}</b>;
+                    return <span>{record.work_area}</span>;
                 }
                 return (
                     <Form.Item
@@ -419,7 +417,7 @@ const TimeSheet = () => {
             title: "Particulars",
             dataIndex: "particulars",
             key: "particulars",
-            width: "10%",
+            width: "20%",
             sorter: (a: Timesheet, b: Timesheet) =>
                 a.particulars.localeCompare(b.particulars),
             render: (particulars: string, record: Timesheet) => {
@@ -454,7 +452,9 @@ const TimeSheet = () => {
                         </Form.Item>
                     );
                 } else if (!record.is_edit) {
-                    return <b>{record.particulars}</b>;
+                    return (
+                        <div className="scrollbar-td">{record.particulars}</div>
+                    );
                 }
                 return (
                     <Form.Item
@@ -487,7 +487,7 @@ const TimeSheet = () => {
             title: "Remark",
             dataIndex: "remark",
             key: "remark",
-            width: "10%",
+            width: "20%",
             sorter: (a: Timesheet, b: Timesheet) =>
                 a.remark.localeCompare(b.remark),
             render: (remark: string, record: Timesheet) => {
@@ -522,7 +522,7 @@ const TimeSheet = () => {
                         </Form.Item>
                     );
                 } else if (!record.is_edit) {
-                    return <b>{record.remark}</b>;
+                    return <div className="scrollbar-td">{record.remark}</div>;
                 }
                 return (
                     <Form.Item
@@ -567,15 +567,13 @@ const TimeSheet = () => {
                     if (record.total_time !== "") {
                         return (
                             <span>
-                                <b>
-                                    <ClockCircleOutlined
-                                        style={{
-                                            color: "#2c7be5",
-                                            marginRight: "10px",
-                                        }}
-                                    />
-                                    {record.total_time}
-                                </b>
+                                <ClockCircleOutlined
+                                    style={{
+                                        color: "#2c7be5",
+                                        marginRight: "10px",
+                                    }}
+                                />
+                                {record.total_time}
                             </span>
                         );
                     }
@@ -595,7 +593,7 @@ const TimeSheet = () => {
             title: "Action",
             dataIndex: "action",
             key: "action",
-            width: "10%",
+            width: "5%",
 
             render: (_: any, record: Timesheet) => {
                 if (record.is_new) {
@@ -808,8 +806,8 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => ({
-            start_time: selectedDate + " " + dayjs(entry.start_time, "HH:mm"),
-            end_time: selectedDate + " " + dayjs(entry.end_time, "HH:mm"),
+            start_time: selectedDate + " " + entry.start_time,
+            end_time: selectedDate + " " + entry.end_time,
             remark: entry.remark,
             client: entry.client,
             work_area: entry.work_area,
@@ -1053,21 +1051,23 @@ const TimeSheet = () => {
                             sm={{ span: 24 }}
                             md={{ span: 24 }}
                         >
-                            <Table
-                                columns={columns}
-                                dataSource={timesheetAction}
-                                rowKey="_id"
-                                onRow={(record, rowIndex) => {
-                                    return {
-                                        onClick: (event) => {
-                                            setSelectedTableRow(record);
-                                        },
-                                    };
-                                }}
-                                className="table-striped-rows center-align-header"
-                                bordered
-                                size="small"
-                            />
+                            <div className="client-details">
+                                <Table
+                                    id="time-sheet-table"
+                                    columns={columns}
+                                    dataSource={timesheetAction}
+                                    rowKey="_id"
+                                    onRow={(record, rowIndex) => {
+                                        return {
+                                            onClick: (event) => {
+                                                setSelectedTableRow(record);
+                                            },
+                                        };
+                                    }}
+                                    className="table-striped-rows center-align-header time-sheet-table"
+                                    bordered
+                                />
+                            </div>
                         </Col>
                     </Row>
 

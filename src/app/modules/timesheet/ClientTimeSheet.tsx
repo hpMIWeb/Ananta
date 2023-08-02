@@ -66,7 +66,7 @@ const ClientTimeSheet = () => {
             width: "25%",
             sorter: (a: any, b: any) => a.remark.localCompare(b.remark),
             render: (remark: string) => (
-                <div className="scrollabletd">{remark}</div>
+                <div className="scrollbar-td">{remark}</div>
             ),
         },
         {
