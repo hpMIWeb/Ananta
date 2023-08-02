@@ -46,24 +46,35 @@ const pageSize = 20;
 const TimeSheet = () => {
     const [current, setCurrent] = useState(1);
     const dateFormat = "YYYY-MM-DD";
-    const [timesheetDate, setTimesheetDate] = useState(
-        dayjs().format(dateFormat)
-    );
-    const [timesheet, setTimesheet] = useState<ITimesheet[]>([]);
-    const [timesheetAction, setTimesheetACtion] = useState<ITimesheet[]>([]);
+    const [filterDate, setFilterDate] = useState(dayjs().format(dateFormat));
+    const [timesheetData, setTimesheetData] = useState<ITimesheet[]>([]);
+    const [timesheetAction, setTimesheetAction] = useState<ITimesheet[]>([]);
     const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
         {} as ITimesheet
     );
     const [isNewRow, setIsNewRow] = useState<boolean>(true);
     const [newRowCount, setNewRowCount] = useState<number>(1);
     const [form] = Form.useForm();
+    //const [currentTimeSheet, setCurrentTimeSheet] = useState<ITimesheet[]>([]);
 
     //Time sheet List
     useEffect(() => {
         getTimeSheetData();
+        getData(filterDate.toString());
     }, []);
 
-    function onChange(sorter: any) {}
+    // Custom Validation for timesheet
+    const anyValidation = (rule: any, value: any, record: any) => {
+        if (record.start_time === "" && record.end_time === "") {
+            return Promise.resolve();
+        }
+
+        if (value === undefined) {
+            return Promise.reject(new Error(rule.message));
+        } else {
+            return Promise.resolve();
+        }
+    };
 
     const columns = [
         {
@@ -80,6 +91,13 @@ const TimeSheet = () => {
                                 {
                                     required: true,
                                     message: "Please enter start time.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
                                 },
                             ]}
                         >
@@ -114,16 +132,15 @@ const TimeSheet = () => {
                 return (
                     <Form.Item
                         name={`start_time_${record._id}`}
-                        rules={
-                            record.is_new
-                                ? [
-                                      {
-                                          required: true,
-                                          message: "Please enter Start Time.",
-                                      },
-                                  ]
-                                : []
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter start time.",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <TimePicker
                             placeholder="Start Time"
@@ -155,7 +172,14 @@ const TimeSheet = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Please enter End Time.",
+                                    message: "Please enter end time.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
                                 },
                             ]}
                         >
@@ -187,16 +211,15 @@ const TimeSheet = () => {
                 return (
                     <Form.Item
                         name={`end_time_${record._id}`}
-                        rules={
-                            record.end_time
-                                ? []
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please enter End time.",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter end time.",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <TimePicker
                             placeholder="End Time"
@@ -222,43 +245,51 @@ const TimeSheet = () => {
                 a.client.localeCompare(b.client),
             render: (client: string, record: Timesheet) => {
                 if (record.is_new) {
-                    <Form.Item
-                        name={`client_${record._id}`}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter Client.",
-                            },
-                        ]}
-                    >
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Client"
-                            options={clientOpts}
-                            defaultValue={client}
-                            className="w100"
-                            onChange={(value, event) => {
-                                inputChangeHandler(event, "client");
-                            }}
-                        />
-                    </Form.Item>;
+                    return (
+                        <Form.Item
+                            name={`client_${record._id}`}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter Client.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
+                                },
+                            ]}
+                        >
+                            <Select
+                                allowClear
+                                showSearch
+                                placeholder="Client"
+                                options={clientOpts}
+                                defaultValue={client}
+                                className="w100"
+                                onChange={(value, event) => {
+                                    inputChangeHandler(event, "client");
+                                }}
+                            />
+                        </Form.Item>
+                    );
                 } else if (!record.is_edit) {
                     return <b>{record.client}</b>;
                 }
                 return (
                     <Form.Item
                         name={`client_${record._id}`}
-                        rules={
-                            record.client
-                                ? []
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please enter Client.",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter Client.",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <Select
                             allowClear
@@ -287,17 +318,19 @@ const TimeSheet = () => {
                     return (
                         <Form.Item
                             name={`work_area_${record._id}`}
-                            rules={
-                                record.work_area
-                                    ? []
-                                    : [
-                                          {
-                                              required: true,
-                                              message:
-                                                  "Please select Work Area.",
-                                          },
-                                      ]
-                            }
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select Work Area.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
+                                },
+                            ]}
                         >
                             <Select
                                 allowClear
@@ -318,16 +351,15 @@ const TimeSheet = () => {
                 return (
                     <Form.Item
                         name={`work_area_${record._id}`}
-                        rules={
-                            record.work_area
-                                ? []
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please select Work Area.",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select Work Area.",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <Select
                             allowClear
@@ -356,17 +388,19 @@ const TimeSheet = () => {
                     return (
                         <Form.Item
                             name={`particulars_${record._id}`}
-                            rules={
-                                record.particulars
-                                    ? [] // Exclude validation if `remark` is pre-filled
-                                    : [
-                                          {
-                                              required: true,
-                                              message:
-                                                  "Please enter Particulars.",
-                                          },
-                                      ]
-                            }
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter Particulars.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
+                                },
+                            ]}
                         >
                             <Input
                                 placeholder="Particulars"
@@ -386,16 +420,15 @@ const TimeSheet = () => {
                 return (
                     <Form.Item
                         name={`particulars_${record._id}`}
-                        rules={
-                            record.particulars
-                                ? [] // Exclude validation if `remark` is pre-filled
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please enter Particulars .",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter Particulars .",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <Input
                             placeholder="Particulars"
@@ -423,16 +456,19 @@ const TimeSheet = () => {
                     return (
                         <Form.Item
                             name={`remark_${record._id}`}
-                            rules={
-                                record.remark
-                                    ? [] // Exclude validation if `remark` is pre-filled
-                                    : [
-                                          {
-                                              required: true,
-                                              message: "Please enter a remark.",
-                                          },
-                                      ]
-                            }
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter a remark.",
+                                    validator: (rule, value) => {
+                                        return anyValidation(
+                                            rule,
+                                            value,
+                                            record
+                                        );
+                                    },
+                                },
+                            ]}
                         >
                             <Input
                                 placeholder="Remark"
@@ -452,16 +488,15 @@ const TimeSheet = () => {
                 return (
                     <Form.Item
                         name={`remark_${record._id}`}
-                        rules={
-                            record.remark
-                                ? [] // Exclude validation if `remark` is pre-filled
-                                : [
-                                      {
-                                          required: true,
-                                          message: "Please enter a remark.",
-                                      },
-                                  ]
-                        }
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter a remark.",
+                                validator: (rule, value) => {
+                                    return anyValidation(rule, value, record);
+                                },
+                            },
+                        ]}
                     >
                         <Input
                             placeholder="Remark"
@@ -482,7 +517,6 @@ const TimeSheet = () => {
             dataIndex: "total_time",
             key: "total_time",
             width: "10%",
-
             sorter: (a: Timesheet, b: Timesheet) => {
                 const aMinutes = convertTimeToMinutes(a.total_time);
                 const bMinutes = convertTimeToMinutes(b.total_time);
@@ -647,23 +681,22 @@ const TimeSheet = () => {
     const addNewTimesheetRow = () => {
         const newAddTimesheet = new Timesheet();
         newAddTimesheet._id = nanoid();
-        newAddTimesheet.date = timesheetDate;
+        newAddTimesheet.date = filterDate;
 
-        console.log(timesheet);
         if (
-            !timesheet.some(
+            !timesheetData.some(
                 (row) => row.start_time === "" && row.end_time === ""
             )
         ) {
-            const selectedRowIndex = timesheet.findIndex(
+            const selectedRowIndex = timesheetData.findIndex(
                 (row) => row === selectedTableRow
             );
             const updatedTimesheet = [
-                ...timesheet.slice(0, selectedRowIndex + 1),
+                ...timesheetAction.slice(0, selectedRowIndex + 1),
                 newAddTimesheet,
-                ...timesheet.slice(selectedRowIndex + 1),
+                ...timesheetAction.slice(selectedRowIndex + 1),
             ];
-            setTimesheet(updatedTimesheet);
+            setTimesheetAction(updatedTimesheet);
             setNewRowCount(newRowCount + 1);
         } else {
             // toast.error("Please complete the last row action.", {
@@ -681,22 +714,20 @@ const TimeSheet = () => {
     // Edit time sheet data
     const editClickHandler = (record: Timesheet) => {
         record.is_edit = !record.is_edit;
-        setTimesheet([...timesheet]);
+        setTimesheetData([...timesheetData]);
     };
 
     // delete time sheet data
     const deleteClickHandler = (timeSheetId: string) => {
-        //  const timeSheetList = localStorage.getItem("timesheet");
-
         // Delete from  DB
         try {
             api.deleteTimesheet(timeSheetId).then((resp: any) => {
                 // Set timesheet to `localStorage`
-                const updatedData = timesheet.filter(
+                const updatedData = timesheetData.filter(
                     (item: Timesheet) => item._id !== timeSheetId
                 );
-                setTimesheet(updatedData);
-                localStorage.setItem("timesheet", JSON.stringify(updatedData));
+                setTimesheetData(updatedData);
+                //localStorage.setItem("timesheet", JSON.stringify(updatedData));
                 toast.success("Successfully Timesheet Remove.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -716,11 +747,11 @@ const TimeSheet = () => {
             });
             return;
         }
-        const updatedData = timesheet.filter(
+        const updatedData = timesheetData.filter(
             (item: Timesheet) => item._id !== timeSheetId
         );
 
-        setTimesheet(updatedData);
+        setTimesheetData(updatedData);
         setNewRowCount(newRowCount - 1);
         localStorage.setItem("timesheet", JSON.stringify(updatedData));
         toast.success("Successfully Timesheet delete.", {
@@ -730,11 +761,14 @@ const TimeSheet = () => {
 
     // save time sheet data
     const saveTimeSheetHandler = () => {
-        console.log(timesheet);
-
-        const selectedDate = dayjs(timesheetDate).format(dateFormat);
+        const selectedDate = dayjs(filterDate).format(dateFormat);
         // Read all existing timesheet from `localStorage`
-        const newTimesheets = timesheet.filter((entry) => entry.is_new);
+        const newTimesheets = timesheetAction.filter((entry) => {
+            return (
+                entry.is_new && entry.start_time !== "" && entry.end_time !== ""
+            );
+        });
+
         // Check if any new timesheets are present
         if (newTimesheets.length === 0) {
             toast.error("No new timesheet entries to save.", {
@@ -748,7 +782,6 @@ const TimeSheet = () => {
             Object.values(entry).every((value) => value !== "")
         );
 
-        console.log(newTimesheets);
         // If any entry is not valid, display an error message
         if (!isEveryEntryValid) {
             toast.error("Please complete all required fields.", {
@@ -771,12 +804,19 @@ const TimeSheet = () => {
 
         // Make a single API call to save the multiple timesheet entries
         try {
-            api.createMultipleTimesheet(timesheetPayload).then((resp) => {
-                toast.success("Successfully saved timesheet entries", {
-                    position: toast.POSITION.TOP_RIGHT,
+            api.createMultipleTimesheet(timesheetPayload)
+                .then((resp) => {
+                    console.log("after save timesheet", resp);
+                    toast.success("Successfully saved timesheet entries", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    getTimeSheetData();
+                })
+                .catch((error) => {
+                    toast.error("Technical error while creating Task", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
                 });
-                getTimeSheetData();
-            });
         } catch (ex) {
             toast.error("Technical error while creating Task", {
                 position: toast.POSITION.TOP_RIGHT,
@@ -787,7 +827,6 @@ const TimeSheet = () => {
     };
 
     //save time sheet code start
-
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
         let value = "";
@@ -802,13 +841,11 @@ const TimeSheet = () => {
             value = event.value;
         }
 
-        Object.keys(selectedTableRow).map((recordItem: string) => {
+        Object.keys(selectedTableRow).forEach((recordItem: string) => {
             if (recordItem === name) {
                 switch (recordItem) {
                     case "start_time": {
-                        console.log(selectedTableRow);
                         selectedTableRow.start_time = value;
-
                         let startTime = dayjs(
                             selectedTableRow.start_time,
                             "HH:mm"
@@ -825,13 +862,13 @@ const TimeSheet = () => {
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 
-                        // update the `is_new` if `start_time` and `end_time` are not empty
-                        if (
-                            selectedTableRow.start_time != "" &&
-                            selectedTableRow.end_time != ""
-                        ) {
-                            selectedTableRow.is_new = false;
-                        }
+                        // // update the `is_new` if `start_time` and `end_time` are not empty
+                        // if (
+                        //     selectedTableRow.start_time !== "" &&
+                        //     selectedTableRow.end_time !== ""
+                        // ) {
+                        //     selectedTableRow.is_new = false;
+                        // }
                         break;
                     }
                     case "end_time": {
@@ -880,21 +917,13 @@ const TimeSheet = () => {
         });
 
         // update selected rows
-
         setSelectedTableRow(selectedTableRow);
-        setTimesheetACtion([...timesheetAction, selectedTableRow]);
     };
 
     const dateFilter = (date: string) => {
-        const newBlankTimeSheet = new Timesheet();
-        setTimesheetDate(date);
-        newBlankTimeSheet._id = nanoid();
-        newBlankTimeSheet.date = date.toString();
-        //const finalData = [newBlankTimeSheet, ...timesheet];
-        //setTimesheet(finalData);
-        getData(current, pageSize);
-
-        getTimeSheetData();
+        setFilterDate(date);
+        console.log("filter date", date);
+        getData(date);
     };
 
     const calculateTotalTime = (record: Timesheet) => {
@@ -917,31 +946,32 @@ const TimeSheet = () => {
     // save time sheet code end
 
     const getTimeSheetData = () => {
+        api.getTimesheet().then((resp: any) => {
+            setTimesheetData(resp.data);
+        });
+    };
+
+    const getData = (currentDate: string) => {
+        // Create blank Timesheet
         const newBlankTimeSheet = new Timesheet();
         newBlankTimeSheet._id = nanoid();
-        newBlankTimeSheet.date = timesheetDate.toString();
-        setTimesheet([newBlankTimeSheet]);
-        api.getTimesheet().then((resp: any) => {
-            const finalData = [newBlankTimeSheet, ...resp.data];
-            localStorage.setItem("timesheet", JSON.stringify(finalData));
-            setTimesheet(finalData);
-        });
-        //   addNewTimesheetRow();
-    };
-    const getData = (current: number, pageSize: number) => {
-        let returnVal = timesheet;
-        console.log(timesheet);
+        newBlankTimeSheet.date = currentDate.toString();
 
-        returnVal = timesheet.filter((item: ITimesheet) => {
-            return dayjs(item.date, dateFormat).isSame(timesheetDate);
+        let returnVal = timesheetData.filter((item: ITimesheet) => {
+            return dayjs(item.date, dateFormat).isSame(currentDate);
         });
-        return returnVal
-            .map((item: any, index: number) => {
-                item.key = index;
-                return item;
-            })
-            .slice((current - 1) * pageSize, current * pageSize);
+
+        // Add new blank item at the top
+        returnVal.unshift(newBlankTimeSheet);
+
+        const cTimeSheet = returnVal.map((item: any, index: number) => {
+            item.key = index;
+            return item;
+        });
+        setTimesheetAction(cTimeSheet);
+        //.slice((current - 1) * pageSize, current * pageSize);
     };
+
     //End Time sheet List
     const tabContent: TabsProps["items"] = [
         {
@@ -1017,8 +1047,7 @@ const TimeSheet = () => {
                         >
                             <Table
                                 columns={columns}
-                                dataSource={getData(current, pageSize)}
-                                onChange={onChange}
+                                dataSource={timesheetAction}
                                 rowKey="_id"
                                 onRow={(record, rowIndex) => {
                                     return {

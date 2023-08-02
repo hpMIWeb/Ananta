@@ -25,6 +25,8 @@ import api from "../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAlignLeft,
+    faAngleDown,
+    faAngleUp,
     faCalendarAlt,
     faCalendarDays,
     faUser,
@@ -345,30 +347,21 @@ const ComplianceList = () => {
 
     const rowClassHandler = (record: IAddCompliance) => {
         let rowClassName = "";
-        switch (record.status.toLowerCase()) {
-            case "pending":
-            case "1": {
-                rowClassName = "tasklist  data-row-pending";
+        switch (record.priority.toLowerCase()) {
+            case "high": {
+                rowClassName = "tasklist  data-row-high";
                 break;
             }
-            case "2": {
-                rowClassName = "tasklist  data-row-completed";
+            case "medium": {
+                rowClassName = "tasklist  data-row-medium";
                 break;
             }
-            case "completed": {
-                rowClassName = "tasklist  data-row-completed";
+            case "low": {
+                rowClassName = "tasklist  data-row-low";
                 break;
             }
-            case "in_progress": {
-                rowClassName = "tasklist  data-row-in-progress";
-                break;
-            }
-            case "inprogress": {
-                rowClassName = "tasklist  data-row-in-progress";
-                break;
-            }
-            case "cancelled": {
-                rowClassName = "tasklist  data-row-cancel";
+            case "moderate": {
+                rowClassName = "tasklist  data-row-moderate";
                 break;
             }
         }
@@ -463,7 +456,7 @@ const ComplianceList = () => {
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Col
                         xs={{ span: 24 }}
@@ -472,7 +465,7 @@ const ComplianceList = () => {
                         style={{
                             float: "right",
                             marginBottom: "10px",
-                            marginTop: "10px",
+                            marginTop: "7px",
                         }}
                     >
                         <Input
@@ -489,7 +482,7 @@ const ComplianceList = () => {
                         md={{ span: 8 }}
                         style={{
                             marginBottom: "10px",
-                            marginTop: "10px",
+                            marginTop: "0",
                         }}
                     ></Col>
                     <Col
@@ -498,7 +491,7 @@ const ComplianceList = () => {
                         md={{ span: 8 }}
                         style={{ paddingTop: "20px", textAlign: "right" }}
                     >
-                        <a
+                        <div
                             className="btn-link expanddiv"
                             title="Show Filters"
                             onClick={onSwitchMoreFilter}
@@ -508,34 +501,43 @@ const ComplianceList = () => {
                                     ? "Show Filters "
                                     : "Hide Filters "}
                             </span>
-                            <svg
-                                className="svg-inline--fa fa-angle-down fa-w-10"
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="angle-down"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                                data-fa-i2svg=""
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
-                                ></path>
-                            </svg>
-                            <i className="fas fa-angle-down"></i>
-                        </a>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
                     </Col>
                 </Row>
-                <Fillter
-                    showMoreFilter={showMoreFilter}
-                    filterHandler={filterHandler}
-                />
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
+
                 <Row
                     gutter={[8, 8]}
                     className="form-row"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "0" }}
                 >
                     <Table
                         id={"complianceListRow"}
