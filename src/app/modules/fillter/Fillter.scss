@@ -1,48 +1,58 @@
 .expanddiv {
-  margin-left: auto;
-  padding: 0 0 10px 0;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 18px;
-  text-align: right;
+    margin-left: auto;
+    padding: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: right;
+    color: #1677ff;
+    cursor: pointer;
+}
+
+.filter-div {
+    transition: transform 0.2s;
+}
+
+.filter-div.animate {
+    animation: slidein 0.5s forwards;
 }
 
 .clearlink {
-  color: red !important;
-  margin-left: auto;
-  padding: 0 0 10px 0;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 18px;
+    color: red !important;
+    margin-left: auto;
+    padding: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 18px;
 }
 /* Fillter.scss */
 
 /* Slide down animation for showing the more filter div */
 .fade-down-enter {
-  max-height: 0;
-  opacity: 0;
-  padding: 0;
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
 }
 
 .fade-down-enter-active {
-  max-height: 200px; /* Adjust the height as needed */
-  opacity: 1;
-  padding: 10px; /* Add some padding for a smoother transition */
-  transition: max-height 0.6s ease-out, opacity 0.4s ease-out,
-    padding 0.4s ease-out;
+    max-height: 200px; /* Adjust the height as needed */
+    opacity: 1;
+    padding: 10px; /* Add some padding for a smoother transition */
+    transition: max-height 0.6s ease-out, opacity 0.4s ease-out,
+        padding 0.4s ease-out;
 }
 
 /* Slide up animation for hiding the more filter div */
 .fade-up-enter {
-  max-height: 200px; /* Adjust the height as needed */
-  opacity: 1;
-  padding: 10px; /* Add some padding for a smoother transition */
+    max-height: 200px; /* Adjust the height as needed */
+    opacity: 1;
+    padding: 10px; /* Add some padding for a smoother transition */
 }
 
 .fade-up-enter-active {
-  max-height: 0;
-  opacity: 0;
-  padding: 0;
-  transition: max-height 0.6s ease-out, opacity 0.4s ease-out,
-    padding 0.4s ease-out;
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    transition: max-height 0.6s ease-out, opacity 0.4s ease-out,
+        padding 0.4s ease-out;
 }

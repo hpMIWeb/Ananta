@@ -238,7 +238,7 @@ export const statusColors = (status: string) => {
             break;
         }
         case "cancelled": {
-            color = "#5e6e82";
+            color = "#808080";
             break;
         }
         case "1":

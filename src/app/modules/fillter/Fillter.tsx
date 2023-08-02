@@ -92,15 +92,14 @@ const Fillter = (prop: any) => {
     };
 
     return (
-        <>
-            <Row
-                gutter={[8, 8]}
-                className={`mt-10 form-row ${
-                    prop.showMoreFilter
-                        ? "fade-down-enter-active"
-                        : "fade-up-enter-active"
-                }`}
-            >
+        <div
+            className={`${
+                prop.showMoreFilter
+                    ? "fade-down-enter-active"
+                    : "fade-up-enter-active"
+            }`}
+        >
+            <Row gutter={[8, 8]} className={`mt-10 form-row`}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                     <Select
                         allowClear
@@ -221,7 +220,7 @@ const Fillter = (prop: any) => {
                     </Button>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 };
 export default Fillter;

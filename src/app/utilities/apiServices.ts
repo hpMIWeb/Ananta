@@ -64,7 +64,7 @@ export default {
                 client: task.client,
                 assigned_to: task.assigned_to,
                 datapath: " ",
-                subtask: task.subTask,
+                subtask: task.subtask,
                 attachments: [],
                 comments: [],
             },
@@ -422,6 +422,17 @@ export default {
         instance({
             method: "POST",
             url: "settings/create-settings",
+            data: setting,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    updateSetting: (setting: Settings) =>
+        instance({
+            method: "PUT",
+            url: "settings/update-settings",
             data: setting,
             transformResponse: [
                 function (data) {

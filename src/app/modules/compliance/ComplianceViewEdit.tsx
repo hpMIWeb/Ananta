@@ -627,9 +627,9 @@ const ComplianceViewEdit = (props: any) => {
                             </Title>
 
                             <Collapse
+                                accordion
                                 expandIconPosition="end"
                                 onChange={collapseChangeHandler}
-                                accordion
                             >
                                 {updateCompliance.subcompliance.map(
                                     (
