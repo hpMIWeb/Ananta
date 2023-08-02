@@ -52,8 +52,8 @@ const TimeSheet = () => {
     const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
         {} as ITimesheet
     );
-    const [isNewRow, setIsNewRow] = useState<boolean>(true);
     const [newRowCount, setNewRowCount] = useState<number>(1);
+    const [lastRowIndexId, setLastRowIndexId] = useState<string>();
     const [form] = Form.useForm();
     //const [currentTimeSheet, setCurrentTimeSheet] = useState<ITimesheet[]>([]);
 
