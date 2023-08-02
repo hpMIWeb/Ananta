@@ -53,18 +53,55 @@ const TimeSheet = () => {
         {} as ITimesheet
     );
     const [newRowCount, setNewRowCount] = useState<number>(1);
-    const [lastRowIndexId, setLastRowIndexId] = useState<string>();
-    const [form] = Form.useForm();
-    //const [currentTimeSheet, setCurrentTimeSheet] = useState<ITimesheet[]>([]);
 
     //Time sheet List
     useEffect(() => {
         getTimeSheetData();
-        getData(filterDate.toString());
     }, []);
 
-    // Custom Validation for timesheet
+    const getTimeSheetData = () => {
+        api.getTimesheet().then((resp: any) => {
+            setTimesheetData(resp.data);
+        });
+    };
+
+    useEffect(() => {
+        // getData is called whenever timesheetData changes
+        getData(filterDate.toString());
+    }, [timesheetData]);
+
+    const getData = (currentDate: string) => {
+        // Create blank Timesheet
+        const newBlankTimeSheet = new Timesheet();
+        newBlankTimeSheet._id = nanoid();
+        newBlankTimeSheet.date = currentDate.toString();
+
+        let returnVal = timesheetData.filter((item: ITimesheet) => {
+            return dayjs(item.date, dateFormat).isSame(currentDate);
+        });
+
+        // Add new blank item at the top
+        returnVal.unshift(newBlankTimeSheet);
+
+        const cTimeSheet = returnVal.map((item: any, index: number) => {
+            item.key = index;
+            return item;
+        });
+        setTimesheetAction(cTimeSheet);
+    };
+
+    // Custom Validation for time sheet
     const anyValidation = (rule: any, value: any, record: any) => {
+        const fieldId = rule.field; // Replace 'field' with the actual field name or identifier in the rule.
+
+        if (record.is_edit) {
+            // For new or edited records, skip validation and use the existing data as the default value.
+            if (fieldId in record) {
+                return Promise.resolve(record[fieldId]);
+            } else {
+                return Promise.resolve();
+            }
+        }
         if (record.start_time === "" && record.end_time === "") {
             return Promise.resolve();
         }
@@ -81,6 +118,8 @@ const TimeSheet = () => {
             title: "Start Time",
             dataIndex: "start_time",
             key: "start_time",
+            sorter: (a: Timesheet, b: Timesheet) =>
+                dayjs(a.start_time).unix() - dayjs(b.start_time).unix(),
             width: "10%",
             render: (start_time: string, record: Timesheet) => {
                 if (record.is_new) {
@@ -162,7 +201,7 @@ const TimeSheet = () => {
             dataIndex: "end_time",
             key: "end_time",
             sorter: (a: Timesheet, b: Timesheet) =>
-                dayjs(a.start_time).unix() - dayjs(b.start_time).unix(),
+                dayjs(a.end_time).unix() - dayjs(b.end_time).unix(),
             width: "10%",
             render: (end_time: string, record: Timesheet) => {
                 if (record.is_new) {
@@ -517,6 +556,7 @@ const TimeSheet = () => {
             dataIndex: "total_time",
             key: "total_time",
             width: "10%",
+
             sorter: (a: Timesheet, b: Timesheet) => {
                 const aMinutes = convertTimeToMinutes(a.total_time);
                 const bMinutes = convertTimeToMinutes(b.total_time);
@@ -526,7 +566,7 @@ const TimeSheet = () => {
                 if (!record.is_edit) {
                     if (record.total_time !== "") {
                         return (
-                            <span className="totalTimeDisplay">
+                            <span>
                                 <b>
                                     <ClockCircleOutlined
                                         style={{
@@ -544,30 +584,11 @@ const TimeSheet = () => {
                     return null; // Hide the column for new entries or if start time or end time is empty
                 }
 
-                const startTime = dayjs(record.start_time, "HH:mm");
-                const endTime = dayjs(record.end_time, "HH:mm");
-
-                if (endTime.isBefore(startTime)) {
-                    return null; // Hide the column if end time is before start time
-                }
-
-                const diffMinutes = endTime.diff(startTime, "minutes");
-                const hours = Math.floor(diffMinutes / 60);
-                const minutes = diffMinutes % 60;
-                const formattedDuration = `${hours}:${minutes
-                    .toString()
-                    .padStart(2, "0")}`;
-
-                if (formattedDuration !== "") {
-                    return (
-                        <span
-                            className="totalTimeDisplay"
-                            id={`total_time_${record._id}`}
-                        >
-                            {formattedDuration}
-                        </span>
-                    );
-                }
+                return (
+                    <span id={`total_time_${record._id}`}>
+                        {record.total_time}
+                    </span>
+                );
             },
         },
         {
@@ -698,10 +719,6 @@ const TimeSheet = () => {
             ];
             setTimesheetAction(updatedTimesheet);
             setNewRowCount(newRowCount + 1);
-        } else {
-            // toast.error("Please complete the last row action.", {
-            //     position: toast.POSITION.TOP_RIGHT,
-            // });
         }
     };
 
@@ -714,47 +731,44 @@ const TimeSheet = () => {
     // Edit time sheet data
     const editClickHandler = (record: Timesheet) => {
         record.is_edit = !record.is_edit;
-        setTimesheetData([...timesheetData]);
+        setTimesheetAction([...timesheetAction]);
     };
 
     // delete time sheet data
     const deleteClickHandler = (timeSheetId: string) => {
         // Delete from  DB
-        try {
-            api.deleteTimesheet(timeSheetId).then((resp: any) => {
+        api.deleteTimesheet(timeSheetId)
+            .then((resp: any) => {
                 // Set timesheet to `localStorage`
-                const updatedData = timesheetData.filter(
+                const updatedData = timesheetAction.filter(
                     (item: Timesheet) => item._id !== timeSheetId
                 );
-                setTimesheetData(updatedData);
-                //localStorage.setItem("timesheet", JSON.stringify(updatedData));
-                toast.success("Successfully Timesheet Remove.", {
+                setTimesheetAction(updatedData);
+                toast.success("Timesheet successfully deleted.", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            })
+            .catch((error) => {
+                toast.error("Technical error while deleting timesheet", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             });
-        } catch (ex) {
-            toast.error("Technical error while creating Task", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-        }
     };
 
     const removeRow = (timeSheetId: string) => {
-        console.log(newRowCount);
         if (newRowCount === 1) {
             toast.error("Cannot delete the first new row.", {
                 position: toast.POSITION.TOP_RIGHT,
             });
             return;
         }
-        const updatedData = timesheetData.filter(
+        const updatedData = timesheetAction.filter(
             (item: Timesheet) => item._id !== timeSheetId
         );
 
-        setTimesheetData(updatedData);
+        setTimesheetAction(updatedData);
         setNewRowCount(newRowCount - 1);
-        localStorage.setItem("timesheet", JSON.stringify(updatedData));
-        toast.success("Successfully Timesheet delete.", {
+        toast.success("Timesheet successfully removed.", {
             position: toast.POSITION.TOP_RIGHT,
         });
     };
@@ -765,7 +779,9 @@ const TimeSheet = () => {
         // Read all existing timesheet from `localStorage`
         const newTimesheets = timesheetAction.filter((entry) => {
             return (
-                entry.is_new && entry.start_time !== "" && entry.end_time !== ""
+                (entry.is_new || entry.is_edit) &&
+                entry.start_time !== "" &&
+                entry.end_time !== ""
             );
         });
 
@@ -792,41 +808,38 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => ({
-            start_time: selectedDate + " " + entry.start_time,
-            end_time: selectedDate + " " + entry.end_time,
+            start_time: selectedDate + " " + dayjs(entry.start_time, "HH:mm"),
+            end_time: selectedDate + " " + dayjs(entry.end_time, "HH:mm"),
             remark: entry.remark,
             client: entry.client,
             work_area: entry.work_area,
             particulars: entry.particulars,
             total_time: entry.total_time,
             date: selectedDate,
+            _id: entry.is_edit ? entry._id : "",
         }));
 
         // Make a single API call to save the multiple timesheet entries
         try {
             api.createMultipleTimesheet(timesheetPayload)
                 .then((resp) => {
-                    console.log("after save timesheet", resp);
-                    toast.success("Successfully saved timesheet entries", {
+                    toast.success("Timesheet entries successfully saved.", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                     getTimeSheetData();
                 })
                 .catch((error) => {
-                    toast.error("Technical error while creating Task", {
+                    toast.error("Technical error while Timesheet entries.", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                 });
         } catch (ex) {
-            toast.error("Technical error while creating Task", {
+            toast.error("Technical error while Timesheet entries.", {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
-
-        // old code
     };
 
-    //save time sheet code start
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
         let value = "";
@@ -862,13 +875,6 @@ const TimeSheet = () => {
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 
-                        // // update the `is_new` if `start_time` and `end_time` are not empty
-                        // if (
-                        //     selectedTableRow.start_time !== "" &&
-                        //     selectedTableRow.end_time !== ""
-                        // ) {
-                        //     selectedTableRow.is_new = false;
-                        // }
                         break;
                     }
                     case "end_time": {
@@ -922,55 +928,39 @@ const TimeSheet = () => {
 
     const dateFilter = (date: string) => {
         setFilterDate(date);
-        console.log("filter date", date);
         getData(date);
     };
 
     const calculateTotalTime = (record: Timesheet) => {
+        console.log(record);
         let endTime = dayjs(record.end_time, "HH:mm");
         let startTime = dayjs(record.start_time, "HH:mm");
         let diff = 0;
+        if (!endTime.isValid() || !startTime.isValid()) {
+            return "";
+        }
         if (startTime) {
             diff = dayjs(endTime).diff(
                 dayjs(record.start_time, "HH:mm"),
                 "minute"
             );
         }
+        if (startTime.isAfter(endTime)) {
+            toast.error("Start time should not be greater than end time.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return "";
+        }
+
         const hours = Math.floor(diff / 60);
         const minutes = diff % 60;
         const formattedDuration = `${hours}:${minutes
             .toString()
             .padStart(2, "0")}`;
-        return formattedDuration;
+
+        return formattedDuration ? formattedDuration : "";
     };
     // save time sheet code end
-
-    const getTimeSheetData = () => {
-        api.getTimesheet().then((resp: any) => {
-            setTimesheetData(resp.data);
-        });
-    };
-
-    const getData = (currentDate: string) => {
-        // Create blank Timesheet
-        const newBlankTimeSheet = new Timesheet();
-        newBlankTimeSheet._id = nanoid();
-        newBlankTimeSheet.date = currentDate.toString();
-
-        let returnVal = timesheetData.filter((item: ITimesheet) => {
-            return dayjs(item.date, dateFormat).isSame(currentDate);
-        });
-
-        // Add new blank item at the top
-        returnVal.unshift(newBlankTimeSheet);
-
-        const cTimeSheet = returnVal.map((item: any, index: number) => {
-            item.key = index;
-            return item;
-        });
-        setTimesheetAction(cTimeSheet);
-        //.slice((current - 1) * pageSize, current * pageSize);
-    };
 
     //End Time sheet List
     const tabContent: TabsProps["items"] = [
@@ -1020,18 +1010,36 @@ const TimeSheet = () => {
                     />
                 </div>
             </div>
-            <div style={{ textAlign: "right", marginTop: "10px" }}>
-                <DatePicker
-                    placeholder="Date"
-                    name="date"
-                    className="w101"
-                    defaultValue={dayjs()}
-                    format={dateFormat}
-                    onChange={(date, dateString) => {
-                        dateFilter(dateString);
-                    }}
-                />
-            </div>
+            <Row
+                gutter={[8, 8]}
+                className="form-row"
+                style={{ marginTop: "10px" }}
+            >
+                <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 21 }}
+                ></Col>
+                <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 3 }}
+                    className="border-bottom"
+                >
+                    <DatePicker
+                        placeholder="Date"
+                        name="date"
+                        className="w100"
+                        style={{ float: "right" }}
+                        defaultValue={dayjs()}
+                        format={dateFormat}
+                        bordered={false}
+                        onChange={(date, dateString) => {
+                            dateFilter(dateString);
+                        }}
+                    />
+                </Col>
+            </Row>
 
             <div>
                 <Form>
@@ -1056,6 +1064,9 @@ const TimeSheet = () => {
                                         },
                                     };
                                 }}
+                                className="table-striped-rows center-align-header"
+                                bordered
+                                size="small"
                             />
                         </Col>
                     </Row>

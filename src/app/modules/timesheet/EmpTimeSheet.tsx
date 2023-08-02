@@ -138,13 +138,10 @@ const EmpTimeSheet = () => {
         setActiveTab(key);
     };
 
-    function onChange(sorter: any) {
-        console.log(sorter);
-    }
+    function onChange(sorter: any) {}
 
     const downloadPDF = () => {
         // manage down load()
-        console.log("dsDD");
         toast.success("Successfully Download.", {
             position: toast.POSITION.TOP_RIGHT,
         });
@@ -163,7 +160,6 @@ const EmpTimeSheet = () => {
 
     const downloadExcel = () => {
         // manage down load()
-        console.log("dsDD");
         toast.success("Successfully Download.", {
             position: toast.POSITION.TOP_RIGHT,
         });
@@ -230,7 +226,6 @@ const EmpTimeSheet = () => {
         }
 
         const queryString = parameters.join("&");
-        console.log(queryString);
         try {
             api.getEmployeeTimesheetReport("?" + queryString).then(
                 (resp: any) => {
@@ -248,8 +243,6 @@ const EmpTimeSheet = () => {
 
     const getData = (current: number, pageSize: number) => {
         let returnVal = employeeReport;
-        console.log(employeeReport);
-
         return returnVal
             .map((item: any, index: number) => {
                 item.key = index;
