@@ -8,7 +8,6 @@ import {
 } from "../../utilities/utility";
 import "react-quill/dist/quill.snow.css";
 
-import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
@@ -19,6 +18,8 @@ import {
     SubCompliance as ISubCompliance,
 } from "./interfaces/ICompliance";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 
 const ComplianceDetails = (props: any) => {
@@ -423,7 +424,9 @@ const ComplianceDetails = (props: any) => {
 
     const removeComplianceDetails = (item: IClientDetails) => {
         const index = clients.indexOf(item);
-        if (index > -1) {
+        console.log();
+
+        if (clients.length > 1 && index > -1) {
             const selectedClients = clients.filter((compliance: any) => {
                 return (
                     compliance.complianceDetailId !== item.complianceDetailId
@@ -435,6 +438,11 @@ const ComplianceDetails = (props: any) => {
             if (props.updateClients) {
                 props.updateClients(selectedClients);
             }
+        } else {
+            toast.error("Cannot delete the first row.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
         }
     };
 
@@ -467,6 +475,7 @@ const ComplianceDetails = (props: any) => {
                 </Button> */}
             </div>
             <div className="client-details">
+                <ToastContainer />
                 <Table
                     rowKey={(record) => record.complianceDetailId}
                     dataSource={clients}
