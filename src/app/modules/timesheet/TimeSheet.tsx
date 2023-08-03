@@ -55,7 +55,10 @@ const TimeSheet = () => {
     const [newRowCount, setNewRowCount] = useState<number>(1);
 
     //Time sheet List
+
     useEffect(() => {
+        const startDateTime = "2023-07-10T21:30:00.000Z";
+        console.log(dayjs(startDateTime).format("YYYY-MM-DD HH:mm"));
         getTimeSheetData();
     }, []);
 
@@ -119,6 +122,8 @@ const TimeSheet = () => {
             dataIndex: "start_time",
             key: "start_time",
             width: "10%",
+            sorter: (a: Timesheet, b: Timesheet) =>
+                dayjs(a.start_time).unix() - dayjs(b.start_time).unix(),
             render: (start_time: string, record: Timesheet) => {
                 if (record.is_new) {
                     return (
@@ -806,8 +811,12 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => ({
-            start_time: selectedDate + " " + entry.start_time,
-            end_time: selectedDate + " " + entry.end_time,
+            start_time: entry.is_edit
+                ? dayjs(entry.start_time).format("YYYY-MM-DD HH:mm")
+                : selectedDate + " " + entry.start_time,
+            end_time: entry.is_edit
+                ? dayjs(entry.end_time).format("YYYY-MM-DD HH:mm")
+                : selectedDate + " " + entry.end_time,
             remark: entry.remark,
             client: entry.client,
             work_area: entry.work_area,
@@ -877,21 +886,6 @@ const TimeSheet = () => {
                     }
                     case "end_time": {
                         selectedTableRow.end_time = value;
-                        let endTime = dayjs(value, "HH:mm");
-                        let startTime = dayjs(
-                            selectedTableRow.start_time,
-                            "HH:mm"
-                        );
-
-                        if (endTime.isBefore(startTime)) {
-                            toast.error(
-                                "End time should not be less than start time.",
-                                {
-                                    position: toast.POSITION.TOP_RIGHT,
-                                }
-                            );
-                            return;
-                        }
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
                         if (selectedTableRow.is_new) {
@@ -931,24 +925,26 @@ const TimeSheet = () => {
 
     const calculateTotalTime = (record: Timesheet) => {
         console.log(record);
-        let endTime = dayjs(record.end_time, "HH:mm");
-        let startTime = dayjs(record.start_time, "HH:mm");
+        let endTime = record.is_edit
+            ? dayjs(record.end_time).format("HH:mm").toString()
+            : dayjs(record.end_time, "HH:mm");
+        let startTime = record.is_edit
+            ? dayjs(record.start_time).format("HH:mm").toString()
+            : dayjs(record.start_time, "HH:mm");
         let diff = 0;
-        if (!endTime.isValid() || !startTime.isValid()) {
-            return "";
-        }
+
         if (startTime) {
             diff = dayjs(endTime).diff(
                 dayjs(record.start_time, "HH:mm"),
                 "minute"
             );
         }
-        if (startTime.isAfter(endTime)) {
-            toast.error("Start time should not be greater than end time.", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-            return "";
-        }
+        // if (startTime.isAfter(endTime)) {
+        //     toast.error("Start time should not be greater than end time.", {
+        //         position: toast.POSITION.TOP_RIGHT,
+        //     });
+        //     return "";
+        // }
 
         const hours = Math.floor(diff / 60);
         const minutes = diff % 60;
