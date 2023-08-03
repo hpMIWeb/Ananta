@@ -99,7 +99,7 @@ const Setting = () => {
         addSetting.compliance = complianceData;
 
         try {
-            api.createSetting(addSetting).then((resp: any) => {
+            api.updateSetting(addSetting).then((resp: any) => {
                 toast.success("Successfully Settings saved.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
