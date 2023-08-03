@@ -58,7 +58,7 @@ const AddCompliance = () => {
     const [showSubCompliance, setShowSubCompliance] = useState<boolean>(false);
     const [addCompliance, setAddCompliance] = useState<IAddCompliance>({
         status: "pending",
-        start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        start_date: dayjs().format("YYYY-MM-DD"),
         title: "",
         actual_time: "",
         assignee: "",
