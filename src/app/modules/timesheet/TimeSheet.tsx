@@ -827,13 +827,13 @@ const TimeSheet = () => {
                 particulars: entry.particulars,
                 total_time: entry.total_time,
                 date: selectedDate,
-                is_activate: true,
                 ...(entry.is_edit && { _id: entry._id }), // Conditionally add _id property
             };
 
             return payload;
         });
-        // Make a single API call to save the multiple timesheet entries
+
+        // Make a single API call to save/edit the multiple timesheet entries
         try {
             api.createMultipleTimesheet(timesheetPayload)
                 .then((resp) => {

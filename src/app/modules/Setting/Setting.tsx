@@ -77,9 +77,8 @@ const Setting = () => {
         checkedValues: CheckboxValueType[],
         actionTab: string
     ) => {
-        console.log("checked = ", checkedValues);
-
         if (actionTab === "task") {
+            console.log("before save ", taskData);
             setTaskData((prevTaskData) => ({
                 ...prevTaskData,
                 select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
@@ -90,6 +89,8 @@ const Setting = () => {
                 select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
             }));
         }
+
+        console.log("taskData", taskData);
     };
 
     // Save settings
@@ -128,6 +129,7 @@ const Setting = () => {
             //TODO: taking only first record of the array, `payload` should not be an array
             console.log(resp.data);
             var respData = resp.data;
+
             setSettingData(respData);
             setValue(respData.task.select_template);
             setComplianceData(respData.compliance);
