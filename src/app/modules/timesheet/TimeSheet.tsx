@@ -810,22 +810,29 @@ const TimeSheet = () => {
         }
 
         // Create an array of timesheet data
-        const timesheetPayload = newTimesheets.map((entry) => ({
-            start_time: entry.is_edit
+        const timesheetPayload = newTimesheets.map((entry) => {
+            const startTime = entry.is_edit
                 ? dayjs(entry.start_time).format("YYYY-MM-DD HH:mm")
-                : selectedDate + " " + entry.start_time,
-            end_time: entry.is_edit
+                : selectedDate + " " + entry.start_time;
+            const endTime = entry.is_edit
                 ? dayjs(entry.end_time).format("YYYY-MM-DD HH:mm")
-                : selectedDate + " " + entry.end_time,
-            remark: entry.remark,
-            client: entry.client,
-            work_area: entry.work_area,
-            particulars: entry.particulars,
-            total_time: entry.total_time,
-            date: selectedDate,
-            _id: entry.is_edit ? entry._id : "",
-        }));
+                : selectedDate + " " + entry.end_time;
 
+            const payload = {
+                start_time: startTime,
+                end_time: endTime,
+                remark: entry.remark,
+                client: entry.client,
+                work_area: entry.work_area,
+                particulars: entry.particulars,
+                total_time: entry.total_time,
+                date: selectedDate,
+                is_activate: true,
+                ...(entry.is_edit && { _id: entry._id }), // Conditionally add _id property
+            };
+
+            return payload;
+        });
         // Make a single API call to save the multiple timesheet entries
         try {
             api.createMultipleTimesheet(timesheetPayload)
