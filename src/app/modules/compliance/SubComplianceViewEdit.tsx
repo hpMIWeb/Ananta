@@ -15,6 +15,8 @@ import {
     IClientDetails,
     SubCompliance,
     UpdateSubCompliance,
+    SaveSubComplianceComment,
+    Comment as IComment,
 } from "./interfaces/ICompliance";
 import "./subCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
@@ -27,27 +29,28 @@ import Comments from "../../components/Comments/Comments";
 const { Title } = Typography;
 
 const SubComplianceViewEdit = (props: any) => {
-    const [subCompliances, setSubCompliance] = useState<ISubCompliance[]>([
-        {
-            _id: "1",
-            status: "pending",
-        } as ISubCompliance,
-    ]);
+    const [subCompliance, setSubCompliance] = useState<ISubCompliance>({
+        _id: "1",
+        status: "pending",
+    } as ISubCompliance);
 
     // const [subComplianceClients, setSubComplianceClients] = useState<
     //     IClientDetails[]
     // >([]);
 
+    const [subComments, setSubComments] = useState<IComment[]>([]);
+
     useEffect(() => {
         if (props.subComplianceData) {
-            setSubCompliance([props.subComplianceData]);
+            setSubCompliance(props.subComplianceData);
+            setSubComments(props.subComplianceData.comments);
             //setSubComplianceClients([props.subComplianceData.clients]);
         }
     }, [props.subComplianceData]);
 
     useEffect(() => {
-        console.log(subCompliances);
-    }, [subCompliances]);
+        console.log(subCompliance);
+    }, [subCompliance]);
 
     const dividerRow = () => {
         return (
@@ -78,14 +81,14 @@ const SubComplianceViewEdit = (props: any) => {
             value = event.value;
         }
 
-        const updatedCompliance = [...subCompliances].map((item: any) => {
-            if (item._id === subCompliance._id) {
-                item[name] = value;
-            }
-            return item;
-        });
+        // const updatedCompliance = [...subCompliance].map((item: any) => {
+        //     if (item._id === subCompliance._id) {
+        //         item[name] = value;
+        //     }
+        //     return item;
+        // });
 
-        setSubCompliance(updatedCompliance);
+        // setSubCompliance(updatedCompliance);
     };
 
     const statusChangeHandler = (
@@ -140,8 +143,6 @@ const SubComplianceViewEdit = (props: any) => {
         complianceUpdate.ComplianceId = props.complianceId;
         complianceUpdate.subComplianceId = subCompliance._id!;
 
-        console.log(complianceUpdate);
-
         api.updateSubCompliance(complianceUpdate).then((resp: any) => {
             toast.success("Successfully Updated Sub Compliance", {
                 position: toast.POSITION.TOP_RIGHT,
@@ -150,228 +151,308 @@ const SubComplianceViewEdit = (props: any) => {
         });
     };
 
+    /* comment code start */
+
+    // add comment code
+    const addCommentHandler = (comment: string) => {
+        const addComment = {} as SaveSubComplianceComment;
+        addComment.comment = comment;
+        addComment.complianceId = props.complianceId;
+        addComment.subcomplianceId = subCompliance._id;
+
+        api.addComplianceComment(addComment)
+            .then((resp: any) => {
+                toast.success("Successfully added comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+
+                // Update the comments & parent sub-tasks
+                if (resp) {
+                    const allSubCompliances = resp.data.subcompliance;
+                    const matchedItem = allSubCompliances.find(
+                        (complianceItem: ISubCompliance) => {
+                            return complianceItem._id === subCompliance._id;
+                        }
+                    );
+                    if (matchedItem) {
+                        setSubComments(matchedItem.comments);
+                    }
+                }
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+    };
+
+    const editCommentHandler = (
+        commentId: string,
+        parentId: string,
+        comment: string
+    ) => {
+        const updateComment = {} as SaveSubComplianceComment;
+        updateComment.commentId = commentId;
+        updateComment.comment = comment;
+        updateComment.complianceId = props.complianceId;
+        updateComment.subcomplianceId = subCompliance._id;
+
+        api.updateSubComplianceComment(updateComment)
+            .then((resp: any) => {
+                toast.success("Successfully updated comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                //TODO: API is not sending updated comment. once done, update comments here
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+    };
+
+    const deleteCommentHandler = (commentId: string, parentId: string) => {
+        api.deleteComplianceComment(
+            props.complianceId,
+            commentId,
+            subCompliance._id
+        )
+            .then((resp: any) => {
+                toast.success("Successfully deleted comment", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                const newSubComments = subComments.filter(
+                    (comment: IComment) => {
+                        return comment._id !== commentId;
+                    }
+                );
+                setSubComments(newSubComments);
+            })
+            .catch((error: any) => {
+                const msg = JSON.parse(error.response.data).message;
+                toast.error(msg, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            });
+    };
+
+    /* comment code end */
+
     return (
         <div>
-            {subCompliances.map((subComplianceItem: any, index: number) => (
-                <div key={subComplianceItem._id}>
-                    {index !== 0 && (
-                        <Divider style={{ backgroundColor: "#9da9bb" }} />
-                    )}
-                    <div className="sub-compliance-header"></div>
-                    <div className="sub-compliance-content">
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 12 }}
-                                md={{ span: 16 }}
-                                lg={{ span: 14 }}
-                            >
-                                <div className="timerbuttons">
-                                    {subComplianceItem.clients &&
-                                        subComplianceItem.clients.length <=
-                                            0 && (
-                                            <Stopwatch
-                                                parentId={subComplianceItem._id}
-                                                handleTaskStatus={(
-                                                    isRunning: boolean,
-                                                    time: string,
-                                                    isStop: boolean
-                                                ) => {
-                                                    handleTaskStatus(
-                                                        isRunning,
-                                                        time,
-                                                        isStop,
-                                                        subComplianceItem
-                                                    );
-                                                }}
-                                                status={
-                                                    subComplianceItem.status
-                                                }
-                                                label={"subCompliance"}
-                                                showSeconds={true}
-                                            />
-                                        )}
-                                    {subComplianceItem.clients &&
-                                        subComplianceItem.clients.length >
-                                            0 && (
-                                            <span className="stopwatch-time">
-                                                {getTotalTime(
-                                                    subComplianceItem.clients.map(
-                                                        (
-                                                            item: ISubCompliance
-                                                        ) => {
-                                                            return item.actual_time;
-                                                        }
-                                                    )
-                                                )}
-                                            </span>
-                                        )}
-                                </div>
-                            </Col>
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 6 }}
-                                md={{ span: 4 }}
-                                lg={{ span: 5 }}
-                            >
-                                {!props.isEdit && (
-                                    <Title
-                                        level={4}
-                                        style={{
-                                            textAlign: "right",
-                                            marginRight: "30px",
-                                        }}
-                                        className={`text-priority ${
-                                            subComplianceItem.priority
-                                        } ${
-                                            subComplianceItem.priority ===
-                                            "high"
-                                                ? "blink"
-                                                : ""
-                                        }`}
-                                    >
-                                        {capitalize(subComplianceItem.priority)}
-                                    </Title>
-                                )}
-                                {props.isEdit && (
-                                    <Select
-                                        allowClear
-                                        placeholder="Select Priority"
-                                        options={priorityOpts}
-                                        value={subComplianceItem.priority}
-                                        className="w100"
-                                        onChange={(value, event) => {
-                                            statusChangeHandler(
-                                                event,
-                                                value,
-                                                subComplianceItem
-                                            );
-                                        }}
-                                    />
-                                )}
-                            </Col>
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 6 }}
-                                md={{ span: 4 }}
-                                lg={{ span: 5 }}
-                            >
+            {/* {subCompliance.map((subComplianceItem: any, index: number) => ( */}
+            <div key={subCompliance._id}>
+                {/* {index !== 0 && (
+                    <Divider style={{ backgroundColor: "#9da9bb" }} />
+                )} */}
+                <div className="sub-compliance-header"></div>
+                <div className="sub-compliance-content">
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 12 }}
+                            md={{ span: 16 }}
+                            lg={{ span: 14 }}
+                        >
+                            <div className="timerbuttons">
+                                {subCompliance.clients &&
+                                    subCompliance.clients.length <= 0 && (
+                                        <Stopwatch
+                                            parentId={subCompliance._id}
+                                            handleTaskStatus={(
+                                                isRunning: boolean,
+                                                time: string,
+                                                isStop: boolean
+                                            ) => {
+                                                handleTaskStatus(
+                                                    isRunning,
+                                                    time,
+                                                    isStop,
+                                                    subCompliance
+                                                );
+                                            }}
+                                            status={subCompliance.status}
+                                            label={"subCompliance"}
+                                            showSeconds={true}
+                                        />
+                                    )}
+                                {subCompliance.clients &&
+                                    subCompliance.clients.length > 0 && (
+                                        <span className="stopwatch-time">
+                                            {getTotalTime(
+                                                subCompliance.clients.map(
+                                                    (item: IClientDetails) => {
+                                                        return item.actual_time;
+                                                    }
+                                                )
+                                            )}
+                                        </span>
+                                    )}
+                            </div>
+                        </Col>
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 6 }}
+                            md={{ span: 4 }}
+                            lg={{ span: 5 }}
+                        >
+                            {!props.isEdit && (
+                                <Title
+                                    level={4}
+                                    style={{
+                                        textAlign: "right",
+                                        marginRight: "30px",
+                                    }}
+                                    className={`text-priority ${
+                                        subCompliance.priority
+                                    } ${
+                                        subCompliance.priority === "high"
+                                            ? "blink"
+                                            : ""
+                                    }`}
+                                >
+                                    {capitalize(subCompliance.priority)}
+                                </Title>
+                            )}
+                            {props.isEdit && (
                                 <Select
                                     allowClear
-                                    placeholder="Select Status"
-                                    options={statusList}
-                                    value={subComplianceItem.status}
+                                    placeholder="Select Priority"
+                                    options={priorityOpts}
+                                    value={subCompliance.priority}
                                     className="w100"
                                     onChange={(value, event) => {
                                         statusChangeHandler(
                                             event,
                                             value,
-                                            subComplianceItem
+                                            subCompliance
                                         );
                                     }}
                                 />
-                            </Col>
-                        </Row>
-                        {dividerRow()}
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                {!props.isEdit && (
-                                    <b>{subComplianceItem.title}</b>
-                                )}
-                                {props.isEdit && (
-                                    <Input
-                                        placeholder="Compliance"
-                                        name="title"
-                                        defaultValue={subComplianceItem.title}
-                                    />
-                                )}
-                            </Col>
-                        </Row>
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                {!props.isEdit && (
-                                    <b>
-                                        {subComplianceItem.remark &&
-                                            parse(subComplianceItem.remark)}
-                                    </b>
-                                )}
-                                {props.isEdit && (
-                                    <ReactQuill
-                                        theme="snow"
-                                        value={subComplianceItem.remark}
-                                        placeholder="Remark"
-                                        // onChange={(event) => {
-                                        //     inputChangeHandler(event, "remark");
-                                        // }}
-                                    />
-                                )}
-                            </Col>
-                        </Row>
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                <ComplianceDetails
-                                    handleTaskStatus={(
-                                        isRunning: boolean,
-                                        time: string,
-                                        isStop: boolean
-                                    ) => {
-                                        handleTaskStatus(
-                                            isRunning,
-                                            time,
-                                            isStop,
-                                            subComplianceItem
-                                        );
-                                    }}
-                                    isAllowAdd={false}
-                                    parentTitle={"sub_compliance"}
-                                    parentId={subComplianceItem._id}
-                                    data={subComplianceItem.clients}
-                                    scroll={{ x: 1000 }}
-                                    isEdit={props.isEdit}
+                            )}
+                        </Col>
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 6 }}
+                            md={{ span: 4 }}
+                            lg={{ span: 5 }}
+                        >
+                            <Select
+                                allowClear
+                                placeholder="Select Status"
+                                options={statusList}
+                                value={subCompliance.status}
+                                className="w100"
+                                onChange={(value, event) => {
+                                    statusChangeHandler(
+                                        event,
+                                        value,
+                                        subCompliance
+                                    );
+                                }}
+                            />
+                        </Col>
+                    </Row>
+                    {dividerRow()}
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            {!props.isEdit && <b>{subCompliance.title}</b>}
+                            {props.isEdit && (
+                                <Input
+                                    placeholder="Compliance"
+                                    name="title"
+                                    defaultValue={subCompliance.title}
                                 />
-                            </Col>
-                        </Row>
-                        {!props.isEdit && (
-                            <Row gutter={[8, 8]} className="form-row">
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
+                            )}
+                        </Col>
+                    </Row>
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            {!props.isEdit && (
+                                <b>
+                                    {subCompliance.remark &&
+                                        parse(subCompliance.remark)}
+                                </b>
+                            )}
+                            {props.isEdit && (
+                                <ReactQuill
+                                    theme="snow"
+                                    value={subCompliance.remark}
+                                    placeholder="Remark"
+                                    // onChange={(event) => {
+                                    //     inputChangeHandler(event, "remark");
+                                    // }}
+                                />
+                            )}
+                        </Col>
+                    </Row>
+                    <Row gutter={[8, 8]} className="form-row">
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            <ComplianceDetails
+                                handleTaskStatus={(
+                                    isRunning: boolean,
+                                    time: string,
+                                    isStop: boolean
+                                ) => {
+                                    handleTaskStatus(
+                                        isRunning,
+                                        time,
+                                        isStop,
+                                        subCompliance
+                                    );
+                                }}
+                                isAllowAdd={false}
+                                parentTitle={"sub_compliance"}
+                                parentId={subCompliance._id}
+                                data={subCompliance.clients}
+                                scroll={{ x: 1000 }}
+                                isEdit={props.isEdit}
+                            />
+                        </Col>
+                    </Row>
+                    {!props.isEdit && (
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <Title
+                                    level={5}
+                                    style={{
+                                        textAlign: "left",
+                                        marginTop: "10px",
+                                    }}
                                 >
-                                    <Title
-                                        level={5}
-                                        style={{
-                                            textAlign: "left",
-                                            marginTop: "10px",
-                                        }}
-                                    >
-                                        Comments
-                                    </Title>
-                                    <Comments
-                                        comments={subComplianceItem.comments}
-                                        parentId={subComplianceItem._id}
-                                        addComment={() => {}}
-                                        editComment={() => {}}
-                                        deleteComment={() => {}}
-                                    />
-                                </Col>
-                            </Row>
-                        )}
-                    </div>
+                                    Comments
+                                </Title>
+                                <Comments
+                                    comments={subComments}
+                                    parentId={subCompliance._id}
+                                    addComment={addCommentHandler}
+                                    editComment={editCommentHandler}
+                                    deleteComment={deleteCommentHandler}
+                                />
+                            </Col>
+                        </Row>
+                    )}
                 </div>
-            ))}
+            </div>
+            {/* ))} */}
         </div>
     );
 };

@@ -262,6 +262,7 @@ const AddCompliance = () => {
                 subCompliance && subCompliance.length > 0
                     ? subCompliance.map((item: ISubCompliance) => {
                           return {
+                              _id: "",
                               title: item.title,
                               status: item.status,
                               mode: item.status,
