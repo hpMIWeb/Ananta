@@ -432,7 +432,7 @@ export default {
     updateSetting: (setting: Settings) =>
         instance({
             method: "PUT",
-            url: "settings/update-settings",
+            url: "settings/update-settings/id=" + setting._id,
             data: setting,
             transformResponse: [
                 function (data) {

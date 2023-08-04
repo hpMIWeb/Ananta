@@ -66,7 +66,7 @@ const ClientTimeSheet = () => {
             width: "25%",
             sorter: (a: any, b: any) => a.remark.localCompare(b.remark),
             render: (remark: string) => (
-                <div className="scrollabletd">{remark}</div>
+                <div className="scrollbar-td">{remark}</div>
             ),
         },
         {
@@ -183,59 +183,40 @@ const ClientTimeSheet = () => {
             value = event.value;
         }
 
-        switch (name) {
-            case "employeeName": {
-                if (value !== "") {
-                    parameters.push(
-                        `employeeName=${encodeURIComponent(value)}`
-                    );
-                }
-                break;
-            }
-            case "clientName": {
-                if (value !== "") {
-                    parameters.push(
-                        `clientName=${encodeURIComponent(
-                            "64b54477c4e3df1d6ce73fe9"
-                        )}`
-                    );
-                }
-                break;
-            }
-            case "workArea": {
-                if (value !== "") {
-                    parameters.push(`workArea=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            case "billable": {
-                if (value !== "") {
-                    parameters.push(`billable=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            case "date": {
-                if (value !== "") {
-                    parameters.push(`date=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            default:
-                break;
+        // Check if the filter parameter already exists in the parameters array
+        const parameterExists = parameters.some((param) =>
+            param.startsWith(`${nameItem}=`)
+        );
+
+        // If the parameter already exists, remove it from the array
+        if (parameterExists) {
+            parameters = parameters.filter((param) => {
+                return !param.startsWith(`${nameItem}=`);
+            });
         }
 
-        const queryString = parameters.join("&");
+        // Push the new parameter to the array
+        if (value !== "") {
+            parameters.push(`${nameItem}=${encodeURIComponent(value)}`);
+        }
+
+        let queryString = "";
+        if (parameters && parameters.length > 0) {
+            queryString = "?" + parameters.join("&");
+        }
         console.log(queryString);
         try {
-            api.getClientTimesheetReport("?" + queryString).then(
-                (resp: any) => {
-                    localStorage.setItem(
-                        "clientReport",
-                        JSON.stringify(resp.data["data"])
-                    );
-                    setClientReport(resp.data["data"]);
-                }
-            );
+            if (queryString !== "") {
+                api.getClientTimesheetReport("?" + queryString).then(
+                    (resp: any) => {
+                        setClientReport(resp.data["data"]);
+                        setClientReportSummary(resp.data["header"]);
+                    }
+                );
+            } else {
+                setClientReport([]);
+                setClientReportSummary(new ClientReportSummary());
+            }
         } catch (ex) {
             toast.error("Technical error while Download.", {
                 position: toast.POSITION.TOP_RIGHT,
