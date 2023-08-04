@@ -81,12 +81,12 @@ const Setting = () => {
             console.log("before save ", taskData);
             setTaskData((prevTaskData) => ({
                 ...prevTaskData,
-                select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
+                select_fields: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
             }));
         } else if (actionTab === "compliance") {
             setComplianceData((prevTaskData) => ({
                 ...prevTaskData,
-                select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
+                select_fields: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
             }));
         }
 
@@ -172,7 +172,7 @@ const Setting = () => {
                         onChange={(check) => {
                             checkBoxHandler(check, "task");
                         }}
-                        value={taskData && taskData.select_feilds}
+                        value={taskData && taskData.select_fields}
                     >
                         <Space direction="vertical">{taskFields}</Space>
                     </Checkbox.Group>
@@ -209,7 +209,7 @@ const Setting = () => {
                         onChange={(check) => {
                             checkBoxHandler(check, "compliance");
                         }}
-                        value={complianceData && complianceData.select_feilds}
+                        value={complianceData && complianceData.select_fields}
                     >
                         <Space direction="vertical">{complianceFields}</Space>
                     </Checkbox.Group>

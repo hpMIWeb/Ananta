@@ -15,17 +15,17 @@ export class Settings implements AddSetting {
 export interface Task {
     task: any;
     select_template: string;
-    select_feilds: string[];
+    select_fields: string[];
     client_assignment: boolean;
 }
 
 export interface Compliance {
     select_template: string;
-    select_feilds: string[];
+    select_fields: string[];
     client_assignment: boolean;
 }
 export interface Timesheet {
     select_template: string;
-    select_feilds: string[];
+    select_fields: string[];
     client_assignment: boolean;
 }
