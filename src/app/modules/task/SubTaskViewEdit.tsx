@@ -62,6 +62,7 @@ const SubTaskViewEdit = (props: any) => {
         setParentId(props.parentId);
     }, [props.parentId]);
 
+    // General input change handler
     const inputChangeHandler = (event: any, nameItem: string = "") => {
         let name = "";
         let value = "";
@@ -76,12 +77,16 @@ const SubTaskViewEdit = (props: any) => {
             value = event.value;
         }
 
-        console.log(name, value);
+        const newUpdatedTask = {
+            ...updateSubTask,
+            [name]: value,
+        };
+        setUpdateSubTask(newUpdatedTask);
 
-        const taskUpdate = {} as SubTask;
-        taskUpdate.status = value;
+        if (props.handleTaskUpdate) props.handleTaskUpdate(newUpdatedTask);
     };
 
+    // Render Divider row
     const dividerRow = () => {
         return (
             <Row gutter={[8, 8]} className="form-row">
@@ -92,6 +97,7 @@ const SubTaskViewEdit = (props: any) => {
         );
     };
 
+    // Render Remarks
     const getRemark = () => {
         if (updateSubTask.remarks) {
             return parse(updateSubTask.remarks);
@@ -114,6 +120,7 @@ const SubTaskViewEdit = (props: any) => {
         );
     };
 
+    // Priority change
     const priorityChangeHandler = (event: any, value: string) => {
         console.log("Priority change - ", event);
 
@@ -133,6 +140,7 @@ const SubTaskViewEdit = (props: any) => {
         });
     };
 
+    // Status change
     const statusChangeHandler = (event: any, value: string) => {
         console.log("Status change - ", event);
 
@@ -152,6 +160,7 @@ const SubTaskViewEdit = (props: any) => {
         });
     };
 
+    // Add Comment
     const addCommentHandler = (comment: string) => {
         const addComment = {} as SaveComment;
         addComment.comment = comment;
@@ -178,6 +187,7 @@ const SubTaskViewEdit = (props: any) => {
             });
     };
 
+    // Update Comment
     const editCommentHandler = (
         commentId: string,
         parentId: string,
@@ -208,6 +218,7 @@ const SubTaskViewEdit = (props: any) => {
             });
     };
 
+    // Delete Comment
     const deleteCommentHandler = (commentId: string, parentId: string) => {
         api.deleteTaskComment(updateSubTask._id, commentId)
             .then((resp: any) => {
@@ -215,7 +226,6 @@ const SubTaskViewEdit = (props: any) => {
                     position: toast.POSITION.TOP_RIGHT,
                 });
                 if (resp && resp.data) setTaskComments(resp.data.comments);
-                if (props.handleListUpdate) props.handleListUpdate();
             })
             .catch((error: any) => {
                 const msg = JSON.parse(error.response.data).message;
@@ -259,29 +269,6 @@ const SubTaskViewEdit = (props: any) => {
                 }}
             >
                 <ToastContainer />
-
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
-                        {!isEdit && (
-                            <Title level={5} style={{ textAlign: "left" }}>
-                                {updateSubTask.title}
-                            </Title>
-                        )}
-                        {isEdit && (
-                            <Input
-                                placeholder="Task"
-                                name="task"
-                                defaultValue={updateSubTask.title}
-                            />
-                        )}
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Title level={5} style={{ textAlign: "right" }}>
-                            {capitalize(updateSubTask.assigned_to)}
-                        </Title>
-                    </Col>
-                </Row>
-                {dividerRow()}
                 <Row gutter={[8, 8]} className="form-row">
                     <Col
                         xs={{ span: 24 }}
@@ -306,24 +293,22 @@ const SubTaskViewEdit = (props: any) => {
                         lg={{ span: 5 }}
                     >
                         {!isEdit && (
-                            <>
-                                <Title
-                                    level={4}
-                                    style={{
-                                        textAlign: "right",
-                                        marginRight: "30px",
-                                    }}
-                                    className={`text-priority ${
-                                        updateSubTask.priority
-                                    } ${
-                                        updateSubTask.priority === "high"
-                                            ? "blink"
-                                            : ""
-                                    }`}
-                                >
-                                    {capitalize(updateSubTask.priority)}
-                                </Title>
-                            </>
+                            <Title
+                                level={4}
+                                style={{
+                                    textAlign: "right",
+                                    marginRight: "30px",
+                                }}
+                                className={`text-priority ${
+                                    updateSubTask.priority
+                                } ${
+                                    updateSubTask.priority === "high"
+                                        ? "blink"
+                                        : ""
+                                }`}
+                            >
+                                {capitalize(updateSubTask.priority)}
+                            </Title>
                         )}
                         {isEdit && (
                             <Select
@@ -359,10 +344,21 @@ const SubTaskViewEdit = (props: any) => {
                 </Row>
                 {dividerRow()}
                 <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 6 }}>
-                        Assigned To
+                    <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
+                        <span className="dataLabel">Assigned To</span>
                         <div>
-                            {!isEdit && <b>{updateSubTask.assigned_to}</b>}
+                            {!isEdit && (
+                                <div className="assigneeContainer">
+                                    <img
+                                        src={
+                                            "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                                        }
+                                        alt="Assignee"
+                                        className="assigneeImage"
+                                    />
+                                    <b>{updateSubTask.assigned_to}</b>
+                                </div>
+                            )}
                             {isEdit && (
                                 <Select
                                     allowClear
@@ -378,8 +374,80 @@ const SubTaskViewEdit = (props: any) => {
                             )}
                         </div>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 6 }}>
-                        Budget Time
+                    <Col xs={{ span: 24 }} sm={{ span: 6 }} md={{ span: 6 }}>
+                        <span className="dataLabel">Assigned Date</span>
+                        <div>
+                            {!isEdit && (
+                                <b>
+                                    <CalendarOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {dayjs(updateSubTask.budget_time).format(
+                                        "YYYY-MM-DD, HH:mm A"
+                                    )}
+                                </b>
+                            )}
+
+                            {/* {isEdit && (
+                                <DatePicker
+                                    placeholder="Start Date"
+                                    name="start_date"
+                                    defaultValue={dayjs(
+                                        updateSubTask.budget_time
+                                    )}
+                                    className="w100"
+                                    // format={dateFormat}
+                                    // className="w100"
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "start_date"
+                                        );
+                                    }}
+                                    onPanelChange={() => {}}
+                                />
+                            )} */}
+                        </div>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 6 }}>
+                        <span className="dataLabel">Due Date</span>
+                        <div>
+                            {!isEdit && (
+                                <b>
+                                    <CalendarOutlined
+                                        style={{
+                                            color: "#2c7be5",
+                                            marginRight: "10px",
+                                        }}
+                                    />
+                                    {dayjs(updateSubTask.budget_time).format(
+                                        "YYYY-MM-DD, HH:mm A"
+                                    )}
+                                </b>
+                            )}
+                            {/* {isEdit && (
+                                <DatePicker
+                                    placeholder="Due Date"
+                                    name="due_date"
+                                    defaultValue={dayjs(updateTask.due_date)}
+                                    format={dateFormat}
+                                    onPanelChange={() => {}}
+                                    className="w100"
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "due_date"
+                                        );
+                                    }}
+                                />
+                            )} */}
+                        </div>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 4 }}>
+                        <span className="dataLabel">Budget Time</span>
                         <div>
                             {!isEdit && (
                                 <b>
@@ -401,16 +469,19 @@ const SubTaskViewEdit = (props: any) => {
                                         "HH:mm"
                                     )}
                                     format={"HH:mm"}
-                                    // onChange={(date, dateString) => {
-                                    //     inputChangeHandler(dateString, "budgetTime");
-                                    // }}
+                                    onChange={(date, dateString) => {
+                                        inputChangeHandler(
+                                            dateString,
+                                            "budget_time"
+                                        );
+                                    }}
                                     className="w100"
                                 />
                             )}
                         </div>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 6 }}>
-                        Actual Time
+                    <Col xs={{ span: 24 }} sm={{ span: 4 }} md={{ span: 4 }}>
+                        <span className="dataLabel">Actual Time</span>
                         <div>
                             {!isEdit && (
                                 <b>
@@ -425,21 +496,6 @@ const SubTaskViewEdit = (props: any) => {
                                         : updateSubTask.actual_time}
                                 </b>
                             )}
-                            {/* {isEdit && (
-                                <TimePicker
-                                    placeholder="Actual Time"
-                                    name="actual_time"
-                                    defaultValue={dayjs(
-                                        updateTask.actual_time,
-                                        "HH:mm"
-                                    )}
-                                    format={"HH:mm"}
-                                    // onChange={(date, dateString) => {
-                                    //     inputChangeHandler(dateString, "budgetTime");
-                                    // }}
-                                    className="w100"
-                                />
-                            )} */}
                         </div>
                     </Col>
                 </Row>
@@ -460,6 +516,12 @@ const SubTaskViewEdit = (props: any) => {
                                 }}
                             />
                         )}
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                        <Title level={5} style={{ textAlign: "left" }}>
+                            Data Path
+                        </Title>
+                        <span>{updateSubTask.datapath}</span>
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">

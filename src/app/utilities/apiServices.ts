@@ -302,7 +302,8 @@ export default {
             data: comment,
             transformResponse: [
                 function (data) {
-                    return data;
+                    const jsondata = JSON.parse(data);
+                    return jsondata.payload;
                 },
             ],
         }),
@@ -318,14 +319,53 @@ export default {
                 },
             ],
         }),
-    deleteComplianceComment: (complianceId: string, commentId: string) =>
+    deleteComplianceComment: (
+        complianceId: string,
+        commentId: string,
+        subcomplianceId: string
+    ) =>
         instance({
             method: "DELETE",
             url:
-                "compliancecomment/delete-compliance-comment?taskId=" +
+                "compliancecomment/delete-compliance-comment?complianceId=" +
                 complianceId +
                 "&commentId=" +
-                commentId,
+                commentId +
+                "&subcomplianceId=" +
+                subcomplianceId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateSubComplianceComment: (comment: SaveComplianceComment) =>
+        instance({
+            method: "PUT",
+            url: "compliancecomment/update-compliance-comment",
+            data: comment,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteSubComplianceComment: (
+        commentId: string,
+        subComplianceId: string,
+        complianceId: string
+    ) =>
+        instance({
+            method: "DELETE",
+            url:
+                "compliancecomment/delete-compliance-comment?complianceId=" +
+                complianceId +
+                "&commentId=" +
+                commentId +
+                "&subcomplianceId=" +
+                subComplianceId,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
