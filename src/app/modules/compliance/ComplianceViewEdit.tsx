@@ -279,21 +279,21 @@ const ComplianceViewEdit = (props: any) => {
                     </span>
                 </div>
                 <div
-                    className="task-header-cell"
+                    className={`task-header-cell ${
+                        !props.fullScreenMode ? `short-title` : ``
+                    }`}
                     style={{
-                        flex: props.fullScreenMode
-                            ? index.toString() !== currentCollapse
-                                ? 5
-                                : 15
-                            : 7,
+                        flex: props.fullScreenMode ? 1 : 8.5,
                     }}
+                    title={subComplianceItem.title}
                 >
                     {subComplianceItem.title}
                 </div>
                 <div
                     className="task-header-cell"
                     style={{
-                        flex: props.fullScreenMode ? 3 : 4,
+                        flex: props.fullScreenMode ? 0.2 : 3,
+                        textAlign: "center",
                     }}
                 >
                     <>
@@ -309,7 +309,13 @@ const ComplianceViewEdit = (props: any) => {
                 </div>
                 {props.fullScreenMode &&
                     index.toString() !== currentCollapse && (
-                        <div className="task-header-cell">
+                        <div
+                            className="task-header-cell"
+                            style={{
+                                flex: props.fullScreenMode ? 0.2 : 2,
+                                textAlign: "center",
+                            }}
+                        >
                             <FontAwesomeIcon
                                 icon={faClock}
                                 className="timer-play"
@@ -320,11 +326,13 @@ const ComplianceViewEdit = (props: any) => {
                             {formatTime(subComplianceItem.budget_time)}
                         </div>
                     )}
-                {index.toString() !== currentCollapse && (
+                {(index.toString() !== currentCollapse ||
+                    !props.fullScreenMode) && (
                     <div
                         className="task-header-cell"
                         style={{
-                            flex: props.fullScreenMode ? 1 : 2,
+                            flex: props.fullScreenMode ? 0.2 : 2,
+                            textAlign: "center",
                         }}
                     >
                         <FontAwesomeIcon
@@ -339,34 +347,38 @@ const ComplianceViewEdit = (props: any) => {
                             : 0}
                     </div>
                 )}
-                {index.toString() !== currentCollapse && (
-                    <div className="task-header-cell">
-                        {props.fullScreenMode && (
+                {index.toString() !== currentCollapse &&
+                    props.fullScreenMode && (
+                        <div
+                            className="task-header-cell"
+                            style={{
+                                flex: props.fullScreenMode ? 0.2 : 2,
+                                textAlign: "center",
+                            }}
+                        >
                             <Tag
                                 color={statusColors(subComplianceItem.status)}
                                 style={{
                                     fontWeight: "500",
                                     fontSize: "12px",
+                                    flex: props.fullScreenMode ? 0.2 : 0.5,
                                 }}
                             >
                                 {upperText(subComplianceItem.status)}
                             </Tag>
-                        )}
-                    </div>
-                )}
-                {index.toString() !== currentCollapse && (
-                    <div
-                        className={`task-header-cell ${
-                            props.fullScreenMode ? "" : "task_priorty"
-                        } ${subComplianceItem.priority} ${
-                            subComplianceItem.priority === "high" ? "blink" : ""
-                        }`}
-                    >
-                        {props.fullScreenMode
-                            ? capitalize(subComplianceItem.priority)
-                            : " "}
-                    </div>
-                )}
+                        </div>
+                    )}
+                <div
+                    className={`task-header-cell ${
+                        props.fullScreenMode ? "" : "task_priorty"
+                    } ${subComplianceItem.priority} ${
+                        subComplianceItem.priority === "high" ? "blink" : ""
+                    }`}
+                >
+                    {props.fullScreenMode
+                        ? capitalize(subComplianceItem.priority)
+                        : " "}
+                </div>
             </div>
         );
     };
