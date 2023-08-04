@@ -165,8 +165,12 @@ const ComplianceViewEdit = (props: any) => {
             value = event.value;
         }
 
-        const taskUpdate = {} as IAddCompliance;
-        taskUpdate.status = value;
+        // const taskUpdate = {} as IAddCompliance;
+        //taskUpdate.status = value;
+        setUpdateCompliance({
+            ...updateCompliance,
+            [name]: value,
+        });
     };
 
     /* comment code start */
@@ -241,7 +245,21 @@ const ComplianceViewEdit = (props: any) => {
 
     /* comment code end */
 
-    const handleUpdateTask = () => {};
+    const handleUpdateTask = () => {
+        updateCompliance.subcompliance = subCompliances;
+        console.log("updateCompliance", updateCompliance);
+        // return;
+
+        api.updateCompliance(updateCompliance._id, updateCompliance).then(
+            (resp: any) => {
+                toast.success("Successfully Updated Compliance.", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                setIsEdit(false);
+                if (props.handleListUpdate) props.handleListUpdate();
+            }
+        );
+    };
 
     // calculate client count
     const getSubCompliancesCount = (data: any) => {
@@ -618,6 +636,7 @@ const ComplianceViewEdit = (props: any) => {
                             <ComplianceDetails
                                 id="complianceClients"
                                 isEdit={isEdit}
+                                isAllowAdd={false}
                                 scroll={{ x: 1000 }}
                                 data={updateCompliance.clients}
                                 subcompliance={updateCompliance.subcompliance}

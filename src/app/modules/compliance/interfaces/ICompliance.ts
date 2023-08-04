@@ -93,6 +93,7 @@ export interface TimerDetail {
 
 export interface IClientDetails {
     complianceDetailId: string;
+    _id: string;
     client_name: string;
     assigned_to: string;
     budget_time: string;
@@ -104,6 +105,7 @@ export interface IClientDetails {
 
 export class ClientDetail implements IClientDetails {
     complianceDetailId: string = "";
+    _id: string = "";
     client_name: string = "";
     assigned_to: string = "";
     budget_time: string = "";

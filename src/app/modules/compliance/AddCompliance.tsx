@@ -96,8 +96,6 @@ const AddCompliance = () => {
             value = event.value;
         }
 
-        console.log("Compliance Remark");
-
         setAddCompliance({
             ...addCompliance,
             [name]: value,
@@ -223,9 +221,11 @@ const AddCompliance = () => {
             // console.log("ALL COMPLIANCE", allCompliance);
             // localStorage.setItem("compliance", JSON.stringify(allCompliance));
 
+            console.log("complianceDetails", complianceDetails);
             const complianceData = JSON.parse(
                 JSON.stringify(complianceDetails)
             );
+
             if (complianceData && complianceData.length > 0) {
                 addCompliance.clients = complianceData;
             }
@@ -248,6 +248,8 @@ const AddCompliance = () => {
                           };
                       })
                     : [];
+
+            console.log(addCompliance);
 
             setAddCompliance(addCompliance);
 

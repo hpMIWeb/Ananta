@@ -21,10 +21,11 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
-
+import { nanoid } from "nanoid";
 const ComplianceDetails = (props: any) => {
     const newClientItem = {
-        complianceDetailId: "-1",
+        complianceDetailId: nanoid(),
+        _id: nanoid(),
         budget_time: "00:00",
         parentId: props.parentId ?? -1,
         client_name: "",
@@ -57,6 +58,219 @@ const ComplianceDetails = (props: any) => {
     };
 
     const editColumns = [
+        {
+            title: "Actions",
+            dataIndex: "action",
+            key: "action",
+            align: "center",
+            render: (text: any, record: any, index: number) => (
+                <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{
+                        fontSize: "15px",
+                        color: "#ec0033",
+                        cursor: "pointer",
+                    }}
+                    title={"Click here to Delete"}
+                    onClick={() => {
+                        removeComplianceDetails(record);
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Client",
+            dataIndex: "client",
+            key: "client",
+            width: "20%",
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "client_name_" +
+                        record._id +
+                        "_" +
+                        props.parentTitle +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select Client.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        showSearch
+                        placeholder="Client"
+                        options={clientOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "client_name");
+                            const emptyRowExist = clients.find((item) => {
+                                return item.client_name === "";
+                            });
+                            if (!emptyRowExist) {
+                                addNewComplianceDetails();
+                            }
+                        }}
+                        defaultValue={record.client_name}
+                    />
+                </Form.Item>
+            ),
+        },
+        {
+            title: "Assign To",
+            dataIndex: "assignTo",
+            key: "assignTo",
+            width: "20%",
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "assignee_to_" +
+                        record._id +
+                        "_" +
+                        props.parentTitle +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select Assignee.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        showSearch
+                        placeholder="Assign Person"
+                        options={assigneeOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "assigned_to");
+                        }}
+                        defaultValue={record.assigned_to}
+                    />
+                </Form.Item>
+            ),
+        },
+        {
+            title: "Budget Time",
+            dataIndex: "budgetTime",
+            key: "budgetTime",
+            width: "8rem",
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "budget_time_" +
+                        record._id +
+                        "_" +
+                        props.parentTitle +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please set Budget Time.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
+                        },
+                    ]}
+                >
+                    <TimePicker
+                        placeholder="Budget Time"
+                        name="budget_time"
+                        className="w100"
+                        format={"HH:mm"}
+                        onChange={(date, dateString) => {
+                            inputChangeHandler(dateString, "budget_time");
+                        }}
+                        defaultValue={dayjs(record.budget_time, "HH:mm")}
+                    />
+                </Form.Item>
+            ),
+        },
+        {
+            title: "Priority",
+            dataIndex: "priority",
+            key: "priority",
+            width: "10rem",
+            render: (text: any, record: any, index: number) => (
+                <Form.Item
+                    name={
+                        "_priority_" +
+                        record._id +
+                        "_" +
+                        props.parentTitle +
+                        "_" +
+                        props.parentId
+                    }
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please set Priority.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        placeholder="Priority"
+                        options={priorityOpts}
+                        className="w100"
+                        onChange={(value, event) => {
+                            inputChangeHandler(event, "priority");
+                        }}
+                        defaultValue={record.priority}
+                    />
+                </Form.Item>
+            ),
+        },
+        {
+            title: "Remark",
+            dataIndex: "remark",
+            key: "remark",
+            render: (text: any, record: ClientDetail, index: number) => (
+                <TextArea
+                    rows={1}
+                    onChange={(value) => {
+                        inputChangeHandler(value, "remark");
+                    }}
+                    defaultValue={record.remark}
+                />
+            ),
+        },
+    ];
+
+    const AddModeColumns = [
         {
             title: "Actions",
             dataIndex: "action",
@@ -257,14 +471,13 @@ const ComplianceDetails = (props: any) => {
             title: "Remark",
             dataIndex: "remark",
             key: "remark",
-            render: (text: any, record: any, index: number) => (
+            render: (text: any, record: ClientDetail, index: number) => (
                 <TextArea
                     rows={1}
-                    name="remark"
                     onChange={(value) => {
-                        inputChangeHandler(value);
+                        inputChangeHandler(value, "remark");
                     }}
-                    value={record.remak}
+                    defaultValue={record.remark}
                 />
             ),
         },
@@ -386,7 +599,7 @@ const ComplianceDetails = (props: any) => {
         }
 
         Object.keys(new ClientDetail()).map((keyItem: string) => {
-            if (keyItem === name) {
+            if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
                         selectedTableRow.client_name = value;
@@ -447,9 +660,9 @@ const ComplianceDetails = (props: any) => {
     };
 
     const addNewComplianceDetails = () => {
-        const new_id = clients.length + 1;
         const newClient = newClientItem;
-        newClient.complianceDetailId = new_id.toString();
+        newClient.complianceDetailId = nanoid();
+        newClient._id = nanoid();
         setClients([...clients, newClient]);
 
         // update parent component
@@ -459,6 +672,7 @@ const ComplianceDetails = (props: any) => {
     };
 
     useEffect(() => {
+        console.log(props.data);
         setIsEdit(props.isEdit);
     }, [props.isEdit]);
 
@@ -479,7 +693,13 @@ const ComplianceDetails = (props: any) => {
                 <Table
                     rowKey={(record) => record.complianceDetailId}
                     dataSource={clients}
-                    columns={isEdit ? editColumns : columns}
+                    columns={
+                        isEdit
+                            ? props.isAllowAdd
+                                ? AddModeColumns
+                                : editColumns
+                            : columns
+                    }
                     pagination={false}
                     onRow={(record, rowIndex) => {
                         return {
