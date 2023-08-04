@@ -106,7 +106,12 @@ const AddCompliance = () => {
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add - ", details);
-        setComplianceDetails(details);
+        if (details) {
+            const newDetails = details.filter((clientItem: IClientDetails) => {
+                return clientItem.client_name !== "";
+            });
+            setComplianceDetails(newDetails);
+        }
     };
 
     const validate = () => {
@@ -229,6 +234,7 @@ const AddCompliance = () => {
                 subCompliance && subCompliance.length > 0
                     ? subCompliance.map((item: ISubCompliance) => {
                           return {
+                              _id: "",
                               title: item.title,
                               status: item.status,
                               mode: item.status,

@@ -43,6 +43,7 @@ import {
     SubCompliance as ISubCompliance,
     IClientDetails,
     SaveComplianceComment,
+    Comment as IComment,
 } from "./interfaces/ICompliance";
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
@@ -59,7 +60,7 @@ const ComplianceViewEdit = (props: any) => {
     const [updateCompliance, setUpdateCompliance] = useState<IAddCompliance>(
         props.tableRowSelected
     );
-    const [complianceComments, setComplianceComments] = useState<Comment>(
+    const [complianceComments, setComplianceComments] = useState<Comment[]>(
         props.tableRowSelected.comments
     );
     const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
@@ -215,11 +216,18 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const deleteCommentHandler = (commentId: string, parentId: string) => {
-        api.deleteTaskComment(updateCompliance._id, commentId)
+        api.deleteComplianceComment(updateCompliance._id, commentId, "")
             .then((resp: any) => {
                 toast.success("Successfully deleted comment", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+
+                const newSubComments = complianceComments.filter(
+                    (comment: any) => {
+                        return comment._id !== commentId;
+                    }
+                );
+                setComplianceComments(newSubComments);
 
                 // setTaskComments(resp.data.comments);
             })
@@ -679,7 +687,7 @@ const ComplianceViewEdit = (props: any) => {
                                     Comments
                                 </Title>
                                 <Comments
-                                    comments={updateCompliance.comments}
+                                    comments={complianceComments}
                                     parentId={updateCompliance._id}
                                     addComment={addCommentHandler}
                                     editComment={editCommentHandler}

@@ -20,7 +20,7 @@ export interface AddCompliance {
 }
 
 export interface SubCompliance {
-    _id?: string;
+    _id: string;
     title: string;
     status: string;
     mode: string;
@@ -55,12 +55,20 @@ export interface Attachment {
 }
 
 export interface Comment {
+    _id: string;
     comment: string;
     commentDate: string;
     commentBy: string;
 }
 export interface SaveComplianceComment {
     complianceId: string;
+    comment: string;
+    commentId: string;
+}
+
+export interface SaveSubComplianceComment {
+    complianceId: string;
+    subcomplianceId: string;
     comment: string;
     commentId: string;
 }

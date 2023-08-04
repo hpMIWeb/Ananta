@@ -98,6 +98,7 @@ const Setting = () => {
         const addSetting = new Settings();
         addSetting.task = taskData;
         addSetting.compliance = complianceData;
+        addSetting._id = settingData._id;
 
         try {
             api.updateSetting(addSetting).then((resp: any) => {
