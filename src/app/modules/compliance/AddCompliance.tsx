@@ -38,6 +38,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
+import { nanoid } from "@reduxjs/toolkit";
 
 const { Title } = Typography;
 const dataSource = [
@@ -234,7 +235,7 @@ const AddCompliance = () => {
                 subCompliance && subCompliance.length > 0
                     ? subCompliance.map((item: ISubCompliance) => {
                           return {
-                              _id: "",
+                              _id: nanoid(),
                               title: item.title,
                               status: item.status,
                               mode: item.status,
@@ -249,17 +250,15 @@ const AddCompliance = () => {
                       })
                     : [];
 
-            console.log(addCompliance);
+            console.log("subCompliance", subCompliance);
 
-            setAddCompliance(addCompliance);
+            // setAddCompliance(addCompliance);
 
-            console.log(
-                "before same subCompliance - ",
-                subCompliance,
-                addCompliance
-            );
+            console.log("before same subCompliance - ", addCompliance);
 
             // Save to DB
+
+            //return;
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
                     const fields = form.getFieldsValue();
