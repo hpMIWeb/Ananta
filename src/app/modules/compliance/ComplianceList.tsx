@@ -62,14 +62,10 @@ const ComplianceList = () => {
         setFullScreenMode(!fullScreenMode);
     };
 
-    const reportTabToggle = () => {
-        setReportTab(!reportTab);
-    };
-
     const onTabChange = (key: string) => {
         setActiveTab(key);
         setFullScreenMode(false);
-        setReportTab(key === "2" ? true : false);
+        setReportTab(key === "4" || key === "5" ? true : false);
     };
 
     useEffect(() => {
@@ -408,10 +404,25 @@ const ComplianceList = () => {
         switch (rangeMode) {
             case "today": {
                 retVal = allCompliance.filter((item: IAddCompliance) => {
-                    // return dayjs(item.start_date, dateFormat).isSame(
-                    //     dayjs().format(dateFormat)
-                    // );
-                    return item;
+                    return dayjs(item.start_date, dateFormat).isSame(
+                        dayjs().format(dateFormat)
+                    );
+                });
+                break;
+            }
+            case "upcoming": {
+                retVal = allCompliance.filter((item: IAddCompliance) => {
+                    return dayjs(item.start_date, dateFormat).isAfter(
+                        dayjs().format(dateFormat)
+                    );
+                });
+                break;
+            }
+            case "history": {
+                retVal = allCompliance.filter((item: IAddCompliance) => {
+                    return dayjs(item.start_date, dateFormat).isBefore(
+                        dayjs().format(dateFormat)
+                    );
                 });
                 break;
             }
@@ -562,7 +573,334 @@ const ComplianceList = () => {
         );
     };
 
+    const upcomingContent = () => {
+        return (
+            <div>
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "10px",
+                            marginTop: "7px",
+                        }}
+                    >
+                        <Input
+                            placeholder="Search"
+                            className="search-box border-bottom"
+                            bordered={false}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined />}
+                        />
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{
+                            marginBottom: "10px",
+                            marginTop: "0",
+                        }}
+                    ></Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{ paddingTop: "20px", textAlign: "right" }}
+                    >
+                        <div
+                            className="btn-link expanddiv"
+                            title="Show Filters"
+                            onClick={onSwitchMoreFilter}
+                        >
+                            <span className="svgIcon">
+                                {!showMoreFilter
+                                    ? "Show Filters "
+                                    : "Hide Filters "}
+                            </span>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
+
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
+                >
+                    <Table
+                        id={"complianceListRow"}
+                        dataSource={getData(current, pageSize, "upcoming")}
+                        rowClassName={rowClassHandler}
+                        onRow={(record, rowIndex) => {
+                            return {
+                                onClick: (event) => {
+                                    setTableRowSelected(record);
+                                },
+                            };
+                        }}
+                        className=""
+                        columns={colInfo}
+                        showHeader={false}
+                        style={{ width: "100%" }}
+                        size="small"
+                        showSorterTooltip
+                    />
+                </Row>
+            </div>
+        );
+    };
+
+    const historyContent = () => {
+        return (
+            <div>
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "10px",
+                            marginTop: "7px",
+                        }}
+                    >
+                        <Input
+                            placeholder="Search"
+                            className="search-box border-bottom"
+                            bordered={false}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined />}
+                        />
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{
+                            marginBottom: "10px",
+                            marginTop: "0",
+                        }}
+                    ></Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{ paddingTop: "20px", textAlign: "right" }}
+                    >
+                        <div
+                            className="btn-link expanddiv"
+                            title="Show Filters"
+                            onClick={onSwitchMoreFilter}
+                        >
+                            <span className="svgIcon">
+                                {!showMoreFilter
+                                    ? "Show Filters "
+                                    : "Hide Filters "}
+                            </span>
+                            <FontAwesomeIcon
+                                icon={!showMoreFilter ? faAngleDown : faAngleUp}
+                                style={{
+                                    fontSize: "13px",
+                                }}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <Row
+                    gutter={[8, 8]}
+                    className={`form-row`}
+                    style={{
+                        marginTop: "0",
+                    }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "0",
+                            marginTop: "0",
+                        }}
+                    >
+                        <Fillter
+                            showMoreFilter={showMoreFilter}
+                            filterHandler={filterHandler}
+                        />
+                    </Col>
+                </Row>
+
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
+                >
+                    <Table
+                        id={"complianceListRow"}
+                        dataSource={getData(current, pageSize, "history")}
+                        rowClassName={rowClassHandler}
+                        onRow={(record, rowIndex) => {
+                            return {
+                                onClick: (event) => {
+                                    setTableRowSelected(record);
+                                },
+                            };
+                        }}
+                        className=""
+                        columns={colInfo}
+                        showHeader={false}
+                        style={{ width: "100%" }}
+                        size="small"
+                        showSorterTooltip
+                    />
+                </Row>
+            </div>
+        );
+    };
+
     const reportContent = () => {
+        return (
+            <div>
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "10px" }}
+                >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Select
+                            allowClear
+                            showSearch
+                            placeholder="Report Type"
+                            options={complianceReportOpts}
+                            className="w100 border-bottom"
+                            bordered={false}
+                            value={reportType}
+                            onChange={handelReportType}
+                        />
+                    </Col>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Select
+                            allowClear
+                            showSearch
+                            placeholder="Client"
+                            options={clientOpts}
+                            className="w100 border-bottom"
+                            bordered={false}
+                        />
+                    </Col>
+
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 8 }}
+                        style={{ float: "right" }}
+                    >
+                        <a
+                            className="btn-link expanddiv"
+                            href="#"
+                            title="Show Filters"
+                            onClick={onSwitchMoreFilter}
+                        >
+                            <span>
+                                {!showMoreFilter
+                                    ? "Show Filters"
+                                    : "Hide Filters"}
+                            </span>
+                            <svg
+                                className="svg-inline--fa fa-angle-down fa-w-10"
+                                aria-hidden="true"
+                                focusable="false"
+                                data-prefix="fas"
+                                data-icon="angle-down"
+                                role="img"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 320 512"
+                                data-fa-i2svg=""
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"
+                                ></path>
+                            </svg>
+                            <i className="fas fa-angle-down"></i>
+                        </a>
+                    </Col>
+                </Row>
+
+                <ComplianceFilter
+                    showMoreFilter={showMoreFilter}
+                    filterHandler={filterHandler}
+                    reportType={reportType}
+                />
+
+                <Row
+                    gutter={[8, 8]}
+                    className={"form-row "}
+                    style={{ marginTop: "10px" }}
+                >
+                    <Table
+                        id={"complianceReport"}
+                        dataSource={getData(current, pageSize, "today")}
+                        rowClassName={rowClassHandlerForReport}
+                        onRow={(record, rowIndex) => {
+                            return {
+                                onClick: (event) => {
+                                    setTableRowSelected(record);
+                                },
+                            };
+                        }}
+                        columns={colInfoForReportTab}
+                        showHeader={true}
+                        size="small"
+                        showSorterTooltip
+                        scroll={{ x: 1300 }}
+                    />
+                </Row>
+            </div>
+        );
+    };
+
+    const reportContentNew = () => {
         return (
             <div>
                 <Row
@@ -679,7 +1017,16 @@ const ComplianceList = () => {
                 return todayContent();
             }
             case "2": {
+                return upcomingContent();
+            }
+            case "3": {
+                return historyContent();
+            }
+            case "4": {
                 return reportContent();
+            }
+            case "5": {
+                return reportContentNew();
             }
         }
         return null;
@@ -696,7 +1043,19 @@ const ComplianceList = () => {
         },
         {
             key: "2",
+            label: "Upcoming",
+        },
+        {
+            key: "3",
+            label: "History",
+        },
+        {
+            key: "4",
             label: "Report",
+        },
+        {
+            key: "5",
+            label: "New Report",
         },
     ];
 

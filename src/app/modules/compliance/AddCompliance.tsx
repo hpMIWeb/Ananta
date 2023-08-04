@@ -58,7 +58,7 @@ const AddCompliance = () => {
     const [showSubCompliance, setShowSubCompliance] = useState<boolean>(false);
     const [addCompliance, setAddCompliance] = useState<IAddCompliance>({
         status: "pending",
-        start_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        start_date: dayjs().format("YYYY-MM-DD"),
         title: "",
         actual_time: "",
         assignee: "",
@@ -104,43 +104,14 @@ const AddCompliance = () => {
         });
     };
 
-    const handleQuillKeyDown = (event: any) => {
-        if (event.key === "Tab") {
-            event.preventDefault(); // Prevent the default tab behavior
-
-            const formElements = [
-                "input",
-                "select",
-                "textarea",
-                "button",
-                "a[href]",
-                '[tabindex]:not([tabindex="-1"])',
-            ];
-
-            // Get all focusable elements in the form
-            const focusableElements = document.querySelectorAll(
-                "form, [contenteditable='true'], " + formElements.join(", ")
-            );
-
-            const currentFocusIndex = Array.from(focusableElements).indexOf(
-                event.target
-            );
-
-            // Move focus to the next focusable element in the form
-            const nextFocusIndex =
-                (currentFocusIndex + 1) % focusableElements.length;
-            const nextFocusElement = focusableElements[nextFocusIndex];
-
-            // Check if the next focusable element supports focus
-            if (nextFocusElement instanceof HTMLElement) {
-                nextFocusElement.focus();
-            }
-        }
-    };
-
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add - ", details);
-        setComplianceDetails(details);
+        if (details) {
+            const newDetails = details.filter((clientItem: IClientDetails) => {
+                return clientItem.client_name !== "";
+            });
+            setComplianceDetails(newDetails);
+        }
     };
 
     const validate = () => {
@@ -215,6 +186,7 @@ const AddCompliance = () => {
         }
 
         // Clients validation
+        console.log(complianceDetails);
         if (complianceDetails === undefined || complianceDetails.length === 0) {
             returnFlag = false;
         }
@@ -572,7 +544,6 @@ const AddCompliance = () => {
                                 theme="snow"
                                 value={addCompliance.remark}
                                 placeholder="Compliance Remark"
-                                onKeyDown={handleQuillKeyDown}
                                 onChange={(event) => {
                                     inputChangeHandler(event, "remark");
                                 }}

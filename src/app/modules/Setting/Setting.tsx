@@ -77,19 +77,20 @@ const Setting = () => {
         checkedValues: CheckboxValueType[],
         actionTab: string
     ) => {
-        console.log("checked = ", checkedValues);
-
         if (actionTab === "task") {
+            console.log("before save ", taskData);
             setTaskData((prevTaskData) => ({
                 ...prevTaskData,
-                select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
+                select_fields: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
             }));
         } else if (actionTab === "compliance") {
             setComplianceData((prevTaskData) => ({
                 ...prevTaskData,
-                select_feilds: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
+                select_fields: checkedValues as string[], // You can cast CheckboxValueType[] to string[] if required.
             }));
         }
+
+        console.log("taskData", taskData);
     };
 
     // Save settings
@@ -97,9 +98,10 @@ const Setting = () => {
         const addSetting = new Settings();
         addSetting.task = taskData;
         addSetting.compliance = complianceData;
+        addSetting._id = settingData._id;
 
         try {
-            api.createSetting(addSetting).then((resp: any) => {
+            api.updateSetting(addSetting).then((resp: any) => {
                 toast.success("Successfully Settings saved.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -128,6 +130,7 @@ const Setting = () => {
             //TODO: taking only first record of the array, `payload` should not be an array
             console.log(resp.data);
             var respData = resp.data;
+
             setSettingData(respData);
             setValue(respData.task.select_template);
             setComplianceData(respData.compliance);
@@ -170,7 +173,7 @@ const Setting = () => {
                         onChange={(check) => {
                             checkBoxHandler(check, "task");
                         }}
-                        value={taskData && taskData.select_feilds}
+                        value={taskData && taskData.select_fields}
                     >
                         <Space direction="vertical">{taskFields}</Space>
                     </Checkbox.Group>
@@ -207,7 +210,7 @@ const Setting = () => {
                         onChange={(check) => {
                             checkBoxHandler(check, "compliance");
                         }}
-                        value={complianceData && complianceData.select_feilds}
+                        value={complianceData && complianceData.select_fields}
                     >
                         <Space direction="vertical">{complianceFields}</Space>
                     </Checkbox.Group>

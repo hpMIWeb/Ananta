@@ -75,7 +75,7 @@ const EmpTimeSheet = () => {
                 return remarkA.localeCompare(remarkB);
             },
             render: (remark: string) => (
-                <div className="scrollabletd">{remark}</div>
+                <div className="scrollbar-td">{remark}</div>
             ),
         },
 
@@ -138,13 +138,10 @@ const EmpTimeSheet = () => {
         setActiveTab(key);
     };
 
-    function onChange(sorter: any) {
-        console.log(sorter);
-    }
+    function onChange(sorter: any) {}
 
     const downloadPDF = () => {
         // manage down load()
-        console.log("dsDD");
         toast.success("Successfully Download.", {
             position: toast.POSITION.TOP_RIGHT,
         });
@@ -163,7 +160,6 @@ const EmpTimeSheet = () => {
 
     const downloadExcel = () => {
         // manage down load()
-        console.log("dsDD");
         toast.success("Successfully Download.", {
             position: toast.POSITION.TOP_RIGHT,
         });
@@ -196,49 +192,40 @@ const EmpTimeSheet = () => {
             value = event.value;
         }
 
-        switch (name) {
-            case "employeeName": {
-                if (value !== "") {
-                    parameters.push(
-                        `employeeName=${encodeURIComponent(
-                            "64995ea32247b2567c76e015"
-                        )}`
-                    );
-                }
-                break;
-            }
-            case "clientName": {
-                if (value !== "") {
-                    parameters.push(`clientName=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            case "workArea": {
-                if (value !== "") {
-                    parameters.push(`workArea=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            case "date": {
-                if (value !== "") {
-                    parameters.push(`date=${encodeURIComponent(value)}`);
-                }
-                break;
-            }
-            default:
-                break;
+        // Check if the filter parameter already exists in the parameters array
+        const parameterExists = parameters.some((param) =>
+            param.startsWith(`${nameItem}=`)
+        );
+
+        // If the parameter already exists, remove it from the array
+        if (parameterExists) {
+            parameters = parameters.filter((param) => {
+                return !param.startsWith(`${nameItem}=`);
+            });
         }
 
-        const queryString = parameters.join("&");
-        console.log(queryString);
+        // Push the new parameter to the array
+        if (value !== "") {
+            parameters.push(`${nameItem}=${encodeURIComponent(value)}`);
+        }
+
+        let queryString = "";
+        if (parameters && parameters.length > 0) {
+            queryString = "?" + parameters.join("&");
+        }
+
         try {
-            api.getEmployeeTimesheetReport("?" + queryString).then(
-                (resp: any) => {
-                    setEmployeeReport(resp.data["data"]);
-                    setEmployeeReportSummary(resp.data["header"]);
-                    // employeeReportSummary.employeeName = "Pinank Soni";
-                }
-            );
+            if (queryString !== "") {
+                api.getEmployeeTimesheetReport("?" + queryString).then(
+                    (resp: any) => {
+                        setEmployeeReport(resp.data["data"]);
+                        setEmployeeReportSummary(resp.data["header"]);
+                    }
+                );
+            } else {
+                setEmployeeReport([]);
+                setEmployeeReportSummary(new EmployeeReportSummary());
+            }
         } catch (ex) {
             toast.error("Technical error while Download.", {
                 position: toast.POSITION.TOP_RIGHT,
@@ -248,8 +235,6 @@ const EmpTimeSheet = () => {
 
     const getData = (current: number, pageSize: number) => {
         let returnVal = employeeReport;
-        console.log(employeeReport);
-
         return returnVal
             .map((item: any, index: number) => {
                 item.key = index;
