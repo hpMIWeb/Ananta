@@ -7,7 +7,8 @@ import {
 } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 import {
-    AddCompliance,
+    InsertCompliance,
+    Compliance,
     SubCompliance,
     SaveComplianceComment,
     UpdateSubCompliance,
@@ -143,7 +144,7 @@ export default {
                 },
             ],
         }),
-    createCompliance: (compliance: AddCompliance) =>
+    createCompliance: (compliance: InsertCompliance) =>
         instance({
             method: "POST",
             url: "compliance/create-compliance",
@@ -173,7 +174,7 @@ export default {
                 },
             ],
         }),
-    updateCompliance: (complianceId: string, updateCompliance: AddCompliance) =>
+    updateCompliance: (complianceId: string, updateCompliance: Compliance) =>
         instance({
             method: "PUT",
             url: "compliance/update-compliance/id=" + complianceId,

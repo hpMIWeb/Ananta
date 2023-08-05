@@ -39,7 +39,7 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
 import {
-    AddCompliance as IAddCompliance,
+    Compliance as ICompliance,
     SubCompliance as ISubCompliance,
     IClientDetails,
     SaveComplianceComment,
@@ -57,7 +57,7 @@ dayjs.extend(customParseFormat);
 
 const ComplianceViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-    const [updateCompliance, setUpdateCompliance] = useState<IAddCompliance>(
+    const [updateCompliance, setUpdateCompliance] = useState<ICompliance>(
         props.tableRowSelected
     );
     const [complianceComments, setComplianceComments] = useState<Comment[]>(
@@ -102,7 +102,7 @@ const ComplianceViewEdit = (props: any) => {
 
     // event handler from `stopwatch` action - play & stop
     const handleTaskStatus = (isRunning: boolean) => {
-        const complianceUpdate = {} as IAddCompliance;
+        const complianceUpdate = {} as ICompliance;
         complianceUpdate.status = isRunning
             ? Status.in_progress
             : Status.completed;
@@ -122,7 +122,7 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const statusChangeHandler = (event: any, value: string) => {
-        const complianceUpdate = {} as IAddCompliance;
+        const complianceUpdate = {} as ICompliance;
         complianceUpdate.status = value;
 
         api.updateCompliance(updateCompliance._id, complianceUpdate).then(
@@ -165,7 +165,7 @@ const ComplianceViewEdit = (props: any) => {
             value = event.value;
         }
 
-        // const taskUpdate = {} as IAddCompliance;
+        // const taskUpdate = {} as ICompliance;
         //taskUpdate.status = value;
         setUpdateCompliance({
             ...updateCompliance,
