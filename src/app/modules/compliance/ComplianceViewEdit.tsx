@@ -279,9 +279,7 @@ const ComplianceViewEdit = (props: any) => {
                     </span>
                 </div>
                 <div
-                    className={`task-header-cell ${
-                        !props.fullScreenMode ? `short-title` : ``
-                    }`}
+                    className={`task-header-cell short-title`}
                     style={{
                         flex: props.fullScreenMode ? 1 : 8.5,
                     }}
