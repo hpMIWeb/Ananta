@@ -39,7 +39,7 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../utilities/apiServices";
 import {
-    AddCompliance as IAddCompliance,
+    Compliance as ICompliance,
     SubCompliance as ISubCompliance,
     IClientDetails,
     SaveComplianceComment,
@@ -57,7 +57,7 @@ dayjs.extend(customParseFormat);
 
 const ComplianceViewEdit = (props: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-    const [updateCompliance, setUpdateCompliance] = useState<IAddCompliance>(
+    const [updateCompliance, setUpdateCompliance] = useState<ICompliance>(
         props.tableRowSelected
     );
     const [complianceComments, setComplianceComments] = useState<Comment[]>(
@@ -102,7 +102,7 @@ const ComplianceViewEdit = (props: any) => {
 
     // event handler from `stopwatch` action - play & stop
     const handleTaskStatus = (isRunning: boolean) => {
-        const complianceUpdate = {} as IAddCompliance;
+        const complianceUpdate = {} as ICompliance;
         complianceUpdate.status = isRunning
             ? Status.in_progress
             : Status.completed;
@@ -122,7 +122,7 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     const statusChangeHandler = (event: any, value: string) => {
-        const complianceUpdate = {} as IAddCompliance;
+        const complianceUpdate = {} as ICompliance;
         complianceUpdate.status = value;
 
         api.updateCompliance(updateCompliance._id, complianceUpdate).then(
@@ -165,8 +165,12 @@ const ComplianceViewEdit = (props: any) => {
             value = event.value;
         }
 
-        const taskUpdate = {} as IAddCompliance;
-        taskUpdate.status = value;
+        // const taskUpdate = {} as ICompliance;
+        //taskUpdate.status = value;
+        setUpdateCompliance({
+            ...updateCompliance,
+            [name]: value,
+        });
     };
 
     /* comment code start */
@@ -241,7 +245,21 @@ const ComplianceViewEdit = (props: any) => {
 
     /* comment code end */
 
-    const handleUpdateTask = () => {};
+    const handleUpdateTask = () => {
+        updateCompliance.subcompliance = subCompliances;
+        console.log("updateCompliance", updateCompliance);
+        // return;
+
+        api.updateCompliance(updateCompliance._id, updateCompliance).then(
+            (resp: any) => {
+                toast.success("Successfully Updated Compliance.", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                setIsEdit(false);
+                if (props.handleListUpdate) props.handleListUpdate();
+            }
+        );
+    };
 
     // calculate client count
     const getSubCompliancesCount = (data: any) => {
@@ -628,6 +646,7 @@ const ComplianceViewEdit = (props: any) => {
                             <ComplianceDetails
                                 id="complianceClients"
                                 isEdit={isEdit}
+                                isAllowAdd={false}
                                 scroll={{ x: 1000 }}
                                 data={updateCompliance.clients}
                                 subcompliance={updateCompliance.subcompliance}

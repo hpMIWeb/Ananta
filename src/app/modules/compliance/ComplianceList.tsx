@@ -12,11 +12,7 @@ import {
     Select,
     Input,
 } from "antd";
-import {
-    AddCompliance,
-    AddCompliance as IAddCompliance,
-    AddCompliance as ISubTask,
-} from "./interfaces/ICompliance";
+import { Compliance as ICompliance } from "./interfaces/ICompliance";
 import dayjs from "dayjs";
 import "./ComplianceList.scss";
 import { useNavigate } from "react-router-dom";
@@ -90,13 +86,16 @@ const ComplianceList = () => {
             title: "Title",
             dataIndex: "title",
             key: "title",
-            width: "40%",
-            render: (text: string) => <span className="title">{text}</span>,
+            width: "30rem",
+            render: (text: string) => (
+                <span className="list-short-title">{text}</span>
+            ),
         },
         {
             title: "Compliance date",
             dataIndex: "start_date",
             key: "start_date",
+            width: "6rem",
             render: (start_date: string) => (
                 <span className="clientDiv dueDate">
                     <FontAwesomeIcon
@@ -110,7 +109,8 @@ const ComplianceList = () => {
         {
             title: "Sub Compliance",
             dataIndex: "start1_date",
-            key: "start1_date",
+            key: "sub_compliance",
+            width: "6rem",
             render: (start_date1: string) => (
                 <div className="clientDiv">
                     <FontAwesomeIcon icon={faUser} style={{}} />
@@ -341,7 +341,7 @@ const ComplianceList = () => {
         },
     ];
 
-    const rowClassHandler = (record: IAddCompliance) => {
+    const rowClassHandler = (record: ICompliance) => {
         let rowClassName = "";
         switch (record.priority.toLowerCase()) {
             case "high": {
@@ -364,7 +364,7 @@ const ComplianceList = () => {
         return rowClassName;
     };
 
-    const rowClassHandlerForReport = (record: IAddCompliance) => {
+    const rowClassHandlerForReport = (record: ICompliance) => {
         let rowClassName = "";
         switch (record.status.toLowerCase()) {
             case "pending":
@@ -399,11 +399,11 @@ const ComplianceList = () => {
     };
 
     const getData = (current: number, pageSize: number, rangeMode: string) => {
-        let retVal: AddCompliance[] = [];
+        let retVal: ICompliance[] = [];
 
         switch (rangeMode) {
             case "today": {
-                retVal = allCompliance.filter((item: IAddCompliance) => {
+                retVal = allCompliance.filter((item: ICompliance) => {
                     return dayjs(item.start_date, dateFormat).isSame(
                         dayjs().format(dateFormat)
                     );
@@ -411,7 +411,7 @@ const ComplianceList = () => {
                 break;
             }
             case "upcoming": {
-                retVal = allCompliance.filter((item: IAddCompliance) => {
+                retVal = allCompliance.filter((item: ICompliance) => {
                     return dayjs(item.start_date, dateFormat).isAfter(
                         dayjs().format(dateFormat)
                     );
@@ -419,7 +419,7 @@ const ComplianceList = () => {
                 break;
             }
             case "history": {
-                retVal = allCompliance.filter((item: IAddCompliance) => {
+                retVal = allCompliance.filter((item: ICompliance) => {
                     return dayjs(item.start_date, dateFormat).isBefore(
                         dayjs().format(dateFormat)
                     );
@@ -427,7 +427,7 @@ const ComplianceList = () => {
                 break;
             }
             case "report": {
-                retVal = allCompliance.filter((item: IAddCompliance) => {
+                retVal = allCompliance.filter((item: ICompliance) => {
                     return dayjs(item.start_date, dateFormat).isAfter(
                         dayjs().format(dateFormat)
                     );

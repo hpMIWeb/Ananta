@@ -93,6 +93,7 @@ const AddSubCompliance = (props: any) => {
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add SubCompliance - ", details);
+
         const matchedItem = subCompliances.find((item: ISubCompliance) => {
             return (
                 item._id ===
@@ -101,8 +102,16 @@ const AddSubCompliance = (props: any) => {
         });
 
         if (matchedItem) {
-            matchedItem.clients = details;
-            setComplianceDetails(details);
+            let newDataWithoutId = [];
+            //TODO: need with API team _id Parameter discuss
+            const complianceData = JSON.parse(JSON.stringify(details));
+            for (const obj of complianceData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+            matchedItem.clients = newDataWithoutId;
+            setComplianceDetails(newDataWithoutId);
             //setSubCompliance([...subCompliances, matchedItem]);
         }
     };

@@ -21,11 +21,11 @@ import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
-
+import { nanoid } from "nanoid";
 const ComplianceDetails = (props: any) => {
     const newClientItem = {
-        complianceDetailId: "-1",
-        budget_time: "00:00",
+        _id: nanoid(),
+        budget_time: "00:00:00",
         parentId: props.parentId ?? -1,
         client_name: "",
         priority: "",
@@ -44,8 +44,12 @@ const ComplianceDetails = (props: any) => {
     );
 
     // Custom Validation for Client row
-    const customValidationRule = (rule: any, value: any, record: any) => {
-        if (record.client === "") {
+    const customValidationRule = (
+        rule: any,
+        value: any,
+        record: ClientDetail
+    ) => {
+        if (record.client_name === "") {
             return Promise.resolve();
         }
 
@@ -86,7 +90,7 @@ const ComplianceDetails = (props: any) => {
                 <Form.Item
                     name={
                         "client_name_" +
-                        record.complianceDetailId +
+                        record._id +
                         "_" +
                         props.parentTitle +
                         "_" +
@@ -121,7 +125,11 @@ const ComplianceDetails = (props: any) => {
                                 addNewComplianceDetails();
                             }
                         }}
-                        defaultValue={record.client_name}
+                        defaultValue={
+                            record.client_name === ""
+                                ? null
+                                : record.client_name
+                        }
                     />
                 </Form.Item>
             ),
@@ -135,7 +143,7 @@ const ComplianceDetails = (props: any) => {
                 <Form.Item
                     name={
                         "assignee_to_" +
-                        record.complianceDetailId +
+                        record._id +
                         "_" +
                         props.parentTitle +
                         "_" +
@@ -173,12 +181,12 @@ const ComplianceDetails = (props: any) => {
             title: "Budget Time",
             dataIndex: "budgetTime",
             key: "budgetTime",
-            width: "8rem",
+            width: "10rem",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
                     name={
                         "budget_time_" +
-                        record.complianceDetailId +
+                        record._id +
                         "_" +
                         props.parentTitle +
                         "_" +
@@ -220,7 +228,7 @@ const ComplianceDetails = (props: any) => {
                 <Form.Item
                     name={
                         "_priority_" +
-                        record.complianceDetailId +
+                        record._id +
                         "_" +
                         props.parentTitle +
                         "_" +
@@ -257,14 +265,13 @@ const ComplianceDetails = (props: any) => {
             title: "Remark",
             dataIndex: "remark",
             key: "remark",
-            render: (text: any, record: any, index: number) => (
+            render: (text: any, record: ClientDetail, index: number) => (
                 <TextArea
                     rows={1}
-                    name="remark"
                     onChange={(value) => {
-                        inputChangeHandler(value);
+                        inputChangeHandler(value, "remark");
                     }}
-                    value={record.remak}
+                    defaultValue={record.remark}
                 />
             ),
         },
@@ -386,7 +393,7 @@ const ComplianceDetails = (props: any) => {
         }
 
         Object.keys(new ClientDetail()).map((keyItem: string) => {
-            if (keyItem === name) {
+            if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
                         selectedTableRow.client_name = value;
@@ -418,7 +425,10 @@ const ComplianceDetails = (props: any) => {
 
         // update parent component
         if (props.updateClients) {
-            props.updateClients(clients);
+            const newDetails = clients.filter((clientItem: IClientDetails) => {
+                return clientItem.client_name !== "";
+            });
+            props.updateClients(newDetails);
         }
     };
 
@@ -428,9 +438,7 @@ const ComplianceDetails = (props: any) => {
 
         if (clients.length > 1 && index > -1) {
             const selectedClients = clients.filter((compliance: any) => {
-                return (
-                    compliance.complianceDetailId !== item.complianceDetailId
-                );
+                return compliance._id !== item._id;
             });
             setClients(selectedClients);
 
@@ -447,9 +455,8 @@ const ComplianceDetails = (props: any) => {
     };
 
     const addNewComplianceDetails = () => {
-        const new_id = clients.length + 1;
         const newClient = newClientItem;
-        newClient.complianceDetailId = new_id.toString();
+        newClient._id = nanoid();
         setClients([...clients, newClient]);
 
         // update parent component
