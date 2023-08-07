@@ -9,6 +9,13 @@ export const Status = {
     cancelled: "cancelled",
 };
 
+export const OperationType = {
+    add: "add",
+    remove: "remove",
+    change: "change",
+    update: "update",
+};
+
 export const modeOptions = [
     "Repetitive",
     "Never",

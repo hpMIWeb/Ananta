@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Select, TimePicker, Table, Button, Form } from "antd";
+import { Select, TimePicker, Table, Form, Popconfirm } from "antd";
 import {
     priorityOpts,
     assigneeOpts,
     clientOpts,
     formatTime,
+    OperationType,
 } from "../../utilities/utility";
 import "react-quill/dist/quill.snow.css";
 
@@ -34,8 +35,11 @@ const ComplianceDetails = (props: any) => {
     } as IClientDetails;
 
     const [clients, setClients] = useState<IClientDetails[]>(
-        props.data && props.data.length > 0 ? props.data : [newClientItem]
+        props.data
+        // props.isEdit ? [newClientItem, ...props.data] : props.data
     );
+
+    // props.data && props.data.length > 0 ? props.data : [newClientItem]
     const [selectedTableRow, setSelectedTableRow] = useState(newClientItem);
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
 
@@ -67,18 +71,20 @@ const ComplianceDetails = (props: any) => {
             key: "action",
             align: "center",
             render: (text: any, record: any, index: number) => (
-                <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    style={{
-                        fontSize: "15px",
-                        color: "#ec0033",
-                        cursor: "pointer",
-                    }}
-                    title={"Click here to Delete"}
-                    onClick={() => {
-                        removeComplianceDetails(record);
-                    }}
-                />
+                <Popconfirm
+                    title="Sure to Delete?"
+                    onConfirm={() => removeComplianceDetails(record)}
+                >
+                    <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        style={{
+                            fontSize: "15px",
+                            color: "#ec0033",
+                            cursor: "pointer",
+                        }}
+                        title={"Click here to Delete"}
+                    />
+                </Popconfirm>
             ),
         },
         {
@@ -405,7 +411,6 @@ const ComplianceDetails = (props: any) => {
                     }
                     case "budget_time": {
                         selectedTableRow.budget_time = value;
-                        selectedTableRow.actual_time = value;
                         break;
                     }
                     case "priority": {
@@ -428,13 +433,12 @@ const ComplianceDetails = (props: any) => {
             const newDetails = clients.filter((clientItem: IClientDetails) => {
                 return clientItem.client_name !== "";
             });
-            props.updateClients(newDetails);
+            props.updateClients(newDetails, OperationType.change);
         }
     };
 
     const removeComplianceDetails = (item: IClientDetails) => {
         const index = clients.indexOf(item);
-        console.log();
 
         if (clients.length > 1 && index > -1) {
             const selectedClients = clients.filter((compliance: any) => {
@@ -444,7 +448,7 @@ const ComplianceDetails = (props: any) => {
 
             // update parent component
             if (props.updateClients) {
-                props.updateClients(selectedClients);
+                props.updateClients(selectedClients, OperationType.remove);
             }
         } else {
             toast.error("Cannot delete the first row.", {
@@ -459,10 +463,10 @@ const ComplianceDetails = (props: any) => {
         newClient._id = nanoid();
         setClients([...clients, newClient]);
 
-        // update parent component
-        if (props.updateClients) {
-            props.updateClients(clients);
-        }
+        // // update parent component
+        // if (props.addClients) {
+        //     props.addClients(clients, OperationType.add);
+        // }
     };
 
     useEffect(() => {

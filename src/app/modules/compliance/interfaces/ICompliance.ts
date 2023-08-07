@@ -136,6 +136,7 @@ export interface IClientDetails {
     priority: string;
     remark: string;
     parentId: string;
+    status: string;
 }
 
 export interface IInsertClientDetails {
@@ -157,4 +158,5 @@ export class ClientDetail implements IClientDetails {
     priority: string = "";
     remark: string = "";
     parentId: string = "";
+    status: string = "";
 }

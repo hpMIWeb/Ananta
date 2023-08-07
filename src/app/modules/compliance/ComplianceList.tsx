@@ -70,7 +70,6 @@ const ComplianceList = () => {
 
     const getComplianceData = () => {
         api.getAllCompliance("").then((resp: any) => {
-            console.log(resp.data);
             setAllCompliance(resp.data);
         });
     };
@@ -457,7 +456,6 @@ const ComplianceList = () => {
     };
 
     const handelReportType = (value: string) => {
-        console.log(value);
         setReportType(value);
     };
 

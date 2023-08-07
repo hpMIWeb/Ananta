@@ -43,7 +43,6 @@ import {
     SubCompliance as ISubCompliance,
     IClientDetails,
     SaveComplianceComment,
-    Comment as IComment,
 } from "./interfaces/ICompliance";
 import ReactQuill from "react-quill";
 import ComplianceDetails from "./ComplianceDetails";
@@ -67,6 +66,9 @@ const ComplianceViewEdit = (props: any) => {
         props.tableRowSelected.subcompliance ?? []
     );
     const [currentCollapse, setCurrentCollapse] = useState<string>("");
+    const [complianceClients, setComplianceClients] = useState<
+        IClientDetails[]
+    >(props.tableRowSelected.clients);
 
     interface DataType {
         key: React.Key;
@@ -101,11 +103,16 @@ const ComplianceViewEdit = (props: any) => {
     };
 
     // event handler from `stopwatch` action - play & stop
-    const handleTaskStatus = (isRunning: boolean) => {
+    const handleTaskStatus = (
+        isRunning: boolean,
+        time: string,
+        isStop: boolean
+    ) => {
         const complianceUpdate = {} as ICompliance;
-        complianceUpdate.status = isRunning
-            ? Status.in_progress
-            : Status.completed;
+        complianceUpdate.status = isStop
+            ? Status.completed
+            : Status.in_progress;
+        if (!isRunning) complianceUpdate.actual_time = time;
 
         api.updateCompliance(updateCompliance._id, complianceUpdate).then(
             (resp: any) => {
@@ -115,6 +122,48 @@ const ComplianceViewEdit = (props: any) => {
                 if (props.handleListUpdate) props.handleListUpdate();
             }
         );
+    };
+
+    // event handler from `stopwatch` action - play & stop
+    const handleClientStatus = (
+        isRunning: boolean,
+        time: string,
+        isStop: boolean,
+        recordId: string
+    ) => {
+        // const clientDetails = {} as IClientDetails;
+        // clientDetails._id = recordId;
+        // clientDetails.status = isStop ? Status.completed : Status.in_progress;
+        // if (!isRunning) clientDetails.actual_time = time;
+
+        let matchedItem = complianceClients.find(
+            (clientItem: IClientDetails) => {
+                return clientItem._id === recordId;
+            }
+        );
+
+        if (matchedItem) {
+            matchedItem.status = isStop ? Status.completed : Status.in_progress;
+            if (!isRunning) matchedItem.actual_time = time;
+
+            const complianceUpdate = {} as ICompliance;
+            complianceUpdate._id = updateCompliance._id;
+            complianceUpdate.clients = complianceClients;
+
+            api.updateCompliance(updateCompliance._id, complianceUpdate).then(
+                (resp: any) => {
+                    toast.success("Successfully Updated Compliance", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    if (props.handleListUpdate) props.handleListUpdate();
+                }
+            );
+        }
+    };
+
+    // Update `Compliance` clients
+    const complianceClientsHandler = (clientDetails: IClientDetails[]) => {
+        setComplianceClients(clientDetails);
     };
 
     const editClickHandler = () => {
@@ -247,8 +296,6 @@ const ComplianceViewEdit = (props: any) => {
 
     const handleUpdateTask = () => {
         updateCompliance.subcompliance = subCompliances;
-        console.log("updateCompliance", updateCompliance);
-        // return;
 
         api.updateCompliance(updateCompliance._id, updateCompliance).then(
             (resp: any) => {
@@ -276,13 +323,28 @@ const ComplianceViewEdit = (props: any) => {
         return `${completedCount} / ${totalCount}`;
     };
 
-    const convertTimeTest = (dateValue: string) => {
-        const date = dayjs(dateValue, "HH:mm");
-        const hours = date.format("HH");
-        const minutes = date.format("mm");
+    const updateSubComplianceList = (subComplianceItem: ISubCompliance) => {
+        // const subComplianceData = updateCompliance.subcompliance;
+        // let matchedItem = subComplianceData.find(
+        //     (subComplianceItem: ISubCompliance) => {
+        //         return subComplianceItem._id === compliance._id;
+        //     }
+        // );
+        // matchedItem = compliance;
 
-        return `${hours} h ${minutes}m`;
+        const data = JSON.parse(JSON.stringify(subCompliances));
+        const newData = data.map((subCompItem: ISubCompliance) =>
+            subCompItem._id === subComplianceItem._id
+                ? subComplianceItem
+                : subCompItem
+        );
+
+        setSubCompliances(newData);
+
+        // if (props.handleListUpdate) props.handleListUpdate();
     };
+
+    const updateCurrentCompliance = (complianceItem: ICompliance) => {};
 
     const subComplianceHeader = (subComplianceItem: any, index: number) => {
         return (
@@ -606,6 +668,7 @@ const ComplianceViewEdit = (props: any) => {
                                 onChange={(value, event) => {
                                     statusChangeHandler(event, value);
                                 }}
+                                disabled={true}
                             />
                         </Col>
                     </Row>
@@ -646,10 +709,12 @@ const ComplianceViewEdit = (props: any) => {
                             <ComplianceDetails
                                 id="complianceClients"
                                 isEdit={isEdit}
-                                isAllowAdd={false}
+                                isAllowAdd={isEdit}
                                 scroll={{ x: 1000 }}
-                                data={updateCompliance.clients}
+                                data={complianceClients}
                                 subcompliance={updateCompliance.subcompliance}
+                                handleTaskStatus={handleClientStatus}
+                                updateClients={complianceClientsHandler}
                             />
                         </Col>
                     </Row>
@@ -691,6 +756,12 @@ const ComplianceViewEdit = (props: any) => {
                                                 isEdit={isEdit}
                                                 complianceId={
                                                     updateCompliance._id
+                                                }
+                                                handleListUpdate={
+                                                    updateSubComplianceList
+                                                }
+                                                handleComplianceUpdate={
+                                                    updateCurrentCompliance
                                                 }
                                             />
                                         </CollapsePanel>
