@@ -7,51 +7,42 @@ import {
     formatTime,
     OperationType,
 } from "../../utilities/utility";
-import "react-quill/dist/quill.snow.css";
-
-import "./AddCompliance.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextArea from "antd/es/input/TextArea";
+
 import {
-    IClientDetails,
-    ClientDetail,
-    SubCompliance as ISubCompliance,
-} from "./interfaces/ICompliance";
-import Stopwatch from "../../components/Stockwatch/Stopwatch";
+    AddTask as IAddTask,
+    SubTask as ISubTask,
+    AddClientDetails as IAddClientDetails,
+    AddClientDetails,
+} from "./interfaces/ITask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
-const ComplianceDetails = (props: any) => {
+const MultipleTaskClientDetails = (props: any) => {
     const newClientItem = {
         _id: nanoid(),
-        budget_time: "00:00:00",
-        parentId: props.parentId ?? -1,
         client_name: "",
-        priority: "",
         assigned_to: "",
-        remark: "",
-    } as IClientDetails;
+        budget_time: "",
+        actual_time: "",
+        priority: "",
+        remarks: "",
+        data_path: "",
+        attachments: [],
+    } as IAddClientDetails;
 
-    const [clients, setClients] = useState<IClientDetails[]>(
-        // props.data
-        props.isEdit ? [newClientItem, ...props.data] : props.data
-    );
-
-    // props.data && props.data.length > 0 ? props.data : [newClientItem]
+    const [clients, setClients] = useState<IAddClientDetails[]>(props.data);
     const [selectedTableRow, setSelectedTableRow] = useState(newClientItem);
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
-
-    const [subCompliances, setSubCompliances] = useState<ISubCompliance[]>(
-        props.subcompliance ?? []
-    );
 
     // Custom Validation for Client row
     const customValidationRule = (
         rule: any,
         value: any,
-        record: ClientDetail
+        record: IAddClientDetails
     ) => {
         if (record.client_name === "") {
             return Promise.resolve();
@@ -73,7 +64,7 @@ const ComplianceDetails = (props: any) => {
             render: (text: any, record: any, index: number) => (
                 <Popconfirm
                     title="Sure to Delete?"
-                    onConfirm={() => removeComplianceDetails(record)}
+                    onConfirm={() => removeClientRow(record)}
                 >
                     <FontAwesomeIcon
                         icon={faTrashAlt}
@@ -94,14 +85,7 @@ const ComplianceDetails = (props: any) => {
             width: "20%",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
-                    name={
-                        "client_name_" +
-                        record._id +
-                        "_" +
-                        props.parentTitle +
-                        "_" +
-                        props.parentId
-                    }
+                    name={"client_name_" + record._id + "_" + props.parentId}
                     rules={[
                         {
                             required: true,
@@ -128,7 +112,7 @@ const ComplianceDetails = (props: any) => {
                                 return item.client_name === "";
                             });
                             if (!emptyRowExist) {
-                                addNewComplianceDetails();
+                                addNewClientRowDetails();
                             }
                         }}
                         defaultValue={
@@ -147,14 +131,7 @@ const ComplianceDetails = (props: any) => {
             width: "20%",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
-                    name={
-                        "assignee_to_" +
-                        record._id +
-                        "_" +
-                        props.parentTitle +
-                        "_" +
-                        props.parentId
-                    }
+                    name={"assignee_to_" + record._id + "_" + props.parentId}
                     rules={[
                         {
                             required: true,
@@ -190,14 +167,7 @@ const ComplianceDetails = (props: any) => {
             width: "10rem",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
-                    name={
-                        "budget_time_" +
-                        record._id +
-                        "_" +
-                        props.parentTitle +
-                        "_" +
-                        props.parentId
-                    }
+                    name={"budget_time_" + record._id + "_" + props.parentId}
                     rules={[
                         {
                             required: true,
@@ -232,14 +202,7 @@ const ComplianceDetails = (props: any) => {
             width: "10rem",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
-                    name={
-                        "_priority_" +
-                        record._id +
-                        "_" +
-                        props.parentTitle +
-                        "_" +
-                        props.parentId
-                    }
+                    name={"_priority_" + record._id + "_" + props.parentId}
                     rules={[
                         {
                             required: true,
@@ -269,118 +232,31 @@ const ComplianceDetails = (props: any) => {
         },
         {
             title: "Remark",
-            dataIndex: "remark",
-            key: "remark",
-            render: (text: any, record: ClientDetail, index: number) => (
+            dataIndex: "remarks",
+            key: "remarks",
+            render: (text: any, record: IAddClientDetails, index: number) => (
+                <TextArea
+                    rows={1}
+                    onChange={(value) => {
+                        inputChangeHandler(value, "remarks");
+                    }}
+                    defaultValue={record.remarks}
+                />
+            ),
+        },
+        {
+            title: "Data Path",
+            dataIndex: "data_path",
+            key: "data_path",
+            render: (text: any, record: IAddClientDetails, index: number) => (
                 <TextArea
                     rows={1}
                     onChange={(value) => {
                         inputChangeHandler(value, "remark");
                     }}
-                    defaultValue={record.remark}
+                    defaultValue={record.data_path}
                 />
             ),
-        },
-    ];
-
-    const columns = [
-        {
-            title: "Action",
-            dataIndex: "_id",
-            key: "_id",
-            align: "center",
-            width: "15rem",
-            render: (text: any, record: any, index: number) => (
-                <div className="timerbuttons">
-                    <Stopwatch
-                        label={"compliance"}
-                        parentId={record._id}
-                        handleTaskStatus={props.handleTaskStatus} //TODO: need to implement
-                        status={record.status}
-                        showSeconds={true}
-                    />
-                </div>
-            ),
-        },
-        {
-            title: "Client Name",
-            dataIndex: "client_name",
-            key: "client_name",
-            width: "15rem",
-            sorter: (a: any, b: any) =>
-                a.client_name.localeCompare(b.client_name),
-            //sortDirections: ["descend", "ascend"],
-        },
-        {
-            title: "Assign To",
-            dataIndex: "assigned_to",
-            key: "assigned_to",
-            width: "15rem",
-            sorter: (a: any, b: any) =>
-                a.assigned_to.localeCompare(b.assigned_to),
-        },
-        {
-            title: "Sub Compliance",
-            dataIndex: "subCompliance",
-            key: "subCompliance",
-            width: "12rem",
-            render: (text: any, record: any) => {
-                let currentClientCount = 0;
-                let completedCount = 0;
-
-                // subcompliance count as per client
-                if (subCompliances) {
-                    subCompliances.map((item: ISubCompliance) => {
-                        const matchedItem = item.clients.filter(
-                            (client: any) => {
-                                return (
-                                    client.client_name === record.client_name
-                                );
-                            }
-                        );
-
-                        if (matchedItem && matchedItem.length > 0) {
-                            currentClientCount += matchedItem.length;
-                            if (matchedItem.length > 0) {
-                                if (item.status === "completed") {
-                                    completedCount++;
-                                }
-                            }
-                        }
-                    });
-                }
-
-                return `${completedCount} / ${currentClientCount}`;
-            },
-            sorter: (a: any, b: any) => a.subCompliances - b.subCompliances,
-        },
-        {
-            title: "Remarks",
-            dataIndex: "remark",
-            key: "remark",
-            sorter: (a: any, b: any) => a.remark.localeCompare(b.remark),
-        },
-        {
-            title: "Budget Time",
-            dataIndex: "budget_time",
-            key: "budget_time",
-            align: "center",
-            width: "10rem",
-            render: (item: string) => {
-                return formatTime(item);
-            },
-            //sorter: (a: any, b: any) => a.budget_time - b.budget_time,
-        },
-        {
-            title: "Actual Time",
-            dataIndex: "actual_time",
-            key: "actual_time",
-            align: "center",
-            width: "10rem",
-            render: (item: string) => {
-                return formatTime(item);
-            },
-            //sorter: (a: any, b: any) => a.actual_time - b.actual_time,
         },
     ];
 
@@ -398,7 +274,8 @@ const ComplianceDetails = (props: any) => {
             value = event.value;
         }
 
-        Object.keys(new ClientDetail()).map((keyItem: string) => {
+        console.log("==nameItem", nameItem);
+        Object.keys(newClientItem).map((keyItem: string) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
@@ -417,8 +294,12 @@ const ComplianceDetails = (props: any) => {
                         selectedTableRow.priority = value;
                         break;
                     }
-                    case "remark": {
-                        selectedTableRow.remark = value;
+                    case "remarks": {
+                        selectedTableRow.remarks = value;
+                        break;
+                    }
+                    case "data_path": {
+                        selectedTableRow.data_path = value;
                         break;
                     }
                 }
@@ -426,24 +307,26 @@ const ComplianceDetails = (props: any) => {
         });
 
         // update selected rows
+        console.log(selectedTableRow);
         setSelectedTableRow(selectedTableRow);
 
         // update parent component
         if (props.updateClients) {
-            const newDetails = clients.filter((clientItem: IClientDetails) => {
-                return clientItem.client_name !== "";
-            });
-            console.log("newDetails", newDetails);
+            const newDetails = clients.filter(
+                (clientItem: AddClientDetails) => {
+                    return clientItem.client_name !== "";
+                }
+            );
             props.updateClients(newDetails, OperationType.change);
         }
     };
 
-    const removeComplianceDetails = (item: IClientDetails) => {
+    const removeClientRow = (item: IAddClientDetails) => {
         const index = clients.indexOf(item);
 
         if (clients.length > 1 && index > -1) {
-            const selectedClients = clients.filter((compliance: any) => {
-                return compliance._id !== item._id;
+            const selectedClients = clients.filter((client: any) => {
+                return client._id !== item._id;
             });
             setClients(selectedClients);
 
@@ -459,15 +342,11 @@ const ComplianceDetails = (props: any) => {
         }
     };
 
-    const addNewComplianceDetails = () => {
+    const addNewClientRowDetails = () => {
         const newClient = newClientItem;
         newClient._id = nanoid();
+        newClient.budget_time = "00:00";
         setClients([...clients, newClient]);
-
-        // // update parent component
-        // if (props.addClients) {
-        //     props.addClients(clients, OperationType.add);
-        // }
     };
 
     useEffect(() => {
@@ -476,22 +355,13 @@ const ComplianceDetails = (props: any) => {
 
     return (
         <>
-            <div style={{ display: props.isAllowAdd ? "block" : "none" }}>
-                {/* <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={addNewComplianceDetails}
-                    style={{ float: "right", marginBottom: "10px" }}
-                >
-                    Add
-                </Button> */}
-            </div>
+            <div style={{ display: props.isAllowAdd ? "block" : "none" }}></div>
             <div className="client-details">
                 <ToastContainer />
                 <Table
                     rowKey={(record) => record.complianceDetailId}
                     dataSource={clients}
-                    columns={isEdit ? editColumns : columns}
+                    columns={editColumns}
                     pagination={false}
                     onRow={(record, rowIndex) => {
                         return {
@@ -509,4 +379,4 @@ const ComplianceDetails = (props: any) => {
     );
 };
 
-export default ComplianceDetails;
+export default MultipleTaskClientDetails;

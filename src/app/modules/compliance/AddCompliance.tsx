@@ -67,6 +67,7 @@ const AddCompliance = () => {
     const [complianceDetails, setComplianceDetails] = useState<
         IClientDetails[]
     >([]);
+
     const [subCompliance, setSubCompliance] =
         useState<IInsertSubCompliance[]>();
 
@@ -250,7 +251,7 @@ const AddCompliance = () => {
             // return;
             // Save to DB
 
-            //return;
+            //  return;
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
                     const fields = form.getFieldsValue();

@@ -22,6 +22,7 @@ import ComplianceDetails from "./ComplianceDetails";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
+import { nanoid } from "@reduxjs/toolkit";
 dayjs.extend(customParseFormat);
 
 const AddSubCompliance = (props: any) => {
@@ -113,6 +114,10 @@ const AddSubCompliance = (props: any) => {
             matchedItem.clients = newDataWithoutId;
             setComplianceDetails(newDataWithoutId);
             //setSubCompliance([...subCompliances, matchedItem]);
+
+            if (props.subComponentsHandler) {
+                props.subComponentsHandler(newDataWithoutId);
+            }
         }
     };
 

@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { ClientDetail } from "../../compliance/interfaces/ICompliance";
 export interface AddTask {
     _id: string;
     title: string;
@@ -120,4 +121,39 @@ export const TimerOpts = {
 export interface TaskTimer {
     state: number;
     time: number;
+}
+
+export interface AddMultipleTask {
+    _id: string;
+    start_date: string;
+    due_date: string;
+    status: string;
+    mode: string;
+    title: string;
+    workArea: string;
+    billable: string;
+    clients: AddClientDetails[];
+    subtask: AddMultipleSubtask[];
+    subtaskToggle: boolean;
+}
+export interface AddClientDetails {
+    _id: string;
+    client_name: string;
+    assigned_to: string;
+    budget_time: string;
+    actual_time: string;
+    priority: string;
+    remarks: string;
+    data_path: string;
+    attachments: Attachment[];
+}
+export interface AddMultipleSubtask {
+    title: string;
+    taskId: string;
+    status: string;
+    budget_time: string;
+    actual_time: string;
+    remarks: string;
+    clients: ClientDetail[];
+    priority: string;
 }
