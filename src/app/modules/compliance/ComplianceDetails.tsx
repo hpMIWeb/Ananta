@@ -433,6 +433,7 @@ const ComplianceDetails = (props: any) => {
             const newDetails = clients.filter((clientItem: IClientDetails) => {
                 return clientItem.client_name !== "";
             });
+            console.log("newDetails", newDetails);
             props.updateClients(newDetails, OperationType.change);
         }
     };

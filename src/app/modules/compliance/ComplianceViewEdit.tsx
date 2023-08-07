@@ -163,6 +163,7 @@ const ComplianceViewEdit = (props: any) => {
 
     // Update `Compliance` clients
     const complianceClientsHandler = (clientDetails: IClientDetails[]) => {
+        console.log(clientDetails);
         setComplianceClients(clientDetails);
     };
 
@@ -297,6 +298,23 @@ const ComplianceViewEdit = (props: any) => {
     const handleUpdateTask = () => {
         updateCompliance.subcompliance = subCompliances;
 
+        const complianceData = JSON.parse(JSON.stringify(complianceClients));
+        // remove id from new client data
+        const newDataWithoutId = [];
+        for (const obj of complianceData) {
+            const newObj = { ...obj }; // Create a shallow copy of the object
+            if (newObj.hasOwnProperty("status")) {
+                // 'status' property is available in newObj Need to discuss code is valid or not
+            } else {
+                console.log("status is not");
+                delete newObj._id;
+            }
+            newDataWithoutId.push(newObj);
+        }
+        updateCompliance.clients = newDataWithoutId;
+
+        //
+        console.log(updateCompliance);
         api.updateCompliance(updateCompliance._id, updateCompliance).then(
             (resp: any) => {
                 toast.success("Successfully Updated Compliance.", {

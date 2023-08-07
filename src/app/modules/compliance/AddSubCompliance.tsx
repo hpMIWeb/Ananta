@@ -22,6 +22,7 @@ import ComplianceDetails from "./ComplianceDetails";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
+import { nanoid } from "@reduxjs/toolkit";
 dayjs.extend(customParseFormat);
 
 const AddSubCompliance = (props: any) => {
@@ -35,6 +36,15 @@ const AddSubCompliance = (props: any) => {
         IClientDetails[]
     >([]);
 
+    const newClientItem = {
+        _id: nanoid(),
+        budget_time: "00:00:00",
+        parentId: props.parentId ?? -1,
+        client_name: "",
+        priority: "",
+        assigned_to: "",
+        remark: "",
+    } as IClientDetails;
     useEffect(() => {}, []);
 
     const addNewCompliance = () => {
@@ -351,7 +361,7 @@ const AddSubCompliance = (props: any) => {
                                                 parentTitle={"sub_compliance"}
                                                 parentId={subComplianceItem._id}
                                                 scroll={{ x: 1000 }}
-                                                data={[]}
+                                                data={[newClientItem]}
                                                 isEdit={true}
                                             />
                                         </Col>

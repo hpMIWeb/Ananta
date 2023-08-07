@@ -67,6 +67,16 @@ const AddCompliance = () => {
     const [complianceDetails, setComplianceDetails] = useState<
         IClientDetails[]
     >([]);
+    const newClientItem = {
+        _id: nanoid(),
+        budget_time: "00:00:00",
+        parentId: "-1",
+        client_name: "",
+        priority: "",
+        assigned_to: "",
+        remark: "",
+    } as IClientDetails;
+
     const [subCompliance, setSubCompliance] =
         useState<IInsertSubCompliance[]>();
 
@@ -250,7 +260,7 @@ const AddCompliance = () => {
             // return;
             // Save to DB
 
-            //return;
+            return;
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
                     const fields = form.getFieldsValue();
@@ -624,7 +634,7 @@ const AddCompliance = () => {
                             parentTitle="compliance"
                             parentId={-1}
                             scroll={{ x: 1000 }}
-                            data={[]}
+                            data={[newClientItem]}
                             isEdit={true}
                         />
                     </Col>
