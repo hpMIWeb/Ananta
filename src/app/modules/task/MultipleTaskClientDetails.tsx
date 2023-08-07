@@ -238,7 +238,7 @@ const MultipleTaskClientDetails = (props: any) => {
                 <TextArea
                     rows={1}
                     onChange={(value) => {
-                        inputChangeHandler(value, "remark");
+                        inputChangeHandler(value, "remarks");
                     }}
                     defaultValue={record.remarks}
                 />
@@ -274,6 +274,7 @@ const MultipleTaskClientDetails = (props: any) => {
             value = event.value;
         }
 
+        console.log("==nameItem", nameItem);
         Object.keys(newClientItem).map((keyItem: string) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
@@ -293,7 +294,7 @@ const MultipleTaskClientDetails = (props: any) => {
                         selectedTableRow.priority = value;
                         break;
                     }
-                    case "remark": {
+                    case "remarks": {
                         selectedTableRow.remarks = value;
                         break;
                     }
@@ -306,6 +307,7 @@ const MultipleTaskClientDetails = (props: any) => {
         });
 
         // update selected rows
+        console.log(selectedTableRow);
         setSelectedTableRow(selectedTableRow);
 
         // update parent component
@@ -315,7 +317,6 @@ const MultipleTaskClientDetails = (props: any) => {
                     return clientItem.client_name !== "";
                 }
             );
-            console.log("newDetails", newDetails);
             props.updateClients(newDetails, OperationType.change);
         }
     };

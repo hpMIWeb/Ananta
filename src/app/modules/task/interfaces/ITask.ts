@@ -133,7 +133,7 @@ export interface AddMultipleTask {
     workArea: string;
     billable: string;
     clients: AddClientDetails[];
-    subtask: AddSubtaskForMultipleTask[];
+    subtask: AddMultipleSubtask[];
     subtaskToggle: boolean;
 }
 export interface AddClientDetails {
@@ -147,7 +147,7 @@ export interface AddClientDetails {
     data_path: string;
     attachments: Attachment[];
 }
-export interface AddSubtaskForMultipleTask {
+export interface AddMultipleSubtask {
     title: string;
     taskId: string;
     status: string;

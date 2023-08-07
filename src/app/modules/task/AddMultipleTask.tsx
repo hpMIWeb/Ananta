@@ -31,10 +31,12 @@ import "react-quill/dist/quill.snow.css";
 import {
     AddMultipleTask as IAddMultipleTask,
     AddClientDetails as IAddClientDetails,
+    AddMultipleSubtask as IAddMultipleSubtask,
 } from "./interfaces/ITask";
 import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
 import "./AddTask.scss";
 import { nanoid } from "@reduxjs/toolkit";
+import SubTask from "./SubTask";
 const { Title } = Typography;
 
 dayjs.extend(weekday);
@@ -97,6 +99,23 @@ const AddMultipleTask = () => {
     const clientDetailsHandler = (details: IAddClientDetails[]) => {
         console.log("client details at Add - ", details);
         setClientDetails(details);
+    };
+
+    const updateSubComponents = (subTasks: IAddMultipleSubtask[]) => {
+        multipleTask.subtask = !showSubTask
+            ? []
+            : subTasks.map((subTaskItem: IAddMultipleSubtask) => {
+                  return {
+                      title: subTaskItem.title,
+                      taskId: "",
+                      status: "pending",
+                      budget_time: subTaskItem.budget_time,
+                      actual_time: subTaskItem.budget_time,
+                      remarks: subTaskItem.remarks,
+                      clients: subTaskItem.clients,
+                      priority: subTaskItem.priority,
+                  };
+              });
     };
 
     return (
@@ -325,14 +344,29 @@ const AddMultipleTask = () => {
                     </Col>
                 </Row>
 
-                {/* <Row
+                <Row gutter={[8, 8]} className="form-row">
+                    <Divider />
+                </Row>
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col>
+                        <Title level={5}>Sub Task</Title>
+                    </Col>
+                    <Col>
+                        <Switch
+                            checked={showSubTask}
+                            onChange={onSwitchSubTask}
+                        ></Switch>
+                    </Col>
+                </Row>
+
+                <Row
                     gutter={[8, 8]}
                     className={"form-row " + (!showSubTask ? "hide" : "")}
                 >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
                         <SubTask subComponentsHandler={updateSubComponents} />
                     </Col>
-                </Row> */}
+                </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Button
                         htmlType="submit"

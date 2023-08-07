@@ -165,21 +165,35 @@ const SubComplianceViewEdit = (props: any) => {
         clientDetails: IClientDetails[],
         optType: string
     ) => {
-        subCompliance.clients = clientDetails;
-        setSubComplianceClients(clientDetails);
+        const complianceData = JSON.parse(JSON.stringify(clientDetails));
+        // remove id from new client data
+        const newDataWithoutId = [];
+        for (const obj of complianceData) {
+            const newObj = { ...obj }; // Create a shallow copy of the object
+            if (newObj.hasOwnProperty("status")) {
+                // 'status' property is available in newObj Need to discuss code is valid or not
+            } else {
+                console.log("status is not");
+                delete newObj._id;
+            }
+            newDataWithoutId.push(newObj);
+        }
+
+        subCompliance.clients = newDataWithoutId;
+        setSubComplianceClients(newDataWithoutId);
 
         const complianceUpdate = {} as UpdateSubCompliance;
         complianceUpdate.ComplianceId = props.complianceId;
         complianceUpdate.subComplianceId = subCompliance._id;
         complianceUpdate.clients = clientDetails;
 
-        if (optType === OperationType.add || optType === OperationType.remove) {
-            api.updateSubCompliance(complianceUpdate).then((resp: any) => {
-                toast.success("Successfully Updated Client Details", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            });
-        }
+        // if (optType === OperationType.add || optType === OperationType.remove) {
+        //     api.updateSubCompliance(complianceUpdate).then((resp: any) => {
+        //         toast.success("Successfully Updated Client Details", {
+        //             position: toast.POSITION.TOP_RIGHT,
+        //         });
+        //     });
+        // }
 
         if (props.handleListUpdate) props.handleListUpdate(subCompliance);
     };

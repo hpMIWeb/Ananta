@@ -36,15 +36,6 @@ const AddSubCompliance = (props: any) => {
         IClientDetails[]
     >([]);
 
-    const newClientItem = {
-        _id: nanoid(),
-        budget_time: "00:00:00",
-        parentId: props.parentId ?? -1,
-        client_name: "",
-        priority: "",
-        assigned_to: "",
-        remark: "",
-    } as IClientDetails;
     useEffect(() => {}, []);
 
     const addNewCompliance = () => {
@@ -123,6 +114,10 @@ const AddSubCompliance = (props: any) => {
             matchedItem.clients = newDataWithoutId;
             setComplianceDetails(newDataWithoutId);
             //setSubCompliance([...subCompliances, matchedItem]);
+
+            if (props.subComponentsHandler) {
+                props.subComponentsHandler(newDataWithoutId);
+            }
         }
     };
 
@@ -361,7 +356,7 @@ const AddSubCompliance = (props: any) => {
                                                 parentTitle={"sub_compliance"}
                                                 parentId={subComplianceItem._id}
                                                 scroll={{ x: 1000 }}
-                                                data={[newClientItem]}
+                                                data={[]}
                                                 isEdit={true}
                                             />
                                         </Col>
