@@ -35,7 +35,7 @@ const ComplianceDetails = (props: any) => {
     } as IClientDetails;
 
     const [clients, setClients] = useState<IClientDetails[]>(
-        // props.data
+        //props.data
         props.isEdit ? [newClientItem, ...props.data] : props.data
     );
 
@@ -471,6 +471,8 @@ const ComplianceDetails = (props: any) => {
     };
 
     useEffect(() => {
+        console.log("props", props);
+        console.log("clients", clients);
         setIsEdit(props.isEdit);
     }, [props.isEdit]);
 

@@ -321,7 +321,11 @@ const ComplianceViewEdit = (props: any) => {
                     position: toast.POSITION.TOP_RIGHT,
                 });
                 setIsEdit(false);
-                if (props.handleListUpdate) props.handleListUpdate();
+                console.log("resp.data", resp.data);
+                setUpdateCompliance(resp.data);
+                setSubCompliances(resp.data.subcompliance);
+                setComplianceComments(resp.data.comments);
+                // if (props.handleListUpdate) props.handleListUpdate();
             }
         );
     };
@@ -351,13 +355,20 @@ const ComplianceViewEdit = (props: any) => {
         // matchedItem = compliance;
 
         const data = JSON.parse(JSON.stringify(subCompliances));
-        const newData = data.map((subCompItem: ISubCompliance) =>
-            subCompItem._id === subComplianceItem._id
-                ? subComplianceItem
-                : subCompItem
-        );
-
-        setSubCompliances(newData);
+        if (subComplianceItem && Array.isArray(subCompliances)) {
+            console.log("Pinank");
+            const newData = subCompliances.map((subCompItem: ISubCompliance) =>
+                subCompItem && subCompItem._id === subComplianceItem._id
+                    ? subComplianceItem
+                    : subCompItem
+            );
+            // Rest of your code using newData...
+            setSubCompliances(newData);
+        } else {
+            console.error(
+                "subComplianceItem is undefined or subCompliances is not an array."
+            );
+        }
 
         // if (props.handleListUpdate) props.handleListUpdate();
     };
