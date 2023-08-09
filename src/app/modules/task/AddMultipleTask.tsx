@@ -36,7 +36,7 @@ import {
 import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
 import "./AddTask.scss";
 import { nanoid } from "@reduxjs/toolkit";
-import SubTask from "./SubTask";
+import MultipleSubtask from "./MultipleSubtask";
 const { Title } = Typography;
 
 dayjs.extend(weekday);
@@ -67,7 +67,9 @@ const AddMultipleTask = () => {
     };
 
     const onSwitchSubTask = () => {
-        setShowSubTask(!showSubTask);
+        if (clientDetails.length > 0) {
+            setShowSubTask(!showSubTask);
+        }
     };
 
     const handleAddTask = () => {
@@ -303,7 +305,9 @@ const AddMultipleTask = () => {
                         />
                     </Col>
                 </Row> */}
-
+                <Row gutter={[8, 8]} className="form-row">
+                    <Divider />
+                </Row>
                 <MultipleTaskClientDetails
                     updateClients={clientDetailsHandler}
                     isAllowAdd={true}
@@ -312,7 +316,10 @@ const AddMultipleTask = () => {
                     scroll={{ x: 1000 }}
                     data={[newClientItem]}
                     isEdit={true}
-                />
+                />{" "}
+                <Row gutter={[8, 8]} className="form-row">
+                    <Divider />
+                </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col>
                         <Title level={5}>Create new task for each client</Title>
@@ -332,7 +339,11 @@ const AddMultipleTask = () => {
                         <Title level={5}>Sub Task</Title>
                     </Col>
                     <Col>
-                        <Switch onChange={onSwitchSubTask}></Switch>
+                        <Switch
+                            checked={showSubTask}
+                            onChange={onSwitchSubTask}
+                            disabled
+                        ></Switch>
                     </Col>
                     <Col>
                         <Title
@@ -343,28 +354,15 @@ const AddMultipleTask = () => {
                         </Title>
                     </Col>
                 </Row>
-
-                <Row gutter={[8, 8]} className="form-row">
-                    <Divider />
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col>
-                        <Title level={5}>Sub Task</Title>
-                    </Col>
-                    <Col>
-                        <Switch
-                            checked={showSubTask}
-                            onChange={onSwitchSubTask}
-                        ></Switch>
-                    </Col>
-                </Row>
-
                 <Row
                     gutter={[8, 8]}
                     className={"form-row " + (!showSubTask ? "hide" : "")}
                 >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <SubTask subComponentsHandler={updateSubComponents} />
+                        <MultipleSubtask
+                            subComponentsHandler={updateSubComponents}
+                            clientData={clientDetails}
+                        />
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
