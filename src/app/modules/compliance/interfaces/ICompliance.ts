@@ -129,8 +129,8 @@ export interface TimerDetail {
 
 export interface IClientDetails {
     _id: string;
-    client_name: string;
-    assigned_to: string;
+    client_name: string[];
+    assigned_to: string[];
     budget_time: string;
     actual_time: string;
     priority: string;
@@ -140,8 +140,8 @@ export interface IClientDetails {
 }
 
 export interface IInsertClientDetails {
-    client_name: string;
-    assigned_to: string;
+    client_name: string[];
+    assigned_to: string[];
     budget_time: string;
     actual_time: string;
     priority: string;
@@ -151,8 +151,8 @@ export interface IInsertClientDetails {
 
 export class ClientDetail implements IClientDetails {
     _id: string = "";
-    client_name: string = "";
-    assigned_to: string = "";
+    client_name: string[] = [];
+    assigned_to: string[] = [];
     budget_time: string = "";
     actual_time: string = "";
     priority: string = "";

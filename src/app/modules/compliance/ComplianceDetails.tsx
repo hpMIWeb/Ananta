@@ -24,15 +24,17 @@ import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
 const ComplianceDetails = (props: any) => {
-    const newClientItem = {
+    const newClientItem: IClientDetails = {
         _id: nanoid(),
         budget_time: "00:00:00",
-        parentId: props.parentId ?? -1,
-        client_name: "",
+        parentId: props.parentId ?? "-1",
+        client_name: [],
+        assigned_to: [],
         priority: "",
-        assigned_to: "",
         remark: "",
-    } as IClientDetails;
+        actual_time: "00:00:00", // Add a default value for actual_time
+        status: "Pending", // Add a default value for status
+    };
 
     const [clients, setClients] = useState<IClientDetails[]>(props.data);
 
@@ -49,7 +51,7 @@ const ComplianceDetails = (props: any) => {
         value: any,
         record: ClientDetail
     ) => {
-        if (record.client_name === "") {
+        if (record.client_name.length === 0) {
             return Promise.resolve();
         }
 
@@ -121,7 +123,7 @@ const ComplianceDetails = (props: any) => {
                         onChange={(value, event) => {
                             inputChangeHandler(event, "client_name");
                             const emptyRowExist = clients.find((item) => {
-                                return item.client_name === "";
+                                return item.client_name.length === 0;
                             });
                             if (!emptyRowExist) {
                                 addNewComplianceDetails();
@@ -398,11 +400,12 @@ const ComplianceDetails = (props: any) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
-                        selectedTableRow.client_name = value;
+                        selectedTableRow.client_name = [value];
+
                         break;
                     }
                     case "assigned_to": {
-                        selectedTableRow.assigned_to = value;
+                        selectedTableRow.assigned_to = [value];
                         break;
                     }
                     case "budget_time": {
@@ -427,7 +430,7 @@ const ComplianceDetails = (props: any) => {
         // update parent component
         if (props.updateClients) {
             const newDetails = clients.filter((clientItem: IClientDetails) => {
-                return clientItem.client_name !== "";
+                return clientItem.client_name.length > 0;
             });
             console.log("newDetails", newDetails);
             props.updateClients(newDetails, OperationType.change);
