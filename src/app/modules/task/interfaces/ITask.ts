@@ -14,8 +14,8 @@ export interface AddTask {
     timer: TaskTimer;
     priority: string;
     billable: string;
-    client: string;
-    assigned_to: string;
+    client: string[];
+    assigned_to: string[];
     datapath: string;
     subtask: AddSubTask[];
     attachments: Attachment[];
@@ -36,8 +36,8 @@ export class Task implements AddTask {
     timer: TaskTimer = {} as TaskTimer;
     priority: string = "";
     billable: string = "";
-    client: string = "";
-    assigned_to: string = "";
+    client: string[] = [];
+    assigned_to: string[] = [];
     datapath: string = "";
     subtask: SubTask[] = [];
     attachments: Attachment[] = [];
@@ -50,8 +50,8 @@ export interface AddSubTask {
     budget_time: string;
     actual_time: string;
     remarks: string;
-    client: string;
-    assigned_to: string;
+    client: string[];
+    assigned_to: string[];
     priority: string;
     datapath: string;
     workArea: string;
@@ -67,8 +67,8 @@ export interface SubTask {
     budget_time: string;
     actual_time: string;
     remarks: string;
-    client: string;
-    assigned_to: string;
+    client: string[];
+    assigned_to: string[];
     priority: string;
     datapath: string;
     workArea: string;
@@ -84,8 +84,8 @@ export interface UpdateSubTask {
     budget_time: string;
     actual_time: string;
     remarks: string;
-    client: string;
-    assigned_to: string;
+    client: string[];
+    assigned_to: string[];
     priority: string;
     datapath: string;
     workArea: string;
@@ -138,8 +138,8 @@ export interface AddMultipleTask {
 }
 export interface AddClientDetails {
     _id: string;
-    client_name: string;
-    assigned_to: string;
+    client_name: string[];
+    assigned_to: string[];
     budget_time: string;
     actual_time: string;
     priority: string;

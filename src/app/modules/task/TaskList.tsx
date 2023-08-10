@@ -90,8 +90,10 @@ const TaskList = () => {
             dataIndex: "client",
             key: "client",
             width: "30%",
-            render: (client: string) => (
-                <span className="clientDiv">{client}</span>
+            render: (client: string[]) => (
+                <>
+                    <span className="clientDiv">{client}</span>
+                </>
             ),
         },
         {
