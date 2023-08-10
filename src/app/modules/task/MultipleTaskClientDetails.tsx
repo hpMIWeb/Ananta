@@ -85,7 +85,9 @@ const MultipleTaskClientDetails = (props: any) => {
             width: "20%",
             render: (text: any, record: any, index: number) => (
                 <Form.Item
-                    name={"client_name_" + record._id + "_" + props.parentId}
+                    name={
+                        "client_name_" + record._id + "_" + props.parentId + ""
+                    }
                     rules={[
                         {
                             required: true,
@@ -350,6 +352,9 @@ const MultipleTaskClientDetails = (props: any) => {
     };
 
     useEffect(() => {
+        console.log("props.data", props.data);
+
+        //setClients(props.isEdit ? [newClientItem, ...props.data] : props.data);
         setIsEdit(props.isEdit);
     }, [props.isEdit]);
 

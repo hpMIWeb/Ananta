@@ -260,7 +260,6 @@ const MultipleSubtask = (props: any) => {
                             <MultipleTaskClientDetails
                                 updateClients={clientDetailsHandler}
                                 isAllowAdd={true}
-                                parentTitle="compliance"
                                 parentId={-1}
                                 scroll={{ x: 1000 }}
                                 data={clients}
