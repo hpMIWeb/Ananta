@@ -254,57 +254,6 @@ const AddMultipleTask = () => {
                         ></Select>
                     </Col>
                 </Row>
-                {/* <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Client"
-                            // value={addTask.client}
-                            options={clientOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Assign Person"
-                            // value={addTask.assignee}
-                            options={assigneeOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            // onInputKeyDown={(event) => {
-                            //     if (event.keyCode === 9) {
-                            //         console.log(event.keyCode);
-                            //     }
-                            // }}
-                            className="w100"
-                        ></Select>
-                    </Col>
-                </Row> */}
-                {/* <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-                        <Upload>
-                            <Button type="primary">Attach Files</Button>
-                        </Upload>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-                        <Input
-                            placeholder="Data Path"
-                            name="dataPath"
-                            // value={addTask.dataPath}
-                            onChange={(event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
-                    </Col>
-                </Row> */}
                 <Row gutter={[8, 8]} className="form-row">
                     <Divider />
                 </Row>
@@ -359,10 +308,12 @@ const AddMultipleTask = () => {
                     className={"form-row " + (!showSubTask ? "hide" : "")}
                 >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <MultipleSubtask
-                            subComponentsHandler={updateSubComponents}
-                            clientData={clientDetails}
-                        />
+                        {showSubTask && (
+                            <MultipleSubtask
+                                subComponentsHandler={updateSubComponents}
+                                clientData={clientDetails}
+                            />
+                        )}
                     </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
