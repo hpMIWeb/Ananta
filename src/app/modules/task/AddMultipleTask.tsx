@@ -314,7 +314,7 @@ const AddMultipleTask = () => {
                     parentTitle="compliance"
                     parentId={-1}
                     scroll={{ x: 1000 }}
-                    data={[newClientItem]}
+                    data={[]}
                     isEdit={true}
                 />{" "}
                 <Row gutter={[8, 8]} className="form-row">
