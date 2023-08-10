@@ -24,8 +24,8 @@ import { nanoid } from "nanoid";
 const MultipleTaskClientDetails = (props: any) => {
     const newClientItem = {
         _id: nanoid(),
-        client_name: "",
-        assigned_to: "",
+        client_name: [],
+        assigned_to: [],
         budget_time: "",
         actual_time: "",
         priority: "",
@@ -44,7 +44,7 @@ const MultipleTaskClientDetails = (props: any) => {
         value: any,
         record: IAddClientDetails
     ) => {
-        if (record.client_name === "") {
+        if (record.client_name.length === 0) {
             return Promise.resolve();
         }
 
@@ -111,7 +111,7 @@ const MultipleTaskClientDetails = (props: any) => {
                         onChange={(value, event) => {
                             inputChangeHandler(event, "client_name");
                             const emptyRowExist = clients.find((item) => {
-                                return item.client_name === "";
+                                return item.client_name.length == 0;
                             });
                             if (!emptyRowExist) {
                                 addNewClientRowDetails();
@@ -277,15 +277,15 @@ const MultipleTaskClientDetails = (props: any) => {
         }
 
         console.log("==nameItem", nameItem);
-        Object.keys(newClientItem).map((keyItem: string) => {
+        Object.keys(newClientItem).forEach((keyItem: string) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
-                        selectedTableRow.client_name = value;
+                        selectedTableRow.client_name = [value];
                         break;
                     }
                     case "assigned_to": {
-                        selectedTableRow.assigned_to = value;
+                        selectedTableRow.assigned_to = [value];
                         break;
                     }
                     case "budget_time": {
@@ -316,7 +316,7 @@ const MultipleTaskClientDetails = (props: any) => {
         if (props.updateClients) {
             const newDetails = clients.filter(
                 (clientItem: AddClientDetails) => {
-                    return clientItem.client_name !== "";
+                    return clientItem.client_name.length > 0;
                 }
             );
             props.updateClients(newDetails, OperationType.change);

@@ -52,8 +52,8 @@ const AddMultipleTask = () => {
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
     const newClientItem = {
         _id: nanoid(),
-        client_name: "",
-        assigned_to: "",
+        client_name: [],
+        assigned_to: [],
         budget_time: "00:00",
         actual_time: "",
         priority: "",
@@ -263,7 +263,7 @@ const AddMultipleTask = () => {
                     parentTitle="compliance"
                     parentId={-1}
                     scroll={{ x: 1000 }}
-                    data={[]}
+                    data={[newClientItem]}
                     isEdit={true}
                 />{" "}
                 <Row gutter={[8, 8]} className="form-row">

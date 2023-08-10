@@ -397,7 +397,7 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: 4 }}
                         >
                             <Title level={4} style={{ textAlign: "right" }}>
-                                {capitalize(updateTask.client)}
+                                {capitalize(updateTask.client[0])}
                             </Title>
                         </Col>
                     )}
@@ -740,7 +740,7 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             <span className="dataLabel">Client</span>
-                            <div>{<b>{updateTask.client.trim()}</b>}</div>
+                            <div>{<b>{updateTask.client[0].trim()}</b>}</div>
                         </Col>
                     )}
                 </Row>
