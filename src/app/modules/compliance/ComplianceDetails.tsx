@@ -34,12 +34,8 @@ const ComplianceDetails = (props: any) => {
         remark: "",
     } as IClientDetails;
 
-    const [clients, setClients] = useState<IClientDetails[]>(
-        // props.data
-        props.isEdit ? [newClientItem, ...props.data] : props.data
-    );
+    const [clients, setClients] = useState<IClientDetails[]>(props.data);
 
-    // props.data && props.data.length > 0 ? props.data : [newClientItem]
     const [selectedTableRow, setSelectedTableRow] = useState(newClientItem);
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
 
@@ -471,6 +467,7 @@ const ComplianceDetails = (props: any) => {
     };
 
     useEffect(() => {
+        setClients(props.isEdit ? [newClientItem, ...props.data] : props.data);
         setIsEdit(props.isEdit);
     }, [props.isEdit]);
 
