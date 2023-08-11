@@ -40,8 +40,6 @@ export default {
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
-                    console.log("all task", json.payload);
-                    console.log("all task", json.payload);
                     return json.payload;
                 },
             ],

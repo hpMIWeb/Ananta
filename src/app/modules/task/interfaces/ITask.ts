@@ -139,6 +139,7 @@ export interface AddMultipleTask {
 export interface AddClientDetails {
     _id: string;
     client_name: string[];
+
     assigned_to: string[];
     budget_time: string;
     actual_time: string;

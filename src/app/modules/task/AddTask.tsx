@@ -75,10 +75,7 @@ const AddTask = () => {
 
         setAddTask({
             ...addTask,
-            [name]:
-                event.name === "client" || event.name === "assigned_to"
-                    ? [value]
-                    : value,
+            [name]: event.name === "assigned_to" ? [value] : value,
         });
     };
 

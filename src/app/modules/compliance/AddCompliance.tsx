@@ -95,10 +95,7 @@ const AddCompliance = () => {
 
         setAddCompliance({
             ...addCompliance,
-            [name]:
-                event.name === "client" || event.name === "assigned_to"
-                    ? [value]
-                    : value,
+            [name]: value,
         });
     };
 

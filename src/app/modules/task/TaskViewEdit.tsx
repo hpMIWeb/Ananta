@@ -59,6 +59,7 @@ const TaskViewEdit = (props: any) => {
     const [updateTask, setUpdateTask] = useState<AddTask>(
         props.tableRowSelected
     );
+
     const [taskComments, setTaskComments] = useState<Comment>(
         props.tableRowSelected.comments
     );
@@ -397,7 +398,7 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: 4 }}
                         >
                             <Title level={4} style={{ textAlign: "right" }}>
-                                {capitalize(updateTask.client[0])}
+                                {/* {capitalize(updateTask.client[0].client_name)} */}
                             </Title>
                         </Col>
                     )}
@@ -740,7 +741,13 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             <span className="dataLabel">Client</span>
-                            <div>{<b>{updateTask.client[0].trim()}</b>}</div>
+                            <div>
+                                {
+                                    <b>
+                                        {/* {updateTask.client[0].client_name.trim()} */}
+                                    </b>
+                                }
+                            </div>
                         </Col>
                     )}
                 </Row>

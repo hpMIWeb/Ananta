@@ -87,12 +87,14 @@ const TaskList = () => {
         },
         {
             title: "client",
-            dataIndex: "client",
-            key: "client",
+            dataIndex: "",
+            key: "",
             width: "30%",
-            render: (client: string[]) => (
+            render: (record: any) => (
                 <>
-                    <span className="clientDiv">{client}</span>
+                    <span className="clientDiv">
+                        {record.client[0].client_name}
+                    </span>
                 </>
             ),
         },
