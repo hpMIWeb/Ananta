@@ -422,6 +422,7 @@ const ComplianceDetails = (props: any) => {
         });
 
         // update selected rows
+
         setSelectedTableRow(selectedTableRow);
 
         // update parent component
