@@ -33,18 +33,6 @@ const Fillter = (prop: any) => {
         filterHandler("", "");
     };
 
-    useEffect(() => {
-        // Get the current URL
-        console.log(prop);
-        const currentURL = window.location.href;
-        console.log("Current URL:", currentURL);
-        // Split the URL by slashes and get the last part
-        const parts = currentURL.split("/");
-        const lastPart = parts[parts.length - 1];
-
-        console.log("Last part of the URL:", lastPart);
-    }, []); // Empty
-
     const onClearData = (data: any) => {
         console.log(data);
     };

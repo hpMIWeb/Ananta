@@ -40,8 +40,6 @@ export default {
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
-                    console.log("all task", json.payload);
-                    console.log("all task", json.payload);
                     return json.payload;
                 },
             ],
@@ -64,7 +62,7 @@ export default {
                 billable: task.billable,
                 client: task.client,
                 assigned_to: task.assigned_to,
-                datapath: " ",
+                datapath: task.datapath,
                 subtask: task.subtask,
                 attachments: [],
                 comments: [],

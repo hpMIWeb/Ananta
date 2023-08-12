@@ -59,6 +59,7 @@ const TaskViewEdit = (props: any) => {
     const [updateTask, setUpdateTask] = useState<AddTask>(
         props.tableRowSelected
     );
+
     const [taskComments, setTaskComments] = useState<Comment>(
         props.tableRowSelected.comments
     );
@@ -142,6 +143,11 @@ const TaskViewEdit = (props: any) => {
         const taskUpdate = {} as AddTask;
         taskUpdate.status = isStop ? Status.completed : Status.in_progress;
         if (!isRunning) taskUpdate.actual_time = time;
+
+        setUpdateTask({
+            ...updateTask,
+            ["status"]: taskUpdate.status,
+        });
 
         api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
@@ -396,9 +402,17 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 4 }}
                         >
-                            <Title level={4} style={{ textAlign: "right" }}>
-                                {capitalize(updateTask.client[0])}
-                            </Title>
+                            {updateTask.client.length > 0 ? (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    {capitalize(
+                                        updateTask.client[0].client_name
+                                    )}
+                                </Title>
+                            ) : (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    No client available
+                                </Title>
+                            )}
                         </Col>
                     )}
                     <Col
@@ -740,7 +754,16 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             <span className="dataLabel">Client</span>
-                            <div>{<b>{updateTask.client[0].trim()}</b>}</div>
+                            <div>
+                                {
+                                    <b>
+                                        {updateTask.client &&
+                                        updateTask.client.length > 0
+                                            ? updateTask.client[0].client_name.trim()
+                                            : ""}
+                                    </b>
+                                }
+                            </div>
                         </Col>
                     )}
                 </Row>
