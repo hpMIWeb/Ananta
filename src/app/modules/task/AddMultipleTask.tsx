@@ -52,7 +52,7 @@ const AddMultipleTask = () => {
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
     const newClientItem = {
         _id: nanoid(),
-        client_name: [],
+        client_name: "",
         assigned_to: [],
         budget_time: "00:00",
         actual_time: "",
@@ -60,6 +60,7 @@ const AddMultipleTask = () => {
         remarks: "",
         data_path: "",
         attachments: [],
+        status: "",
     } as IAddClientDetails;
 
     const cancelNewTaskHandler = () => {

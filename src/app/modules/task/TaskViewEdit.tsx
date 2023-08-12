@@ -144,6 +144,11 @@ const TaskViewEdit = (props: any) => {
         taskUpdate.status = isStop ? Status.completed : Status.in_progress;
         if (!isRunning) taskUpdate.actual_time = time;
 
+        setUpdateTask({
+            ...updateTask,
+            ["status"]: taskUpdate.status,
+        });
+
         api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
                 position: toast.POSITION.TOP_RIGHT,
@@ -397,9 +402,17 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 4 }}
                         >
-                            <Title level={4} style={{ textAlign: "right" }}>
-                                {/* {capitalize(updateTask.client[0].client_name)} */}
-                            </Title>
+                            {updateTask.client.length > 0 ? (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    {capitalize(
+                                        updateTask.client[0].client_name
+                                    )}
+                                </Title>
+                            ) : (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    No client available
+                                </Title>
+                            )}
                         </Col>
                     )}
                     <Col
@@ -744,7 +757,10 @@ const TaskViewEdit = (props: any) => {
                             <div>
                                 {
                                     <b>
-                                        {/* {updateTask.client[0].client_name.trim()} */}
+                                        {updateTask.client &&
+                                        updateTask.client.length > 0
+                                            ? updateTask.client[0].client_name.trim()
+                                            : ""}
                                     </b>
                                 }
                             </div>

@@ -14,7 +14,7 @@ export interface AddTask {
     timer: TaskTimer;
     priority: string;
     billable: string;
-    client: string[];
+    client: AddClientDetails[];
     assigned_to: string[];
     datapath: string;
     subtask: AddSubTask[];
@@ -36,7 +36,7 @@ export class Task implements AddTask {
     timer: TaskTimer = {} as TaskTimer;
     priority: string = "";
     billable: string = "";
-    client: string[] = [];
+    client: [] = [];
     assigned_to: string[] = [];
     datapath: string = "";
     subtask: SubTask[] = [];
@@ -138,15 +138,15 @@ export interface AddMultipleTask {
 }
 export interface AddClientDetails {
     _id: string;
-    client_name: string[];
-
+    client_name: string;
     assigned_to: string[];
     budget_time: string;
     actual_time: string;
     priority: string;
-    remarks: string;
-    data_path: string;
-    attachments: Attachment[];
+    remarks?: string;
+    data_path?: string;
+    attachments?: Attachment[];
+    status: string;
 }
 export interface AddMultipleSubtask {
     title: string;

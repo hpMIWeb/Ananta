@@ -24,7 +24,7 @@ import { nanoid } from "nanoid";
 const MultipleTaskClientDetails = (props: any) => {
     const newClientItem = {
         _id: nanoid(),
-        client_name: [],
+        client_name: "",
         assigned_to: [],
         budget_time: "",
         actual_time: "",
@@ -32,6 +32,7 @@ const MultipleTaskClientDetails = (props: any) => {
         remarks: "",
         data_path: "",
         attachments: [],
+        status: "",
     } as IAddClientDetails;
 
     const [clients, setClients] = useState<IAddClientDetails[]>(props.data);
@@ -281,7 +282,7 @@ const MultipleTaskClientDetails = (props: any) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
                     case "client_name": {
-                        selectedTableRow.client_name = [value];
+                        selectedTableRow.client_name = value;
                         break;
                     }
                     case "assigned_to": {

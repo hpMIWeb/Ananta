@@ -62,7 +62,7 @@ export default {
                 billable: task.billable,
                 client: task.client,
                 assigned_to: task.assigned_to,
-                datapath: " ",
+                datapath: task.datapath,
                 subtask: task.subtask,
                 attachments: [],
                 comments: [],
