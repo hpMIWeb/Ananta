@@ -267,7 +267,7 @@ export const getTotalTime = (actualTimes: string[]) => {
 
     if (actualTimes.length > 0) {
         actualTimes.forEach((actualTime: string) => {
-            if (actualTime !== "" && actualTime !== undefined) {
+            if (actualTime && actualTime !== "" && actualTime !== undefined) {
                 const splitTime = actualTime.split(":");
                 const hours_item = parseInt(splitTime[0]);
                 const minute_item = parseInt(splitTime[1]);

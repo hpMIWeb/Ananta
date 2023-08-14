@@ -1,5 +1,9 @@
 import dayjs from "dayjs";
 import { ClientDetail } from "../../compliance/interfaces/ICompliance";
+import {
+    Attachment,
+    IComment as Comment,
+} from "../../../utilities/globalInterfaces";
 export interface AddTask {
     _id: string;
     title: string;
@@ -91,18 +95,6 @@ export interface UpdateSubTask {
     workArea: string;
     attachments: Attachment[];
     comments: Comment[];
-}
-
-export interface Attachment {
-    fileName: string;
-    filePath: string;
-}
-
-export interface Comment {
-    _id: string;
-    comment: string;
-    comment_date: string;
-    comment_by: string;
 }
 
 export interface SaveComment {

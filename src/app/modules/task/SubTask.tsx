@@ -62,7 +62,7 @@ const SubTask = (props: any) => {
 
         const updatedTasks = [...subTasks].map((item: any) => {
             if (item._id === subTask._id) {
-                item[name] = value;
+                item[name] = event.name === "assigned_to" ? [value] : value;
             }
             return item;
         });
