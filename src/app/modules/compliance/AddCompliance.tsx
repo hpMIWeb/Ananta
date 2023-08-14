@@ -249,9 +249,12 @@ const AddCompliance = () => {
                     Object.keys(fields).forEach((field) => {
                         form.setFieldsValue({ [field]: undefined });
                     });
+                    setSubCompliance([]);
+                    setComplianceDetails([]);
                     toast.success("Successfully Created Compliance", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
+                    navigate("/add-compliance");
                 });
             } catch (ex) {
                 toast.error("Technical error while creating Compliance", {
