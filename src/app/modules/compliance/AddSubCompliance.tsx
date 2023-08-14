@@ -89,13 +89,16 @@ const AddSubCompliance = (props: any) => {
             return item;
         });
 
+        console.log("updatedCompliance", updatedCompliance);
         setSubCompliance(updatedCompliance);
     };
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add SubCompliance - ", details);
-
+        console.log("subCompliances -=-=-=-=-=", subCompliances);
         const matchedItem = subCompliances.find((item: ISubCompliance) => {
+            console.log("item", item);
+            console.log("details[0].parentId", details[0].parentId);
             return (
                 item._id ===
                 (details && details.length > 0 && details[0].parentId)
@@ -116,6 +119,7 @@ const AddSubCompliance = (props: any) => {
             //setSubCompliance([...subCompliances, matchedItem]);
 
             if (props.subComponentsHandler) {
+                console.log("newDataWithoutId", newDataWithoutId);
                 props.subComponentsHandler(newDataWithoutId);
             }
         }
