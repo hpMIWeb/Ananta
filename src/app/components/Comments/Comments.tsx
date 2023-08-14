@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { setLocalstorage, getLocalStorage } from "../../utilities/utility";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
-import { Comment } from "../../modules/task/interfaces/ITask";
+import { IComment } from "../../utilities/globalInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAt,
@@ -30,8 +30,8 @@ const Comments = (props: any) => {
     const [taskComments, setTaskComments] = useState<[]>(props.comments);
     const [comment, setComment] = useState<string>("");
     const [isEditComment, setIsEditComment] = useState<Boolean>(false);
-    const [editCommentItem, setEditCommentItem] = useState<Comment>(
-        {} as Comment
+    const [editCommentItem, setEditCommentItem] = useState<IComment>(
+        {} as IComment
     );
     const [updateComment, setUpdateComment] = useState<string>("");
     const { Title } = Typography;
@@ -60,7 +60,7 @@ const Comments = (props: any) => {
     const updateCommentHandler = (
         commentId: string,
         parentId: string,
-        commentItem: Comment
+        commentItem: IComment
     ) => {
         console.log(commentId, parentId, commentItem, updateComment);
         setIsEditComment(false);
@@ -73,7 +73,7 @@ const Comments = (props: any) => {
     const editCommentHandler = (
         commentId: string,
         parentId: string,
-        commentItem: Comment
+        commentItem: IComment
     ) => {
         console.log(commentId, parentId, commentItem);
         setIsEditComment(true);
