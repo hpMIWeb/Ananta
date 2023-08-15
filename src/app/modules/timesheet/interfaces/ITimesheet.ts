@@ -1,11 +1,9 @@
-import { IClientDetails } from "../../../utilities/globalInterfaces";
-
 export interface AddTimesheet {
     _id: string;
     start_time: string;
     end_time: string;
     remark: string;
-    client: string[];
+    client: string;
     work_area: string;
     particulars: string;
     total_time: string;
@@ -14,16 +12,12 @@ export interface AddTimesheet {
     date: string;
 }
 
-export interface ITimeSheet extends Omit<AddTimesheet, "client"> {
-    client: IClientDetails[];
-}
-
 export class Timesheet implements AddTimesheet {
     _id: string = "";
     start_time: string = "";
     end_time: string = "";
     remark: string = "";
-    client: string[] = [];
+    client: string = "";
     work_area: string = "";
     particulars: string = "";
     total_time: string = "";
