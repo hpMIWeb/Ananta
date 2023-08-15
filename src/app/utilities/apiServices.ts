@@ -4,6 +4,7 @@ import {
     SaveComment,
     SubTask,
     UpdateSubTask,
+    AddMultipleTask,
 } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 import {
@@ -20,6 +21,8 @@ import { Settings } from "../modules/Setting/interfaces/Isetting";
 
 const token = getLocalStorage("authtoken");
 const apiURL = "http://localhost:8005/api/v1/";
+//const apiURL = "https://api.prod.nccountant.com/api/v1/";
+//const apiURL = "https://api.staging.nccountant.com/api/v1/";
 
 const instance = axios.create({
     baseURL: apiURL,
@@ -85,11 +88,17 @@ export default {
                 },
             ],
         }),
-    createMultipleTask: (tasks: AddTask[]) =>
+    createMultipleTask: (multipleTask: AddMultipleTask) =>
         instance({
             method: "POST",
             url: "task/create-multiple-task",
-            data: tasks,
+            data: multipleTask,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
         }),
     addTaskComment: (comment: SaveComment) =>
         instance({

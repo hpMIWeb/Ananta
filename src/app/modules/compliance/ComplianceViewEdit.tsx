@@ -163,7 +163,7 @@ const ComplianceViewEdit = (props: any) => {
 
     // Update `Compliance` clients
     const complianceClientsHandler = (clientDetails: IClientDetails[]) => {
-        console.log(clientDetails);
+        console.log("clientDetails", clientDetails);
         setComplianceClients(clientDetails);
     };
 
@@ -300,6 +300,7 @@ const ComplianceViewEdit = (props: any) => {
 
         const complianceData = JSON.parse(JSON.stringify(complianceClients));
         // remove id from new client data
+        console.log("complianceData", complianceData);
         const newDataWithoutId = [];
         for (const obj of complianceData) {
             const newObj = { ...obj }; // Create a shallow copy of the object
@@ -315,6 +316,7 @@ const ComplianceViewEdit = (props: any) => {
 
         //
         console.log(updateCompliance);
+        //return;
         api.updateCompliance(updateCompliance._id, updateCompliance).then(
             (resp: any) => {
                 toast.success("Successfully Updated Compliance.", {

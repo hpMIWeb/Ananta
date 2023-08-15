@@ -107,7 +107,6 @@ const AddCompliance = () => {
     const validate = () => {
         let returnFlag = true;
 
-        console.log(addCompliance.start_date);
         if (
             addCompliance.hasOwnProperty("start_date") &&
             addCompliance.start_date === ""
@@ -176,12 +175,10 @@ const AddCompliance = () => {
         }
 
         // Clients validation
-        console.log(complianceDetails);
         if (complianceDetails === undefined || complianceDetails.length === 0) {
             returnFlag = false;
         }
 
-        console.log(returnFlag);
         return returnFlag;
     };
 
@@ -197,7 +194,6 @@ const AddCompliance = () => {
             });
             return;
         } else {
-            console.log("complianceDetails", complianceDetails);
             const complianceData = JSON.parse(
                 JSON.stringify(complianceDetails)
             );
@@ -214,6 +210,8 @@ const AddCompliance = () => {
             }
 
             let newDetails = [];
+            let newDetails1 = [];
+            console.log("Add time subCompliance", subCompliance);
             if (subCompliance && subCompliance.length > 0) {
                 // filter any in-correct data
                 newDetails = subCompliance.filter(
@@ -222,8 +220,10 @@ const AddCompliance = () => {
                     }
                 );
 
+                console.log("Add time newDetails", newDetails);
                 // Convert data into required format
-                newDetails = newDetails.map((item: IInsertSubCompliance) => {
+                newDetails1 = newDetails.map((item: IInsertSubCompliance) => {
+                    console.log("item=>", item);
                     return {
                         title: item.title,
                         status: item.status,
@@ -238,29 +238,23 @@ const AddCompliance = () => {
                     };
                 });
 
-                addCompliance.subcompliance = newDetails;
-                setSubCompliance(newDetails);
+                addCompliance.subcompliance = newDetails1;
+                //TODO:: @hitesh bhai
+                // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
             }
 
-            console.log("subCompliance", subCompliance);
-
-            // setAddCompliance(addCompliance);
-
-            console.log("before same subCompliance - ", addCompliance);
-
-            // return;
-            // Save to DB
-
-            //  return;
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
                     const fields = form.getFieldsValue();
                     Object.keys(fields).forEach((field) => {
                         form.setFieldsValue({ [field]: undefined });
                     });
+                    setSubCompliance([]);
+                    setComplianceDetails([]);
                     toast.success("Successfully Created Compliance", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
+                    navigate("/add-compliance");
                 });
             } catch (ex) {
                 toast.error("Technical error while creating Compliance", {
@@ -271,14 +265,9 @@ const AddCompliance = () => {
     };
 
     const updateSubComponents = (subCompliance: IInsertSubCompliance[]) => {
+        console.log("updateSubComponents showSubCompliance", showSubCompliance);
+        console.log("updateSubComponents subCompliance", subCompliance);
         setSubCompliance(showSubCompliance ? subCompliance : []);
-    };
-
-    const handleInputKeyDown = () => {
-        if (selectModeRef.current) {
-            // selectModeRef.current.blur();
-            console.log(selectModeRef.current);
-        }
     };
 
     return (
@@ -462,16 +451,6 @@ const AddCompliance = () => {
                                 }}
                                 value={addCompliance.mode}
                                 showSearch={true}
-                                onInputKeyDown={(event) => {
-                                    if (event.keyCode === 9) {
-                                        // console.log(event.keyCode, event);
-                                        // inputChangeHandler(event);
-                                        handleInputKeyDown();
-                                    }
-                                }}
-                                // onBlur={(event) => {
-                                //     console.log("onBlur", event.target);
-                                // }}
                                 className="w100"
                             ></Select>
                         </Form.Item>

@@ -29,7 +29,8 @@ import "./TimeSheet.scss";
 import { Link } from "react-router-dom";
 
 import {
-    AddTimesheet as IAddTimesheet,
+    AddTimesheet,
+    AddTimesheet as ITimesheet,
     Timesheet,
 } from "./interfaces/ITimesheet";
 import { PlusOutlined, ClockCircleOutlined } from "@ant-design/icons";
@@ -39,7 +40,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import "./TimeSheet.scss";
-import { IClientDetails } from "../compliance/interfaces/ICompliance";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -47,13 +47,10 @@ const TimeSheet = () => {
     const [current, setCurrent] = useState(1);
     const dateFormat = "YYYY-MM-DD";
     const [filterDate, setFilterDate] = useState(dayjs().format(dateFormat));
-    // fetch all data and store it here - use this to filter data
-    const [timesheetData, setTimesheetData] = useState<Timesheet[]>([]);
-    // current table row at edit time
-    const [timesheetAction, setTimesheetAction] = useState<IAddTimesheet[]>([]);
-    // current table row at edit time
-    const [selectedTableRow, setSelectedTableRow] = useState<IAddTimesheet>(
-        {} as IAddTimesheet
+    const [timesheetData, setTimesheetData] = useState<ITimesheet[]>([]);
+    const [timesheetAction, setTimesheetAction] = useState<ITimesheet[]>([]);
+    const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
+        {} as ITimesheet
     );
     const [newRowCount, setNewRowCount] = useState<number>(1);
 
@@ -80,15 +77,9 @@ const TimeSheet = () => {
         newBlankTimeSheet._id = nanoid();
         newBlankTimeSheet.date = currentDate.toString();
 
-        // Convert `client` array into object to display data
-        let returnVal = timesheetData
-            .filter((item: Timesheet) => {
-                return dayjs(item.date, dateFormat).isSame(currentDate);
-            })
-            .map((timesheetItem: any) => {
-                timesheetItem.client_name = timesheetItem.client[0].client_name;
-                return timesheetItem;
-            });
+        let returnVal = timesheetData.filter((item: ITimesheet) => {
+            return dayjs(item.date, dateFormat).isSame(currentDate);
+        });
 
         // Add new blank item at the top
         returnVal.unshift(newBlankTimeSheet);
@@ -290,9 +281,9 @@ const TimeSheet = () => {
             dataIndex: "client",
             key: "client",
             width: "10%",
-            // sorter: (a: Timesheet, b: Timesheet) =>
-            //     a.client.localeCompare(b.client),
-            render: (client: any, record: Timesheet) => {
+            sorter: (a: Timesheet, b: Timesheet) =>
+                a.client.localeCompare(b.client),
+            render: (client: string, record: Timesheet) => {
                 if (record.is_new) {
                     return (
                         <Form.Item
@@ -316,11 +307,7 @@ const TimeSheet = () => {
                                 showSearch
                                 placeholder="Client"
                                 options={clientOpts}
-                                defaultValue={
-                                    client.length > 0
-                                        ? client[0].client_name
-                                        : ""
-                                }
+                                defaultValue={client}
                                 className="w100"
                                 onChange={(value, event) => {
                                     inputChangeHandler(event, "client");
@@ -329,12 +316,7 @@ const TimeSheet = () => {
                         </Form.Item>
                     );
                 } else if (!record.is_edit) {
-                    //return <span>{record.client[0].client_name}</span>;
-                    return (
-                        <span>
-                            {client.length > 0 ? client[0].client_name : ""}
-                        </span>
-                    );
+                    return <span>{record.client}</span>;
                 }
                 return (
                     <Form.Item
@@ -354,7 +336,7 @@ const TimeSheet = () => {
                             showSearch
                             placeholder="Client"
                             options={clientOpts}
-                            defaultValue={client[0].client_name}
+                            defaultValue={client}
                             className="w100"
                             onChange={(value, event) => {
                                 inputChangeHandler(event, "client");
@@ -728,9 +710,8 @@ const TimeSheet = () => {
                 (row) => row.start_time === "" && row.end_time === ""
             )
         ) {
-            // TODO: Verify the functionality
             const selectedRowIndex = timesheetData.findIndex(
-                (row) => row._id === selectedTableRow._id
+                (row) => row === selectedTableRow
             );
             const updatedTimesheet = [
                 ...timesheetAction.slice(0, selectedRowIndex + 1),
@@ -761,7 +742,7 @@ const TimeSheet = () => {
             .then((resp: any) => {
                 // Set timesheet to `localStorage`
                 const updatedData = timesheetAction.filter(
-                    (item: IAddTimesheet) => item._id !== timeSheetId
+                    (item: Timesheet) => item._id !== timeSheetId
                 );
                 setTimesheetAction(updatedData);
                 toast.success("Timesheet successfully deleted.", {
@@ -783,7 +764,7 @@ const TimeSheet = () => {
             return;
         }
         const updatedData = timesheetAction.filter(
-            (item: IAddTimesheet) => item._id !== timeSheetId
+            (item: Timesheet) => item._id !== timeSheetId
         );
 
         setTimesheetAction(updatedData);
@@ -839,9 +820,7 @@ const TimeSheet = () => {
                 start_time: startTime,
                 end_time: endTime,
                 remark: entry.remark,
-                // client: entry.is_new
-                //     ? entry.client
-                //     : [entry.client.client_name],
+                client: entry.client,
                 work_area: entry.work_area,
                 particulars: entry.particulars,
                 total_time: entry.total_time,
@@ -852,27 +831,25 @@ const TimeSheet = () => {
             return payload;
         });
 
-        console.log("timesheetPayload", timesheetPayload);
-
         // Make a single API call to save/edit the multiple timesheet entries
-        // try {
-        //     api.createMultipleTimesheet(timesheetPayload)
-        //         .then((resp) => {
-        //             toast.success("Timesheet entries successfully saved.", {
-        //                 position: toast.POSITION.TOP_RIGHT,
-        //             });
-        //             getTimeSheetData();
-        //         })
-        //         .catch((error) => {
-        //             toast.error("Technical error while Timesheet entries.", {
-        //                 position: toast.POSITION.TOP_RIGHT,
-        //             });
-        //         });
-        // } catch (ex) {
-        //     toast.error("Technical error while Timesheet entries.", {
-        //         position: toast.POSITION.TOP_RIGHT,
-        //     });
-        // }
+        try {
+            api.createMultipleTimesheet(timesheetPayload)
+                .then((resp) => {
+                    toast.success("Timesheet entries successfully saved.", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    getTimeSheetData();
+                })
+                .catch((error) => {
+                    toast.error("Technical error while Timesheet entries.", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                });
+        } catch (ex) {
+            toast.error("Technical error while Timesheet entries.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -922,7 +899,8 @@ const TimeSheet = () => {
                         break;
                     }
                     case "client": {
-                        selectedTableRow.client = [value];
+                        selectedTableRow.client = value;
+
                         break;
                     }
                     case "particulars": {
