@@ -153,6 +153,7 @@ const TaskViewEdit = (props: any) => {
             toast.success("Successfully Updated Task", {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            console.log("updateTask", updateTask);
             if (props.handleListUpdate) props.handleListUpdate();
         });
     };
@@ -176,10 +177,15 @@ const TaskViewEdit = (props: any) => {
         taskUpdate.status = value;
 
         if (value !== "" && value !== undefined) {
+            setUpdateTask({
+                ...updateTask,
+                ["status"]: taskUpdate.status,
+            });
             api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
                 toast.success("Successfully Updated Task", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+
                 if (props.handleListUpdate) props.handleListUpdate();
             });
         } else {

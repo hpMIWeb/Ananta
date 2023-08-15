@@ -80,13 +80,14 @@ const TaskList = () => {
             render: (text: string) => <></>,
         },
         {
+            title: "Title",
             dataIndex: "title",
             key: "title",
             render: (text: string) => <span className="title">{text}</span>,
             width: "20%",
         },
         {
-            title: "client",
+            title: "Client",
             dataIndex: "",
             key: "",
             width: "30%",
@@ -99,7 +100,7 @@ const TaskList = () => {
             ),
         },
         {
-            title: "assignee",
+            title: "Assignee",
             dataIndex: "assigned_to",
             key: "assigned_to",
             width: "10%",
@@ -118,7 +119,7 @@ const TaskList = () => {
             ),
         },
         {
-            title: "calendaricon",
+            title: "Due Date",
             key: "due_date",
             dataIndex: "due_date",
             width: "10%",
@@ -136,7 +137,7 @@ const TaskList = () => {
         },
 
         {
-            title: "lefticon",
+            title: "Sub task",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
@@ -152,23 +153,24 @@ const TaskList = () => {
             },
         },
         {
-            title: "subtask",
+            title: "Sub Task",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
             render: (subtask: []) => {
                 if (subtask && subtask.length > 0) {
                     return (
-                        <div key={subtask.length} className="clientDiv">
-                            {subtask.filter((item: ISubTask) => {
-                                return (
-                                    item.status === "completed" ||
-                                    item.status === "complete"
-                                );
-                            }).length +
-                                "/" +
-                                subtask.length}
-                        </div>
+                        // <div key={subtask.length} className="clientDiv">
+                        //     {subtask.filter((item: ISubTask) => {
+                        //         return (
+                        //             item.status === "completed" ||
+                        //             item.status === "complete"
+                        //         );
+                        //     }).length +
+                        //         "/" +
+                        //         subtask.length}
+                        // </div>
+                        <span className="clientDiv">0/0</span>
                     );
                 } else {
                     return <span className="clientDiv">0/0</span>;
@@ -417,7 +419,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}
@@ -642,7 +643,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}

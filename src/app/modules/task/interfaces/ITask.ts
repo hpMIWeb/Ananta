@@ -127,6 +127,28 @@ export interface AddMultipleTask {
     clients: AddClientDetails[];
     subtask: AddMultipleSubtask[];
     subtaskToggle: boolean;
+    remarks: string;
+    budget_time: string;
+    actual_time: string;
+    priority: string;
+}
+
+export class AddMultipleTaskClass implements AddMultipleTask {
+    _id: string = "";
+    start_date: string = "";
+    due_date: string = "";
+    status: string = "";
+    mode: string = "";
+    title: string = "";
+    workArea: string = "";
+    billable: string = "";
+    clients: AddClientDetails[] = [];
+    subtask: AddMultipleSubtask[] = [];
+    subtaskToggle: boolean = false;
+    remarks: string = "";
+    budget_time: string = "";
+    actual_time: string = "";
+    priority: string = "";
 }
 export interface AddClientDetails {
     _id: string;
@@ -139,8 +161,21 @@ export interface AddClientDetails {
     data_path?: string;
     attachments?: Attachment[];
     status: string;
+    parentId: string;
 }
 export interface AddMultipleSubtask {
+    title: string;
+    taskId: string;
+    status: string;
+    budget_time: string;
+    actual_time: string;
+    remarks: string;
+    clients: ClientDetail[];
+    priority: string;
+}
+
+export interface MultipleSubtask {
+    _id: string;
     title: string;
     taskId: string;
     status: string;

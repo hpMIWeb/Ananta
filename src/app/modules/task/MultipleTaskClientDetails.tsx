@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import { nanoid } from "nanoid";
 const MultipleTaskClientDetails = (props: any) => {
     const newClientItem = {
-        _id: nanoid(),
+        _id: "1",
         client_name: "",
         assigned_to: [],
         budget_time: "",
@@ -33,6 +33,7 @@ const MultipleTaskClientDetails = (props: any) => {
         data_path: "",
         attachments: [],
         status: "",
+        parentId: props.parentId ?? -1,
     } as IAddClientDetails;
 
     const [clients, setClients] = useState<IAddClientDetails[]>(props.data);
@@ -277,7 +278,6 @@ const MultipleTaskClientDetails = (props: any) => {
             value = event.value;
         }
 
-        console.log("==nameItem", nameItem);
         Object.keys(newClientItem).forEach((keyItem: string) => {
             if (keyItem === nameItem) {
                 switch (keyItem) {
@@ -308,9 +308,11 @@ const MultipleTaskClientDetails = (props: any) => {
                 }
             }
         });
+        selectedTableRow.parentId = props.parentId ?? -1;
+
+        console.log("selectedTableRow", selectedTableRow);
 
         // update selected rows
-        console.log(selectedTableRow);
         setSelectedTableRow(selectedTableRow);
 
         // update parent component
@@ -347,15 +349,16 @@ const MultipleTaskClientDetails = (props: any) => {
 
     const addNewClientRowDetails = () => {
         const newClient = newClientItem;
-        newClient._id = nanoid();
+        let newId = clients.length + 1;
+        newClient._id = newId.toString();
         newClient.budget_time = "00:00";
+        newClient.parentId = props.parentId ?? -1;
+
         setClients([...clients, newClient]);
     };
 
     useEffect(() => {
-        console.log("props.data", props.data);
-
-        //setClients(props.isEdit ? [newClientItem, ...props.data] : props.data);
+        console.log("props in cliner table", props);
         setIsEdit(props.isEdit);
     }, [props.isEdit]);
 

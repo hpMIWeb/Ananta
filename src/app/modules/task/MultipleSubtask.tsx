@@ -52,8 +52,35 @@ const MultipleSubtask = (props: any) => {
     };
 
     const clientDetailsHandler = (details: IAddClientDetails[]) => {
-        console.log("client details at Add - ", details);
-        setClients(details);
+        console.log("subTasks", subTasks);
+        console.log("details", details);
+        const matchedItem = subTasks.find((item: any) => {
+            return (
+                item._id ===
+                (details && details.length > 0 && details[0].parentId)
+            );
+        });
+        console.log("matchedItem", matchedItem);
+        if (matchedItem) {
+            let newDataWithoutId = [];
+            //TODO: need with API team _id Parameter discuss
+            const clientData = JSON.parse(JSON.stringify(details));
+
+            for (const obj of clientData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+            matchedItem.client = newDataWithoutId;
+            console.log("matchedItem", matchedItem);
+
+            setClients(newDataWithoutId);
+
+            if (props.subComponentsHandler) {
+                console.log("newDataWithoutId", newDataWithoutId);
+                props.subComponentsHandler(newDataWithoutId);
+            }
+        }
     };
 
     const inputChangeHandler = (
@@ -82,11 +109,24 @@ const MultipleSubtask = (props: any) => {
             return item;
         });
 
+        console.log("Sub task OBj ", updatedTasks);
         setSubTasks(updatedTasks);
     };
 
     useEffect(() => {
-        console.log(props.clientData);
+        let new_Id = 0;
+        const updatedData = props.clientData.map((item: IAddClientDetails) => {
+            console.log("props.parentId", props.parentId);
+            new_Id++;
+            return {
+                ...item,
+                _id: 1, // Generate a unique Nano ID
+                parentId: props.parentId ?? -1,
+            };
+        });
+        console.log("updatedData", updatedData);
+        setClients(updatedData);
+
         if (props.subComponentsHandler) {
             props.subComponentsHandler(subTasks);
         }
@@ -260,8 +300,9 @@ const MultipleSubtask = (props: any) => {
                             <MultipleTaskClientDetails
                                 updateClients={clientDetailsHandler}
                                 isAllowAdd={true}
-                                parentId={-1}
                                 scroll={{ x: 1000 }}
+                                parentTitle={"sub_task"}
+                                parentId={subTaskItem._id}
                                 data={clients}
                                 isEdit={true}
                             />

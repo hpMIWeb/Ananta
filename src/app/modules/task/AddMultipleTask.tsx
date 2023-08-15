@@ -10,14 +10,11 @@ import {
     Row,
     Col,
     TimePicker,
-    Upload,
     Divider,
 } from "antd";
 import {
     priorityOpts,
     chargesOpts,
-    assigneeOpts,
-    clientOpts,
     modeOptions,
     workAreaOpts,
 } from "../../utilities/utility";
@@ -32,11 +29,13 @@ import {
     AddMultipleTask as IAddMultipleTask,
     AddClientDetails as IAddClientDetails,
     AddMultipleSubtask as IAddMultipleSubtask,
+    AddMultipleTaskClass,
 } from "./interfaces/ITask";
 import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
 import "./AddTask.scss";
-import { nanoid } from "@reduxjs/toolkit";
 import MultipleSubtask from "./MultipleSubtask";
+import { ToastContainer, toast } from "react-toastify";
+
 const { Title } = Typography;
 
 dayjs.extend(weekday);
@@ -46,12 +45,16 @@ const AddMultipleTask = () => {
     const navigate = useNavigate();
     const dateFormat = "YYYY-MM-DD";
     const [clientDetails, setClientDetails] = useState<IAddClientDetails[]>([]);
+    const [clientDetailsForSubTask, setClientDetailsForSubtask] = useState<
+        IAddClientDetails[]
+    >([]);
     const [multipleTask, setMultipleTask] = useState<IAddMultipleTask>(
-        {} as IAddMultipleTask
+        new AddMultipleTaskClass()
     );
+    const [subTask, setSubTask] = useState<IAddMultipleSubtask[]>();
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
     const newClientItem = {
-        _id: nanoid(),
+        _id: "1",
         client_name: "",
         assigned_to: [],
         budget_time: "00:00",
@@ -61,6 +64,7 @@ const AddMultipleTask = () => {
         data_path: "",
         attachments: [],
         status: "",
+        parentId: "",
     } as IAddClientDetails;
 
     const cancelNewTaskHandler = () => {
@@ -73,8 +77,135 @@ const AddMultipleTask = () => {
         }
     };
 
+    const validate = () => {
+        let returnFlag = true;
+
+        console.log("multipleTask", multipleTask);
+        if (
+            multipleTask.hasOwnProperty("start_date") &&
+            multipleTask.start_date === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("due_date") &&
+            multipleTask.due_date === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("mode") &&
+            multipleTask.mode === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("title") &&
+            multipleTask.title === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("client") &&
+            multipleTask.clients &&
+            multipleTask.clients.length === 0
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("workArea") &&
+            multipleTask.workArea === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("remarks") &&
+            multipleTask.remarks === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("budget_time") &&
+            multipleTask.budget_time === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("priority") &&
+            multipleTask.priority === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("billable") &&
+            multipleTask.billable === ""
+        ) {
+            returnFlag = false;
+        }
+
+        // Due date validation against the start date
+        const startDateValue = dayjs(multipleTask.start_date);
+        const dueDateValue = dayjs(multipleTask.due_date);
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (dueDateValue.isBefore(startDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        // Start date validation against the due date
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (startDateValue.isAfter(dueDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        return returnFlag;
+    };
+
     const handleAddTask = () => {
-        // console.log(addTask);
+        if (!validate()) {
+            toast.error("Please set mandatory fields", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+
+            return false;
+        } else {
+            const clientDetailsData = JSON.parse(JSON.stringify(clientDetails));
+            const newDataWithoutId = [];
+
+            for (const obj of clientDetailsData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+
+            if (newDataWithoutId && newDataWithoutId.length > 0) {
+                multipleTask.clients = newDataWithoutId;
+            }
+
+            let newDetails = [];
+            let newDetails1 = [];
+            if (subTask && subTask.length > 0) {
+                // filter any in-correct data
+                newDetails = subTask.filter((item: IAddMultipleSubtask) => {
+                    return item.title !== "" && item.budget_time !== "";
+                });
+
+                // Convert data into required format
+                newDetails1 = newDetails.map((item: IAddMultipleSubtask) => {
+                    return {
+                        title: item.title,
+                        taskId: "",
+                        status: item.status,
+                        budget_time: item.budget_time,
+                        actual_time: "",
+                        remarks: item.remarks,
+                        clients: item.clients,
+                        priority: item.priority,
+                        comments: [],
+                    };
+                });
+
+                multipleTask.subtask = newDetails1;
+                //TODO:: @hitesh bhai
+                // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
+            }
+        }
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -92,7 +223,6 @@ const AddMultipleTask = () => {
         }
 
         console.log(name, value);
-
         setMultipleTask({
             ...multipleTask,
             [name]: value,
@@ -100,30 +230,17 @@ const AddMultipleTask = () => {
     };
 
     const clientDetailsHandler = (details: IAddClientDetails[]) => {
-        console.log("client details at Add - ", details);
         setClientDetails(details);
     };
 
     const updateSubComponents = (subTasks: IAddMultipleSubtask[]) => {
-        multipleTask.subtask = !showSubTask
-            ? []
-            : subTasks.map((subTaskItem: IAddMultipleSubtask) => {
-                  return {
-                      title: subTaskItem.title,
-                      taskId: "",
-                      status: "pending",
-                      budget_time: subTaskItem.budget_time,
-                      actual_time: subTaskItem.budget_time,
-                      remarks: subTaskItem.remarks,
-                      clients: subTaskItem.clients,
-                      priority: subTaskItem.priority,
-                  };
-              });
+        setSubTask(showSubTask ? subTasks : []);
     };
 
     return (
         <>
             <div className="add-task-header">
+                <ToastContainer autoClose={25000} />
                 <div>
                     <Title level={5}>Add Multiple Tasks</Title>
                 </div>
@@ -143,23 +260,21 @@ const AddMultipleTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
                             placeholder="Start Date"
-                            name="startDate"
-                            //value={addTask.startDate}
+                            name="start_date"
                             defaultValue={dayjs()}
                             format={dateFormat}
                             className="w100"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "startDate");
+                                inputChangeHandler(dateString, "start_date");
                             }}
                         />
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
                             placeholder="Due Date"
-                            name="dueDate"
-                            //value={addTask.dueDate}
+                            name="due_date"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "dueDate");
+                                inputChangeHandler(dateString, "due_date");
                             }}
                             className="w100"
                         />
@@ -172,12 +287,6 @@ const AddMultipleTask = () => {
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
                             }}
-                            //value={addTask.mode}
-                            onInputKeyDown={(event) => {
-                                if (event.keyCode === 9) {
-                                    console.log(event.keyCode, event);
-                                }
-                            }}
                             className="w100"
                         ></Select>
                     </Col>
@@ -186,8 +295,7 @@ const AddMultipleTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
                         <Input
                             placeholder="Task"
-                            name="task"
-                            // value={addTask.task}
+                            name="title"
                             onChange={(event) => {
                                 inputChangeHandler(event);
                             }}
@@ -198,7 +306,6 @@ const AddMultipleTask = () => {
                             allowClear
                             placeholder="Select Work Area"
                             options={workAreaOpts}
-                            // value={addTask.workArea}
                             className="w100"
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
@@ -213,7 +320,7 @@ const AddMultipleTask = () => {
                             // value={addTask.remark}
                             placeholder="Remark"
                             onChange={(event) => {
-                                inputChangeHandler(event, "remark");
+                                inputChangeHandler(event, "remarks");
                             }}
                         />
                     </Col>
@@ -222,9 +329,9 @@ const AddMultipleTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <TimePicker
                             placeholder="Budget Time"
-                            name="budgetTime"
+                            name="budget_time"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "budgetTime");
+                                inputChangeHandler(dateString, "budget_time");
                             }}
                             className="w100"
                             format={"HH:mm"}
@@ -235,7 +342,6 @@ const AddMultipleTask = () => {
                             allowClear
                             placeholder="Priority"
                             options={priorityOpts}
-                            // value={addTask.priority}
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
                             }}
@@ -246,7 +352,6 @@ const AddMultipleTask = () => {
                         <Select
                             allowClear
                             placeholder="Billable"
-                            // value={addTask.billable}
                             options={chargesOpts}
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
@@ -261,7 +366,7 @@ const AddMultipleTask = () => {
                 <MultipleTaskClientDetails
                     updateClients={clientDetailsHandler}
                     isAllowAdd={true}
-                    parentTitle="compliance"
+                    parentTitle="task"
                     parentId={-1}
                     scroll={{ x: 1000 }}
                     data={[newClientItem]}
