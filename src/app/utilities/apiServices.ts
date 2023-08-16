@@ -21,9 +21,9 @@ import { Settings } from "../modules/Setting/interfaces/Isetting";
 import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
-const apiURL = "http://localhost:8005/api/v1/";
+//const apiURL = "http://localhost:8005/api/v1/";
 //const apiURL = "https://api.prod.nccountant.com/api/v1/";
-//const apiURL = "https://api.staging.nccountant.com/api/v1/";
+const apiURL = "https://api.staging.nccountant.com/api/v1/";
 
 const instance = axios.create({
     baseURL: apiURL,
