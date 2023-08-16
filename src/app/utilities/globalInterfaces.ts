@@ -22,3 +22,8 @@ export interface IComment {
     comment_date: string;
     comment_by: string;
 }
+
+export interface ILogin {
+    email: string;
+    password: string;
+}

@@ -18,6 +18,7 @@ import {
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
 import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
+import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
 const apiURL = "http://localhost:8005/api/v1/";
@@ -36,6 +37,18 @@ const instance = axios.create({
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+    login: (loginDetail: ILogin) =>
+        instance({
+            method: "POST",
+            url: "admin/login",
+            data: loginDetail,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
     getAllTask: (queryString: string) =>
         instance({
             method: "GET",

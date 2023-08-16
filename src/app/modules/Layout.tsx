@@ -45,6 +45,7 @@ const items: MenuItem[] = [
         getItem("Settings", "/setting"),
     ]),
     getItem("Files", "12", <FileOutlined />),
+    getItem("Logout", "/login"),
 ];
 
 const LayoutComponent = () => {
@@ -57,6 +58,9 @@ const LayoutComponent = () => {
 
     const handleClick = (e: any) => {
         navigate(e.key);
+        if (e.key === "/login") {
+            localStorage.removeItem("authtoken");
+        }
     };
 
     return (
