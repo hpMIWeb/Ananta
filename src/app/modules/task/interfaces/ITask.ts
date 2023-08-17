@@ -135,9 +135,9 @@ export interface AddMultipleTask {
 
 export class AddMultipleTaskClass implements AddMultipleTask {
     _id: string = "";
-    start_date: string = "";
+    start_date: string = dayjs().format("YYYY-MM-DD");
     due_date: string = "";
-    status: string = "";
+    status: string = "pending";
     mode: string = "";
     title: string = "";
     workArea: string = "";

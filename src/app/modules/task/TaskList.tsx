@@ -137,7 +137,7 @@ const TaskList = () => {
         },
 
         {
-            title: "Sub task",
+            title: "",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",

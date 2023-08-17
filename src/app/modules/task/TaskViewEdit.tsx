@@ -298,7 +298,10 @@ const TaskViewEdit = (props: any) => {
                     className="task-header-cell"
                     style={{ flex: props.fullScreenMode ? 3 : 4 }}
                 >
-                    {subTaskItem.client}
+                    {subTaskItem &&
+                        subTaskItem.client &&
+                        subTaskItem.client.length > 0 &&
+                        subTaskItem.client[0].client_name}
                 </div>
                 {props.fullScreenMode &&
                     index.toString() !== currentCollapse && (

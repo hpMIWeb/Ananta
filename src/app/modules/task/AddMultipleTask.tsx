@@ -31,6 +31,7 @@ import {
     AddMultipleSubtask as IAddMultipleSubtask,
     AddMultipleTaskClass,
 } from "./interfaces/ITask";
+import api from "../../utilities/apiServices";
 import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
 import "./AddTask.scss";
 import MultipleSubtask from "./MultipleSubtask";
@@ -66,6 +67,7 @@ const AddMultipleTask = () => {
         status: "",
         parentId: "",
     } as IAddClientDetails;
+    const [form] = Form.useForm();
 
     const cancelNewTaskHandler = () => {
         navigate("/task");
@@ -205,7 +207,30 @@ const AddMultipleTask = () => {
                 //TODO:: @hitesh bhai
                 // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
             }
+
+            // Save to DB
+            try {
+                api.createMultipleTask(multipleTask).then((resp: any) => {
+                    toast.success("Successfully Created Multiple Task", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    resetFormValues();
+                });
+            } catch (ex) {
+                toast.error("Technical error while creating Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
         }
+    };
+
+    const resetFormValues = () => {
+        const fields = form.getFieldsValue();
+        Object.keys(fields).forEach((field) => {
+            form.setFieldsValue({ [field]: undefined });
+        });
+
+        setShowSubTask(false);
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -255,19 +280,56 @@ const AddMultipleTask = () => {
                     </Button>
                 </div>
             </div>
-            <Form>
+            <Form
+                form={form}
+                initialValues={{
+                    start_date: dayjs(),
+                }}
+                id="addMultipleTaskFrm"
+            >
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <DatePicker
-                            placeholder="Start Date"
+                        <Form.Item
                             name="start_date"
-                            defaultValue={dayjs()}
-                            format={dateFormat}
-                            className="w100"
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "start_date");
-                            }}
-                        />
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select start date.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const dueDateValue =
+                                            getFieldValue("due_date");
+                                        if (
+                                            !value ||
+                                            !dueDateValue ||
+                                            dayjs(value).isBefore(dueDateValue)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Start date should be before the due date."
+                                            )
+                                        );
+                                    },
+                                }),
+                            ]}
+                        >
+                            <DatePicker
+                                placeholder="Start Date"
+                                name="start_date"
+                                format={dateFormat}
+                                className="w100"
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(
+                                        dateString,
+                                        "start_date"
+                                    );
+                                }}
+                                onPanelChange={() => {}}
+                            />
+                        </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
@@ -371,7 +433,7 @@ const AddMultipleTask = () => {
                     scroll={{ x: 1000 }}
                     data={[newClientItem]}
                     isEdit={true}
-                />{" "}
+                />
                 <Row gutter={[8, 8]} className="form-row">
                     <Divider />
                 </Row>
