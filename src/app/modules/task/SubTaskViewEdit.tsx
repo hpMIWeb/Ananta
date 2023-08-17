@@ -507,14 +507,16 @@ const SubTaskViewEdit = (props: any) => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
                         {!isEdit && getRemark()}
                         {isEdit && (
-                            <ReactQuill
-                                theme="snow"
-                                value={updateSubTask.remarks}
-                                placeholder="Remark"
-                                onChange={(event) => {
-                                    inputChangeHandler(event, "remarks");
-                                }}
-                            />
+                            <Form.Item name={"remark_" + updateSubTask._id}>
+                                <ReactQuill
+                                    theme="snow"
+                                    value={updateSubTask.remarks}
+                                    placeholder="Remark"
+                                    onChange={(event) => {
+                                        inputChangeHandler(event, "remarks");
+                                    }}
+                                />
+                            </Form.Item>
                         )}
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>

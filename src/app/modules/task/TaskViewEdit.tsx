@@ -82,8 +82,14 @@ const TaskViewEdit = (props: any) => {
     }, [props.tableRowSelected]);
 
     const updateCurrentTask = (subTask: SubTask) => {
-        // TODO: need to fix  - multiple subtask been added with below condition
-        setTaskSubTasks([...taskSubTasks, subTask]);
+        if (subTask && taskSubTasks) {
+            const newData = taskSubTasks.map((subTaskItem: SubTask) =>
+                subTaskItem && subTaskItem._id === subTask._id
+                    ? subTask
+                    : subTaskItem
+            );
+            setTaskSubTasks(newData);
+        }
     };
 
     const updateTaskList = (subTasks: SubTask[]) => {
