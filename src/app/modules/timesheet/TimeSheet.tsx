@@ -57,8 +57,6 @@ const TimeSheet = () => {
     //Time sheet List
 
     useEffect(() => {
-        const startDateTime = "2023-07-10T21:30:00.000Z";
-        console.log(dayjs(startDateTime).format("YYYY-MM-DD HH:mm"));
         getTimeSheetData();
     }, []);
 

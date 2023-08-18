@@ -74,7 +74,12 @@ const Stopwatch = (props: any) => {
         setIsRunning(updatedStatus);
 
         if (props.handleTaskStatus) {
-            props.handleTaskStatus(updatedStatus, getTime(), false);
+            props.handleTaskStatus(
+                updatedStatus,
+                getTime(),
+                false,
+                props.parentId
+            );
         }
     };
 
@@ -83,7 +88,7 @@ const Stopwatch = (props: any) => {
         setIsRunning(false);
         setShowButtons(false);
         if (props.handleTaskStatus) {
-            props.handleTaskStatus(false, getTime(), true);
+            props.handleTaskStatus(false, getTime(), true, props.parentId);
         }
     };
     return (

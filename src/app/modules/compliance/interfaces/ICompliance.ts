@@ -1,4 +1,5 @@
-export interface AddCompliance {
+// View / Edit compliance
+export interface Compliance {
     _id: string;
     title: string;
     start_date: string;
@@ -32,6 +33,41 @@ export interface SubCompliance {
     complianceId?: string;
     clients: IClientDetails[];
     comments: [];
+}
+
+// Create compliance
+export interface InsertCompliance {
+    title: string;
+    start_date: string;
+    due_date: string;
+    mode: string;
+    status: string;
+    workArea: string;
+    remark: string;
+    budget_time: string;
+    actual_time: string;
+    timer: ComplianceTimer;
+    priority: string;
+    billable: string;
+    assignee: string;
+    dataPath: string;
+    clients: IInsertClientDetails[];
+    subcompliance: InsertSubCompliance[];
+    //comments: [];
+}
+
+export interface InsertSubCompliance {
+    title: string;
+    status: string;
+    mode: string;
+    budget_time: string;
+    actual_time: string;
+    remark: string;
+    priority: string;
+    workArea: string;
+    complianceId?: string;
+    clients: IInsertClientDetails[];
+    //comments: [];
 }
 
 export interface UpdateSubCompliance {
@@ -92,7 +128,18 @@ export interface TimerDetail {
 }
 
 export interface IClientDetails {
-    complianceDetailId: string;
+    _id: string;
+    client_name: string;
+    assigned_to: string;
+    budget_time: string;
+    actual_time: string;
+    priority: string;
+    remark: string;
+    parentId: string;
+    status: string;
+}
+
+export interface IInsertClientDetails {
     client_name: string;
     assigned_to: string;
     budget_time: string;
@@ -103,7 +150,7 @@ export interface IClientDetails {
 }
 
 export class ClientDetail implements IClientDetails {
-    complianceDetailId: string = "";
+    _id: string = "";
     client_name: string = "";
     assigned_to: string = "";
     budget_time: string = "";
@@ -111,4 +158,5 @@ export class ClientDetail implements IClientDetails {
     priority: string = "";
     remark: string = "";
     parentId: string = "";
+    status: string = "";
 }

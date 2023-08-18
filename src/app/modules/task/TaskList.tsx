@@ -29,7 +29,7 @@ import {
     faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import Fillter from "../fillter/Fillter";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { SearchOutlined, UserOutlined, FilterTwoTone } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -80,22 +80,27 @@ const TaskList = () => {
             render: (text: string) => <></>,
         },
         {
+            title: "Title",
             dataIndex: "title",
             key: "title",
             render: (text: string) => <span className="title">{text}</span>,
             width: "20%",
         },
         {
-            title: "client",
-            dataIndex: "client",
-            key: "client",
+            title: "Client",
+            dataIndex: "",
+            key: "",
             width: "30%",
-            render: (client: string) => (
-                <span className="clientDiv">{client}</span>
+            render: (record: any) => (
+                <>
+                    <span className="clientDiv">
+                        {record.client[0].client_name}
+                    </span>
+                </>
             ),
         },
         {
-            title: "assignee",
+            title: "Assignee",
             dataIndex: "assigned_to",
             key: "assigned_to",
             width: "10%",
@@ -114,7 +119,7 @@ const TaskList = () => {
             ),
         },
         {
-            title: "calendaricon",
+            title: "Due Date",
             key: "due_date",
             dataIndex: "due_date",
             width: "10%",
@@ -132,7 +137,7 @@ const TaskList = () => {
         },
 
         {
-            title: "lefticon",
+            title: "",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
@@ -148,23 +153,24 @@ const TaskList = () => {
             },
         },
         {
-            title: "subtask",
+            title: "Sub Task",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
             render: (subtask: []) => {
                 if (subtask && subtask.length > 0) {
                     return (
-                        <div key={subtask.length} className="clientDiv">
-                            {subtask.filter((item: ISubTask) => {
-                                return (
-                                    item.status === "completed" ||
-                                    item.status === "complete"
-                                );
-                            }).length +
-                                "/" +
-                                subtask.length}
-                        </div>
+                        // <div key={subtask.length} className="clientDiv">
+                        //     {subtask.filter((item: ISubTask) => {
+                        //         return (
+                        //             item.status === "completed" ||
+                        //             item.status === "complete"
+                        //         );
+                        //     }).length +
+                        //         "/" +
+                        //         subtask.length}
+                        // </div>
+                        <span className="clientDiv">0/0</span>
                     );
                 } else {
                     return <span className="clientDiv">0/0</span>;
@@ -355,18 +361,17 @@ const TaskList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
                                 style={{
                                     fontSize: "13px",
+                                    paddingLeft: "5px",
                                 }}
                             />
                         </div>
@@ -413,7 +418,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}
@@ -638,7 +642,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}

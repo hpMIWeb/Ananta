@@ -20,6 +20,7 @@ import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
+import Login from "./modules/login/Login";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -36,44 +37,54 @@ const App = () => {
     };
 
     return (
-        <HotKeys keyMap={keyMap} handlers={handlers}>
-            <Provider store={store}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Layout />}>
-                            <Route index element={<Home />} />
-                            <Route path="about" element={<Dashboard />} />
-                            <Route path="task" element={<TaskList />} />
-                            <Route path="add-task" element={<AddTask />} />
-                            <Route
-                                path="add-multi-task"
-                                element={<AddMultipleTask />}
-                            />
-                            <Route
-                                path="compliance"
-                                element={<ComplianceList />}
-                            />
-                            <Route
-                                path="add-compliance"
-                                element={<AddCompliance />}
-                            />
-                            <Route path="approval" element={<Approval />} />
-                            <Route path="timesheet" element={<TimeSheet />} />
-                            <Route
-                                path="emp-time-sheet"
-                                element={<EmpTimeSheet />}
-                            />
-                            <Route
-                                path="client-time-sheet"
-                                element={<ClientTimeSheet />}
-                            />
-                            <Route path="Setting" element={<Setting />} />
-                            <Route path="*" element={<NoMatch />} />
-                        </Route>
-                    </Routes>
-                </BrowserRouter>
-            </Provider>
-        </HotKeys>
+        <div data-theme={"dark"}>
+            <HotKeys keyMap={keyMap} handlers={handlers}>
+                <Provider store={store}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="login" element={<Login />} />
+                            <Route path="/" element={<Layout />}>
+                                <Route element={<Home />} />
+                                <Route path="about" element={<Dashboard />} />
+                                <Route
+                                    index
+                                    path="task"
+                                    element={<TaskList />}
+                                />
+                                <Route path="add-task" element={<AddTask />} />
+                                <Route
+                                    path="add-multi-task"
+                                    element={<AddMultipleTask />}
+                                />
+                                <Route
+                                    path="compliance"
+                                    element={<ComplianceList />}
+                                />
+                                <Route
+                                    path="add-compliance"
+                                    element={<AddCompliance />}
+                                />
+                                <Route path="approval" element={<Approval />} />
+                                <Route
+                                    path="timesheet"
+                                    element={<TimeSheet />}
+                                />
+                                <Route
+                                    path="emp-time-sheet"
+                                    element={<EmpTimeSheet />}
+                                />
+                                <Route
+                                    path="client-time-sheet"
+                                    element={<ClientTimeSheet />}
+                                />
+                                <Route path="Setting" element={<Setting />} />
+                                <Route path="*" element={<NoMatch />} />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </Provider>
+            </HotKeys>
+        </div>
     );
 };
 

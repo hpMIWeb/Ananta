@@ -10,14 +10,11 @@ import {
     Row,
     Col,
     TimePicker,
-    Upload,
     Divider,
 } from "antd";
 import {
     priorityOpts,
     chargesOpts,
-    assigneeOpts,
-    clientOpts,
     modeOptions,
     workAreaOpts,
 } from "../../utilities/utility";
@@ -28,8 +25,18 @@ import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddTask as IAddTask, SubTask as ISubTask } from "./interfaces/ITask";
+import {
+    AddMultipleTask as IAddMultipleTask,
+    AddClientDetails as IAddClientDetails,
+    AddMultipleSubtask as IAddMultipleSubtask,
+    AddMultipleTaskClass,
+} from "./interfaces/ITask";
+import api from "../../utilities/apiServices";
+import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
 import "./AddTask.scss";
+import MultipleSubtask from "./MultipleSubtask";
+import { ToastContainer, toast } from "react-toastify";
+
 const { Title } = Typography;
 
 dayjs.extend(weekday);
@@ -38,17 +45,192 @@ dayjs.extend(localeData);
 const AddMultipleTask = () => {
     const navigate = useNavigate();
     const dateFormat = "YYYY-MM-DD";
+    const [clientDetails, setClientDetails] = useState<IAddClientDetails[]>([]);
+    const [clientDetailsForSubTask, setClientDetailsForSubtask] = useState<
+        IAddClientDetails[]
+    >([]);
+    const [multipleTask, setMultipleTask] = useState<IAddMultipleTask>(
+        new AddMultipleTaskClass()
+    );
+    const [subTask, setSubTask] = useState<IAddMultipleSubtask[]>();
+    const [showSubTask, setShowSubTask] = useState<boolean>(false);
+    const newClientItem = {
+        _id: "1",
+        client_name: "",
+        assigned_to: [],
+        budget_time: "00:00",
+        actual_time: "",
+        priority: "",
+        remarks: "",
+        data_path: "",
+        attachments: [],
+        status: "",
+        parentId: "",
+    } as IAddClientDetails;
+    const [form] = Form.useForm();
 
     const cancelNewTaskHandler = () => {
         navigate("/task");
     };
 
     const onSwitchSubTask = () => {
-        //setShowSubTask(!showSubTask);
+        if (clientDetails.length > 0) {
+            setShowSubTask(!showSubTask);
+        }
+    };
+
+    const validate = () => {
+        let returnFlag = true;
+
+        console.log("multipleTask", multipleTask);
+        if (
+            multipleTask.hasOwnProperty("start_date") &&
+            multipleTask.start_date === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("due_date") &&
+            multipleTask.due_date === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("mode") &&
+            multipleTask.mode === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("title") &&
+            multipleTask.title === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("client") &&
+            multipleTask.clients &&
+            multipleTask.clients.length === 0
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("workArea") &&
+            multipleTask.workArea === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("remarks") &&
+            multipleTask.remarks === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("budget_time") &&
+            multipleTask.budget_time === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("priority") &&
+            multipleTask.priority === ""
+        ) {
+            returnFlag = false;
+        } else if (
+            multipleTask.hasOwnProperty("billable") &&
+            multipleTask.billable === ""
+        ) {
+            returnFlag = false;
+        }
+
+        // Due date validation against the start date
+        const startDateValue = dayjs(multipleTask.start_date);
+        const dueDateValue = dayjs(multipleTask.due_date);
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (dueDateValue.isBefore(startDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        // Start date validation against the due date
+        if (startDateValue.isValid() && dueDateValue.isValid()) {
+            if (startDateValue.isAfter(dueDateValue)) {
+                returnFlag = false;
+            }
+        } else {
+            returnFlag = false;
+        }
+
+        return returnFlag;
     };
 
     const handleAddTask = () => {
-        // console.log(addTask);
+        if (!validate()) {
+            toast.error("Please set mandatory fields", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+
+            return false;
+        } else {
+            const clientDetailsData = JSON.parse(JSON.stringify(clientDetails));
+            const newDataWithoutId = [];
+
+            for (const obj of clientDetailsData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+
+            if (newDataWithoutId && newDataWithoutId.length > 0) {
+                multipleTask.clients = newDataWithoutId;
+            }
+
+            let newDetails = [];
+            let newDetails1 = [];
+            if (subTask && subTask.length > 0) {
+                // filter any in-correct data
+                newDetails = subTask.filter((item: IAddMultipleSubtask) => {
+                    return item.title !== "" && item.budget_time !== "";
+                });
+
+                // Convert data into required format
+                newDetails1 = newDetails.map((item: IAddMultipleSubtask) => {
+                    return {
+                        title: item.title,
+                        taskId: "",
+                        status: item.status,
+                        budget_time: item.budget_time,
+                        actual_time: "",
+                        remarks: item.remarks,
+                        clients: item.clients,
+                        priority: item.priority,
+                        comments: [],
+                    };
+                });
+
+                multipleTask.subtask = newDetails1;
+                //TODO:: @hitesh bhai
+                // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
+            }
+
+            // Save to DB
+            try {
+                api.createMultipleTask(multipleTask).then((resp: any) => {
+                    toast.success("Successfully Created Multiple Task", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    resetFormValues();
+                });
+            } catch (ex) {
+                toast.error("Technical error while creating Task", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        }
+    };
+
+    const resetFormValues = () => {
+        const fields = form.getFieldsValue();
+        Object.keys(fields).forEach((field) => {
+            form.setFieldsValue({ [field]: undefined });
+        });
+
+        setShowSubTask(false);
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -66,16 +248,24 @@ const AddMultipleTask = () => {
         }
 
         console.log(name, value);
+        setMultipleTask({
+            ...multipleTask,
+            [name]: value,
+        });
+    };
 
-        // setAddTask({
-        //     ...addTask,
-        //     [name]: value,
-        // });
+    const clientDetailsHandler = (details: IAddClientDetails[]) => {
+        setClientDetails(details);
+    };
+
+    const updateSubComponents = (subTasks: IAddMultipleSubtask[]) => {
+        setSubTask(showSubTask ? subTasks : []);
     };
 
     return (
         <>
             <div className="add-task-header">
+                <ToastContainer autoClose={25000} />
                 <div>
                     <Title level={5}>Add Multiple Tasks</Title>
                 </div>
@@ -90,28 +280,63 @@ const AddMultipleTask = () => {
                     </Button>
                 </div>
             </div>
-            <Form>
+            <Form
+                form={form}
+                initialValues={{
+                    start_date: dayjs(),
+                }}
+                id="addMultipleTaskFrm"
+            >
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <DatePicker
-                            placeholder="Start Date"
-                            name="startDate"
-                            //value={addTask.startDate}
-                            defaultValue={dayjs()}
-                            format={dateFormat}
-                            className="w100"
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "startDate");
-                            }}
-                        />
+                        <Form.Item
+                            name="start_date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select start date.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const dueDateValue =
+                                            getFieldValue("due_date");
+                                        if (
+                                            !value ||
+                                            !dueDateValue ||
+                                            dayjs(value).isBefore(dueDateValue)
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Start date should be before the due date."
+                                            )
+                                        );
+                                    },
+                                }),
+                            ]}
+                        >
+                            <DatePicker
+                                placeholder="Start Date"
+                                name="start_date"
+                                format={dateFormat}
+                                className="w100"
+                                onChange={(date, dateString) => {
+                                    inputChangeHandler(
+                                        dateString,
+                                        "start_date"
+                                    );
+                                }}
+                                onPanelChange={() => {}}
+                            />
+                        </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <DatePicker
                             placeholder="Due Date"
-                            name="dueDate"
-                            //value={addTask.dueDate}
+                            name="due_date"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "dueDate");
+                                inputChangeHandler(dateString, "due_date");
                             }}
                             className="w100"
                         />
@@ -124,12 +349,6 @@ const AddMultipleTask = () => {
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
                             }}
-                            //value={addTask.mode}
-                            onInputKeyDown={(event) => {
-                                if (event.keyCode === 9) {
-                                    console.log(event.keyCode, event);
-                                }
-                            }}
                             className="w100"
                         ></Select>
                     </Col>
@@ -138,8 +357,7 @@ const AddMultipleTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
                         <Input
                             placeholder="Task"
-                            name="task"
-                            // value={addTask.task}
+                            name="title"
                             onChange={(event) => {
                                 inputChangeHandler(event);
                             }}
@@ -150,7 +368,6 @@ const AddMultipleTask = () => {
                             allowClear
                             placeholder="Select Work Area"
                             options={workAreaOpts}
-                            // value={addTask.workArea}
                             className="w100"
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
@@ -165,7 +382,7 @@ const AddMultipleTask = () => {
                             // value={addTask.remark}
                             placeholder="Remark"
                             onChange={(event) => {
-                                inputChangeHandler(event, "remark");
+                                inputChangeHandler(event, "remarks");
                             }}
                         />
                     </Col>
@@ -174,9 +391,9 @@ const AddMultipleTask = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <TimePicker
                             placeholder="Budget Time"
-                            name="budgetTime"
+                            name="budget_time"
                             onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "budgetTime");
+                                inputChangeHandler(dateString, "budget_time");
                             }}
                             className="w100"
                             format={"HH:mm"}
@@ -187,7 +404,6 @@ const AddMultipleTask = () => {
                             allowClear
                             placeholder="Priority"
                             options={priorityOpts}
-                            // value={addTask.priority}
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
                             }}
@@ -198,7 +414,6 @@ const AddMultipleTask = () => {
                         <Select
                             allowClear
                             placeholder="Billable"
-                            // value={addTask.billable}
                             options={chargesOpts}
                             onChange={(value, event) => {
                                 inputChangeHandler(event);
@@ -207,58 +422,21 @@ const AddMultipleTask = () => {
                         ></Select>
                     </Col>
                 </Row>
-                {/* <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Client"
-                            // value={addTask.client}
-                            options={clientOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Assign Person"
-                            // value={addTask.assignee}
-                            options={assigneeOpts}
-                            onChange={(value, event) => {
-                                inputChangeHandler(event);
-                            }}
-                            // onInputKeyDown={(event) => {
-                            //     if (event.keyCode === 9) {
-                            //         console.log(event.keyCode);
-                            //     }
-                            // }}
-                            className="w100"
-                        ></Select>
-                    </Col>
-                </Row> */}
-                {/* <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-                        <Upload>
-                            <Button type="primary">Attach Files</Button>
-                        </Upload>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-                        <Input
-                            placeholder="Data Path"
-                            name="dataPath"
-                            // value={addTask.dataPath}
-                            onChange={(event) => {
-                                inputChangeHandler(event);
-                            }}
-                            className="w100"
-                        />
-                    </Col>
-                </Row> */}
-
+                <Row gutter={[8, 8]} className="form-row">
+                    <Divider />
+                </Row>
+                <MultipleTaskClientDetails
+                    updateClients={clientDetailsHandler}
+                    isAllowAdd={true}
+                    parentTitle="task"
+                    parentId={-1}
+                    scroll={{ x: 1000 }}
+                    data={[newClientItem]}
+                    isEdit={true}
+                />
+                <Row gutter={[8, 8]} className="form-row">
+                    <Divider />
+                </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col>
                         <Title level={5}>Create new task for each client</Title>
@@ -278,7 +456,11 @@ const AddMultipleTask = () => {
                         <Title level={5}>Sub Task</Title>
                     </Col>
                     <Col>
-                        <Switch onChange={onSwitchSubTask}></Switch>
+                        <Switch
+                            checked={showSubTask}
+                            onChange={onSwitchSubTask}
+                            disabled
+                        ></Switch>
                     </Col>
                     <Col>
                         <Title
@@ -289,15 +471,19 @@ const AddMultipleTask = () => {
                         </Title>
                     </Col>
                 </Row>
-
-                {/* <Row
+                <Row
                     gutter={[8, 8]}
                     className={"form-row " + (!showSubTask ? "hide" : "")}
                 >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <SubTask subComponentsHandler={updateSubComponents} />
+                        {showSubTask && (
+                            <MultipleSubtask
+                                subComponentsHandler={updateSubComponents}
+                                clientData={clientDetails}
+                            />
+                        )}
                     </Col>
-                </Row> */}
+                </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Button
                         htmlType="submit"

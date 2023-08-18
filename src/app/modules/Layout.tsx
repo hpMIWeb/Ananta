@@ -1,19 +1,6 @@
 import React, { useState } from "react";
-import {
-    Outlet,
-    BrowserRouter,
-    Router,
-    Route,
-    Link,
-    useNavigate,
-} from "react-router-dom";
-import {
-    DesktopOutlined,
-    FileOutlined,
-    PieChartOutlined,
-    TeamOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
+import { Outlet, useNavigate } from "react-router-dom";
+import { FileOutlined, TeamOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import MenuItem from "antd/es/menu/MenuItem";
@@ -37,7 +24,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem("Task Master", "/task", <TeamOutlined />, [
+    getItem("Task Master", "/", <TeamOutlined />, [
         getItem("Task", "/task"),
         getItem("Compliance", "/compliance"),
         getItem("Timesheet", "/timesheet"),
@@ -45,6 +32,7 @@ const items: MenuItem[] = [
         getItem("Settings", "/setting"),
     ]),
     getItem("Files", "12", <FileOutlined />),
+    getItem("Logout", "/login"),
 ];
 
 const LayoutComponent = () => {
@@ -57,6 +45,9 @@ const LayoutComponent = () => {
 
     const handleClick = (e: any) => {
         navigate(e.key);
+        if (e.key === "/login") {
+            localStorage.removeItem("authtoken");
+        }
     };
 
     return (

@@ -4,10 +4,12 @@ import {
     SaveComment,
     SubTask,
     UpdateSubTask,
+    AddMultipleTask,
 } from "../modules/task/interfaces/ITask";
 import { getLocalStorage } from "./utility";
 import {
-    AddCompliance,
+    InsertCompliance,
+    Compliance,
     SubCompliance,
     SaveComplianceComment,
     UpdateSubCompliance,
@@ -16,9 +18,12 @@ import {
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
 import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
+import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
-const apiURL = "http://localhost:8005/api/v1/";
+//const apiURL = "http://localhost:8005/api/v1/";
+//const apiURL = "https://api.prod.nccountant.com/api/v1/";
+const apiURL = "https://api.staging.nccountant.com/api/v1/";
 
 const instance = axios.create({
     baseURL: apiURL,
@@ -32,6 +37,18 @@ const instance = axios.create({
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+    login: (loginDetail: ILogin) =>
+        instance({
+            method: "POST",
+            url: "admin/login",
+            data: loginDetail,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
     getAllTask: (queryString: string) =>
         instance({
             method: "GET",
@@ -39,8 +56,6 @@ export default {
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
-                    console.log("all task", json.payload);
-                    console.log("all task", json.payload);
                     return json.payload;
                 },
             ],
@@ -63,7 +78,7 @@ export default {
                 billable: task.billable,
                 client: task.client,
                 assigned_to: task.assigned_to,
-                datapath: " ",
+                datapath: task.datapath,
                 subtask: task.subtask,
                 attachments: [],
                 comments: [],
@@ -86,11 +101,17 @@ export default {
                 },
             ],
         }),
-    createMultipleTask: (tasks: AddTask[]) =>
+    createMultipleTask: (multipleTask: AddMultipleTask) =>
         instance({
             method: "POST",
             url: "task/create-multiple-task",
-            data: tasks,
+            data: multipleTask,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
         }),
     addTaskComment: (comment: SaveComment) =>
         instance({
@@ -143,7 +164,7 @@ export default {
                 },
             ],
         }),
-    createCompliance: (compliance: AddCompliance) =>
+    createCompliance: (compliance: InsertCompliance) =>
         instance({
             method: "POST",
             url: "compliance/create-compliance",
@@ -173,14 +194,15 @@ export default {
                 },
             ],
         }),
-    updateCompliance: (complianceId: string, updateCompliance: AddCompliance) =>
+    updateCompliance: (complianceId: string, updateCompliance: Compliance) =>
         instance({
             method: "PUT",
             url: "compliance/update-compliance/id=" + complianceId,
             data: updateCompliance,
             transformResponse: [
                 function (data) {
-                    return data;
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),

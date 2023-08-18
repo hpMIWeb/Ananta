@@ -4,19 +4,7 @@ import { RootState } from "../../states/store";
 import { setCounter } from "../../states/app";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { hello, counter } = useSelector((state: RootState) => state.app);
-
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch(setCounter());
-    }, 1000);
-  }, [counter, dispatch]);
-  return (
-    <p>
-      Home , {hello} {counter}
-    </p>
-  );
+    return <></>;
 };
 
 export default Home;

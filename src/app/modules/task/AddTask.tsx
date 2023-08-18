@@ -75,7 +75,7 @@ const AddTask = () => {
 
         setAddTask({
             ...addTask,
-            [name]: value,
+            [name]: event.name === "assigned_to" ? [value] : value,
         });
     };
 
@@ -93,7 +93,11 @@ const AddTask = () => {
             returnFlag = false;
         } else if (addTask.hasOwnProperty("title") && addTask.title === "") {
             returnFlag = false;
-        } else if (addTask.hasOwnProperty("client") && addTask.client === "") {
+        } else if (
+            addTask.hasOwnProperty("client") &&
+            addTask.client &&
+            addTask.client.length === 0
+        ) {
             returnFlag = false;
         } else if (
             addTask.hasOwnProperty("workArea") &&
@@ -122,7 +126,8 @@ const AddTask = () => {
             returnFlag = false;
         } else if (
             addTask.hasOwnProperty("assigned_to") &&
-            addTask.assigned_to === ""
+            addTask.assigned_to &&
+            addTask.assigned_to.length === 0
         ) {
             returnFlag = false;
         }

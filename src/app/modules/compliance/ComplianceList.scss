@@ -99,3 +99,11 @@ table {
         margin: 0 !important;
     }
 }
+
+.list-short-title {
+    display: inline-block;
+    white-space: nowrap;
+    width: 20rem;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}

@@ -14,7 +14,7 @@ import {
     Divider,
     Table,
 } from "antd";
-import AddSubCompliance from "./AddSubCompliance";
+
 import {
     priorityOpts,
     chargesOpts,
@@ -27,27 +27,22 @@ import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
-    AddCompliance as IAddCompliance,
+    InsertCompliance as IInsertCompliance,
     SubCompliance as ISubCompliance,
     IClientDetails,
     ComplianceTimer,
     TimerOpts,
+    InsertSubCompliance as IInsertSubCompliance,
 } from "./interfaces/ICompliance";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
+import { nanoid } from "@reduxjs/toolkit";
+import AddSubCompliance from "./AddSubCompliance";
 
 const { Title } = Typography;
-const dataSource = [
-    {
-        key: "1",
-        action: "Mike",
-        age: 32,
-        address: "10 Downing Street",
-    },
-];
 const AddCompliance = () => {
     const dateFormat = "YYYY-MM-DD";
     const navigate = useNavigate();
@@ -56,7 +51,7 @@ const AddCompliance = () => {
 
     // local states
     const [showSubCompliance, setShowSubCompliance] = useState<boolean>(false);
-    const [addCompliance, setAddCompliance] = useState<IAddCompliance>({
+    const [addCompliance, setAddCompliance] = useState<IInsertCompliance>({
         status: "pending",
         start_date: dayjs().format("YYYY-MM-DD"),
         title: "",
@@ -68,11 +63,13 @@ const AddCompliance = () => {
         mode: "",
         due_date: "",
         workArea: "",
-    } as IAddCompliance);
+    } as IInsertCompliance);
     const [complianceDetails, setComplianceDetails] = useState<
         IClientDetails[]
     >([]);
-    const [subCompliance, setSubCompliance] = useState<ISubCompliance[]>();
+
+    const [subCompliance, setSubCompliance] =
+        useState<IInsertSubCompliance[]>();
 
     // Handllers
     const onSwitchSubCompliance = () => {
@@ -96,8 +93,6 @@ const AddCompliance = () => {
             value = event.value;
         }
 
-        console.log("Compliance Remark");
-
         setAddCompliance({
             ...addCompliance,
             [name]: value,
@@ -106,18 +101,12 @@ const AddCompliance = () => {
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add - ", details);
-        if (details) {
-            const newDetails = details.filter((clientItem: IClientDetails) => {
-                return clientItem.client_name !== "";
-            });
-            setComplianceDetails(newDetails);
-        }
+        setComplianceDetails(details);
     };
 
     const validate = () => {
         let returnFlag = true;
 
-        console.log(addCompliance.start_date);
         if (
             addCompliance.hasOwnProperty("start_date") &&
             addCompliance.start_date === ""
@@ -186,87 +175,86 @@ const AddCompliance = () => {
         }
 
         // Clients validation
-        console.log(complianceDetails);
         if (complianceDetails === undefined || complianceDetails.length === 0) {
             returnFlag = false;
         }
 
-        console.log(returnFlag);
         return returnFlag;
     };
 
     const handleAddCompliance = () => {
         if (!validate()) {
-            toast.error("Please set mandatory fields", {
+            const errorMessage =
+                complianceDetails && complianceDetails.length === 0
+                    ? "Please select at least one Client."
+                    : "Please set mandatory fields";
+
+            toast.error(errorMessage, {
                 position: toast.POSITION.TOP_RIGHT,
             });
             return;
         } else {
-            // // Read all existing task from `localStorage`
-            // const complianceList = localStorage.getItem("compliance");
-            // // set timer
-            // const timer = {} as ComplianceTimer;
-            // timer.state = TimerOpts.stop;
-            // timer.time = 0;
-            // addCompliance.timer = timer;
-            // addCompliance.actual_time = addCompliance.budget_time;
-            // let allCompliance =
-            //     complianceList && complianceList.length > 0
-            //         ? JSON.parse(complianceList)
-            //         : [];
-            // addCompliance._id =
-            //     allCompliance && allCompliance.length > 0
-            //         ? allCompliance.length + 1
-            //         : 1;
-            // console.log(addCompliance);
-            // allCompliance.push(addCompliance);
-            // console.log("ALL COMPLIANCE", allCompliance);
-            // localStorage.setItem("compliance", JSON.stringify(allCompliance));
-
             const complianceData = JSON.parse(
                 JSON.stringify(complianceDetails)
             );
-            if (complianceData && complianceData.length > 0) {
-                addCompliance.clients = complianceData;
+
+            const newDataWithoutId = [];
+            for (const obj of complianceData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
             }
 
-            addCompliance.subcompliance =
-                subCompliance && subCompliance.length > 0
-                    ? subCompliance.map((item: ISubCompliance) => {
-                          return {
-                              _id: "",
-                              title: item.title,
-                              status: item.status,
-                              mode: item.status,
-                              budget_time: item.budget_time,
-                              actual_time: "",
-                              remark: item.remark,
-                              priority: item.priority,
-                              workArea: item.workArea,
-                              clients: item.clients,
-                              comments: [],
-                          };
-                      })
-                    : [];
+            if (newDataWithoutId && newDataWithoutId.length > 0) {
+                addCompliance.clients = newDataWithoutId;
+            }
 
-            setAddCompliance(addCompliance);
+            let newDetails = [];
+            let newDetails1 = [];
+            console.log("Add time subCompliance", subCompliance);
+            if (subCompliance && subCompliance.length > 0) {
+                // filter any in-correct data
+                newDetails = subCompliance.filter(
+                    (item: IInsertSubCompliance) => {
+                        return item.title !== "" && item.budget_time !== "";
+                    }
+                );
 
-            console.log(
-                "before same subCompliance - ",
-                subCompliance,
-                addCompliance
-            );
+                console.log("Add time newDetails", newDetails);
+                // Convert data into required format
+                newDetails1 = newDetails.map((item: IInsertSubCompliance) => {
+                    console.log("item=>", item);
+                    return {
+                        title: item.title,
+                        status: item.status,
+                        mode: item.status,
+                        budget_time: item.budget_time,
+                        actual_time: "",
+                        remark: item.remark,
+                        priority: item.priority,
+                        workArea: item.workArea,
+                        clients: item.clients,
+                        comments: [],
+                    };
+                });
 
-            // Save to DB
+                addCompliance.subcompliance = newDetails1;
+                //TODO:: @hitesh bhai
+                // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
+            }
+
             try {
                 api.createCompliance(addCompliance).then((resp: any) => {
                     const fields = form.getFieldsValue();
                     Object.keys(fields).forEach((field) => {
                         form.setFieldsValue({ [field]: undefined });
                     });
+                    setSubCompliance([]);
+                    setComplianceDetails([]);
                     toast.success("Successfully Created Compliance", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
+                    navigate("/add-compliance");
                 });
             } catch (ex) {
                 toast.error("Technical error while creating Compliance", {
@@ -276,15 +264,10 @@ const AddCompliance = () => {
         }
     };
 
-    const updateSubComponents = (subCompliance: ISubCompliance[]) => {
+    const updateSubComponents = (subCompliance: IInsertSubCompliance[]) => {
+        console.log("updateSubComponents showSubCompliance", showSubCompliance);
+        console.log("updateSubComponents subCompliance", subCompliance);
         setSubCompliance(showSubCompliance ? subCompliance : []);
-    };
-
-    const handleInputKeyDown = () => {
-        if (selectModeRef.current) {
-            // selectModeRef.current.blur();
-            console.log(selectModeRef.current);
-        }
     };
 
     return (
@@ -468,16 +451,6 @@ const AddCompliance = () => {
                                 }}
                                 value={addCompliance.mode}
                                 showSearch={true}
-                                onInputKeyDown={(event) => {
-                                    if (event.keyCode === 9) {
-                                        // console.log(event.keyCode, event);
-                                        // inputChangeHandler(event);
-                                        handleInputKeyDown();
-                                    }
-                                }}
-                                // onBlur={(event) => {
-                                //     console.log("onBlur", event.target);
-                                // }}
                                 className="w100"
                             ></Select>
                         </Form.Item>
@@ -540,7 +513,7 @@ const AddCompliance = () => {
                             ]}
                         >
                             <ReactQuill
-                                id={"compliance_" + addCompliance._id}
+                                id={"compliance_" + nanoid()}
                                 theme="snow"
                                 value={addCompliance.remark}
                                 placeholder="Compliance Remark"
@@ -629,7 +602,7 @@ const AddCompliance = () => {
                             updateClients={complianceDetailsHandler}
                             isAllowAdd={true}
                             parentTitle="compliance"
-                            parentId={addCompliance._id}
+                            parentId={-1}
                             scroll={{ x: 1000 }}
                             data={[]}
                             isEdit={true}
@@ -647,16 +620,24 @@ const AddCompliance = () => {
                         <Switch onChange={onSwitchSubCompliance}></Switch>
                     </Col>
                 </Row>
-                <Row
-                    gutter={[8, 8]}
-                    className={"form-row " + (!showSubCompliance ? "hide" : "")}
-                >
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <AddSubCompliance
-                            subComponentsHandler={updateSubComponents}
-                        />
-                    </Col>
-                </Row>
+                {showSubCompliance && (
+                    <Row
+                        gutter={[8, 8]}
+                        className={
+                            "form-row " + (!showSubCompliance ? "hide" : "")
+                        }
+                    >
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 24 }}
+                        >
+                            <AddSubCompliance
+                                subComponentsHandler={updateSubComponents}
+                            />
+                        </Col>
+                    </Row>
+                )}
                 <Row gutter={[8, 8]} className="form-row">
                     <Button
                         htmlType="submit"

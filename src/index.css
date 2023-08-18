@@ -1,3 +1,158 @@
 body {
-  margin: 0;
+    margin: 0;
+    font-family: "Poppins", sans-serif !important;
+    background-color: #edf2f9 !important;
+}
+span {
+    font-family: "Poppins", sans-serif !important;
+}
+
+.description-label {
+    font-size: 13.33px;
+    line-height: 18.66px;
+}
+
+.semiBold {
+    font-weight: 600;
+    line-height: 19.59px;
+}
+
+.fs--1 {
+    font-size: 0.8333333333rem !important;
+}
+
+.feature-description-list {
+    margin: 7px 0;
+    li {
+        line-height: 19.6px;
+        font-weight: 600 !important;
+    }
+}
+
+.rowPadding > * {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+.success-text {
+    color: var(--falcon-success-rgb) !important;
+}
+.promocode-link {
+    color: #2c7be5;
+    cursor: pointer;
+    &:hover {
+        color: #2362b7;
+        text-decoration: underline;
+    }
+}
+
+p {
+    color: var(--falcon-body-color);
+    line-height: 1.4;
+    font-size: 0.875rem;
+    font-family: Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+        Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+        Segoe UI Symbol;
+}
+
+.inputSuffix {
+    background-color: var(--falcon-200);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--falcon-input-color);
+    padding: 3px 10px;
+    position: absolute;
+    right: 0px;
+    border-left: 1px solid var(--falcon-input-border-color);
+    font-family: Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+        Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+        Segoe UI Symbol;
+}
+
+:root {
+    --primary-blue: #2c7be5;
+    --secondary-blue: #2362b7;
+    --text-color-hover: #232e3c;
+    --text-label: #4d5969;
+    --light-blue: #edf2f9;
+    --white: #fff;
+    --light-grey: #5e6e82;
+    --light-grey-secondary-hover: #b6c1d2;
+    --light-grey-secondary: #d8e2ef;
+    --input-placeholder: #bbc2d8;
+    --card-label: #344050;
+    --card-background: #f9fafd;
+    --falcon-navbar-vertical-link-hover-color: #232e3c;
+    --falcon-input-bg: #fff;
+    --falcon-200: #edf2f9;
+    --falcon-400: #b6c1d2;
+    --falcon-input-border-color: #d8e2ef;
+    --falcon-input-placeholder-color: #b6c1d2;
+    --falcon-navbar-light-color: rgba(0, 0, 0, 0.55);
+    --falcon-card-bg: #fff;
+    --falcon-border-color: #d8e2ef;
+    --falcon-form-check-input-border-color: #b6c1d2;
+    --falcon-body-color: #5e6e82;
+    --falcon-input-color: #344050;
+    --falcon-soft-primary: #e6effc;
+    --falcon-900-rgb: 52, 64, 80;
+    --falcon-table-border-color: #edf2f9;
+    --falcon-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    --falcon-light-rgb: #f9fafd;
+    --falcon-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1),
+        0 3px 6px 0 rgba(0, 0, 0, 0.07);
+    --falcon-card-border-color: rgba(0, 0, 0, 0.125);
+    --falcon-thumbnail-bg: #fff;
+    --falcon-success-rgb: #00d27a;
+    --falcon-headings-color: #344050;
+    --falcon-pagination-border-color: #edf2f9;
+    --falcon-pagination-color: #000;
+    --falcon-pagination-bg: #fff;
+    --falcon-btn-falcon-box-shadow: 0 0 0 1px rgba(43, 45, 80, 0.1),
+        0 2px 5px 0 rgba(43, 45, 80, 0.08), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07),
+        0 1px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+    --primary-blue: #2c7be5;
+    --secondary-blue: #2362b7;
+    --text-color-hover: #232e3c;
+    --text-label: #b6c1d2;
+    --light-blue: #0b1727;
+    --white: #121e2d;
+    --light-grey: #9da9bb;
+    --light-grey-secondary-hover: #4d5969;
+    --light-grey-secondary: #344050;
+    --input-placeholder: #bbc2d8;
+    --card-label: #d8e2ef;
+    --card-background: #0b1727;
+    --falcon-navbar-vertical-link-hover-color: #edf2f9;
+    --falcon-input-bg: #0b1727;
+    --falcon-200: #232e3c;
+    --falcon-400: #4d5969;
+    --falcon-input-border-color: #344050;
+    --falcon-input-placeholder-color: #344050;
+    --falcon-navbar-light-color: rgba(255, 255, 255, 0.55);
+    --falcon-card-bg: #121e2d;
+    --falcon-border-color: rgba(255, 255, 255, 0.05);
+    --falcon-form-check-input-border-color: #344050;
+    --falcon-body-color: #9da9bb;
+    --falcon-input-color: #d8e2ef;
+    --falcon-soft-primary: #0d2545;
+    --falcon-900-rgb: 216, 226, 239;
+    --falcon-table-border-color: #0b1727;
+    --falcon-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    --falcon-light-rgb: #162231;
+    --falcon-box-shadow: 0 7px 14px 0 rgba(3, 12, 51, 0.15),
+        0 3px 6px 0 rgba(0, 0, 0, 0.2);
+    --falcon-card-border-color: rgba(255, 255, 255, 0.125);
+    --falcon-thumbnail-bg: #232e3c;
+    --falcon-success-rgb: #00d27a;
+    --falcon-headings-color: #d8e2ef;
+    --falcon-pagination-border-color: #232e3c;
+    --falcon-pagination-color: #fff;
+    --falcon-pagination-bg: #0b1727;
+    --falcon-btn-falcon-box-shadow: 0 0 0 1px rgba(0, 8, 19, 0.3),
+        0 2px 5px 0 rgba(0, 13, 33, 0.5), 0 1px 1.5px 0 rgba(0, 8, 1, 0.48),
+        0 1px 2px 0 rgba(0, 8, 1, 0.4);
 }

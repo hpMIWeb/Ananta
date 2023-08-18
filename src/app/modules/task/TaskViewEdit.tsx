@@ -59,6 +59,7 @@ const TaskViewEdit = (props: any) => {
     const [updateTask, setUpdateTask] = useState<AddTask>(
         props.tableRowSelected
     );
+
     const [taskComments, setTaskComments] = useState<Comment>(
         props.tableRowSelected.comments
     );
@@ -81,8 +82,14 @@ const TaskViewEdit = (props: any) => {
     }, [props.tableRowSelected]);
 
     const updateCurrentTask = (subTask: SubTask) => {
-        // TODO: need to fix  - multiple subtask been added with below condition
-        setTaskSubTasks([...taskSubTasks, subTask]);
+        if (subTask && taskSubTasks) {
+            const newData = taskSubTasks.map((subTaskItem: SubTask) =>
+                subTaskItem && subTaskItem._id === subTask._id
+                    ? subTask
+                    : subTaskItem
+            );
+            setTaskSubTasks(newData);
+        }
     };
 
     const updateTaskList = (subTasks: SubTask[]) => {
@@ -143,10 +150,16 @@ const TaskViewEdit = (props: any) => {
         taskUpdate.status = isStop ? Status.completed : Status.in_progress;
         if (!isRunning) taskUpdate.actual_time = time;
 
+        setUpdateTask({
+            ...updateTask,
+            ["status"]: taskUpdate.status,
+        });
+
         api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
             toast.success("Successfully Updated Task", {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            console.log("updateTask", updateTask);
             if (props.handleListUpdate) props.handleListUpdate();
         });
     };
@@ -170,10 +183,15 @@ const TaskViewEdit = (props: any) => {
         taskUpdate.status = value;
 
         if (value !== "" && value !== undefined) {
+            setUpdateTask({
+                ...updateTask,
+                ["status"]: taskUpdate.status,
+            });
             api.updateTask(updateTask._id, taskUpdate).then((resp: any) => {
                 toast.success("Successfully Updated Task", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+
                 if (props.handleListUpdate) props.handleListUpdate();
             });
         } else {
@@ -286,7 +304,10 @@ const TaskViewEdit = (props: any) => {
                     className="task-header-cell"
                     style={{ flex: props.fullScreenMode ? 3 : 4 }}
                 >
-                    {subTaskItem.client}
+                    {subTaskItem &&
+                        subTaskItem.client &&
+                        subTaskItem.client.length > 0 &&
+                        subTaskItem.client[0].client_name}
                 </div>
                 {props.fullScreenMode &&
                     index.toString() !== currentCollapse && (
@@ -396,9 +417,17 @@ const TaskViewEdit = (props: any) => {
                             sm={{ span: 24 }}
                             md={{ span: 4 }}
                         >
-                            <Title level={4} style={{ textAlign: "right" }}>
-                                {capitalize(updateTask.client)}
-                            </Title>
+                            {updateTask.client.length > 0 ? (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    {capitalize(
+                                        updateTask.client[0].client_name
+                                    )}
+                                </Title>
+                            ) : (
+                                <Title level={4} style={{ textAlign: "right" }}>
+                                    No client available
+                                </Title>
+                            )}
                         </Col>
                     )}
                     <Col
@@ -740,7 +769,16 @@ const TaskViewEdit = (props: any) => {
                             md={{ span: props.fullScreenMode ? 4 : 12 }}
                         >
                             <span className="dataLabel">Client</span>
-                            <div>{<b>{updateTask.client.trim()}</b>}</div>
+                            <div>
+                                {
+                                    <b>
+                                        {updateTask.client &&
+                                        updateTask.client.length > 0
+                                            ? updateTask.client[0].client_name.trim()
+                                            : ""}
+                                    </b>
+                                }
+                            </div>
                         </Col>
                     )}
                 </Row>

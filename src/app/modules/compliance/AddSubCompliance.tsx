@@ -22,6 +22,7 @@ import ComplianceDetails from "./ComplianceDetails";
 import Stopwatch from "../../components/Stockwatch/Stopwatch";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
+import { nanoid } from "@reduxjs/toolkit";
 dayjs.extend(customParseFormat);
 
 const AddSubCompliance = (props: any) => {
@@ -88,12 +89,16 @@ const AddSubCompliance = (props: any) => {
             return item;
         });
 
+        console.log("updatedCompliance", updatedCompliance);
         setSubCompliance(updatedCompliance);
     };
 
     const complianceDetailsHandler = (details: IClientDetails[]) => {
         console.log("client details at Add SubCompliance - ", details);
+        console.log("subCompliances -=-=-=-=-=", subCompliances);
         const matchedItem = subCompliances.find((item: ISubCompliance) => {
+            console.log("item", item);
+            console.log("details[0].parentId", details[0].parentId);
             return (
                 item._id ===
                 (details && details.length > 0 && details[0].parentId)
@@ -101,9 +106,22 @@ const AddSubCompliance = (props: any) => {
         });
 
         if (matchedItem) {
-            matchedItem.clients = details;
-            setComplianceDetails(details);
+            let newDataWithoutId = [];
+            //TODO: need with API team _id Parameter discuss
+            const complianceData = JSON.parse(JSON.stringify(details));
+            for (const obj of complianceData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+            matchedItem.clients = newDataWithoutId;
+            setComplianceDetails(newDataWithoutId);
             //setSubCompliance([...subCompliances, matchedItem]);
+
+            if (props.subComponentsHandler) {
+                console.log("newDataWithoutId", newDataWithoutId);
+                props.subComponentsHandler(newDataWithoutId);
+            }
         }
     };
 

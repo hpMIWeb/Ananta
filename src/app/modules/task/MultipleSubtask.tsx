@@ -21,11 +21,21 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubTask as ISubTask } from "./interfaces/ITask";
 import "./subTask.scss";
+import MultipleTaskClientDetails from "./MultipleTaskClientDetails";
+import {
+    AddMultipleTask as IAddMultipleTask,
+    AddClientDetails as IAddClientDetails,
+    AddMultipleSubtask as IAddMultipleSubtask,
+} from "./interfaces/ITask";
 
-const SubTask = (props: any) => {
+import { nanoid } from "@reduxjs/toolkit";
+
+const MultipleSubtask = (props: any) => {
     const subTaskObj = { _id: "1", status: "Pending" } as ISubTask;
     const [subTasks, setSubTasks] = useState<ISubTask[]>([subTaskObj]);
-
+    const [clients, setClients] = useState<IAddClientDetails[]>(
+        props.clientData
+    );
     const addNewTask = () => {
         subTaskObj._id = (subTasks.length + 1).toString();
         setSubTasks([...subTasks, subTaskObj]);
@@ -38,6 +48,38 @@ const SubTask = (props: any) => {
                 return task._id !== item._id;
             });
             setSubTasks(tasks);
+        }
+    };
+
+    const clientDetailsHandler = (details: IAddClientDetails[]) => {
+        console.log("subTasks", subTasks);
+        console.log("details", details);
+        const matchedItem = subTasks.find((item: any) => {
+            return (
+                item._id ===
+                (details && details.length > 0 && details[0].parentId)
+            );
+        });
+        console.log("matchedItem", matchedItem);
+        if (matchedItem) {
+            let newDataWithoutId = [];
+            //TODO: need with API team _id Parameter discuss
+            const clientData = JSON.parse(JSON.stringify(details));
+
+            for (const obj of clientData) {
+                const newObj = { ...obj }; // Create a shallow copy of the object
+                delete newObj._id;
+                newDataWithoutId.push(newObj);
+            }
+            matchedItem.client = newDataWithoutId;
+            console.log("matchedItem", matchedItem);
+
+            setClients(newDataWithoutId);
+
+            if (props.subComponentsHandler) {
+                console.log("newDataWithoutId", newDataWithoutId);
+                props.subComponentsHandler(newDataWithoutId);
+            }
         }
     };
 
@@ -62,16 +104,29 @@ const SubTask = (props: any) => {
 
         const updatedTasks = [...subTasks].map((item: any) => {
             if (item._id === subTask._id) {
-                item[name] = event.name === "assigned_to" ? [value] : value;
+                item[name] = value;
             }
             return item;
         });
 
+        console.log("Sub task OBj ", updatedTasks);
         setSubTasks(updatedTasks);
     };
 
     useEffect(() => {
-        console.log(subTasks);
+        let new_Id = 0;
+        const updatedData = props.clientData.map((item: IAddClientDetails) => {
+            console.log("props.parentId", props.parentId);
+            new_Id++;
+            return {
+                ...item,
+                _id: 1, // Generate a unique Nano ID
+                parentId: props.parentId ?? -1,
+            };
+        });
+        console.log("updatedData", updatedData);
+        setClients(updatedData);
+
         if (props.subComponentsHandler) {
             props.subComponentsHandler(subTasks);
         }
@@ -188,14 +243,11 @@ const SubTask = (props: any) => {
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <Row
-                                gutter={[8, 8]}
-                                className="form-row add-form-row"
-                            >
+                            <Row gutter={[8, 8]} className="form-row">
                                 <Col
                                     xs={{ span: 24 }}
                                     sm={{ span: 24 }}
-                                    md={{ span: 24 }}
+                                    md={{ span: 18 }}
                                 >
                                     <Form.Item name={"remark_" + index}>
                                         <ReactQuill
@@ -212,75 +264,10 @@ const SubTask = (props: any) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                            </Row>
-                            <Row
-                                gutter={[8, 10]}
-                                className="form-row add-form-row"
-                            >
                                 <Col
                                     xs={{ span: 24 }}
                                     sm={{ span: 24 }}
-                                    md={{ span: 8 }}
-                                >
-                                    <Form.Item
-                                        name={"client_" + index}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please select client.",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            allowClear
-                                            showSearch
-                                            placeholder="Client"
-                                            options={clientOpts}
-                                            onChange={(value, event) => {
-                                                inputChangeHandler(
-                                                    event,
-                                                    subTaskItem
-                                                );
-                                            }}
-                                            className="w100"
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 8 }}
-                                >
-                                    <Form.Item
-                                        name={"assigned_to_" + index}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please select assignee.",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            allowClear
-                                            showSearch
-                                            placeholder="Assign Person"
-                                            options={assigneeOpts}
-                                            onChange={(value, event) => {
-                                                inputChangeHandler(
-                                                    event,
-                                                    subTaskItem
-                                                );
-                                            }}
-                                            className="w100"
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 8 }}
+                                    md={{ span: 4 }}
                                 >
                                     <Form.Item
                                         name={"priority_" + index}
@@ -307,38 +294,20 @@ const SubTask = (props: any) => {
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <Row
-                                gutter={[8, 8]}
-                                className="form-row add-form-row"
-                            >
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 4 }}
-                                >
-                                    <Upload>
-                                        <Button type="primary">
-                                            Attach Files
-                                        </Button>
-                                    </Upload>
-                                </Col>
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 20 }}
-                                >
-                                    <Input
-                                        placeholder="Data Path"
-                                        name="dataPath"
-                                        onChange={(event) => {
-                                            inputChangeHandler(
-                                                event,
-                                                subTaskItem
-                                            );
-                                        }}
-                                        className="w100"
-                                    />
-                                </Col>
+                            <Row gutter={[8, 8]} className="form-row">
+                                <Divider />
+                            </Row>
+                            <MultipleTaskClientDetails
+                                updateClients={clientDetailsHandler}
+                                isAllowAdd={true}
+                                scroll={{ x: 1000 }}
+                                parentTitle={"sub_task"}
+                                parentId={subTaskItem._id}
+                                data={clients}
+                                isEdit={true}
+                            />
+                            <Row gutter={[8, 8]} className="form-row">
+                                <Divider />
                             </Row>
                         </div>
                     </div>
@@ -357,4 +326,4 @@ const SubTask = (props: any) => {
     );
 };
 
-export default SubTask;
+export default MultipleSubtask;
