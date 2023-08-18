@@ -92,7 +92,7 @@ const Fillter = (prop: any) => {
                     <Select
                         allowClear
                         showSearch
-                        placeholder="Select a client"
+                        placeholder="Client"
                         options={clientOpts}
                         value={clientValue}
                         className="w100 border-bottom"

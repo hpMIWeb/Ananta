@@ -44,9 +44,13 @@ const App = () => {
                         <Routes>
                             <Route path="login" element={<Login />} />
                             <Route path="/" element={<Layout />}>
-                                <Route index element={<Home />} />
+                                <Route element={<Home />} />
                                 <Route path="about" element={<Dashboard />} />
-                                <Route path="task" element={<TaskList />} />
+                                <Route
+                                    index
+                                    path="task"
+                                    element={<TaskList />}
+                                />
                                 <Route path="add-task" element={<AddTask />} />
                                 <Route
                                     path="add-multi-task"

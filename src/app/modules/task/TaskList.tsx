@@ -29,7 +29,7 @@ import {
     faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import Fillter from "../fillter/Fillter";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { SearchOutlined, UserOutlined, FilterTwoTone } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -361,18 +361,17 @@ const TaskList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
                                 style={{
                                     fontSize: "13px",
+                                    paddingLeft: "5px",
                                 }}
                             />
                         </div>
