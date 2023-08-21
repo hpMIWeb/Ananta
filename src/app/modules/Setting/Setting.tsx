@@ -249,7 +249,7 @@ const Setting = () => {
         <div className="main">
             <div>
                 <div>
-                    <Title level={5}>Approvals</Title>
+                    <Title level={5}>Settings</Title>
                 </div>
                 <ToastContainer autoClose={25000} />
                 <div className="header">

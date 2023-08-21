@@ -62,7 +62,15 @@ const SubTask = (props: any) => {
 
         const updatedTasks = [...subTasks].map((item: any) => {
             if (item._id === subTask._id) {
-                item[name] = event.name === "assigned_to" ? [value] : value;
+                if (name === "assigned_to") {
+                    const transformedValues = event.map(
+                        (item: any) => item.value
+                    );
+                    item[name] = transformedValues;
+                    setSubTasks({ ...subTasks, [name]: transformedValues });
+                } else {
+                    item[name] = value;
+                }
             }
             return item;
         });
@@ -140,9 +148,15 @@ const SubTask = (props: any) => {
                                                 message:
                                                     "Please select budget time.",
                                             },
+                                            {
+                                                pattern:
+                                                    /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                                message:
+                                                    "Please enter a valid time in the format HH:mm.",
+                                            },
                                         ]}
                                     >
-                                        <TimePicker
+                                        {/* <TimePicker
                                             placeholder="Time"
                                             name="budget_time"
                                             onChange={(date, dateString) => {
@@ -153,6 +167,17 @@ const SubTask = (props: any) => {
                                                 );
                                             }}
                                             format={"HH:mm"}
+                                            className="w100"
+                                        /> */}
+                                        <Input
+                                            placeholder="Budget Time"
+                                            name="budget_time"
+                                            onChange={(event) => {
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
                                             className="w100"
                                         />
                                     </Form.Item>
@@ -270,9 +295,11 @@ const SubTask = (props: any) => {
                                             onChange={(value, event) => {
                                                 inputChangeHandler(
                                                     event,
-                                                    subTaskItem
+                                                    subTaskItem,
+                                                    "assigned_to"
                                                 );
                                             }}
+                                            mode="multiple"
                                             className="w100"
                                         />
                                     </Form.Item>
