@@ -531,11 +531,16 @@ const AddCompliance = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Please select budget time.",
+                                    message: "Please enter budget time.",
+                                },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
                                 },
                             ]}
                         >
-                            <TimePicker
+                            {/* <TimePicker
                                 placeholder="Budget Time"
                                 name="budget_time"
                                 onChange={(date, dateString) => {
@@ -546,6 +551,14 @@ const AddCompliance = () => {
                                 }}
                                 className="w100"
                                 format={"HH:mm"}
+                            /> */}
+                            <Input
+                                placeholder="Budget Time"
+                                name="budget_time"
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
                             />
                         </Form.Item>
                     </Col>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Select, TimePicker, Table, Form, Popconfirm } from "antd";
+import { Select, TimePicker, Table, Form, Popconfirm, Input } from "antd";
 import {
     priorityOpts,
     assigneeOpts,
@@ -153,6 +153,7 @@ const MultipleTaskClientDetails = (props: any) => {
                     <Select
                         allowClear
                         showSearch
+                        mode="multiple"
                         placeholder="Assign Person"
                         options={assigneeOpts}
                         className="w100"
@@ -184,9 +185,14 @@ const MultipleTaskClientDetails = (props: any) => {
                                 );
                             },
                         },
+                        {
+                            pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                            message:
+                                "Please enter a valid time in the format HH:mm.",
+                        },
                     ]}
                 >
-                    <TimePicker
+                    {/* <TimePicker
                         placeholder="Budget Time"
                         name="budget_time"
                         className="w100"
@@ -195,6 +201,14 @@ const MultipleTaskClientDetails = (props: any) => {
                             inputChangeHandler(dateString, "budget_time");
                         }}
                         defaultValue={dayjs(record.budget_time, "HH:mm")}
+                    /> */}
+                    <Input
+                        placeholder="Budget Time"
+                        name="budget_time"
+                        onChange={(event) => {
+                            inputChangeHandler(event);
+                        }}
+                        className="w100"
                     />
                 </Form.Item>
             ),
@@ -286,7 +300,10 @@ const MultipleTaskClientDetails = (props: any) => {
                         break;
                     }
                     case "assigned_to": {
-                        selectedTableRow.assigned_to = [value];
+                        const transformedValues = event.map(
+                            (item: any) => item.value
+                        );
+                        selectedTableRow.assigned_to = transformedValues;
                         break;
                     }
                     case "budget_time": {

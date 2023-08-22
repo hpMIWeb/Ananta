@@ -599,11 +599,12 @@ const TaskViewEdit = (props: any) => {
                             )}
                             {isEdit && (
                                 <Select
+                                    mode="multiple"
                                     allowClear
                                     showSearch
                                     placeholder="Assign Person"
-                                    defaultValue={updateTask.assigned_to}
                                     options={assigneeOpts}
+                                    defaultValue={updateTask.assigned_to}
                                     className="w100"
                                     onChange={(value, event) => {
                                         inputChangeHandler(event);
@@ -709,19 +710,28 @@ const TaskViewEdit = (props: any) => {
                                 </b>
                             )}
                             {isEdit && (
-                                <TimePicker
+                                // <TimePicker
+                                //     placeholder="Budget Time"
+                                //     name="budget_time"
+                                //     defaultValue={dayjs(
+                                //         updateTask.budget_time,
+                                //         "HH:mm"
+                                //     )}
+                                //     format={"HH:mm"}
+                                //     onChange={(date, dateString) => {
+                                //         inputChangeHandler(
+                                //             dateString,
+                                //             "budget_time"
+                                //         );
+                                //     }}
+                                //     className="w100"
+                                // />
+                                <Input
                                     placeholder="Budget Time"
                                     name="budget_time"
-                                    defaultValue={dayjs(
-                                        updateTask.budget_time,
-                                        "HH:mm"
-                                    )}
-                                    format={"HH:mm"}
-                                    onChange={(date, dateString) => {
-                                        inputChangeHandler(
-                                            dateString,
-                                            "budget_time"
-                                        );
+                                    defaultValue={updateTask.budget_time}
+                                    onChange={(event) => {
+                                        inputChangeHandler(event);
                                     }}
                                     className="w100"
                                 />

@@ -363,6 +363,7 @@ const SubTaskViewEdit = (props: any) => {
                                 <Select
                                     allowClear
                                     showSearch
+                                    mode="multiple"
                                     placeholder="Assign Person"
                                     defaultValue={updateSubTask.assigned_to}
                                     options={assigneeOpts}
@@ -461,19 +462,28 @@ const SubTaskViewEdit = (props: any) => {
                                 </b>
                             )}
                             {isEdit && (
-                                <TimePicker
+                                // <TimePicker
+                                //     placeholder="Budget Time"
+                                //     name="budgetTime"
+                                //     defaultValue={dayjs(
+                                //         updateSubTask.budget_time,
+                                //         "HH:mm"
+                                //     )}
+                                //     format={"HH:mm"}
+                                //     onChange={(date, dateString) => {
+                                //         inputChangeHandler(
+                                //             dateString,
+                                //             "budget_time"
+                                //         );
+                                //     }}
+                                //     className="w100"
+                                // />
+                                <Input
                                     placeholder="Budget Time"
-                                    name="budgetTime"
-                                    defaultValue={dayjs(
-                                        updateSubTask.budget_time,
-                                        "HH:mm"
-                                    )}
-                                    format={"HH:mm"}
-                                    onChange={(date, dateString) => {
-                                        inputChangeHandler(
-                                            dateString,
-                                            "budget_time"
-                                        );
+                                    name="budget_time"
+                                    defaultValue={updateSubTask.budget_time}
+                                    onChange={(event) => {
+                                        inputChangeHandler(event);
                                     }}
                                     className="w100"
                                 />

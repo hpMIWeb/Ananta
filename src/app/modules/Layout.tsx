@@ -36,7 +36,7 @@ const items: MenuItem[] = [
 ];
 
 const LayoutComponent = () => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const {
         token: { colorBgContainer },
     } = theme.useToken();

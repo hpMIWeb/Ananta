@@ -336,8 +336,8 @@ const TaskList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
-                            className="search-box border-bottom"
+                            placeholder="Search..."
+                            className="search-box"
                             bordered={false}
                             onChange={handleSearch}
                             prefix={<SearchOutlined />}
@@ -448,7 +448,7 @@ const TaskList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
+                            placeholder="Search..."
                             className="search-box border-bottom"
                             bordered={false}
                             onChange={handleSearch}
@@ -473,13 +473,11 @@ const TaskList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
@@ -560,7 +558,7 @@ const TaskList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
+                            placeholder="Search..."
                             prefix={<SearchOutlined />}
                             className="search-box border-bottom"
                             bordered={false}
@@ -585,13 +583,11 @@ const TaskList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}

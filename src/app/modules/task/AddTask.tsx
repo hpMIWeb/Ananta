@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import {
     Form,
     Input,
-    Button,
     Typography,
     DatePicker,
     Select,
@@ -13,6 +12,7 @@ import {
     Upload,
     Divider,
 } from "antd";
+import Button from "../../components/ui/Button/Index";
 import SubTask from "./SubTask";
 import {
     priorityOpts,
@@ -73,10 +73,15 @@ const AddTask = () => {
             value = event.value;
         }
 
-        setAddTask({
-            ...addTask,
-            [name]: event.name === "assigned_to" ? [value] : value,
-        });
+        if (name === "assigned_to" && Array.isArray(event)) {
+            const transformedValues = event.map((item) => item.value);
+            setAddTask({ ...addTask, [name]: transformedValues });
+        } else {
+            setAddTask({
+                ...addTask,
+                [name]: value,
+            });
+        }
     };
 
     const validate = () => {
@@ -463,9 +468,14 @@ const AddTask = () => {
                                     required: true,
                                     message: "Please select budget time.",
                                 },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
                             ]}
                         >
-                            <TimePicker
+                            {/* <TimePicker
                                 placeholder="Budget Time"
                                 name="budget_time"
                                 onChange={(date, dateString) => {
@@ -476,6 +486,14 @@ const AddTask = () => {
                                 }}
                                 className="w100"
                                 format={"HH:mm"}
+                            /> */}
+                            <Input
+                                placeholder="Budget Time"
+                                name="budget_time"
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
                             />
                         </Form.Item>
                     </Col>
@@ -567,13 +585,9 @@ const AddTask = () => {
                                 value={addTask.assigned_to}
                                 options={assigneeOpts}
                                 onChange={(value, event) => {
-                                    inputChangeHandler(event);
+                                    inputChangeHandler(event, "assigned_to");
                                 }}
-                                // onInputKeyDown={(event) => {
-                                //     if (event.keyCode === 9) {
-                                //         console.log(event.keyCode);
-                                //     }
-                                // }}
+                                mode="multiple"
                                 className="w100"
                             ></Select>
                         </Form.Item>

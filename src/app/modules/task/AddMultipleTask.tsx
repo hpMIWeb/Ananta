@@ -248,6 +248,7 @@ const AddMultipleTask = () => {
         }
 
         console.log(name, value);
+
         setMultipleTask({
             ...multipleTask,
             [name]: value,
@@ -389,7 +390,7 @@ const AddMultipleTask = () => {
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <TimePicker
+                        {/* <TimePicker
                             placeholder="Budget Time"
                             name="budget_time"
                             onChange={(date, dateString) => {
@@ -397,7 +398,30 @@ const AddMultipleTask = () => {
                             }}
                             className="w100"
                             format={"HH:mm"}
-                        />
+                        /> */}
+                        <Form.Item
+                            name="budget_time"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select budget time.",
+                                },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
+                            ]}
+                        >
+                            <Input
+                                placeholder="Budget Time"
+                                name="budget_time"
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
+                            />
+                        </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
                         <Select
