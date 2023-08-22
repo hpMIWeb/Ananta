@@ -83,14 +83,16 @@ const TaskList = () => {
             title: "Title",
             dataIndex: "title",
             key: "title",
-            render: (text: string) => <span className="title">{text}</span>,
             width: "20%",
+            sorter: (a: any, b: any) => a.title.localeCompare(b.title),
+            render: (text: string) => <span className="title">{text}</span>,
         },
         {
             title: "Client",
             dataIndex: "",
             key: "",
-            width: "30%",
+            sorter: (a: any, b: any) =>
+                a.client[0].client_name.localeCompare(b.client[0].client_name),
             render: (record: any) => (
                 <>
                     <span className="clientDiv">
@@ -104,8 +106,13 @@ const TaskList = () => {
             dataIndex: "assigned_to",
             key: "assigned_to",
             width: "10%",
-            render: (assigned_to: string) => (
-                <Tooltip title={assigned_to}>
+            sorter: (a: any, b: any) => {
+                const nameA = a.assigned_to[0].toLowerCase(); // Assuming the name property exists within each assignee object
+                const nameB = b.assigned_to[0].toLowerCase(); // Assuming the name property exists within each assignee object
+                return nameA.localeCompare(nameB);
+            },
+            render: (assigned_to: any) => (
+                <Tooltip title={assigned_to[0]}>
                     <div className="assigneeContainer">
                         <img
                             src={
@@ -123,6 +130,7 @@ const TaskList = () => {
             key: "due_date",
             dataIndex: "due_date",
             width: "10%",
+
             render: (due_date: string) => {
                 return (
                     <span className="clientDiv dueDate">
@@ -135,43 +143,14 @@ const TaskList = () => {
                 );
             },
         },
-
         {
-            title: "",
-            key: "subtask",
-            dataIndex: "subtask",
-            width: "10%",
-            render: () => {
-                return (
-                    <FontAwesomeIcon
-                        icon={faAlignLeft}
-                        style={{
-                            fontSize: "13px",
-                        }}
-                    />
-                );
-            },
-        },
-        {
-            title: "Sub Task",
+            title: "Progress",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
             render: (subtask: []) => {
                 if (subtask && subtask.length > 0) {
-                    return (
-                        // <div key={subtask.length} className="clientDiv">
-                        //     {subtask.filter((item: ISubTask) => {
-                        //         return (
-                        //             item.status === "completed" ||
-                        //             item.status === "complete"
-                        //         );
-                        //     }).length +
-                        //         "/" +
-                        //         subtask.length}
-                        // </div>
-                        <span className="clientDiv">0/0</span>
-                    );
+                    return <span className="clientDiv">0/0</span>;
                 } else {
                     return <span className="clientDiv">0/0</span>;
                 }
@@ -528,7 +507,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}
