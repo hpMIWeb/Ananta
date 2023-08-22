@@ -77,7 +77,7 @@ export const employeeOpts = [
 export const complianceReportOpts = ["Client Wise", "Compliance Wise"].map(
     (item: string) => {
         return {
-            value: item.toLowerCase(),
+            value: item.toLowerCase().replace(" ", "_"),
             label: item,
             name: "complianceReportType",
         };

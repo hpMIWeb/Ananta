@@ -195,9 +195,15 @@ const MultipleSubtask = (props: any) => {
                                                 message:
                                                     "Please select budget time.",
                                             },
+                                            {
+                                                pattern:
+                                                    /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                                message:
+                                                    "Please enter a valid time in the format HH:mm.",
+                                            },
                                         ]}
                                     >
-                                        <TimePicker
+                                        {/* <TimePicker
                                             placeholder="Time"
                                             name="budget_time"
                                             onChange={(date, dateString) => {
@@ -208,6 +214,17 @@ const MultipleSubtask = (props: any) => {
                                                 );
                                             }}
                                             format={"HH:mm"}
+                                            className="w100"
+                                        /> */}
+                                        <Input
+                                            placeholder="Budget Time"
+                                            name="budget_time"
+                                            onChange={(event) => {
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
                                             className="w100"
                                         />
                                     </Form.Item>

@@ -52,7 +52,7 @@ const ComplianceList = () => {
     const [reportTab, setReportTab] = useState<boolean>(false);
     const [tableRowSelected, setTableRowSelected] = useState<any>({});
     const [allCompliance, setAllCompliance] = useState<[]>([]);
-    const [reportType, setReportType] = useState<string>("Compliance Wise");
+    const [reportType, setReportType] = useState<string>("compliance_wise");
     const [searchQuery, setSearchQuery] = useState<string>("");
     const screenModeToggle = () => {
         setFullScreenMode(!fullScreenMode);
@@ -456,6 +456,7 @@ const ComplianceList = () => {
     };
 
     const handelReportType = (value: string) => {
+        console.log("value", value);
         setReportType(value);
     };
 
@@ -814,8 +815,16 @@ const ComplianceList = () => {
                         <Select
                             allowClear
                             showSearch
-                            placeholder="Client"
-                            options={clientOpts}
+                            placeholder={
+                                reportType === "compliance_wise"
+                                    ? "Client"
+                                    : "Compliance"
+                            }
+                            options={
+                                reportType === "compliance_wise"
+                                    ? clientOpts
+                                    : []
+                            }
                             className="w100 border-bottom"
                             bordered={false}
                         />
@@ -915,8 +924,12 @@ const ComplianceList = () => {
                         <Select
                             allowClear
                             showSearch
-                            placeholder="Client"
-                            options={clientOpts}
+                            placeholder={
+                                reportType === "Client"
+                                    ? "Client"
+                                    : "Compliance"
+                            }
+                            options={reportType === "Client" ? clientOpts : []}
                             className="w100 border-bottom"
                             bordered={false}
                         />
