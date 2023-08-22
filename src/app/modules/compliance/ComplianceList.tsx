@@ -35,7 +35,7 @@ import {
 } from "../../utilities/utility";
 import Fillter from "../fillter/Fillter";
 import ComplianceFilter from "../fillter/ComplianceFilter";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { SearchOutlined, UserOutlined, FilterTwoTone } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 50;
 
@@ -479,7 +479,7 @@ const ComplianceList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
+                            placeholder="Search..."
                             className="search-box border-bottom"
                             bordered={false}
                             onChange={handleSearch}
@@ -503,13 +503,11 @@ const ComplianceList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
@@ -591,7 +589,7 @@ const ComplianceList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
+                            placeholder="Search..."
                             className="search-box border-bottom"
                             bordered={false}
                             onChange={handleSearch}
@@ -615,13 +613,11 @@ const ComplianceList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
@@ -703,7 +699,7 @@ const ComplianceList = () => {
                         }}
                     >
                         <Input
-                            placeholder="Search"
+                            placeholder="Search..."
                             className="search-box border-bottom"
                             bordered={false}
                             onChange={handleSearch}
@@ -727,13 +723,11 @@ const ComplianceList = () => {
                     >
                         <div
                             className="btn-link expanddiv"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
-                            <span className="svgIcon">
-                                {!showMoreFilter
-                                    ? "Show Filters "
-                                    : "Hide Filters "}
+                            <span>
+                                <FilterTwoTone />
                             </span>
                             <FontAwesomeIcon
                                 icon={!showMoreFilter ? faAngleDown : faAngleUp}
@@ -845,13 +839,11 @@ const ComplianceList = () => {
                         <a
                             className="btn-link expanddiv"
                             href="#"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
                             <span>
-                                {!showMoreFilter
-                                    ? "Show Filters"
-                                    : "Hide Filters"}
+                                <FilterTwoTone />
                             </span>
                             <svg
                                 className="svg-inline--fa fa-angle-down fa-w-10"
@@ -952,13 +944,11 @@ const ComplianceList = () => {
                         <a
                             className="btn-link expanddiv"
                             href="#"
-                            title="Show Filters"
+                            title="Click here to show more filters"
                             onClick={onSwitchMoreFilter}
                         >
                             <span>
-                                {!showMoreFilter
-                                    ? "Show Filters"
-                                    : "Hide Filters"}
+                                <FilterTwoTone />
                             </span>
                             <svg
                                 className="svg-inline--fa fa-angle-down fa-w-10"
