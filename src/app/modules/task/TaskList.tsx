@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TabsProps, Tooltip } from "antd";
+import { Avatar, TabsProps, Tooltip } from "antd";
 import {
     Button,
     Space,
@@ -106,23 +106,33 @@ const TaskList = () => {
             dataIndex: "assigned_to",
             key: "assigned_to",
             width: "10%",
-            sorter: (a: any, b: any) => {
-                const nameA = a.assigned_to[0].toLowerCase(); // Assuming the name property exists within each assignee object
-                const nameB = b.assigned_to[0].toLowerCase(); // Assuming the name property exists within each assignee object
-                return nameA.localeCompare(nameB);
-            },
             render: (assigned_to: any) => (
-                <Tooltip title={assigned_to[0]}>
-                    <div className="assigneeContainer">
-                        <img
-                            src={
-                                "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
-                            }
-                            alt="Assignee"
-                            className="assigneeImage"
-                        />
-                    </div>
-                </Tooltip>
+                <div className="assigneeContainer">
+                    {/* {assigned_to.map((assignee: any, index: any) => (
+                        <Tooltip key={index} title={assignee}>
+                            <img
+                                src={
+                                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                                }
+                                alt="Assignee"
+                                className="assigneeImage"
+                            />
+                        </Tooltip>
+                    ))} */}
+                    <Avatar.Group
+                        maxCount={2}
+                        maxStyle={{
+                            color: "#f56a00",
+                            backgroundColor: "#fde3cf",
+                        }}
+                    >
+                        {assigned_to.map((assignee: any, index: any) => (
+                            <Tooltip key={index} title={assignee}>
+                                <Avatar src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80" />
+                            </Tooltip>
+                        ))}
+                    </Avatar.Group>
+                </div>
             ),
         },
         {

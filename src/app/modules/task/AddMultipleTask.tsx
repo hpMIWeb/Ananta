@@ -80,60 +80,69 @@ const AddMultipleTask = () => {
     };
 
     const validate = () => {
-        let returnFlag = true;
+        let returnArray = {
+            status: true,
+            message: "Please set mandatory fields!",
+        };
 
         console.log("multipleTask", multipleTask);
         if (
             multipleTask.hasOwnProperty("start_date") &&
             multipleTask.start_date === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("due_date") &&
             multipleTask.due_date === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("mode") &&
             multipleTask.mode === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("title") &&
             multipleTask.title === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("client") &&
             multipleTask.clients &&
             multipleTask.clients.length === 0
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("workArea") &&
             multipleTask.workArea === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("remarks") &&
             multipleTask.remarks === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("budget_time") &&
             multipleTask.budget_time === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
+        } else if (
+            multipleTask.hasOwnProperty("budget_time") &&
+            multipleTask.budget_time === "00:00"
+        ) {
+            returnArray.status = false;
+            returnArray.message = "Enter valid budget time.";
         } else if (
             multipleTask.hasOwnProperty("priority") &&
             multipleTask.priority === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             multipleTask.hasOwnProperty("billable") &&
             multipleTask.billable === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         }
 
         // Due date validation against the start date
@@ -141,27 +150,32 @@ const AddMultipleTask = () => {
         const dueDateValue = dayjs(multipleTask.due_date);
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (dueDateValue.isBefore(startDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
         // Start date validation against the due date
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (startDateValue.isAfter(dueDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
-        return returnFlag;
+        return returnArray;
     };
 
     const handleAddTask = () => {
-        if (!validate()) {
-            toast.error("Please set mandatory fields", {
+        let validateTaskData = validate();
+        if (!validateTaskData.status) {
+            toast.error(validateTaskData.message, {
                 position: toast.POSITION.TOP_RIGHT,
             });
 
@@ -208,6 +222,10 @@ const AddMultipleTask = () => {
                 // setSubCompliance(newDetails1); // remove due to override object please confirm @hitesh bhai
             }
 
+            multipleTask.taskType = "multiple_client_without_subtask";
+            if (multipleTask.subtask.length > 0) {
+                multipleTask.taskType = "multiple_client_with_subtask";
+            }
             // Save to DB
             try {
                 api.createMultipleTask(multipleTask).then((resp: any) => {

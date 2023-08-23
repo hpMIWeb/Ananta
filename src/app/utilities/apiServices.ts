@@ -64,25 +64,7 @@ export default {
         instance({
             method: "POST",
             url: "task/create-task",
-            data: {
-                start_date: task.start_date,
-                due_date: task.due_date,
-                status: task.status,
-                budget_time: task.budget_time,
-                actual_time: " ",
-                mode: task.mode,
-                title: task.title,
-                remarks: task.remarks,
-                workArea: task.workArea,
-                priority: task.priority,
-                billable: task.billable,
-                client: task.client,
-                assigned_to: task.assigned_to,
-                datapath: task.datapath,
-                subtask: task.subtask,
-                attachments: [],
-                comments: [],
-            },
+            data: task,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);

@@ -24,6 +24,7 @@ export interface AddTask {
     subtask: AddSubTask[];
     attachments: Attachment[];
     comments: Comment[];
+    taskType: string;
 }
 
 export class Task implements AddTask {
@@ -46,6 +47,7 @@ export class Task implements AddTask {
     subtask: SubTask[] = [];
     attachments: Attachment[] = [];
     comments: Comment[] = [];
+    taskType: string = "";
 }
 
 export interface AddSubTask {
@@ -131,6 +133,7 @@ export interface AddMultipleTask {
     budget_time: string;
     actual_time: string;
     priority: string;
+    taskType: string;
 }
 
 export class AddMultipleTaskClass implements AddMultipleTask {
@@ -149,6 +152,7 @@ export class AddMultipleTaskClass implements AddMultipleTask {
     budget_time: string = "";
     actual_time: string = "";
     priority: string = "";
+    taskType: string = "";
 }
 export interface AddClientDetails {
     _id: string;
