@@ -114,6 +114,17 @@ const TimeSheet = () => {
         }
     };
 
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Tab") {
+            if (
+                event.currentTarget.name === "end_time" &&
+                selectedTableRow.is_new
+            ) {
+                event.preventDefault(); // Prevent form submission on Enter press
+                addNewTimesheetRow();
+            }
+        }
+    };
     const columns = [
         {
             title: "Start Time",
@@ -141,7 +152,7 @@ const TimeSheet = () => {
                                 },
                             ]}
                         >
-                            <TimePicker
+                            {/* <TimePicker
                                 placeholder="Start Time"
                                 name="start_time"
                                 changeOnBlur={true}
@@ -153,6 +164,14 @@ const TimeSheet = () => {
                                         "start_time"
                                     );
                                 }}
+                            /> */}
+                            <Input
+                                placeholder="Start Time"
+                                name="start_time"
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                className="w100"
                             />
                         </Form.Item>
                     );
@@ -182,7 +201,7 @@ const TimeSheet = () => {
                             },
                         ]}
                     >
-                        <TimePicker
+                        {/* <TimePicker
                             placeholder="Start Time"
                             name={`start_time_${record._id}`}
                             format="HH:mm"
@@ -192,6 +211,15 @@ const TimeSheet = () => {
                             onChange={(date, dateString) => {
                                 inputChangeHandler(dateString, "start_time");
                             }}
+                        /> */}
+                        <Input
+                            placeholder="Start Time"
+                            name={`start_time_${record._id}`}
+                            onChange={(event) => {
+                                inputChangeHandler(event);
+                            }}
+                            defaultValue={dayjs(start_time).format("HH:mm")}
+                            className="w100"
                         />
                     </Form.Item>
                 );
@@ -223,7 +251,7 @@ const TimeSheet = () => {
                                 },
                             ]}
                         >
-                            <TimePicker
+                            {/* <TimePicker
                                 placeholder="End Time"
                                 name="end_time"
                                 changeOnBlur={true}
@@ -232,6 +260,16 @@ const TimeSheet = () => {
                                 onChange={(date, dateString) => {
                                     inputChangeHandler(dateString, "end_time");
                                 }}
+                            /> */}
+                            <Input
+                                placeholder="End Time"
+                                name="end_time"
+                                onChange={(event) => {
+                                    inputChangeHandler(event);
+                                }}
+                                //onKeyPress={handleKeyPress}
+                                defaultValue={record.end_time}
+                                className="w100"
                             />
                         </Form.Item>
                     );
@@ -261,7 +299,7 @@ const TimeSheet = () => {
                             },
                         ]}
                     >
-                        <TimePicker
+                        {/* <TimePicker
                             placeholder="End Time"
                             name="end_time"
                             defaultValue={dayjs(end_time)}
@@ -271,6 +309,15 @@ const TimeSheet = () => {
                             onChange={(date, dateString) => {
                                 inputChangeHandler(dateString, "end_time");
                             }}
+                        /> */}
+                        <Input
+                            placeholder="End Time"
+                            name="end_time"
+                            onChange={(event) => {
+                                inputChangeHandler(event);
+                            }}
+                            defaultValue={dayjs(end_time).format("HH:mm")}
+                            className="w100"
                         />
                     </Form.Item>
                 );
@@ -893,14 +940,14 @@ const TimeSheet = () => {
                         selectedTableRow.end_time = value;
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
-                        if (selectedTableRow.is_new) {
-                            addNewTimesheetRow();
-                        }
+
                         break;
                     }
                     case "client": {
                         selectedTableRow.client = value;
-
+                        if (selectedTableRow.is_new) {
+                            addNewTimesheetRow();
+                        }
                         break;
                     }
                     case "particulars": {
@@ -929,7 +976,6 @@ const TimeSheet = () => {
     };
 
     const calculateTotalTime = (record: Timesheet) => {
-        console.log(record);
         let endTime = record.is_edit
             ? dayjs(record.end_time).format("HH:mm").toString()
             : dayjs(record.end_time, "HH:mm");
