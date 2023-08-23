@@ -150,25 +150,54 @@ const TimeSheet = () => {
                                         );
                                     },
                                 },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value.length <= 5) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Maximum length exceeded (HH:mm format)."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
-                            {/* <TimePicker
-                                placeholder="Start Time"
-                                name="start_time"
-                                changeOnBlur={true}
-                                showNow={false}
-                                format={"HH:mm"}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "start_time"
-                                    );
-                                }}
-                            /> */}
                             <Input
                                 placeholder="Start Time"
                                 name="start_time"
-                                onChange={(event) => {
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
@@ -199,23 +228,54 @@ const TimeSheet = () => {
                                     return anyValidation(rule, value, record);
                                 },
                             },
+                            {
+                                pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                message:
+                                    "Please enter a valid time in the format HH:mm.",
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value !== "00:00") {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Budget Time cannot be set to 00:00."
+                                        )
+                                    );
+                                },
+                            }),
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value.length <= 5) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Maximum length exceeded (HH:mm format)."
+                                        )
+                                    );
+                                },
+                            }),
                         ]}
                     >
-                        {/* <TimePicker
-                            placeholder="Start Time"
-                            name={`start_time_${record._id}`}
-                            format="HH:mm"
-                            changeOnBlur={true}
-                            showNow={false}
-                            defaultValue={dayjs(record.start_time)}
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "start_time");
-                            }}
-                        /> */}
                         <Input
                             placeholder="Start Time"
                             name={`start_time_${record._id}`}
-                            onChange={(event) => {
+                            onInput={(event) => {
+                                const inputElement =
+                                    event.target as HTMLInputElement;
+                                let input = inputElement.value;
+                                input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                if (input.length >= 3) {
+                                    input =
+                                        input.slice(0, 2) +
+                                        ":" +
+                                        input.slice(2);
+                                }
+
+                                inputElement.value = input;
                                 inputChangeHandler(event);
                             }}
                             defaultValue={dayjs(start_time).format("HH:mm")}
@@ -249,25 +309,56 @@ const TimeSheet = () => {
                                         );
                                     },
                                 },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value.length <= 5) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Maximum length exceeded (HH:mm format)."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
-                            {/* <TimePicker
-                                placeholder="End Time"
-                                name="end_time"
-                                changeOnBlur={true}
-                                showNow={false}
-                                format={"HH:mm"}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(dateString, "end_time");
-                                }}
-                            /> */}
                             <Input
                                 placeholder="End Time"
                                 name="end_time"
-                                onChange={(event) => {
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
                                     inputChangeHandler(event);
                                 }}
-                                //onKeyPress={handleKeyPress}
                                 defaultValue={record.end_time}
                                 className="w100"
                             />
@@ -297,23 +388,54 @@ const TimeSheet = () => {
                                     return anyValidation(rule, value, record);
                                 },
                             },
+                            {
+                                pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                message:
+                                    "Please enter a valid time in the format HH:mm.",
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value !== "00:00") {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Budget Time cannot be set to 00:00."
+                                        )
+                                    );
+                                },
+                            }),
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value.length <= 5) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Maximum length exceeded (HH:mm format)."
+                                        )
+                                    );
+                                },
+                            }),
                         ]}
                     >
-                        {/* <TimePicker
-                            placeholder="End Time"
-                            name="end_time"
-                            defaultValue={dayjs(end_time)}
-                            format={"HH:mm"}
-                            changeOnBlur={true}
-                            showNow={false}
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "end_time");
-                            }}
-                        /> */}
                         <Input
                             placeholder="End Time"
                             name="end_time"
-                            onChange={(event) => {
+                            onInput={(event) => {
+                                const inputElement =
+                                    event.target as HTMLInputElement;
+                                let input = inputElement.value;
+                                input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                if (input.length >= 3) {
+                                    input =
+                                        input.slice(0, 2) +
+                                        ":" +
+                                        input.slice(2);
+                                }
+
+                                inputElement.value = input;
                                 inputChangeHandler(event);
                             }}
                             defaultValue={dayjs(end_time).format("HH:mm")}
