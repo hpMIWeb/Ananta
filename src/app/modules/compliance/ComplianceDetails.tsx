@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Select, TimePicker, Table, Form, Popconfirm } from "antd";
+import { Select, TimePicker, Table, Form, Popconfirm, Input } from "antd";
 import {
     priorityOpts,
     assigneeOpts,
@@ -26,7 +26,7 @@ import { nanoid } from "nanoid";
 const ComplianceDetails = (props: any) => {
     const newClientItem = {
         _id: nanoid(),
-        budget_time: "00:00:00",
+        budget_time: "00:00",
         parentId: props.parentId ?? -1,
         client_name: "",
         priority: "",
@@ -206,17 +206,59 @@ const ComplianceDetails = (props: any) => {
                                 );
                             },
                         },
+                        {
+                            pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                            message:
+                                "Please enter a valid time in the format HH:mm.",
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (value !== "00:00") {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(
+                                    new Error(
+                                        "Budget Time cannot be set to 00:00."
+                                    )
+                                );
+                            },
+                        }),
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (value.length <= 5) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(
+                                    new Error(
+                                        "Maximum length exceeded (HH:mm format)."
+                                    )
+                                );
+                            },
+                        }),
                     ]}
                 >
-                    <TimePicker
+                    <Input
                         placeholder="Budget Time"
                         name="budget_time"
-                        className="w100"
-                        format={"HH:mm"}
-                        onChange={(date, dateString) => {
-                            inputChangeHandler(dateString, "budget_time");
+                        onChange={(event) => {
+                            inputChangeHandler(event);
                         }}
-                        defaultValue={dayjs(record.budget_time, "HH:mm")}
+                        defaultValue={record.budget_time}
+                        onInput={(event) => {
+                            const inputElement =
+                                event.target as HTMLInputElement;
+                            let input = inputElement.value;
+                            input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                            if (input.length >= 3) {
+                                input =
+                                    input.slice(0, 2) + ":" + input.slice(2);
+                            }
+
+                            inputElement.value = input;
+                            inputChangeHandler(event, "budget_time");
+                        }}
+                        className="w100"
                     />
                 </Form.Item>
             ),

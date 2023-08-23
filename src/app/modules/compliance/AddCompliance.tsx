@@ -558,6 +558,22 @@ const AddCompliance = () => {
                                 onChange={(event) => {
                                     inputChangeHandler(event);
                                 }}
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
+                                    inputChangeHandler(event);
+                                }}
                                 className="w100"
                             />
                         </Form.Item>

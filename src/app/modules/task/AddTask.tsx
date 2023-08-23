@@ -538,18 +538,6 @@ const AddTask = () => {
                                 }),
                             ]}
                         >
-                            {/* <TimePicker
-                                placeholder="Budget Time"
-                                name="budget_time"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "budget_time"
-                                    );
-                                }}
-                                className="w100"
-                                format={"HH:mm"}
-                            /> */}
                             <Input
                                 placeholder="Budget Time"
                                 name="budget_time"
