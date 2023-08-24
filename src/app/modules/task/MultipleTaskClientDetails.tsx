@@ -202,18 +202,6 @@ const MultipleTaskClientDetails = (props: any) => {
                                 );
                             },
                         }),
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (value.length <= 5) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(
-                                    new Error(
-                                        "Maximum length exceeded (HH:mm format)."
-                                    )
-                                );
-                            },
-                        }),
                     ]}
                 >
                     <Input
@@ -232,6 +220,9 @@ const MultipleTaskClientDetails = (props: any) => {
 
                             inputElement.value = input;
                             inputChangeHandler(event);
+                        }}
+                        onChange={(event) => {
+                            inputChangeHandler(event, "budget_time");
                         }}
                         className="w100"
                         maxLength={5}

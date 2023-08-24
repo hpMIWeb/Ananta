@@ -770,6 +770,7 @@ const TaskViewEdit = (props: any) => {
                                     />
                                     {taskSubTasks &&
                                         taskSubTasks.length <= 0 &&
+                                        updateTask.actual_time &&
                                         updateTask.actual_time.trim()}
                                     {taskSubTasks &&
                                         taskSubTasks.length > 0 && (

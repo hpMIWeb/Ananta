@@ -227,6 +227,9 @@ const AddMultipleTask = () => {
                 multipleTask.taskType = "multiple_client_with_subtask";
             }
             // Save to DB
+
+            console.log("multipleTask", multipleTask);
+            // return;
             try {
                 api.createMultipleTask(multipleTask).then((resp: any) => {
                     toast.success("Successfully Created Multiple Task", {
@@ -274,6 +277,7 @@ const AddMultipleTask = () => {
     };
 
     const clientDetailsHandler = (details: IAddClientDetails[]) => {
+        console.log("details", details);
         setClientDetails(details);
     };
 
@@ -408,15 +412,6 @@ const AddMultipleTask = () => {
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        {/* <TimePicker
-                            placeholder="Budget Time"
-                            name="budget_time"
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "budget_time");
-                            }}
-                            className="w100"
-                            format={"HH:mm"}
-                        /> */}
                         <Form.Item
                             name="budget_time"
                             rules={[
@@ -429,15 +424,44 @@ const AddMultipleTask = () => {
                                     message:
                                         "Please enter a valid time in the format HH:mm.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
                             <Input
                                 placeholder="Budget Time"
                                 name="budget_time"
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
+                                    inputChangeHandler(event);
+                                }}
                                 onChange={(event) => {
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
+                                maxLength={5}
                             />
                         </Form.Item>
                     </Col>

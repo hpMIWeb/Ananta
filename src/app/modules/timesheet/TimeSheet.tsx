@@ -40,8 +40,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import "./TimeSheet.scss";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/en"; // Import the locale if needed
+
 const { Title } = Typography;
 const pageSize = 20;
+dayjs.extend(utc);
 
 const TimeSheet = () => {
     const [current, setCurrent] = useState(1);
@@ -167,18 +171,6 @@ const TimeSheet = () => {
                                         );
                                     },
                                 }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (value.length <= 5) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Maximum length exceeded (HH:mm format)."
-                                            )
-                                        );
-                                    },
-                                }),
                             ]}
                         >
                             <Input
@@ -201,6 +193,7 @@ const TimeSheet = () => {
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
+                                maxLength={5}
                             />
                         </Form.Item>
                     );
@@ -213,7 +206,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(record.start_time).format("HH:mm")}
+                            {dayjs.utc(record.start_time).format("HH:mm")}
                         </span>
                     );
                 }
@@ -245,18 +238,6 @@ const TimeSheet = () => {
                                     );
                                 },
                             }),
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (value.length <= 5) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(
-                                        new Error(
-                                            "Maximum length exceeded (HH:mm format)."
-                                        )
-                                    );
-                                },
-                            }),
                         ]}
                     >
                         <Input
@@ -278,8 +259,9 @@ const TimeSheet = () => {
                                 inputElement.value = input;
                                 inputChangeHandler(event);
                             }}
-                            defaultValue={dayjs(start_time).format("HH:mm")}
+                            defaultValue={dayjs.utc(start_time).format("HH:mm")}
                             className="w100"
+                            maxLength={5}
                         />
                     </Form.Item>
                 );
@@ -326,18 +308,6 @@ const TimeSheet = () => {
                                         );
                                     },
                                 }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (value.length <= 5) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Maximum length exceeded (HH:mm format)."
-                                            )
-                                        );
-                                    },
-                                }),
                             ]}
                         >
                             <Input
@@ -359,7 +329,7 @@ const TimeSheet = () => {
                                     inputElement.value = input;
                                     inputChangeHandler(event);
                                 }}
-                                defaultValue={record.end_time}
+                                maxLength={5}
                                 className="w100"
                             />
                         </Form.Item>
@@ -373,7 +343,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(record.end_time).format("HH:mm")}
+                            {dayjs.utc(record.end_time).format("HH:mm")}
                         </span>
                     );
                 }
@@ -405,18 +375,6 @@ const TimeSheet = () => {
                                     );
                                 },
                             }),
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (value.length <= 5) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(
-                                        new Error(
-                                            "Maximum length exceeded (HH:mm format)."
-                                        )
-                                    );
-                                },
-                            }),
                         ]}
                     >
                         <Input
@@ -438,8 +396,9 @@ const TimeSheet = () => {
                                 inputElement.value = input;
                                 inputChangeHandler(event);
                             }}
-                            defaultValue={dayjs(end_time).format("HH:mm")}
+                            defaultValue={dayjs.utc(end_time).format("HH:mm")}
                             className="w100"
+                            maxLength={5}
                         />
                     </Form.Item>
                 );
@@ -978,11 +937,12 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => {
+            console.log("entry.start_time", entry.start_time);
             const startTime = entry.is_edit
-                ? dayjs(entry.start_time).format("YYYY-MM-DD HH:mm")
+                ? dayjs.utc(entry.start_time).format("YYYY-MM-DD HH:mm")
                 : selectedDate + " " + entry.start_time;
             const endTime = entry.is_edit
-                ? dayjs(entry.end_time).format("YYYY-MM-DD HH:mm")
+                ? dayjs.utc(entry.end_time).format("YYYY-MM-DD HH:mm")
                 : selectedDate + " " + entry.end_time;
 
             const payload = {
@@ -1063,13 +1023,20 @@ const TimeSheet = () => {
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 
+                        if (
+                            value &&
+                            /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value)
+                        ) {
+                            // Assuming you have an isNew flag indicating if it's a new row
+                            if (selectedTableRow.is_new) {
+                                addNewTimesheetRow();
+                            }
+                        }
                         break;
                     }
                     case "client": {
                         selectedTableRow.client = value;
-                        if (selectedTableRow.is_new) {
-                            addNewTimesheetRow();
-                        }
+
                         break;
                     }
                     case "particulars": {

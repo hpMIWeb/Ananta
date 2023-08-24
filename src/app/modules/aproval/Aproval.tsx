@@ -322,14 +322,13 @@ const Approval = () => {
 
                 <div>
                     <Table
-                        id="leaveApprovalTable"
+                        id=""
                         columns={columns}
                         size="small"
                         dataSource={getData(current, pageSize)}
                         onChange={onChange}
                         style={{ width: "100%" }}
                         className="table-striped-rows"
-                        bordered
                     />
                 </div>
             </div>

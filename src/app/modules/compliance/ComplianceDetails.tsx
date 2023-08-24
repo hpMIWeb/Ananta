@@ -223,25 +223,13 @@ const ComplianceDetails = (props: any) => {
                                 );
                             },
                         }),
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (value.length <= 5) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(
-                                    new Error(
-                                        "Maximum length exceeded (HH:mm format)."
-                                    )
-                                );
-                            },
-                        }),
                     ]}
                 >
                     <Input
                         placeholder="Budget Time"
                         name="budget_time"
                         onChange={(event) => {
-                            inputChangeHandler(event);
+                            inputChangeHandler(event, "budget_time");
                         }}
                         defaultValue={record.budget_time}
                         onInput={(event) => {
@@ -258,6 +246,7 @@ const ComplianceDetails = (props: any) => {
                             inputElement.value = input;
                             inputChangeHandler(event, "budget_time");
                         }}
+                        maxLength={5}
                         className="w100"
                     />
                 </Form.Item>
@@ -448,7 +437,9 @@ const ComplianceDetails = (props: any) => {
                         break;
                     }
                     case "budget_time": {
-                        selectedTableRow.budget_time = value;
+                        if (value !== "00:00") {
+                            selectedTableRow.budget_time = value;
+                        }
                         break;
                     }
                     case "priority": {

@@ -91,8 +91,6 @@ const TaskList = () => {
             title: "Client",
             dataIndex: "",
             key: "",
-            sorter: (a: any, b: any) =>
-                a.client[0].client_name.localeCompare(b.client[0].client_name),
             render: (record: any) => (
                 <>
                     <span className="clientDiv">
@@ -108,17 +106,6 @@ const TaskList = () => {
             width: "10%",
             render: (assigned_to: any) => (
                 <div className="assigneeContainer">
-                    {/* {assigned_to.map((assignee: any, index: any) => (
-                        <Tooltip key={index} title={assignee}>
-                            <img
-                                src={
-                                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
-                                }
-                                alt="Assignee"
-                                className="assigneeImage"
-                            />
-                        </Tooltip>
-                    ))} */}
                     <Avatar.Group
                         maxCount={2}
                         maxStyle={{

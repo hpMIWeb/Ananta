@@ -166,33 +166,8 @@ const SubTask = (props: any) => {
                                                     );
                                                 },
                                             }),
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (value.length <= 5) {
-                                                        return Promise.resolve();
-                                                    }
-                                                    return Promise.reject(
-                                                        new Error(
-                                                            "Maximum length exceeded (HH:mm format)."
-                                                        )
-                                                    );
-                                                },
-                                            }),
                                         ]}
                                     >
-                                        {/* <TimePicker
-                                            placeholder="Time"
-                                            name="budget_time"
-                                            onChange={(date, dateString) => {
-                                                inputChangeHandler(
-                                                    dateString,
-                                                    subTaskItem,
-                                                    "budget_time"
-                                                );
-                                            }}
-                                            format={"HH:mm"}
-                                            className="w100"
-                                        /> */}
                                         <Input
                                             placeholder="Budget Time"
                                             name="budget_time"

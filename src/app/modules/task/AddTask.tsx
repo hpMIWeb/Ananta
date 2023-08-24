@@ -524,18 +524,6 @@ const AddTask = () => {
                                         );
                                     },
                                 }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (value.length <= 5) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Maximum length exceeded (HH:mm format)."
-                                            )
-                                        );
-                                    },
-                                }),
                             ]}
                         >
                             <Input
