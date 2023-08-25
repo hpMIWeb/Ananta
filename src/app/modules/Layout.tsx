@@ -4,36 +4,9 @@ import { FileOutlined, TeamOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import MenuItem from "antd/es/menu/MenuItem";
+import { removeLocalstorage } from "../utilities/utility";
 
 const { Header, Content, Footer, Sider } = Layout;
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[]
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-    } as MenuItem;
-}
-
-const items: MenuItem[] = [
-    getItem("Task Master", "/", <TeamOutlined />, [
-        getItem("Task", "/task"),
-        getItem("Compliance", "/compliance"),
-        getItem("Timesheet", "/timesheet"),
-        getItem("Approval", "/approval"),
-        getItem("Settings", "/setting"),
-    ]),
-    getItem("Files", "12", <FileOutlined />),
-    getItem("Logout", "/login"),
-];
 
 const LayoutComponent = () => {
     const [collapsed, setCollapsed] = useState(true);
@@ -48,6 +21,39 @@ const LayoutComponent = () => {
         if (e.key === "/login") {
             localStorage.removeItem("authtoken");
         }
+    };
+
+    type MenuItem = Required<MenuProps>["items"][number];
+
+    function getItem(
+        label: React.ReactNode,
+        key: React.Key,
+        icon?: React.ReactNode,
+        children?: MenuItem[]
+    ): MenuItem {
+        return {
+            key,
+            icon,
+            children,
+            label,
+        } as MenuItem;
+    }
+
+    const items: MenuItem[] = [
+        getItem("Task Master", "/", <TeamOutlined />, [
+            getItem("Task", "/task"),
+            getItem("Compliance", "/compliance"),
+            getItem("Timesheet", "/timesheet"),
+            getItem("Approval", "/approval"),
+            getItem("Settings", "/setting"),
+        ]),
+        getItem("Files", "12", <FileOutlined />),
+        getItem("Logout", "/"),
+    ];
+
+    const logout = () => {
+        removeLocalstorage("authtoken");
+        navigate("/login", { replace: true });
     };
 
     return (

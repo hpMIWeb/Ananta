@@ -21,6 +21,7 @@ import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
 import Login from "./modules/login/Login";
+import PrivateRoute from "./components/Auth/PrivateRoute/PrivateRoute";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -45,39 +46,78 @@ const App = () => {
                             <Route path="login" element={<Login />} />
                             <Route path="/" element={<Layout />}>
                                 <Route element={<Home />} />
-                                <Route path="about" element={<Dashboard />} />
                                 <Route
                                     index
                                     path="task"
-                                    element={<TaskList />}
+                                    element={
+                                        <PrivateRoute component={TaskList} />
+                                    }
                                 />
-                                <Route path="add-task" element={<AddTask />} />
+                                <Route path="about" element={<Dashboard />} />
+                                <Route
+                                    path="add-task"
+                                    element={
+                                        <PrivateRoute component={AddTask} />
+                                    }
+                                />
                                 <Route
                                     path="add-multi-task"
-                                    element={<AddMultipleTask />}
+                                    element={
+                                        <PrivateRoute
+                                            component={AddMultipleTask}
+                                        />
+                                    }
                                 />
                                 <Route
                                     path="compliance"
-                                    element={<ComplianceList />}
+                                    element={
+                                        <PrivateRoute
+                                            component={ComplianceList}
+                                        />
+                                    }
                                 />
                                 <Route
                                     path="add-compliance"
-                                    element={<AddCompliance />}
+                                    element={
+                                        <PrivateRoute
+                                            component={AddCompliance}
+                                        />
+                                    }
                                 />
-                                <Route path="approval" element={<Approval />} />
+                                <Route
+                                    path="approval"
+                                    element={
+                                        <PrivateRoute component={Approval} />
+                                    }
+                                />
                                 <Route
                                     path="timesheet"
-                                    element={<TimeSheet />}
+                                    element={
+                                        <PrivateRoute component={TimeSheet} />
+                                    }
                                 />
                                 <Route
                                     path="emp-time-sheet"
-                                    element={<EmpTimeSheet />}
+                                    element={
+                                        <PrivateRoute
+                                            component={EmpTimeSheet}
+                                        />
+                                    }
                                 />
                                 <Route
                                     path="client-time-sheet"
-                                    element={<ClientTimeSheet />}
+                                    element={
+                                        <PrivateRoute
+                                            component={ClientTimeSheet}
+                                        />
+                                    }
                                 />
-                                <Route path="Setting" element={<Setting />} />
+                                <Route
+                                    path="Setting"
+                                    element={
+                                        <PrivateRoute component={Setting} />
+                                    }
+                                />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
                         </Routes>
