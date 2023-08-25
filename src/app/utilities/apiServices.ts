@@ -18,6 +18,7 @@ import {
 import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
 import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
+import { AddDepartment } from "../modules/master/Department/interfaces/IDeparment";
 import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
@@ -478,6 +479,51 @@ export default {
             method: "PUT",
             url: "settings/update-settings/id=" + setting._id,
             data: setting,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    getDepartment: () =>
+        instance({
+            method: "GET",
+            url: "department/get-department/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDepartment: (department: AddDepartment) =>
+        instance({
+            method: "POST",
+            url: "department/create-department/",
+            data: department,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDepartment: (departmentId: string) =>
+        instance({
+            method: "DELETE",
+            url: "department/delete-department/id=" + departmentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDepartment: (department: AddDepartment, departmentId: string) =>
+        instance({
+            method: "PUT",
+            url: "department/update-department/id=" + departmentId,
+            data: department,
             transformResponse: [
                 function (data) {
                     return data;

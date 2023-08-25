@@ -21,6 +21,7 @@ import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
 import Login from "./modules/login/Login";
+import Department from "./modules/master/Department/Department";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -79,6 +80,10 @@ const App = () => {
                                 />
                                 <Route path="Setting" element={<Setting />} />
                                 <Route path="*" element={<NoMatch />} />
+                                <Route
+                                    path="department"
+                                    element={<Department />}
+                                />
                             </Route>
                         </Routes>
                     </BrowserRouter>
