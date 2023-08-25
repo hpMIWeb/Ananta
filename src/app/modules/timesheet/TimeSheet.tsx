@@ -1013,6 +1013,10 @@ const TimeSheet = () => {
                             );
                             return;
                         }
+                        console.log(
+                            "calculateTotalTime(selectedTableRow);",
+                            calculateTotalTime(selectedTableRow)
+                        );
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 
@@ -1028,8 +1032,19 @@ const TimeSheet = () => {
                             /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value)
                         ) {
                             // Assuming you have an isNew flag indicating if it's a new row
-                            if (selectedTableRow.is_new) {
+                            if (
+                                selectedTableRow.is_new &&
+                                !hasEmptyStartEndTimeRow(timesheetAction)
+                            ) {
                                 addNewTimesheetRow();
+                            } else {
+                                toast.error(
+                                    "Start time should not be greater than end time.",
+                                    {
+                                        position: toast.POSITION.TOP_RIGHT,
+                                    }
+                                );
+                                //retur;
                             }
                         }
                         break;
@@ -1059,41 +1074,45 @@ const TimeSheet = () => {
         setSelectedTableRow(selectedTableRow);
     };
 
+    const hasEmptyStartEndTimeRow = (rows: any) => {
+        return rows.some(
+            (row: any) =>
+                row.start_time.trim() === "" && row.end_time.trim() === ""
+        );
+    };
+
     const dateFilter = (date: string) => {
         setFilterDate(date);
         getData(date);
     };
-
     const calculateTotalTime = (record: Timesheet) => {
         let endTime = record.is_edit
-            ? dayjs(record.end_time).format("HH:mm").toString()
+            ? record.end_time
             : dayjs(record.end_time, "HH:mm");
         let startTime = record.is_edit
-            ? dayjs(record.start_time).format("HH:mm").toString()
+            ? record.start_time
             : dayjs(record.start_time, "HH:mm");
-        let diff = 0;
 
-        if (startTime) {
-            diff = dayjs(endTime).diff(
-                dayjs(record.start_time, "HH:mm"),
-                "minute"
-            );
+        if (!endTime || !startTime) {
+            return "";
         }
-        // if (startTime.isAfter(endTime)) {
-        //     toast.error("Start time should not be greater than end time.", {
-        //         position: toast.POSITION.TOP_RIGHT,
-        //     });
-        //     return "";
-        // }
 
+        endTime = dayjs(endTime);
+        startTime = dayjs(startTime);
+
+        if (!endTime.isValid() || !startTime.isValid()) {
+            return "";
+        }
+
+        let diff = endTime.diff(startTime, "minute");
         const hours = Math.floor(diff / 60);
         const minutes = diff % 60;
         const formattedDuration = `${hours}:${minutes
             .toString()
             .padStart(2, "0")}`;
-
-        return formattedDuration ? formattedDuration : "";
+        return formattedDuration;
     };
+
     // save time sheet code end
 
     //End Time sheet List
