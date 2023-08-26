@@ -10,16 +10,16 @@ import {
     Form,
     Popconfirm,
     Divider,
+    Select,
 } from "antd";
-import "./Department.scss";
-import TextArea from "antd/es/input/TextArea";
-
+import "./Designation.scss";
 import api from "../../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import {
-    Department as IDepartment,
-    AddDepartment as IAddDepartment,
-} from "./interfaces/IDeparment";
+    Designation as IDesignation,
+    AddDesignation as IAddDesignation,
+} from "./interfaces/IDesignation";
+import { Department as IDepartment } from "../Department/interfaces/IDeparment";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -27,14 +27,15 @@ import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 const pageSize = 25;
 
-const Department = () => {
+const Designation = () => {
     const [current, setCurrent] = useState(1);
+    const [designationList, setDesignationList] = useState<IDesignation[]>([]);
     const [departmentList, setDepartmentList] = useState<IDepartment[]>([]);
-    const [addDepartment, setAddDepartment] = useState<IAddDepartment>(
-        {} as IAddDepartment
+    const [addDesignation, setAddDesignation] = useState<IAddDesignation>(
+        {} as IAddDesignation
     );
-    const [selectedDepartment, setSelectedDepartment] = useState<IDepartment>(
-        {} as IDepartment
+    const [selectedDesignation, setSelectedDepartment] = useState<IDesignation>(
+        {} as IDesignation
     );
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
@@ -42,7 +43,9 @@ const Department = () => {
 
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
-        useState<IDepartment[]>([]);
+        useState<IDesignation[]>([]);
+
+    const [isSaving, setIsSaving] = useState(false);
 
     const staticEmployees = [
         { EmployeeName: "Employee 1", EmployeeId: "1" },
@@ -62,10 +65,18 @@ const Department = () => {
             className: "center-align-cell",
         },
         {
-            title: "Department Name",
+            title: "Designation",
+            dataIndex: "DesignationName",
+            key: "DesignationName",
+            width: "35%",
+            sorter: (a: any, b: any) =>
+                a.DesignationName.localeCompare(b.DesignationName),
+        },
+        {
+            title: "Department",
             dataIndex: "DepartmentName",
             key: "DepartmentName",
-            width: "70%",
+            width: "35%",
             sorter: (a: any, b: any) =>
                 a.DepartmentName.localeCompare(b.DepartmentName),
         },
@@ -76,7 +87,7 @@ const Department = () => {
             width: "5%",
             className: "center-align-cell",
             sorter: (a: any, b: any) => a.EmployeeCount - b.EmployeeCount,
-            render: (EmployeeCount: any, record: IDepartment) => (
+            render: (EmployeeCount: any, record: IDesignation) => (
                 <span className="totalTimeDisplay">
                     <FontAwesomeIcon
                         icon={faUser}
@@ -94,12 +105,12 @@ const Department = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
-            render: (_: any, record: IDepartment) => (
+            render: (_: any, record: IDesignation) => (
                 <span className="totalTimeDisplay">
                     <FontAwesomeIcon
                         icon={faEdit}
                         className="btn-at"
-                        title="Edit Department"
+                        title="Edit Designation"
                         style={{ color: "#2c7be5", marginLeft: "15px" }}
                         onClick={() => editClickHandler(record)}
                     />
@@ -113,7 +124,7 @@ const Department = () => {
                         <FontAwesomeIcon
                             icon={faTrash}
                             className="btn-at"
-                            title="Delete Department"
+                            title="Delete Designation"
                             style={{ color: "#fa5c7c" }}
                         />
                     </Popconfirm>
@@ -144,7 +155,7 @@ const Department = () => {
                     <FontAwesomeIcon
                         icon={faTrash}
                         className="btn-at"
-                        title="Delete Department"
+                        title="Delete Designation"
                         style={{ color: "#fa5c7c" }}
                     />
                 </Popconfirm>
@@ -153,6 +164,7 @@ const Department = () => {
     ];
 
     useEffect(() => {
+        getDesignationList();
         getDepartmentList();
     }, []);
 
@@ -162,33 +174,42 @@ const Department = () => {
         });
     };
 
+    const getDesignationList = () => {
+        api.getDesignation().then((resp: any) => {
+            setDesignationList(resp.data);
+        });
+    };
+
     const deleteClickHandler = (departmentId: string) => {
         // Delete from  DB
+        setIsSaving(true); // Start loading state
         api.deleteDepartment(departmentId)
             .then((resp: any) => {
-                const updatedData = departmentList.filter(
-                    (item: IDepartment) => item.DepartmentId !== departmentId
+                const updatedData = designationList.filter(
+                    (item: IDesignation) => item.DepartmentId !== departmentId
                 );
-                setDepartmentList(updatedData);
-                toast.success("Department successfully deleted.", {
+                setIsSaving(false); // Stop loading state
+                setDesignationList(updatedData);
+                toast.success("Designation successfully deleted.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             })
             .catch((error) => {
-                toast.error("Technical error while deleting Department.", {
+                setIsSaving(false); // Stop loading state
+                toast.error("Technical error while deleting Designation.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             });
     };
 
-    const editClickHandler = (department: IDepartment) => {
-        setSelectedDepartment(department);
-        setAddDepartment({
-            name: department.DepartmentName,
-            description: department.DepartmentDescription,
+    const editClickHandler = (designation: IDesignation) => {
+        setSelectedDepartment(designation);
+        setAddDesignation({
+            name: designation.DepartmentName,
+            department: designation.DepartmentId,
         });
         setModalMode("edit"); // Set mode to "edit"
-        showModal("edit"); // Open the modal
+        showModal(); // Open the modal
     };
 
     // Search input change handler
@@ -199,8 +220,8 @@ const Department = () => {
 
     const getData = (current: number, pageSize: number) => {
         const startIndex = (current - 1) * pageSize;
-        let retVal = departmentList;
-        const slicedData = departmentList.slice(
+        let retVal = designationList;
+        const slicedData = designationList.slice(
             startIndex,
             startIndex + pageSize
         );
@@ -231,8 +252,7 @@ const Department = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = (mode: "add" | "edit") => {
-        setModalMode(mode);
+    const showModal = () => {
         setIsModalOpen(true);
     };
 
@@ -250,49 +270,49 @@ const Department = () => {
             value = event.value;
         }
 
-        setAddDepartment({
-            ...addDepartment,
+        setAddDesignation({
+            ...addDesignation,
             [name]: value,
         });
     };
 
     const handleOk = () => {
+        setIsSaving(true); // Start loading state
         form.validateFields()
             .then((values) => {
                 try {
                     if (modalMode === "add") {
                         // Add logic
-                        api.createDepartment(addDepartment).then(
+                        api.createDesignation(addDesignation).then(
                             (resp: any) => {
-                                toast.success("Successfully department add.", {
+                                toast.success("Successfully designation add.", {
                                     position: toast.POSITION.TOP_RIGHT,
                                 });
                                 form.resetFields();
                                 setIsModalOpen(false);
-                                getDepartmentList();
+                                setIsSaving(false); // Stop loading state
+                                getDesignationList();
                                 console.log(resp.data);
-                                // setDepartmentList([
-                                //     ...departmentList,
-                                //     resp.data,
-                                // ]);
                             }
                         );
                     } else {
                         // Edit logic
-                        api.updateDepartment(
-                            addDepartment,
-                            selectedDepartment.DepartmentId
+                        api.updateDesignation(
+                            addDesignation,
+                            selectedDesignation.DesignationId
                         ).then((resp: any) => {
-                            toast.success("Successfully department updated.", {
+                            toast.success("Successfully designation updated.", {
                                 position: toast.POSITION.TOP_RIGHT,
                             });
                             form.resetFields();
                             setIsModalOpen(false);
-                            setSelectedDepartment({} as IDepartment);
-                            getDepartmentList();
+                            setIsSaving(false); // Stop loading state
+                            setSelectedDepartment({} as IDesignation);
+                            getDesignationList();
                         });
                     }
                 } catch (ex) {
+                    setIsSaving(false); // Stop loading state in case of error
                     toast.error("Technical error while creating Task", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
@@ -300,20 +320,25 @@ const Department = () => {
             })
             .catch((errorInfo) => {
                 setIsModalOpen(true);
+                setIsSaving(false); // Stop loading state
                 console.log("Validation failed:", errorInfo);
             });
     };
 
     const handleCancel = () => {
-        form.resetFields(); // Reset form fields
-        setSelectedDepartment({} as IDepartment);
-        setAddDepartment({ name: "", description: "" });
-        setModalMode("add"); // Set mode to "add"
+        //form.resetFields();
+        form.resetFields();
         setIsModalOpen(false);
+        setSelectedDepartment({} as IDesignation);
+        setAddDesignation({
+            name: "",
+            department: "",
+        });
+        setModalMode("add"); // Set mode to "add"
     };
 
-    const showEmployeeModal = (department: IDepartment) => {
-        setSelectedDepartmentEmployees(department.Employees); // Assuming "Employees" is the property containing the list of employees for a department
+    const showEmployeeModal = (designation: IDesignation) => {
+        setSelectedDepartmentEmployees(designation.Employees); // Assuming "Employees" is the property containing the list of employees for a designation
         setIsEmployeeModalOpen(true);
     };
 
@@ -323,13 +348,13 @@ const Department = () => {
     };
 
     const removeEmployeeFromDepartment = (employeeId: string) => {
-        // Call your API to remove the employee from the department
+        // Call your API to remove the employee from the designation
         // After successful removal, update the selectedDepartmentEmployees state
         const updatedEmployees = selectedDepartmentEmployees.filter(
             (employee: any) => employee.EmployeeId !== employeeId
         );
         setSelectedDepartmentEmployees(updatedEmployees);
-        // You can also update the Employees property of the department in the departmentList state
+        // You can also update the Employees property of the designation in the designationList state
     };
 
     /*Modal action end */
@@ -338,7 +363,7 @@ const Department = () => {
             <div>
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 4 }}>
-                        <Title level={4}>Department</Title>
+                        <Title level={4}>Designation</Title>
                     </Col>
                     <Col
                         xs={{ span: 24 }}
@@ -349,9 +374,7 @@ const Department = () => {
                         <Button
                             type="primary"
                             className="At2"
-                            onClick={() => {
-                                showModal("add");
-                            }}
+                            onClick={showModal}
                             style={{ float: "right", marginBottom: "10px" }}
                         >
                             Add New
@@ -403,14 +426,14 @@ const Department = () => {
             <Modal
                 title={
                     modalMode === "add"
-                        ? "Add New Department"
-                        : "Edit Department"
+                        ? "Add New Designation"
+                        : "Edit Designation"
                 } // Modify the title
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
             >
-                <Form form={form} initialValues={addDepartment}>
+                <Form form={form} initialValues={addDesignation}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
                             xs={{ span: 24 }}
@@ -422,18 +445,18 @@ const Department = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter department name",
+                                        message:
+                                            "Please enter designation name",
                                     },
                                 ]}
                             >
                                 <Input
-                                    placeholder="Department Name"
+                                    placeholder="Designation Name"
                                     className="w100"
                                     name="name"
                                     onChange={(event) => {
                                         inputChangeHandler(event);
                                     }}
-                                    // defaultValue={addDepartment.name}
                                 />
                             </Form.Item>
                         </Col>
@@ -445,25 +468,29 @@ const Department = () => {
                             md={{ span: 24 }}
                         >
                             <Form.Item
-                                name="description"
+                                name="department"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter a description!",
+                                        message: "Please select a department.",
                                     },
                                 ]}
                             >
-                                <TextArea
-                                    rows={4}
-                                    placeholder="Description.."
-                                    name="description"
-                                    onChange={(event) => {
-                                        inputChangeHandler(
-                                            event,
-                                            "description"
-                                        );
+                                <Select
+                                    allowClear
+                                    placeholder="Department"
+                                    options={departmentList.map(
+                                        (department) => ({
+                                            value: department.DepartmentId,
+                                            label: department.DepartmentName,
+                                        })
+                                    )}
+                                    value={addDesignation.department}
+                                    showSearch={true}
+                                    onChange={(value, event) => {
+                                        inputChangeHandler(event, "department");
                                     }}
-                                    //defaultValue={addDepartment.description}
+                                    className="w100"
                                 />
                             </Form.Item>
                         </Col>
@@ -472,7 +499,7 @@ const Department = () => {
             </Modal>
 
             <Modal
-                title="Department Employees"
+                title="Designation Employees"
                 open={isEmployeeModalOpen}
                 onCancel={closeEmployeeModal}
                 footer={null}
@@ -499,4 +526,4 @@ const Department = () => {
     );
 };
 
-export default Department;
+export default Designation;

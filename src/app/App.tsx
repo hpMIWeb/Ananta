@@ -22,6 +22,7 @@ import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
 import Login from "./modules/login/Login";
 import Department from "./modules/master/Department/Department";
+import Designation from "./modules/master/Designation/Designation";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -79,11 +80,16 @@ const App = () => {
                                     element={<ClientTimeSheet />}
                                 />
                                 <Route path="Setting" element={<Setting />} />
-                                <Route path="*" element={<NoMatch />} />
+                                {/* Master link */}
                                 <Route
                                     path="department"
                                     element={<Department />}
                                 />
+                                <Route
+                                    path="designation"
+                                    element={<Designation />}
+                                />
+                                <Route path="*" element={<NoMatch />} />
                             </Route>
                         </Routes>
                     </BrowserRouter>

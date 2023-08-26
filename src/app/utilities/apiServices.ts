@@ -19,6 +19,7 @@ import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
 import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
 import { AddDepartment } from "../modules/master/Department/interfaces/IDeparment";
+import { AddDesignation } from "../modules/master/Designation/interfaces/IDesignation";
 import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
@@ -524,6 +525,52 @@ export default {
             method: "PUT",
             url: "department/update-department/id=" + departmentId,
             data: department,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+
+    getDesignation: () =>
+        instance({
+            method: "GET",
+            url: "designation/get-designation/?search=acc",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDesignation: (designation: AddDesignation) =>
+        instance({
+            method: "POST",
+            url: "designation/create-designation/",
+            data: designation,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDesignation: (designationId: string) =>
+        instance({
+            method: "DELETE",
+            url: "designation/delete-designation/id=" + designationId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDesignation: (designation: AddDesignation, designationId: string) =>
+        instance({
+            method: "PUT",
+            url: "designation/update-designation/id=" + designationId,
+            data: designation,
             transformResponse: [
                 function (data) {
                     return data;
