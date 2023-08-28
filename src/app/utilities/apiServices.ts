@@ -20,6 +20,9 @@ import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
 import { AddDepartment } from "../modules/master/Department/interfaces/IDeparment";
 import { AddDesignation } from "../modules/master/Designation/interfaces/IDesignation";
+import { AddRole } from "../modules/master/Role/interfaces/IRole";
+import { AddTeam } from "../modules/master/Team/interfaces/ITeam";
+
 import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
@@ -535,7 +538,7 @@ export default {
     getDesignation: () =>
         instance({
             method: "GET",
-            url: "designation/get-designation/?search=acc",
+            url: "designation/get-designation/",
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -574,6 +577,143 @@ export default {
             transformResponse: [
                 function (data) {
                     return data;
+                },
+            ],
+        }),
+
+    getRoleType: () =>
+        instance({
+            method: "GET",
+            url: "role-type/get-role-type/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    getRole: () =>
+        instance({
+            method: "GET",
+            url: "role/get-all-role/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createRole: (role: AddRole) =>
+        instance({
+            method: "POST",
+            url: "role/create",
+            data: role,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteRole: (roleId: string) =>
+        instance({
+            method: "DELETE",
+            url: "role/id=" + roleId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateRole: (role: AddRole, roleId: string) =>
+        instance({
+            method: "PUT",
+            url: "role/id=" + roleId,
+            data: role,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+
+    getTeam: () =>
+        instance({
+            method: "GET",
+            url: "team/get-team",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+
+    getUserList: () =>
+        instance({
+            method: "GET",
+            url: "admin/get-all-users",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createTeam: (team: AddTeam) =>
+        instance({
+            method: "POST",
+            url: "team/create-team",
+            data: team,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteTeam: (teamId: string) =>
+        instance({
+            method: "DELETE",
+            url: "eam/delete-team/id=" + teamId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateTeam: (team: AddTeam, teamId: string) =>
+        instance({
+            method: "PUT",
+            url: "team/update-team/id=" + teamId,
+            data: team,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+    getChecklist: () =>
+        instance({
+            method: "GET",
+            url: "checklist/get-checklist",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteChecklist: (checklistId: string) =>
+        instance({
+            method: "DELETE",
+            url: "checklist/delete-checklist/" + checklistId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
                 },
             ],
         }),

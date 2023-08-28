@@ -34,9 +34,8 @@ const Designation = () => {
     const [addDesignation, setAddDesignation] = useState<IAddDesignation>(
         {} as IAddDesignation
     );
-    const [selectedDesignation, setSelectedDepartment] = useState<IDesignation>(
-        {} as IDesignation
-    );
+    const [selectedDesignation, setSelectedDesignation] =
+        useState<IDesignation>({} as IDesignation);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
@@ -66,36 +65,35 @@ const Designation = () => {
         },
         {
             title: "Designation",
-            dataIndex: "DesignationName",
-            key: "DesignationName",
+            dataIndex: "name",
+            key: "name",
             width: "35%",
-            sorter: (a: any, b: any) =>
-                a.DesignationName.localeCompare(b.DesignationName),
+            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
         },
         {
             title: "Department",
-            dataIndex: "DepartmentName",
-            key: "DepartmentName",
+            dataIndex: "departmentName",
+            key: "departmentName",
             width: "35%",
             sorter: (a: any, b: any) =>
-                a.DepartmentName.localeCompare(b.DepartmentName),
+                a.departmentName.localeCompare(b.departmentName),
         },
         {
             title: "Employee",
-            dataIndex: "EmployeeCount",
-            key: "EmployeeCount",
+            dataIndex: "employeeCount",
+            key: "employeeCount",
             width: "5%",
             className: "center-align-cell",
-            sorter: (a: any, b: any) => a.EmployeeCount - b.EmployeeCount,
-            render: (EmployeeCount: any, record: IDesignation) => (
-                <span className="totalTimeDisplay">
+            sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
+            render: (employeeCount: any, record: IDesignation) => (
+                <span className="actionColumn">
                     <FontAwesomeIcon
                         icon={faUser}
                         style={{ marginRight: "5px" }}
                     />{" "}
                     {/* User icon */}
                     <span onClick={() => showEmployeeModal(record)}>
-                        {EmployeeCount}
+                        {employeeCount}
                     </span>
                 </span>
             ),
@@ -106,7 +104,7 @@ const Designation = () => {
             key: "action",
             width: "10%",
             render: (_: any, record: IDesignation) => (
-                <span className="totalTimeDisplay">
+                <span className="actionColumn">
                     <FontAwesomeIcon
                         icon={faEdit}
                         className="btn-at"
@@ -117,9 +115,7 @@ const Designation = () => {
                     <Divider type="vertical" />
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() =>
-                            deleteClickHandler(record.DepartmentId)
-                        }
+                        onConfirm={() => deleteClickHandler(record._id)}
                     >
                         <FontAwesomeIcon
                             icon={faTrash}
@@ -180,14 +176,15 @@ const Designation = () => {
         });
     };
 
-    const deleteClickHandler = (departmentId: string) => {
+    const deleteClickHandler = (designationId: string) => {
         // Delete from  DB
         setIsSaving(true); // Start loading state
-        api.deleteDepartment(departmentId)
+        api.deleteDesignation(designationId)
             .then((resp: any) => {
                 const updatedData = designationList.filter(
-                    (item: IDesignation) => item.DepartmentId !== departmentId
+                    (item: IDesignation) => item._id !== designationId
                 );
+
                 setIsSaving(false); // Stop loading state
                 setDesignationList(updatedData);
                 toast.success("Designation successfully deleted.", {
@@ -203,11 +200,12 @@ const Designation = () => {
     };
 
     const editClickHandler = (designation: IDesignation) => {
-        setSelectedDepartment(designation);
+        setSelectedDesignation(designation);
         setAddDesignation({
-            name: designation.DepartmentName,
-            department: designation.DepartmentId,
+            name: designation.name,
+            department: designation.department,
         });
+
         setModalMode("edit"); // Set mode to "edit"
         showModal(); // Open the modal
     };
@@ -228,9 +226,9 @@ const Designation = () => {
 
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.DepartmentName.toLowerCase().includes(
-                    searchQuery.toLowerCase()
-                );
+                return item.name
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
             });
         }
 
@@ -299,7 +297,7 @@ const Designation = () => {
                         // Edit logic
                         api.updateDesignation(
                             addDesignation,
-                            selectedDesignation.DesignationId
+                            selectedDesignation.department
                         ).then((resp: any) => {
                             toast.success("Successfully designation updated.", {
                                 position: toast.POSITION.TOP_RIGHT,
@@ -307,7 +305,7 @@ const Designation = () => {
                             form.resetFields();
                             setIsModalOpen(false);
                             setIsSaving(false); // Stop loading state
-                            setSelectedDepartment({} as IDesignation);
+                            setSelectedDesignation({} as IDesignation);
                             getDesignationList();
                         });
                     }
@@ -329,7 +327,7 @@ const Designation = () => {
         //form.resetFields();
         form.resetFields();
         setIsModalOpen(false);
-        setSelectedDepartment({} as IDesignation);
+        setSelectedDesignation({} as IDesignation);
         setAddDesignation({
             name: "",
             department: "",
@@ -338,7 +336,7 @@ const Designation = () => {
     };
 
     const showEmployeeModal = (designation: IDesignation) => {
-        setSelectedDepartmentEmployees(designation.Employees); // Assuming "Employees" is the property containing the list of employees for a designation
+        setSelectedDepartmentEmployees(designation.employees); // Assuming "Employees" is the property containing the list of employees for a designation
         setIsEmployeeModalOpen(true);
     };
 
@@ -411,13 +409,12 @@ const Designation = () => {
             <div>
                 <div className="client-details">
                     <Table
-                        id="departmentTable"
                         columns={columns}
                         dataSource={getData(current, pageSize)}
                         onChange={onChange}
                         size="small"
                         style={{ width: "100%" }}
-                        className="table-striped-rows  departmentTable"
+                        className="table-striped-rows"
                         bordered
                     />
                 </div>
@@ -481,8 +478,8 @@ const Designation = () => {
                                     placeholder="Department"
                                     options={departmentList.map(
                                         (department) => ({
-                                            value: department.DepartmentId,
-                                            label: department.DepartmentName,
+                                            value: department._id,
+                                            label: department.name,
                                         })
                                     )}
                                     value={addDesignation.department}

@@ -437,3 +437,13 @@ label,
 .ant-select-item {
     transition: none !important;
 }
+
+.actionColumn {
+    display: inline-block;
+    align-items: center;
+    min-height: 20px;
+    text-align: center;
+}
+.center-align-value {
+    text-align: center;
+}

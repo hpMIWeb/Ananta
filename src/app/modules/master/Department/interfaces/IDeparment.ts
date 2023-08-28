@@ -4,9 +4,9 @@ export interface AddDepartment {
 }
 
 export interface Department {
-    DepartmentId: string;
-    DepartmentName: string;
-    DepartmentDescription: string;
-    EmployeeCount: string;
-    Employees: [];
+    _id: string;
+    name: string;
+    description: string;
+    employeeCount: string;
+    employees: [];
 }

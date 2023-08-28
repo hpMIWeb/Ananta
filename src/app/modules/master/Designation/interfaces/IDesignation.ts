@@ -4,10 +4,10 @@ export interface AddDesignation {
 }
 
 export interface Designation {
-    DesignationId: string;
-    DesignationName: string;
-    DepartmentId: string;
-    DepartmentName: string;
-    EmployeeCount: string;
-    Employees: [];
+    _id: string;
+    name: string;
+    department: string;
+    departmentName: string;
+    employeeCount: string;
+    employees: [];
 }

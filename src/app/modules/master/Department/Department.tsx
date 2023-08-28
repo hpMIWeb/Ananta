@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Console } from "console";
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -63,28 +64,27 @@ const Department = () => {
         },
         {
             title: "Department Name",
-            dataIndex: "DepartmentName",
-            key: "DepartmentName",
+            dataIndex: "name",
+            key: "name",
             width: "70%",
-            sorter: (a: any, b: any) =>
-                a.DepartmentName.localeCompare(b.DepartmentName),
+            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
         },
         {
             title: "Employee",
-            dataIndex: "EmployeeCount",
-            key: "EmployeeCount",
+            dataIndex: "employeeCount",
+            key: "employeeCount",
             width: "5%",
             className: "center-align-cell",
-            sorter: (a: any, b: any) => a.EmployeeCount - b.EmployeeCount,
-            render: (EmployeeCount: any, record: IDepartment) => (
-                <span className="totalTimeDisplay">
+            sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
+            render: (employeeCount: any, record: IDepartment) => (
+                <span className="actionColumn">
                     <FontAwesomeIcon
                         icon={faUser}
                         style={{ marginRight: "5px" }}
                     />{" "}
                     {/* User icon */}
                     <span onClick={() => showEmployeeModal(record)}>
-                        {EmployeeCount}
+                        {employeeCount}
                     </span>
                 </span>
             ),
@@ -95,7 +95,7 @@ const Department = () => {
             key: "action",
             width: "10%",
             render: (_: any, record: IDepartment) => (
-                <span className="totalTimeDisplay">
+                <span className="actionColumn">
                     <FontAwesomeIcon
                         icon={faEdit}
                         className="btn-at"
@@ -106,9 +106,7 @@ const Department = () => {
                     <Divider type="vertical" />
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() =>
-                            deleteClickHandler(record.DepartmentId)
-                        }
+                        onConfirm={() => deleteClickHandler(record._id)}
                     >
                         <FontAwesomeIcon
                             icon={faTrash}
@@ -167,7 +165,7 @@ const Department = () => {
         api.deleteDepartment(departmentId)
             .then((resp: any) => {
                 const updatedData = departmentList.filter(
-                    (item: IDepartment) => item.DepartmentId !== departmentId
+                    (item: IDepartment) => item._id !== departmentId
                 );
                 setDepartmentList(updatedData);
                 toast.success("Department successfully deleted.", {
@@ -184,8 +182,8 @@ const Department = () => {
     const editClickHandler = (department: IDepartment) => {
         setSelectedDepartment(department);
         setAddDepartment({
-            name: department.DepartmentName,
-            description: department.DepartmentDescription,
+            name: department.name,
+            description: department.description,
         });
         setModalMode("edit"); // Set mode to "edit"
         showModal("edit"); // Open the modal
@@ -207,9 +205,9 @@ const Department = () => {
 
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.DepartmentName.toLowerCase().includes(
-                    searchQuery.toLowerCase()
-                );
+                return item.name
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
             });
         }
 
@@ -281,7 +279,7 @@ const Department = () => {
                         // Edit logic
                         api.updateDepartment(
                             addDepartment,
-                            selectedDepartment.DepartmentId
+                            selectedDepartment._id
                         ).then((resp: any) => {
                             toast.success("Successfully department updated.", {
                                 position: toast.POSITION.TOP_RIGHT,
@@ -313,7 +311,7 @@ const Department = () => {
     };
 
     const showEmployeeModal = (department: IDepartment) => {
-        setSelectedDepartmentEmployees(department.Employees); // Assuming "Employees" is the property containing the list of employees for a department
+        setSelectedDepartmentEmployees(department.employees); // Assuming "Employees" is the property containing the list of employees for a department
         setIsEmployeeModalOpen(true);
     };
 
