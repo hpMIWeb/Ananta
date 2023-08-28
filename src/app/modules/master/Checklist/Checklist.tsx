@@ -22,9 +22,10 @@ import "./Checklist.scss";
 import {
     AddCheckList as IAddCheckList,
     CheckList as ICheckList,
+    QuestionDetails as IQuestionDetails,
 } from "./interface/IChecklist";
 import api from "../../../utilities/apiServices";
-import { capitalize, employeeOpts } from "../../../utilities/utility";
+import { capitalize } from "../../../utilities/utility";
 
 import { Department as IDepartment } from "../Department/interfaces/IDeparment";
 import { ToastContainer, toast } from "react-toastify";
@@ -44,9 +45,16 @@ const Checklist = () => {
     const [selectedChecklist, setSelectedChecklist] = useState<ICheckList>(
         {} as ICheckList
     );
+
+    const questionObject = { _id: "1", name: "Pending" } as IQuestionDetails;
+    const [questions, setQuestions] = useState<IQuestionDetails[]>([
+        questionObject,
+    ]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
+
+    const [contentMaxHeight, setContentMaxHeight] = useState(null);
 
     const columns = [
         {
@@ -112,6 +120,63 @@ const Checklist = () => {
         },
     ];
 
+    const questionColumns = [
+        {
+            title: "Name",
+            dataIndex: "",
+            width: "5%",
+            render: (index: any, record: ICheckList) => (
+                <span>{record._id}</span>
+            ),
+        },
+        {
+            title: "Name",
+            dataIndex: "name",
+            width: "90%",
+            render: (index: any, record: ICheckList) => (
+                <Form.Item
+                    name={"title_" + record._id}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter question.",
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder="Question"
+                        name="title"
+                        onChange={(event) => {
+                            inputChangeHandlerForQuestion(event, index);
+                        }}
+                    />
+                </Form.Item>
+            ),
+        },
+        {
+            title: "Action",
+            dataIndex: "",
+            key: "action",
+            width: "5%",
+            className: "center-align-cell",
+            render: (_: any, record: ICheckList) => (
+                <span className="actionColumn">
+                    <Popconfirm
+                        title="Sure to delete?"
+                        onConfirm={() => deleteClickHandler(record._id)}
+                    >
+                        <FontAwesomeIcon
+                            icon={faTrash}
+                            className="btn-at"
+                            title="Delete Department"
+                            style={{ color: "#fa5c7c" }}
+                        />
+                    </Popconfirm>
+                </span>
+            ),
+        },
+    ];
+
     const [isModalOpen1, setIsModalOpen1] = useState(false);
 
     const deleteClickHandler = (checklistId: string) => {
@@ -143,6 +208,11 @@ const Checklist = () => {
         getChecklist();
         getDepartmentList();
     }, []);
+
+    const addNewQuestion = () => {
+        questionObject._id = (questions.length + 1).toString();
+        setQuestions([...questions, questionObject]);
+    };
 
     const getChecklist = () => {
         api.getChecklist().then((resp: any) => {
@@ -248,6 +318,29 @@ const Checklist = () => {
         });
     };
 
+    const inputChangeHandlerForQuestion = (
+        event: any,
+        nameItem: string = ""
+    ) => {
+        let name = "";
+        let value = "";
+        if (event && event.target) {
+            name = event.target.name;
+            value = event.target.value;
+        } else if (nameItem !== "" && event !== "" && event !== undefined) {
+            name = nameItem;
+            value = event.value ?? event;
+        } else if (event) {
+            name = event.name;
+            value = event.value;
+        }
+
+        setAddCheckList({
+            ...addchecklist,
+            [name]: value,
+        });
+    };
+
     return (
         <div>
             <Row gutter={[8, 8]} className="form-row">
@@ -308,113 +401,110 @@ const Checklist = () => {
                     bordered
                 />
             </div>
-            <Modal
-                title="Sales Entry Checklist"
-                open={isModalOpen1}
-                width={650}
-                onCancel={handleCancel1}
-                onOk={handleOk1}
-            >
-                <hr />
-            </Modal>
-            <Modal
-                title="Sales Entry Checklist"
-                open={isModalOpen2}
-                onCancel={handleCancel2}
-                onOk={handleOk2}
-                width={650}
-                okText="Save"
-                cancelText="Delete"
-                cancelButtonProps={{ style: { color: "red" } }}
-            >
-                <hr />
-            </Modal>
+
             <Modal
                 title="Create New Checklist"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 onOk={handleOk}
-                width={650}
                 okText="Add"
+                className="checklist-modal"
             >
-                <Divider></Divider>
-                <Form>
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 16 }}
-                            md={{ span: 12 }}
-                        >
-                            <Form.Item
-                                name="title"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter checklist name.",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    placeholder="Checklist Name"
-                                    className="w100"
-                                    name="title"
-                                    onChange={(event) => {
-                                        inputChangeHandler(event);
-                                    }}
-                                    defaultValue={addchecklist.title}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 16 }}
-                            md={{ span: 12 }}
-                        >
-                            <Form.Item
-                                name="department"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter department",
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    allowClear
-                                    options={departmentList.map(
-                                        (departmentList) => ({
-                                            value: departmentList._id,
-                                            label: capitalize(
-                                                departmentList.name
-                                            ),
-                                        })
-                                    )}
-                                    placeholder="Select Department"
-                                    onChange={(value, event) => {
-                                        inputChangeHandler(event, "department");
-                                    }}
-                                    defaultValue={addchecklist.department}
-                                    showSearch={true}
-                                    className="w100"
-                                ></Select>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                <div className="modal-content">
                     <Divider></Divider>
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 16 }}
-                            md={{ span: 6 }}
-                        >
-                            <Button
-                                type="primary"
-                                shape="circle"
-                                icon={<PlusOutlined />}
-                            />{" "}
-                        </Col>
-                    </Row>
-                </Form>
+                    <Form>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 16 }}
+                                md={{ span: 12 }}
+                            >
+                                <Form.Item
+                                    name="title"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Please enter checklist name.",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Checklist Name"
+                                        className="w100"
+                                        name="title"
+                                        onChange={(event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        defaultValue={addchecklist.title}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 16 }}
+                                md={{ span: 12 }}
+                            >
+                                <Form.Item
+                                    name="department"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter department",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        options={departmentList.map(
+                                            (departmentList) => ({
+                                                value: departmentList._id,
+                                                label: capitalize(
+                                                    departmentList.name
+                                                ),
+                                            })
+                                        )}
+                                        placeholder="Select Department"
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(
+                                                event,
+                                                "department"
+                                            );
+                                        }}
+                                        defaultValue={addchecklist.department}
+                                        showSearch={true}
+                                        className="w100"
+                                    ></Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]}>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <Button
+                                    type="primary"
+                                    shape="circle"
+                                    icon={<PlusOutlined />}
+                                    onClick={addNewQuestion}
+                                    style={{ float: "right" }}
+                                />
+                            </Col>
+                        </Row>
+                        <Divider></Divider>
+                        <div className="question-details client-details">
+                            <Table
+                                rowKey={(record: any) => record._id}
+                                dataSource={questions}
+                                columns={questionColumns}
+                                pagination={false}
+                                showHeader={false}
+                            />
+                        </div>
+                    </Form>
+                </div>
             </Modal>
         </div>
     );

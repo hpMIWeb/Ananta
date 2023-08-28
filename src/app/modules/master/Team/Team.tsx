@@ -73,7 +73,7 @@ const Team = () => {
         },
         {
             title: "Team Leader",
-            dataIndex: "teamleader",
+            dataIndex: "leader",
             width: "15%",
             render: (leaders: any) => (
                 <span className="actionColumn">
@@ -146,6 +146,7 @@ const Team = () => {
 
     const editClickHandler = (team: ITeam) => {
         setSelectedTeam(team);
+        console.log("team", team);
 
         setModalMode("edit"); // Set mode to "edit"
         showModal(); // Open the modal
@@ -383,7 +384,7 @@ const Team = () => {
                                     onChange={(event) => {
                                         inputChangeHandler(event);
                                     }}
-                                    defaultValue={addTeam.name}
+                                    defaultValue={selectedTeam.name}
                                 />
                             </Form.Item>
                         </Col>
@@ -418,7 +419,7 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "department");
                                     }}
-                                    defaultValue={addTeam.department}
+                                    defaultValue={selectedTeam.department._id}
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -452,7 +453,9 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "leader");
                                     }}
-                                    defaultValue={addTeam.leader}
+                                    defaultValue={selectedTeam.leader.map(
+                                        (leader: any) => leader._id
+                                    )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -486,7 +489,9 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "member");
                                     }}
-                                    defaultValue={addTeam.member}
+                                    defaultValue={selectedTeam.member.map(
+                                        (member: any) => member._id
+                                    )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                     mode="multiple"

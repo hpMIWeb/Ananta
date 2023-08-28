@@ -1,7 +1,7 @@
 export interface AddCheckList {
     title: string;
     department: string;
-    question: [];
+    question: QuestionDetails[];
 }
 
 export interface CheckList {
@@ -9,7 +9,7 @@ export interface CheckList {
     title: string;
     roleType: string;
     department: DepartmentDetails;
-    question: QuestionDetails;
+    question: QuestionDetails[];
 }
 
 export interface DepartmentDetails {
