@@ -328,7 +328,6 @@ const Department = () => {
 
     const handleCancel = () => {
         setModalMode("add"); // Set mode to "add"
-        //  form.resetFields(); // Reset form fields
         form.setFieldsValue({} as IAddDepartment);
         setAddDepartment({} as IAddDepartment);
         setSelectedDepartment({} as IDepartment);

@@ -22,6 +22,7 @@ import { AddDepartment } from "../modules/master/Department/interfaces/IDeparmen
 import { AddDesignation } from "../modules/master/Designation/interfaces/IDesignation";
 import { AddRole } from "../modules/master/Role/interfaces/IRole";
 import { AddTeam } from "../modules/master/Team/interfaces/ITeam";
+import { AddCheckList } from "../modules/master/Checklist/interface/IChecklist";
 
 import { ILogin } from "./globalInterfaces";
 
@@ -714,6 +715,29 @@ export default {
                 function (data) {
                     const json = JSON.parse(data);
                     return json.payload;
+                },
+            ],
+        }),
+    createChecklist: (checklist: AddCheckList) =>
+        instance({
+            method: "POST",
+            url: "checklist/create-checklist",
+            data: checklist,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateChecklist: (checklist: AddCheckList, checklistId: string) =>
+        instance({
+            method: "PUT",
+            url: "checklist/update-checklist/" + checklistId,
+            data: checklist,
+            transformResponse: [
+                function (data) {
+                    return data;
                 },
             ],
         }),

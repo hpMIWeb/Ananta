@@ -193,6 +193,7 @@ const Team = () => {
         if (mode === "add") {
             form.setFieldsValue({} as IAddTeam);
             setAddTeam({} as IAddTeam);
+
             setModalMode(mode);
             setIsModalOpen(true);
         } else {
@@ -204,6 +205,8 @@ const Team = () => {
     const handleCancel = () => {
         setModalMode("add");
         form.resetFields();
+        form.setFieldsValue({} as IAddTeam);
+        setAddTeam({} as IAddTeam);
         setIsModalOpen(false);
     };
 

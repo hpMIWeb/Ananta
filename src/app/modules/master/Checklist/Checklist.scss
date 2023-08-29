@@ -4,6 +4,10 @@
     justify-content: center;
 }
 
+.checklist-modal .ant-modal-content {
+    width: 900px; /* Adjust the width value as needed */
+}
+
 .modal-content {
     overflow: hidden; /* Hide the content overflow */
 }
@@ -14,7 +18,7 @@
 }
 
 .question-details::-webkit-scrollbar {
-    width: 7px;
+    width: 5px;
     border-radius: 10px;
 }
 

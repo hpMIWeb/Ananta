@@ -38,7 +38,7 @@ const { Title } = Typography;
 const Checklist = () => {
     const [current, setCurrent] = useState(1);
     const [checklistList, setChecklistList] = useState<ICheckList[]>([]);
-    const [addchecklist, setAddCheckList] = useState<IAddCheckList>(
+    const [addChecklist, setAddCheckList] = useState<IAddCheckList>(
         {} as IAddCheckList
     );
     const [departmentList, setDepartmentList] = useState<IDepartment[]>([]);
@@ -46,15 +46,13 @@ const Checklist = () => {
         {} as ICheckList
     );
 
-    const questionObject = { _id: "1", name: "Pending" } as IQuestionDetails;
+    const questionObject = { _id: "1", name: "" } as IQuestionDetails;
     const [questions, setQuestions] = useState<IQuestionDetails[]>([
         questionObject,
     ]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
-
-    const [contentMaxHeight, setContentMaxHeight] = useState(null);
 
     const columns = [
         {
@@ -125,17 +123,17 @@ const Checklist = () => {
             title: "Name",
             dataIndex: "",
             width: "5%",
-            render: (index: any, record: ICheckList) => (
-                <span>{record._id}</span>
+            render: (_: any, __: any, index: number) => (
+                <span>{index + 1}</span>
             ),
         },
         {
             title: "Name",
             dataIndex: "name",
             width: "90%",
-            render: (index: any, record: ICheckList) => (
+            render: (index: any, record: IQuestionDetails) => (
                 <Form.Item
-                    name={"title_" + record._id}
+                    name={"name_" + record._id}
                     rules={[
                         {
                             required: true,
@@ -145,10 +143,12 @@ const Checklist = () => {
                 >
                     <Input
                         placeholder="Question"
-                        name="title"
+                        name="name"
                         onChange={(event) => {
-                            inputChangeHandlerForQuestion(event, index);
+                            inputChangeHandlerForQuestion(event, record._id);
                         }}
+                        defaultValue={record.name}
+                        value={record.name}
                     />
                 </Form.Item>
             ),
@@ -159,11 +159,13 @@ const Checklist = () => {
             key: "action",
             width: "5%",
             className: "center-align-cell",
-            render: (_: any, record: ICheckList) => (
+            render: (record: IQuestionDetails) => (
                 <span className="actionColumn">
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() => deleteClickHandler(record._id)}
+                        onConfirm={() =>
+                            deleteClickHandlerForQuestion(record._id)
+                        }
                     >
                         <FontAwesomeIcon
                             icon={faTrash}
@@ -198,10 +200,36 @@ const Checklist = () => {
             });
     };
 
+    const deleteClickHandlerForQuestion = (questionId: any) => {
+        if (questions.length > 1) {
+            // Filter out the question with the given questionId
+            const updatedQuestionsArray = questions.filter(
+                (question) => question._id !== questionId
+            );
+
+            // Update the state with the updated questions array
+            setQuestions(updatedQuestionsArray);
+            toast.success("Question delete successfully.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        } else {
+            toast.error("Cannot delete the first question.", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    };
+
     const editClickHandler = (checklist: ICheckList) => {
         setSelectedChecklist(checklist);
+        form.setFieldsValue({
+            title: checklist.title,
+            department: checklist.department._id,
+            question: checklist.question,
+        });
+        setQuestions(checklist.question);
         setModalMode("edit"); // Set mode to "edit"
-        showModal(); // Open the modal
+        showModal("edit"); // Open the modal
     };
 
     useEffect(() => {
@@ -252,43 +280,73 @@ const Checklist = () => {
             setDepartmentList(resp.data);
         });
     };
-    const showModal1 = () => {
-        setIsModalOpen1(true);
-    };
-    const handleCancel1 = () => {
-        //form.resetFields();
-        setIsModalOpen1(false);
-    };
-    const handleOk1 = () => {
-        //form.resetFields();
-        setIsModalOpen1(false);
-    };
-    const [isModalOpen2, setIsModalOpen2] = useState(false);
-
-    const showModal2 = () => {
-        setIsModalOpen2(true);
-    };
-    const handleCancel2 = () => {
-        //form.resetFields();
-        setIsModalOpen2(false);
-    };
-    const handleOk2 = () => {
-        //form.resetFields();
-        setIsModalOpen2(false);
-    };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = () => {
-        setIsModalOpen(true);
+    const showModal = (mode: "add" | "edit") => {
+        console.log(mode);
+        if (mode === "add") {
+            form.setFieldsValue({} as IAddCheckList);
+            setAddCheckList({} as IAddCheckList);
+            setQuestions([questionObject]);
+            setModalMode(mode);
+            setIsModalOpen(true);
+        } else {
+            setModalMode(mode);
+            setIsModalOpen(true);
+        }
     };
 
     const handleCancel = () => {
-        //form.resetFields();
+        setIsModalOpen(false);
+        setModalMode("add");
+        form.setFieldsValue({} as IAddCheckList);
+        setAddCheckList({} as IAddCheckList);
+        setQuestions([questionObject]);
         setIsModalOpen(false);
     };
     const handleOk = () => {
         //form.resetFields();
+        form.validateFields()
+            .then((values) => {
+                try {
+                    console.log("modalMode", modalMode);
+                    addChecklist.question = questions;
+                    //  return;
+                    console.log("addChecklist", addChecklist);
+                    const apiCall =
+                        modalMode === "add"
+                            ? api.createChecklist(addChecklist)
+                            : api.updateChecklist(
+                                  addChecklist,
+                                  selectedChecklist._id
+                              );
+
+                    apiCall.then((resp: any) => {
+                        const successMessage =
+                            modalMode === "add"
+                                ? "Checklist added."
+                                : "Checklist Updated.";
+
+                        toast.success(successMessage, {
+                            position: toast.POSITION.TOP_RIGHT,
+                        });
+                        setModalMode("add");
+                        form.setFieldsValue({} as IAddCheckList);
+                        setAddCheckList({} as IAddCheckList);
+                        setQuestions([questionObject]);
+                        getChecklist();
+                    });
+                } catch (ex) {
+                    toast.error("Technical error while creating Checklist", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                }
+            })
+            .catch((errorInfo) => {
+                setIsModalOpen(true);
+                console.log("Validation failed:", errorInfo);
+            });
         setIsModalOpen(false);
     };
 
@@ -313,32 +371,34 @@ const Checklist = () => {
         }
 
         setAddCheckList({
-            ...addchecklist,
+            ...addChecklist,
             [name]: value,
         });
     };
 
     const inputChangeHandlerForQuestion = (
-        event: any,
-        nameItem: string = ""
+        event: React.ChangeEvent<HTMLInputElement>,
+        questionId: string
     ) => {
-        let name = "";
-        let value = "";
-        if (event && event.target) {
-            name = event.target.name;
-            value = event.target.value;
-        } else if (nameItem !== "" && event !== "" && event !== undefined) {
-            name = nameItem;
-            value = event.value ?? event;
-        } else if (event) {
-            name = event.name;
-            value = event.value;
-        }
+        const { value } = event.target;
 
-        setAddCheckList({
-            ...addchecklist,
-            [name]: value,
-        });
+        // Find the index of the question with the matching _id
+        const questionIndex = questions.findIndex(
+            (question) => question._id === questionId
+        );
+
+        if (questionIndex !== -1) {
+            // Create a new array with the updated question
+            const updatedQuestionsArray = [...questions];
+            updatedQuestionsArray[questionIndex] = {
+                ...updatedQuestionsArray[questionIndex],
+                name: value,
+            };
+            console.log(updatedQuestionsArray);
+
+            // Update the state with the new array
+            setQuestions(updatedQuestionsArray);
+        }
     };
 
     return (
@@ -358,7 +418,9 @@ const Checklist = () => {
                     <Button
                         type="primary"
                         className="c2"
-                        onClick={showModal}
+                        onClick={() => {
+                            showModal("add");
+                        }}
                         style={{ float: "right", marginBottom: "10px" }}
                     >
                         Create New
@@ -412,7 +474,7 @@ const Checklist = () => {
             >
                 <div className="modal-content">
                     <Divider></Divider>
-                    <Form>
+                    <Form form={form} initialValues={addChecklist}>
                         <Row gutter={[8, 8]} className="form-row">
                             <Col
                                 xs={{ span: 24 }}
@@ -436,7 +498,6 @@ const Checklist = () => {
                                         onChange={(event) => {
                                             inputChangeHandler(event);
                                         }}
-                                        defaultValue={addchecklist.title}
                                     />
                                 </Form.Item>
                             </Col>
@@ -471,7 +532,6 @@ const Checklist = () => {
                                                 "department"
                                             );
                                         }}
-                                        defaultValue={addchecklist.department}
                                         showSearch={true}
                                         className="w100"
                                     ></Select>
@@ -495,13 +555,13 @@ const Checklist = () => {
                         </Row>
                         <Divider></Divider>
                         <div className="question-details client-details">
-                            {/* <Table
+                            <Table
                                 rowKey={(record: any) => record._id}
                                 dataSource={questions}
                                 columns={questionColumns}
                                 pagination={false}
                                 showHeader={false}
-                            /> */}
+                            />
                         </div>
                     </Form>
                 </div>
