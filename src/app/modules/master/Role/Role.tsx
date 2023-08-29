@@ -40,8 +40,6 @@ const Role = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const updateRole = location.state?.roleData;
-    const isUpdated = location.state?.updated;
 
     const columns = [
         {
@@ -120,25 +118,8 @@ const Role = () => {
     ];
 
     useEffect(() => {
-        // if (isUpdated && updateRole) {
-        //     // Find the index of the updated project in the allProject array
-        //     const updatedIndex = roleList.findIndex(
-        //         (roleDetails) => roleDetails._id === updateRole._id
-        //     );
-        //     console.log("updatedIndex", updatedIndex);
-        //     if (updatedIndex !== -1) {
-        //         // Create a copy of the allProject array and update the specific project
-        //         const updateRoles = [...roleList];
-        //         updateRoles[updatedIndex] = updateRole;
-        //         setRoleList(updateRoles);
-        //     } else {
-        //         getAllRole();
-        //     }
-        // } else {
-        //     getAllRole();
-        // }
         getAllRole();
-    }, [isUpdated, updateRole]);
+    }, []);
 
     const getAllRole = () => {
         api.getRole().then((resp: any) => {

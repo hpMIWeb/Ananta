@@ -248,9 +248,8 @@ const Department = () => {
     const showModal = (mode: "add" | "edit") => {
         console.log("mode", mode);
         if (mode === "add") {
-            //form.resetFields();
-            form.setFieldsValue({} as IAddDepartment);
-            setAddDepartment({} as IAddDepartment);
+            form.resetFields();
+            form.setFieldsValue({ name: "", description: "" });
             setModalMode(mode);
             setIsModalOpen(true);
         } else {
@@ -307,7 +306,7 @@ const Department = () => {
 
                             form.setFieldsValue({} as IAddDepartment);
                             setSelectedDepartment({} as IDepartment);
-                            setAddDepartment({} as IAddDepartment);
+                            form.setFieldsValue({ name: "", description: "" });
                             getDepartmentList();
                             setIsModalOpen(false);
                         })
@@ -328,8 +327,7 @@ const Department = () => {
 
     const handleCancel = () => {
         setModalMode("add"); // Set mode to "add"
-        form.setFieldsValue({} as IAddDepartment);
-        setAddDepartment({} as IAddDepartment);
+        form.setFieldsValue({ name: "", description: "" });
         setSelectedDepartment({} as IDepartment);
         setIsModalOpen(false);
     };
@@ -459,6 +457,7 @@ const Department = () => {
                                     onChange={(event) => {
                                         inputChangeHandler(event);
                                     }}
+                                    defaultValue={addDepartment.name}
                                 />
                             </Form.Item>
                         </Col>

@@ -286,7 +286,7 @@ const Checklist = () => {
     const showModal = (mode: "add" | "edit") => {
         console.log(mode);
         if (mode === "add") {
-            form.setFieldsValue({} as IAddCheckList);
+            form.setFieldsValue({ department: "", title: "", question: [] });
             setAddCheckList({} as IAddCheckList);
             setQuestions([questionObject]);
             setModalMode(mode);

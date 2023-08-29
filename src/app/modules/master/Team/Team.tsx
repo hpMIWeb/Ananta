@@ -191,8 +191,18 @@ const Team = () => {
 
     const showModal = (mode: "add" | "edit") => {
         if (mode === "add") {
-            form.setFieldsValue({} as IAddTeam);
-            setAddTeam({} as IAddTeam);
+            form.setFieldsValue({
+                name: "",
+                member: "",
+                leader: "",
+                department: "",
+            });
+            setAddTeam({
+                name: "",
+                member: [],
+                leader: [],
+                department: "",
+            });
 
             setModalMode(mode);
             setIsModalOpen(true);

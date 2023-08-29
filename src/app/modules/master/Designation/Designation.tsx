@@ -197,12 +197,13 @@ const Designation = () => {
             name: designation.name,
             department: designation.department,
         });
+
         form.setFieldsValue({
             name: designation.name,
             department: designation.department,
         });
         setModalMode("edit"); // Set mode to "edit"
-        showModal(); // Open the modal
+        showModal("edit"); // Open the modal
     };
 
     // Search input change handler
@@ -245,10 +246,17 @@ const Designation = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = () => {
-        form.resetFields();
-        form.setFieldsValue({} as IAddDesignation);
-        setIsModalOpen(true);
+    const showModal = (mode: "add" | "edit") => {
+        console.log("mode", mode);
+        if (mode === "add") {
+            form.setFieldsValue({ department: "", name: "" });
+
+            setModalMode(mode);
+            setIsModalOpen(true);
+        } else {
+            setModalMode(mode);
+            setIsModalOpen(true);
+        }
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -357,7 +365,9 @@ const Designation = () => {
                         <Button
                             type="primary"
                             className="At2"
-                            onClick={showModal}
+                            onClick={() => {
+                                showModal("add");
+                            }}
                             style={{ float: "right", marginBottom: "10px" }}
                         >
                             Add New
