@@ -44,8 +44,6 @@ const Designation = () => {
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
         useState<IDesignation[]>([]);
 
-    const [isSaving, setIsSaving] = useState(false);
-
     const staticEmployees = [
         { EmployeeName: "Employee 1", EmployeeId: "1" },
         { EmployeeName: "Employee 2", EmployeeId: "2" },
@@ -178,21 +176,14 @@ const Designation = () => {
 
     const deleteClickHandler = (designationId: string) => {
         // Delete from  DB
-        setIsSaving(true); // Start loading state
         api.deleteDesignation(designationId)
             .then((resp: any) => {
-                const updatedData = designationList.filter(
-                    (item: IDesignation) => item._id !== designationId
-                );
-
-                setIsSaving(false); // Stop loading state
-                setDesignationList(updatedData);
                 toast.success("Designation successfully deleted.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                getDepartmentList();
             })
             .catch((error) => {
-                setIsSaving(false); // Stop loading state
                 toast.error("Technical error while deleting Designation.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -200,12 +191,16 @@ const Designation = () => {
     };
 
     const editClickHandler = (designation: IDesignation) => {
+        form.resetFields();
         setSelectedDesignation(designation);
         setAddDesignation({
             name: designation.name,
             department: designation.department,
         });
-
+        form.setFieldsValue({
+            name: designation.name,
+            department: designation.department,
+        });
         setModalMode("edit"); // Set mode to "edit"
         showModal(); // Open the modal
     };
@@ -251,6 +246,8 @@ const Designation = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
+        form.resetFields();
+        form.setFieldsValue({} as IAddDesignation);
         setIsModalOpen(true);
     };
 
@@ -275,50 +272,40 @@ const Designation = () => {
     };
 
     const handleOk = () => {
-        setIsSaving(true); // Start loading state
         form.validateFields()
             .then((values) => {
                 try {
-                    if (modalMode === "add") {
-                        // Add logic
-                        api.createDesignation(addDesignation).then(
-                            (resp: any) => {
-                                toast.success("Successfully designation add.", {
-                                    position: toast.POSITION.TOP_RIGHT,
-                                });
-                                form.resetFields();
-                                setIsModalOpen(false);
-                                setIsSaving(false); // Stop loading state
-                                getDesignationList();
-                                console.log(resp.data);
-                            }
-                        );
-                    } else {
-                        // Edit logic
-                        api.updateDesignation(
-                            addDesignation,
-                            selectedDesignation.department
-                        ).then((resp: any) => {
-                            toast.success("Successfully designation updated.", {
-                                position: toast.POSITION.TOP_RIGHT,
-                            });
-                            form.resetFields();
-                            setIsModalOpen(false);
-                            setIsSaving(false); // Stop loading state
-                            setSelectedDesignation({} as IDesignation);
-                            getDesignationList();
+                    const apiCall =
+                        modalMode === "add"
+                            ? api.createDesignation(addDesignation)
+                            : api.updateDesignation(
+                                  addDesignation,
+                                  selectedDesignation.department
+                              );
+
+                    apiCall.then((resp: any) => {
+                        const successMessage =
+                            modalMode === "add"
+                                ? "Designation Added."
+                                : "Designation Updated.";
+
+                        toast.success(successMessage, {
+                            position: toast.POSITION.TOP_RIGHT,
                         });
-                    }
+                        form.resetFields();
+                        form.setFieldsValue({} as IAddDesignation);
+                        setIsModalOpen(false);
+                        setSelectedDesignation({} as IDesignation);
+                        getDesignationList();
+                    });
                 } catch (ex) {
-                    setIsSaving(false); // Stop loading state in case of error
-                    toast.error("Technical error while creating Task", {
+                    toast.error("Technical error while creating Designation", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                 }
             })
             .catch((errorInfo) => {
                 setIsModalOpen(true);
-                setIsSaving(false); // Stop loading state
                 console.log("Validation failed:", errorInfo);
             });
     };
@@ -326,12 +313,10 @@ const Designation = () => {
     const handleCancel = () => {
         //form.resetFields();
         form.resetFields();
-        setIsModalOpen(false);
+        form.setFieldsValue({} as IAddDesignation);
         setSelectedDesignation({} as IDesignation);
-        setAddDesignation({
-            name: "",
-            department: "",
-        });
+        setAddDesignation({} as IAddDesignation);
+        setIsModalOpen(false);
         setModalMode("add"); // Set mode to "add"
     };
 
@@ -347,7 +332,7 @@ const Designation = () => {
 
     const removeEmployeeFromDepartment = (employeeId: string) => {
         // Call your API to remove the employee from the designation
-        // After successful removal, update the selectedDepartmentEmployees state
+        //TODO:: After successful removal, update the selectedDepartmentEmployees state
         const updatedEmployees = selectedDepartmentEmployees.filter(
             (employee: any) => employee.EmployeeId !== employeeId
         );

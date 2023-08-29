@@ -495,13 +495,13 @@ const Checklist = () => {
                         </Row>
                         <Divider></Divider>
                         <div className="question-details client-details">
-                            <Table
+                            {/* <Table
                                 rowKey={(record: any) => record._id}
                                 dataSource={questions}
                                 columns={questionColumns}
                                 pagination={false}
                                 showHeader={false}
-                            />
+                            /> */}
                         </div>
                     </Form>
                 </div>

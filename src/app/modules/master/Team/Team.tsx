@@ -146,7 +146,6 @@ const Team = () => {
 
     const editClickHandler = (team: ITeam) => {
         setSelectedTeam(team);
-        console.log("team", team);
 
         setModalMode("edit"); // Set mode to "edit"
         showModal(); // Open the modal
@@ -180,7 +179,7 @@ const Team = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
-        setModalMode("add");
+        //setModalMode("add");
         form.resetFields();
         setIsModalOpen(true);
     };
@@ -197,6 +196,8 @@ const Team = () => {
         form.validateFields()
             .then((values) => {
                 try {
+                    console.log("modalMode", modalMode);
+                    //  return;
                     const apiCall =
                         modalMode === "add"
                             ? api.createTeam(addTeam)
@@ -361,7 +362,7 @@ const Team = () => {
                 width={350}
             >
                 <hr />
-                <Form form={form}>
+                <Form form={form} initialValues={selectedTeam}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
                             xs={{ span: 24 }}
@@ -419,7 +420,7 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "department");
                                     }}
-                                    defaultValue={selectedTeam.department._id}
+                                    //defaultValue={selectedTeam.department._id}
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -453,9 +454,9 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "leader");
                                     }}
-                                    defaultValue={selectedTeam.leader.map(
-                                        (leader: any) => leader._id
-                                    )} // Assuming selectedTeam.member is an array of member objects
+                                    // defaultValue={selectedTeam.leader.map(
+                                    //     (leader: any) => leader._id
+                                    // )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -489,9 +490,9 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "member");
                                     }}
-                                    defaultValue={selectedTeam.member.map(
-                                        (member: any) => member._id
-                                    )} // Assuming selectedTeam.member is an array of member objects
+                                    // defaultValue={selectedTeam.member.map(
+                                    //     (member: any) => member._id
+                                    // )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                     mode="multiple"
