@@ -192,21 +192,17 @@ const Department = () => {
     };
 
     const editClickHandler = (department: IDepartment) => {
-        setLoading(true); // Set loading state to true
+        setModalMode("edit"); // Set mode to "edit"
         setSelectedDepartment(department);
-
-        setAddDepartment({
-            name: department.name,
-            description: department.description,
-        });
         form.setFieldsValue({
             name: department.name,
             description: department.description,
         });
-
-        setModalMode("edit"); // Set mode to "edit"
-        showModal(); // Open the modal
-        setLoading(false); // Set loading state to true
+        setAddDepartment({
+            name: department.name,
+            description: department.description,
+        });
+        showModal("edit"); // Open the modal
     };
 
     // Search input change handler
@@ -249,11 +245,18 @@ const Department = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = () => {
-        form.resetFields();
-        form.setFieldsValue({} as IAddDepartment);
-        setModalMode("add");
-        setIsModalOpen(true);
+    const showModal = (mode: "add" | "edit") => {
+        console.log("mode", mode);
+        if (mode === "add") {
+            //form.resetFields();
+            form.setFieldsValue({} as IAddDepartment);
+            setAddDepartment({} as IAddDepartment);
+            setModalMode(mode);
+            setIsModalOpen(true);
+        } else {
+            setModalMode(mode);
+            setIsModalOpen(true);
+        }
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -278,8 +281,9 @@ const Department = () => {
 
     const handleOk = () => {
         form.validateFields()
-
             .then((values) => {
+                console.log("ok modalMode", modalMode);
+                //return;
                 try {
                     setLoading(true); // Set loading state to true
                     const apiCall =
@@ -300,7 +304,7 @@ const Department = () => {
                             toast.success(successMessage, {
                                 position: toast.POSITION.TOP_RIGHT,
                             });
-                            form.resetFields();
+
                             form.setFieldsValue({} as IAddDepartment);
                             setSelectedDepartment({} as IDepartment);
                             setAddDepartment({} as IAddDepartment);
@@ -323,12 +327,12 @@ const Department = () => {
     };
 
     const handleCancel = () => {
-        form.resetFields(); // Reset form fields
+        setModalMode("add"); // Set mode to "add"
+        //  form.resetFields(); // Reset form fields
         form.setFieldsValue({} as IAddDepartment);
         setAddDepartment({} as IAddDepartment);
         setSelectedDepartment({} as IDepartment);
         setIsModalOpen(false);
-        setModalMode("add"); // Set mode to "add"
     };
 
     const showEmployeeModal = (department: IDepartment) => {
@@ -368,7 +372,9 @@ const Department = () => {
                         <Button
                             type="primary"
                             className="At2"
-                            onClick={showModal}
+                            onClick={() => {
+                                showModal("add");
+                            }}
                             style={{ float: "right", marginBottom: "10px" }}
                         >
                             Add New
@@ -426,7 +432,7 @@ const Department = () => {
                     modalMode === "add"
                         ? "Add New Department"
                         : "Edit Department"
-                } // Modify the title
+                }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -490,6 +496,7 @@ const Department = () => {
                 </Form>
             </Modal>
 
+            {/* employee modal work */}
             <Modal
                 title="Department Employees"
                 open={isEmployeeModalOpen}

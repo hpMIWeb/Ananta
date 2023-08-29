@@ -98,7 +98,7 @@ const Role = () => {
                     <FontAwesomeIcon
                         icon={faEdit}
                         className="btn-at"
-                        title="Edit Designation"
+                        title="Edit Role"
                         style={{ color: "#2c7be5", marginLeft: "15px" }}
                         onClick={() => editClickHandler(record)}
                     />
@@ -110,7 +110,7 @@ const Role = () => {
                         <FontAwesomeIcon
                             icon={faTrash}
                             className="btn-at"
-                            title="Delete Designation"
+                            title="Delete Role."
                             style={{ color: "#fa5c7c" }}
                         />
                     </Popconfirm>
@@ -120,25 +120,24 @@ const Role = () => {
     ];
 
     useEffect(() => {
-        if (isUpdated && updateRole) {
-            // Find the index of the updated project in the allProject array
-            const updatedIndex = roleList.findIndex(
-                (roleDetails) => roleDetails._id === updateRole._id
-            );
-
-            console.log("updatedIndex", updatedIndex);
-
-            if (updatedIndex !== -1) {
-                // Create a copy of the allProject array and update the specific project
-                const updateRoles = [...roleList];
-                updateRoles[updatedIndex] = updateRole;
-                setRoleList(updateRoles);
-            } else {
-                getAllRole();
-            }
-        } else {
-            getAllRole();
-        }
+        // if (isUpdated && updateRole) {
+        //     // Find the index of the updated project in the allProject array
+        //     const updatedIndex = roleList.findIndex(
+        //         (roleDetails) => roleDetails._id === updateRole._id
+        //     );
+        //     console.log("updatedIndex", updatedIndex);
+        //     if (updatedIndex !== -1) {
+        //         // Create a copy of the allProject array and update the specific project
+        //         const updateRoles = [...roleList];
+        //         updateRoles[updatedIndex] = updateRole;
+        //         setRoleList(updateRoles);
+        //     } else {
+        //         getAllRole();
+        //     }
+        // } else {
+        //     getAllRole();
+        // }
+        getAllRole();
     }, [isUpdated, updateRole]);
 
     const getAllRole = () => {

@@ -78,14 +78,13 @@ const Team = () => {
             render: (leaders: any) => (
                 <span className="actionColumn">
                     {leaders && leaders.length > 0
-                        ? leaders[0]?.ownerDetails[0]?.firstName ||
-                          "Unknown Leader"
+                        ? leaders[0].firstName
                         : "No Leader"}
                 </span>
             ),
             sorter: (a: any, b: any) => {
-                const leaderA = a.leader[0]?.ownerDetails[0]?.firstName || "";
-                const leaderB = b.leader[0]?.ownerDetails[0]?.firstName || "";
+                const leaderA = a.leader[0]?.firstName || "";
+                const leaderB = b.leader[0]?.firstName || "";
                 return leaderA.localeCompare(leaderB);
             },
         },
@@ -146,9 +145,21 @@ const Team = () => {
 
     const editClickHandler = (team: ITeam) => {
         setSelectedTeam(team);
+        setAddTeam({
+            name: team.name,
+            department: team.department._id,
+            leader: [team.leader[0]._id.toString()],
+            member: team.member.map((memberData: any) => memberData._id),
+        });
+        form.setFieldsValue({
+            name: team.name,
+            department: team.department._id,
+            leader: team.leader[0]._id,
+            member: team.member.map((memberData: any) => memberData._id),
+        });
 
         setModalMode("edit"); // Set mode to "edit"
-        showModal(); // Open the modal
+        showModal("edit"); // Open the modal
     };
 
     useEffect(() => {
@@ -178,10 +189,16 @@ const Team = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = () => {
-        //setModalMode("add");
-        form.resetFields();
-        setIsModalOpen(true);
+    const showModal = (mode: "add" | "edit") => {
+        if (mode === "add") {
+            form.setFieldsValue({} as IAddTeam);
+            setAddTeam({} as IAddTeam);
+            setModalMode(mode);
+            setIsModalOpen(true);
+        } else {
+            setModalMode(mode);
+            setIsModalOpen(true);
+        }
     };
 
     const handleCancel = () => {
@@ -308,7 +325,9 @@ const Team = () => {
                     <Button
                         type="primary"
                         className="t2"
-                        onClick={showModal}
+                        onClick={() => {
+                            showModal("add");
+                        }}
                         style={{ float: "right", marginBottom: "10px" }}
                     >
                         Create New
@@ -362,7 +381,7 @@ const Team = () => {
                 width={350}
             >
                 <hr />
-                <Form form={form} initialValues={selectedTeam}>
+                <Form form={form} initialValues={addTeam}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
                             xs={{ span: 24 }}
@@ -385,7 +404,6 @@ const Team = () => {
                                     onChange={(event) => {
                                         inputChangeHandler(event);
                                     }}
-                                    defaultValue={selectedTeam.name}
                                 />
                             </Form.Item>
                         </Col>
@@ -420,7 +438,6 @@ const Team = () => {
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "department");
                                     }}
-                                    //defaultValue={selectedTeam.department._id}
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -447,16 +464,13 @@ const Team = () => {
                                     options={userList.map((user: any) => ({
                                         value: user._id,
                                         label: capitalize(
-                                            `${user.firmName} ${user.firmName}`
+                                            `${user.firstName} ${user.lastName}`
                                         ),
                                     }))}
                                     placeholder="Select Team Leader"
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "leader");
                                     }}
-                                    // defaultValue={selectedTeam.leader.map(
-                                    //     (leader: any) => leader._id
-                                    // )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                 ></Select>
@@ -483,16 +497,13 @@ const Team = () => {
                                     options={userList.map((user: any) => ({
                                         value: user._id,
                                         label: capitalize(
-                                            `${user.firmName} ${user.firmName}`
+                                            `${user.firstName} ${user.lastName}`
                                         ),
                                     }))}
                                     placeholder="Select Team Member"
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "member");
                                     }}
-                                    // defaultValue={selectedTeam.member.map(
-                                    //     (member: any) => member._id
-                                    // )} // Assuming selectedTeam.member is an array of member objects
                                     showSearch={true}
                                     className="w100"
                                     mode="multiple"

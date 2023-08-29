@@ -86,8 +86,8 @@ const RoleAction = () => {
 
                     apiCall.then((resp: any) => {
                         const successMessage = isEditMode
-                            ? "Project Updated."
-                            : "Project added.";
+                            ? "Role Updated."
+                            : "Role Added.";
 
                         toast.success(successMessage, {
                             position: toast.POSITION.TOP_RIGHT,
@@ -102,7 +102,7 @@ const RoleAction = () => {
                         });
                     });
                 } catch (ex) {
-                    toast.error("Technical error while creating Task", {
+                    toast.error("Technical error while creating Role.", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                 }
