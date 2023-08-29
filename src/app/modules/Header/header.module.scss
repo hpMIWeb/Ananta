@@ -1,0 +1,112 @@
+@import "../../../styles/variables.scss";
+.headerSearchInput {
+    width: 336px;
+    height: 36px;
+    border-radius: 50rem;
+    margin-left: 63px;
+    padding: 5px 0.9rem;
+}
+
+.headerBoxWrapper {
+    position: fixed;
+    left: 0;
+    max-height: 70px;
+    z-index: 5;
+    background-color: var(--light-blue) !important;
+    width: -webkit-fill-available;
+}
+.headerLogoInput {
+    display: flex;
+    align-items: center;
+}
+.headerBoxContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px 8px 0px;
+}
+
+.demoLogoVertical {
+    padding-left: 7px;
+}
+
+.toggleIconWrapper {
+    margin: 0 20px 6px -1px;
+}
+
+.navbarToggleMinusCollapsed {
+    .iconBar:nth-of-type(1) {
+        width: 16px;
+    }
+
+    .iconBar:nth-of-type(2) {
+        width: 12px;
+    }
+
+    .iconBar:nth-of-type(3) {
+        width: 16px;
+    }
+}
+.navbarToggleMinus {
+    border: 0;
+    padding: 0.3125rem;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+    background: var(--light-blue);
+    position: relative;
+    row-gap: 3px;
+    padding: 5px 5px 5px 10px;
+    border-radius: 50%;
+    &:hover {
+        background: var(--light-grey-secondary);
+    }
+    .iconBar {
+        width: 20px;
+        transition: all 0.2s;
+        background: var(--light-grey);
+        display: block;
+        height: 2px;
+        border-radius: 1px;
+    }
+}
+
+.navbarLogoTitle {
+    color: var(--primary-blue);
+    font-weight: 800;
+    font-size: 1.728rem;
+    line-height: 1.4;
+}
+.logoutBtn {
+    width: 52px;
+    height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    path {
+        fill: var(--falcon-navbar-light-color);
+    }
+}
+.headerAvatarIcon {
+    cursor: pointer;
+    line-height: 54px;
+    margin-left: 8px;
+}
+.headerAvatarBtn {
+    border: 0;
+    background: transparent;
+    padding: 0;
+}
+.headerLogoText {
+    padding-top: 0.5rem !important;
+    padding-bottom: 1rem !important;
+}
+.headerBoxRightWrapper {
+    display: flex;
+    width: 100%;
+    height: 54px;
+    align-items: baseline;
+}

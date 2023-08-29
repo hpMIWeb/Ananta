@@ -1,39 +1,32 @@
 import { useEffect, useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { loginUserApi } from "../../../redux/loginReducers";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../utilities/apiServices";
 import styles from "./Login.module.scss";
+import { ILogin } from "../../utilities/globalInterfaces";
+import { useAppDispatch } from "../../../states/store";
 
 const Login = () => {
+    const dispatch = useAppDispatch();
+    const { success, loading, data } = useSelector((state: any) => state.login);
+
     const navigate = useNavigate();
-    const [error, setError] = useState<string>("");
 
     const onFinish = (e: any) => {
         const { email, password } = e;
         const credentials = {
             email,
             password,
-        };
-        api.login(credentials)
-            .then((result: any) => {
-                const authToken = result.data.token;
-
-                if (
-                    authToken &&
-                    authToken !== null &&
-                    authToken !== undefined
-                ) {
-                    localStorage.setItem("authtoken", authToken);
-                    setError("");
-                    navigate("/home");
-                }
-            })
-            .catch((error: any) => {
-                console.log(error.message);
-                setError("Email and/or Password are incorrect. Try Again !!");
-            });
+        } as ILogin;
+        dispatch(loginUserApi(credentials));
     };
+
+    useEffect(() => {
+        if (success && data?.payload?.token) {
+            navigate("/");
+        }
+    }, [success]);
 
     const onFinishFailed = () => {};
 
@@ -41,14 +34,12 @@ const Login = () => {
         <div className={styles.loginPage}>
             <div className={styles.loginBoxWrapper}>
                 <div className={styles.loginCardHeading}>
-                    {/* <img width={58} src={Logo} /> */}
                     <span className={styles.loginCardHeadingLabel}>
                         NV Associate
                     </span>
                 </div>
                 <div className={styles.loginCardBody}>
                     <h5 className={styles.loginCardSigninLabel}>Log in</h5>
-                    {error && <h3 style={{ color: "#ff4d4f" }}>{error}</h3>}
                     <Form
                         name="basic"
                         initialValues={{ remember: true }}
@@ -92,7 +83,7 @@ const Login = () => {
                             </Form.Item>
                         </div>
                         <div className="row align-items-center justify-content-between">
-                            {/* <div className="col-auto">
+                            <div className="col-auto">
                                 <Form.Item
                                     name="remember"
                                     valuePropName="checked"
@@ -114,7 +105,7 @@ const Login = () => {
                                 >
                                     Forgot Password?
                                 </Link>
-                            </div> */}
+                            </div>
                         </div>
 
                         <Form.Item style={{ marginBottom: "1rem" }}>
@@ -122,6 +113,7 @@ const Login = () => {
                                 className={styles.formLoginBtn}
                                 type="primary"
                                 htmlType="submit"
+                                loading={loading}
                             >
                                 Log in
                             </Button>

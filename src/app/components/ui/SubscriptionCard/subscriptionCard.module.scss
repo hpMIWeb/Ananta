@@ -1,0 +1,92 @@
+@import "../../../../styles/variables.scss";
+.cardPointCounter {
+    width: 25px;
+    height: 25px;
+    border-radius: 50px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700 !important;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    font-family: $body-font-family !important;
+    font-size: 0.875rem;
+}
+.subscriptionNameLabel {
+    font-size: 1.2rem;
+    font-family: $btn-font-family;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--card-label);
+}
+.subscriptionCardWrapper {
+    padding: 20px !important;
+    color: var(--light-grey) !important;
+    background: var(--card-background) !important;
+    border: 1px solid var(--falcon-border-color) !important;
+}
+.cardSwitchLabel {
+    margin-left: 7px;
+    line-height: 20px;
+    font-size: 0.8333333333rem;
+    letter-spacing: 0.02em;
+    font-weight: 500 !important;
+    font-family: $btn-font-family;
+    color: var(--light-grey);
+}
+.switchDevider {
+    color: var(--light-grey-secondary-hover);
+    line-height: 20px;
+}
+.transparentHistoryBtn {
+    border: 0;
+    padding: 0;
+    color: var(--primary-blue);
+    font-family: $body-font-family;
+    height: 20px;
+    background: transparent;
+}
+
+.cardDescWrapper {
+    margin: 16px 0 0 28.8px;
+    font-family: $body-font-family;
+}
+
+.cardDescBox {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+}
+.cardDescBoxWrapper {
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+}
+.subscriptionNameLabelDesc {
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    line-height: 1.2;
+    margin-left: 7px;
+    color: #5e6e82;
+}
+.subscriptionNameLabelBlue {
+    font-size: 23.04px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.cardTitleDesc {
+    font-family: $body-font-family;
+    line-height: 19.6px;
+    margin-bottom: 0;
+}
+.deleteBtn {
+    border: none !important;
+    background: transparent !important;
+    color: #c74d4f;
+    box-shadow: none !important;
+    padding: 1px 4px;
+    &:hover {
+        background: transparent !important;
+        color: #c74d4f !important;
+        background-color: #ff7875 !important;
+    }
+}

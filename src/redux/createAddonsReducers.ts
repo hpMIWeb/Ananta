@@ -7,7 +7,6 @@ interface Payload {
     payload: any;
     addonsId: string;
 }
-
 interface State {
     data: any;
     loading: boolean;
@@ -63,7 +62,7 @@ const createAddonsReducersReducersSlice = createSlice({
             })
             .addCase(
                 createAddonsReducersReducersApi.fulfilled,
-                (state, action: PayloadAction<any>) => {
+                (state, action) => {
                     state.loading = false;
                     state.success = true;
                     state.data = action.payload;
@@ -72,10 +71,10 @@ const createAddonsReducersReducersSlice = createSlice({
             )
             .addCase(
                 createAddonsReducersReducersApi.rejected,
-                (state, action: PayloadAction<any>) => {
+                (state: any, action) => {
                     state.loading = false;
                     state.success = false;
-                    //TODO: state.error = action.error.message;
+                    state.error = action.error.message;
                     toast.error("An error occurred during Creating Addons."); // Display error toast
                 }
             );

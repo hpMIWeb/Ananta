@@ -71,10 +71,10 @@ const createClientReducersSlice = createSlice({
                 state.data = action.payload;
                 toast.success("Subscription Created Successfully");
             })
-            .addCase(createClientReducersApi.rejected, (state, action) => {
+            .addCase(createClientReducersApi.rejected, (state, action: any) => {
                 state.loading = false;
                 state.success = false;
-                //TODO: state.error = action.error.message;
+                state.error = action.error.message;
                 toast.error("An error occurred during Creating Subscription.");
             });
     },

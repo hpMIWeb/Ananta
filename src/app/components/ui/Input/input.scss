@@ -1,0 +1,25 @@
+.headerSearchInput {
+  background: var(--falcon-input-bg);
+  border: 1px solid var(--falcon-input-border-color);
+  .ant-input-suffix{
+    path{
+      fill: var(--falcon-input-placeholder-color);
+    }
+  }
+  .ant-input-prefix{
+    path{
+      fill: var(--falcon-400);
+    }
+  }
+  .ant-input {
+    line-height: 1.5714285714285714;
+    font-family: "Poppins", sans-serif !important;
+    font-size: 0.875rem !important;
+    line-height: 14px;
+    background: var(--falcon-input-bg);
+    color: var(--falcon-input-color);
+    &::placeholder{
+      color: var(--falcon-input-placeholder-color);
+    }
+  }
+}

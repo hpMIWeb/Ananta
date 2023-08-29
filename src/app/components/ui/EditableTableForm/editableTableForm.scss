@@ -1,0 +1,35 @@
+.ant-table-cell{
+    color: var(--falcon-body-color) !important;
+    font-size: 14px;
+    padding: 0.25rem 0.25rem !important; 
+}
+.ant-table-thead{
+    .ant-table-cell{
+        border: 1px solid var(--falcon-soft-primary) !important;
+        background-color: var(--falcon-soft-primary) !important;
+        border-inline-end: 1px solid #ced4dc !important;
+        border-top: 1px solid #ced4dc !important;
+        border-bottom: 1px solid #ced4dc !important;
+        color: rgba(var(--falcon-900-rgb), 1) !important;
+        line-height: 19px !important;
+    }
+}
+.ant-table-cell{
+    border: 1px solid var(--falcon-soft-primary) !important;
+    border-inline-end: 1px solid #ced4dc !important;
+}
+.ant-table-row{
+    height: 55px;
+}
+.tableFormWrapper{
+    .ant-form-item-control{
+        margin-bottom: 0 !important;
+        height: 100% !important;
+    }
+    .ant-form-item{
+        height: 45px !important;
+    }
+    .ant-row, .ant-form-item-control-input, .ant-form-item-control-input-content{
+        height: 100% !important;
+    }
+}

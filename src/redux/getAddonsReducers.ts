@@ -48,12 +48,15 @@ const getAddonsReducersListSlice = createSlice({
                 state.success = true;
                 state.data = [...action.payload.payload];
             })
-            .addCase(getAddonsReducersListApi.rejected, (state, action) => {
-                state.loading = false;
-                state.success = false;
-                //TODO: state.error = action.error.message;
-                toast.error("An error occurred during Addons List."); // Display error toast
-            });
+            .addCase(
+                getAddonsReducersListApi.rejected,
+                (state, action: any) => {
+                    state.loading = false;
+                    state.success = false;
+                    state.error = action.error.message;
+                    toast.error("An error occurred during Addons List."); // Display error toast
+                }
+            );
     },
 });
 

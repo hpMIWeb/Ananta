@@ -1,0 +1,190 @@
+.formFieldRowWrapper {
+    display: flex;
+    margin-left: -8px;
+    margin-right: -8px;
+}
+.formAddPromoWrapper {
+    column-gap: 10px;
+}
+.formLabelWrapper {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+.formInputWrapper {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.formPeriodWrapper {
+    display: flex;
+    column-gap: 16px;
+}
+.customFormDatePicker {
+    margin-bottom: 16px;
+    width: 100%;
+    height: 33px;
+    border: 1px solid var(--falcon-input-border-color);
+    border-radius: 0.25rem;
+
+    input {
+        &::placeholder {
+            color: var(--falcon-form-check-input-border-color) !important;
+            font-family: $btn-font-family !important;
+        }
+    }
+}
+.customAddForm {
+    .form-label {
+        min-width: 180px;
+        margin-bottom: 0.3rem;
+        font-size: 0.875rem;
+        letter-spacing: 0.02em;
+        font-weight: 500 !important;
+        font-family: $btn-font-family;
+        line-height: 1.4;
+        color: var(--falcon-body-color);
+        position: relative;
+        top: -2px;
+    }
+    .custom-label {
+        font-size: 0.8333333333rem;
+        font-weight: 500 !important;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.02em;
+        font-family: $btn-font-family;
+        line-height: 1.4;
+        color: var(--falcon-body-color);
+    }
+    .ant-form-item {
+        margin-bottom: 0;
+    }
+    .ant-form-item-control {
+        margin-bottom: 1rem !important;
+    }
+    .customAddFormInputText {
+        line-height: 1.5;
+        padding: 5px 10px;
+        font-size: 0.875rem;
+        color: var(--falcon-input-color);
+        background-color: var(--falcon-input-bg);
+        background-clip: padding-box;
+        border: 1px solid var(--falcon-input-border-color);
+        border-radius: 0.25rem;
+        box-shadow: var(--falcon-box-shadow-inset);
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+            -webkit-box-shadow 0.15s ease-in-out;
+        &::placeholder {
+            color: var(--falcon-form-check-input-border-color);
+            font-family: $btn-font-family;
+        }
+        input {
+            &::placeholder {
+                color: var(--falcon-form-check-input-border-color);
+                font-family: $btn-font-family;
+            }
+        }
+    }
+    .ant-select-single {
+        line-height: 36px;
+        .ant-select-selector {
+            border: 1px solid var(--falcon-input-border-color);
+            border-radius: 0.25rem;
+            height: 33px;
+        }
+    }
+    .customAddFormSelect {
+        width: 100%;
+    }
+    .customAddFormSelectOptions {
+        .ant-select-selection-item {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--falcon-input-color);
+        }
+    }
+    .customAddClientSelectOptions {
+        .ant-select-selection-item {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--falcon-input-color);
+        }
+        .ant-select-selector {
+            border: 1px solid var(--falcon-input-border-color);
+            background-color: var(--falcon-input-bg);
+        }
+        .ant-form-item-control-input {
+            min-height: 36px;
+        }
+        .ant-select-selector {
+            height: 36px;
+        }
+        .ant-select-selection-item {
+            line-height: 33px;
+        }
+        .ant-select-selection-placeholder {
+            color: var(--falcon-form-check-input-border-color);
+            font-family: $btn-font-family !important;
+        }
+    }
+    //   .ant-select-selector
+    .customAddFormSelectPeriodOptions {
+        margin-bottom: 16px;
+        .ant-select-selector {
+            background-color: var(--falcon-input-bg);
+            color: var(--falcon-input-color);
+        }
+    }
+    .customAddFormSelectOptions {
+        .ant-select-selector {
+            background-color: var(--falcon-input-bg);
+            color: var(--falcon-input-color);
+        }
+    }
+}
+.customInputNumber {
+    .ant-input-number-group-addon {
+        padding: 0;
+    }
+    .ant-input-number-group-addon {
+        padding: 0;
+    }
+    input {
+        &::placeholder {
+            color: var(--falcon-form-check-input-border-color);
+            font-family: $btn-font-family;
+        }
+    }
+}
+.padding8 {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+.ant-checkbox-wrapper {
+    line-height: 1.45rem;
+    font-size: 0.8333333333rem !important;
+    letter-spacing: 0.02em;
+    font-weight: 500 !important;
+    margin-bottom: 0.5rem;
+    font-weight: $btn-font-family !important;
+    color: var(--falcon-body-color);
+    margin: 0 8px 6px 0;
+}
+.primaryLightGreenBtn {
+    color: #fff;
+    background-color: #00d27a;
+    border-color: #00d27a;
+    &:hover {
+        color: #fff !important;
+        background-color: #00b368 !important;
+        border-color: #00a862 !important;
+    }
+}
+.phoneNumberContainerClassInput {
+    .form-control {
+        width: 100% !important;
+        border: 1px solid var(--falcon-input-border-color) !important;
+    }
+    .flag-dropdown {
+        border: 1px solid var(--falcon-input-border-color) !important;
+    }
+}

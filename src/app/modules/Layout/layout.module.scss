@@ -1,0 +1,43 @@
+@import "../../../styles/variables.scss";
+
+.navbarSlider {
+    background-color: var(--light-blue) !important;
+    margin-top: 70px;
+    &:hover {
+        flex: 0 0 218px !important;
+        max-width: 218px !important;
+        min-width: 218px !important;
+        width: 218px !important;
+        .navbarMenuList {
+            width: 100% !important;
+        }
+    }
+}
+
+.outletWrapper {
+    background: var(--falcon-card-bg);
+    box-shadow: var(--falcon-box-shadow);
+}
+
+.navbarMenuList {
+    background: var(--light-blue);
+    padding-left: 16px;
+    padding-top: 2px;
+}
+
+.headerWrapper {
+    background: var(--light-blue) !important;
+    box-shadow: $navbar-shadow;
+}
+.footerWrapper {
+    background: var(--light-blue) !important;
+    margin-left: 12px;
+    color: var(--light-grey);
+    font-family: $body-font-family !important;
+    font-size: 13px;
+    margin-top: 28px !important;
+    margin-bottom: 16px;
+}
+.layoutWrapper {
+    background: var(--light-blue) !important;
+}

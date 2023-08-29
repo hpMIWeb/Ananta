@@ -55,10 +55,10 @@ const deleteSubscriptionsReducersSlice = createSlice({
             )
             .addCase(
                 deleteSubscriptionsReducersApi.rejected,
-                (state, action) => {
+                (state: any, action) => {
                     state.loading = false;
                     state.success = false;
-                    //TODO: state.error = action.error.message;
+                    state.error = action.error.message;
                     toast.error(
                         "An error occurred during Deleting Subscription."
                     ); // Display error toast
