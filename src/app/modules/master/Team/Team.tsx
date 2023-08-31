@@ -10,9 +10,10 @@ import {
     Row,
     Select,
     Table,
+    Tooltip,
     Typography,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, TeamOutlined } from "@ant-design/icons";
 import "./Team.scss";
 import { AddTeam as IAddTeam, Team as ITeam } from "./interfaces/ITeam";
 import { Department as IDepartment } from "../Department/interfaces/IDeparment";
@@ -42,9 +43,31 @@ const Team = () => {
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(true);
-    const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
-    const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
-        useState<ITeam[]>([]);
+    const [isTeamMemberModalOpen, setIsTeamMemberModalOpen] = useState(false);
+    const [selectedTeamMembers, setSelectedTeamMembers] = useState<any[]>([]);
+
+    const showTeamMemberModal = (members: any) => {
+        setSelectedTeamMembers(members); // Assuming "Employees" is the property containing the list of employees for a department
+        setIsTeamMemberModalOpen(true);
+    };
+
+    const closeTeamMemberModal = () => {
+        setSelectedTeamMembers([]);
+        setIsTeamMemberModalOpen(false);
+    };
+
+    const teamMemberColumns = [
+        {
+            title: "Fist Name",
+            dataIndex: "firstName",
+            key: "firstName",
+        },
+        {
+            title: "Last Name",
+            dataIndex: "lastName",
+            key: "lastName",
+        },
+    ];
 
     const columns = [
         {
@@ -97,8 +120,35 @@ const Team = () => {
         },
         {
             title: "Team Members",
-            dataIndex: "teammembers",
+            dataIndex: "member",
             width: "10%",
+            className: "center-align-cell",
+            render: (member: any) => (
+                <span className="actionColumn">
+                    {member && member.length > 0 ? (
+                        <span
+                            onClick={() => {
+                                showTeamMemberModal(member);
+                            }}
+                        >
+                            <TeamOutlined />
+
+                            {/* {member.map((memberData: any, index: any) => (
+                                <Tooltip
+                                    key={index}
+                                    title={capitalize(
+                                        `${memberData.firstName} ${memberData.lastName}`
+                                    )}
+                                ></Tooltip>
+                            ))} */}
+
+                            {member.length}
+                        </span>
+                    ) : (
+                        "No Leader"
+                    )}
+                </span>
+            ),
         },
         {
             title: "Action",
@@ -556,6 +606,20 @@ const Team = () => {
                         </Col>
                     </Row>
                 </Form>
+            </Modal>
+
+            {/* Team modal */}
+            <Modal
+                title="Team Member"
+                open={isTeamMemberModalOpen}
+                onCancel={closeTeamMemberModal}
+                footer={null}
+            >
+                <Table
+                    dataSource={selectedTeamMembers}
+                    columns={teamMemberColumns}
+                    pagination={false}
+                />
             </Modal>
         </div>
     );

@@ -677,7 +677,7 @@ export default {
     deleteTeam: (teamId: string) =>
         instance({
             method: "DELETE",
-            url: "eam/delete-team/id=" + teamId,
+            url: "team/delete-team/id=" + teamId,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);

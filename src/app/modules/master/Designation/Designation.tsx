@@ -306,7 +306,7 @@ const Designation = () => {
                             ? api.createDesignation(addDesignation)
                             : api.updateDesignation(
                                   addDesignation,
-                                  selectedDesignation.department
+                                  selectedDesignation._id
                               );
 
                     apiCall
