@@ -73,7 +73,7 @@ const Checklist = () => {
         {
             title: "Department",
             dataIndex: "department",
-            width: "30%",
+            width: "25%",
             render: (department: any) => (
                 <span className="actionColumn">
                     {department && department.name
@@ -92,6 +92,7 @@ const Checklist = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
+            className: "center-align-cell",
             render: (_: any, record: ICheckList) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon

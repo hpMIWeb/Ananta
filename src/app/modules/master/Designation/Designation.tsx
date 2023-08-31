@@ -101,6 +101,7 @@ const Designation = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
+            className: "center-align-cell",
             render: (_: any, record: IDesignation) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon

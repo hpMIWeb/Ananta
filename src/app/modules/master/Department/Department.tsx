@@ -101,6 +101,7 @@ const Department = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
+            className: "center-align-cell",
             render: (_: any, record: IDepartment) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon
@@ -457,7 +458,6 @@ const Department = () => {
                                     onChange={(event) => {
                                         inputChangeHandler(event);
                                     }}
-                                    defaultValue={addDepartment.name}
                                 />
                             </Form.Item>
                         </Col>

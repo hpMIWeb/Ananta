@@ -53,12 +53,12 @@ const Role = () => {
         {
             title: "Role Name",
             dataIndex: "roleName",
-            width: "32%",
+            width: "30%",
         },
         {
             title: "Role Type",
             dataIndex: "roleTypeName",
-            width: "32%",
+            width: "25%",
         },
         {
             title: "No of users",
@@ -91,6 +91,7 @@ const Role = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
+            className: "center-align-cell",
             render: (_: any, record: IRole) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon
