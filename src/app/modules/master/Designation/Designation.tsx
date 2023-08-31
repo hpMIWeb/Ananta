@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -43,6 +44,7 @@ const Designation = () => {
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
         useState<IDesignation[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const staticEmployees = [
         { EmployeeName: "Employee 1", EmployeeId: "1" },
@@ -164,30 +166,44 @@ const Designation = () => {
     }, []);
 
     const getDepartmentList = () => {
-        api.getDepartment().then((resp: any) => {
-            setDepartmentList(resp.data);
-        });
+        setLoading(true); // Set loading state to true
+        api.getDepartment()
+            .then((resp: any) => {
+                setDepartmentList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
+            });
     };
 
     const getDesignationList = () => {
-        api.getDesignation().then((resp: any) => {
-            setDesignationList(resp.data);
-        });
+        setLoading(true); // Set loading state to true
+        api.getDesignation()
+            .then((resp: any) => {
+                setDesignationList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
+            });
     };
 
     const deleteClickHandler = (designationId: string) => {
         // Delete from  DB
+        setLoading(true); // Set loading state to true
         api.deleteDesignation(designationId)
             .then((resp: any) => {
                 toast.success("Designation successfully deleted.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-                getDepartmentList();
+                getDesignationList();
             })
             .catch((error) => {
                 toast.error("Technical error while deleting Designation.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
             });
     };
 
@@ -284,6 +300,7 @@ const Designation = () => {
         form.validateFields()
             .then((values) => {
                 try {
+                    setLoading(true); // Set loading state to true
                     const apiCall =
                         modalMode === "add"
                             ? api.createDesignation(addDesignation)
@@ -292,21 +309,25 @@ const Designation = () => {
                                   selectedDesignation.department
                               );
 
-                    apiCall.then((resp: any) => {
-                        const successMessage =
-                            modalMode === "add"
-                                ? "Designation Added."
-                                : "Designation Updated.";
+                    apiCall
+                        .then((resp: any) => {
+                            const successMessage =
+                                modalMode === "add"
+                                    ? "Designation Added."
+                                    : "Designation Updated.";
 
-                        toast.success(successMessage, {
-                            position: toast.POSITION.TOP_RIGHT,
+                            toast.success(successMessage, {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+                            form.resetFields();
+                            form.setFieldsValue({} as IAddDesignation);
+                            setIsModalOpen(false);
+                            setSelectedDesignation({} as IDesignation);
+                            getDesignationList();
+                        })
+                        .finally(() => {
+                            setLoading(false); // Reset loading state
                         });
-                        form.resetFields();
-                        form.setFieldsValue({} as IAddDesignation);
-                        setIsModalOpen(false);
-                        setSelectedDesignation({} as IDesignation);
-                        getDesignationList();
-                    });
                 } catch (ex) {
                     toast.error("Technical error while creating Designation", {
                         position: toast.POSITION.TOP_RIGHT,
@@ -401,6 +422,7 @@ const Designation = () => {
                 </Row>
             </div>
             <ToastContainer autoClose={25000} />
+            <LoadingSpinner isLoading={loading} />
 
             <div>
                 <div className="client-details">

@@ -12,12 +12,7 @@ import {
     Table,
     Typography,
 } from "antd";
-import {
-    DeleteOutlined,
-    PlusOutlined,
-    EditOutlined,
-    SearchOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import "./Checklist.scss";
 import {
     AddCheckList as IAddCheckList,
@@ -25,12 +20,13 @@ import {
     QuestionDetails as IQuestionDetails,
 } from "./interface/IChecklist";
 import api from "../../../utilities/apiServices";
-import { capitalize } from "../../../utilities/utility";
+import { capitalize, setLocalstorage } from "../../../utilities/utility";
 
 import { Department as IDepartment } from "../Department/interfaces/IDeparment";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 
 const pageSize = 25;
 const { Title } = Typography;
@@ -53,7 +49,10 @@ const Checklist = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
-
+    const [focusedQuestionId, setFocusedQuestionId] = useState<string | null>(
+        null
+    );
+    const [loading, setLoading] = useState(true);
     const columns = [
         {
             title: "Sr.No",
@@ -138,16 +137,23 @@ const Checklist = () => {
                     rules={[
                         {
                             required: true,
-                            message: "Please enter question.",
+                            message: "Please enter checklist.",
                         },
                     ]}
                 >
                     <Input
-                        placeholder="Question"
+                        placeholder="Checklist"
                         name="name"
                         onChange={(event) => {
                             inputChangeHandlerForQuestion(event, record._id);
                         }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Tab" || event.key === "Enter") {
+                                event.preventDefault();
+                                addNewQuestion();
+                            }
+                        }}
+                        autoFocus={focusedQuestionId === record._id} // Set autoFocus based on the focused ID
                         defaultValue={record.name}
                         value={record.name}
                     />
@@ -239,15 +245,32 @@ const Checklist = () => {
     }, []);
 
     const addNewQuestion = () => {
+        const lastQuestion = questions[questions.length - 1];
+
+        if (lastQuestion && lastQuestion.name.trim() === "") {
+            toast.error(
+                "Cannot add new question. Please fill in the existing question first."
+            );
+            return;
+        }
+
         questionObject._id = (questions.length + 1).toString();
         setQuestions([...questions, questionObject]);
+
+        // Focus on the new row by setting its ID as the focused ID
+        setFocusedQuestionId(questionObject._id);
     };
 
     const getChecklist = () => {
-        api.getChecklist().then((resp: any) => {
-            console.log(resp.data);
-            setChecklistList(resp.data);
-        });
+        setLoading(true);
+        api.getChecklist()
+            .then((resp: any) => {
+                console.log(resp.data);
+                setChecklistList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     function onChange(sorter: any) {
@@ -277,9 +300,14 @@ const Checklist = () => {
     };
 
     const getDepartmentList = () => {
-        api.getDepartment().then((resp: any) => {
-            setDepartmentList(resp.data);
-        });
+        setLoading(true);
+        api.getDepartment()
+            .then((resp: any) => {
+                setDepartmentList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -311,7 +339,7 @@ const Checklist = () => {
         form.validateFields()
             .then((values) => {
                 try {
-                    console.log("modalMode", modalMode);
+                    setLoading(true);
                     addChecklist.question = questions;
                     //  return;
                     console.log("addChecklist", addChecklist);
@@ -323,22 +351,28 @@ const Checklist = () => {
                                   selectedChecklist._id
                               );
 
-                    apiCall.then((resp: any) => {
-                        const successMessage =
-                            modalMode === "add"
-                                ? "Checklist added."
-                                : "Checklist Updated.";
+                    apiCall
+                        .then((resp: any) => {
+                            const successMessage =
+                                modalMode === "add"
+                                    ? "Checklist added."
+                                    : "Checklist Updated.";
 
-                        toast.success(successMessage, {
-                            position: toast.POSITION.TOP_RIGHT,
+                            toast.success(successMessage, {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+                            setModalMode("add");
+                            form.setFieldsValue({} as IAddCheckList);
+                            setAddCheckList({} as IAddCheckList);
+                            setQuestions([questionObject]);
+                            getChecklist();
+                            setIsModalOpen(false);
+                        })
+                        .finally(() => {
+                            setLoading(false);
                         });
-                        setModalMode("add");
-                        form.setFieldsValue({} as IAddCheckList);
-                        setAddCheckList({} as IAddCheckList);
-                        setQuestions([questionObject]);
-                        getChecklist();
-                    });
                 } catch (ex) {
+                    setLoading(false);
                     toast.error("Technical error while creating Checklist", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
@@ -346,9 +380,9 @@ const Checklist = () => {
             })
             .catch((errorInfo) => {
                 setIsModalOpen(true);
+                setLoading(false);
                 console.log("Validation failed:", errorInfo);
             });
-        setIsModalOpen(false);
     };
 
     // Search input change handler
@@ -408,6 +442,7 @@ const Checklist = () => {
                 <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 4 }}>
                     <Title level={4}>Checklist</Title>
                     <ToastContainer autoClose={25000} />
+                    <LoadingSpinner isLoading={loading} />
                 </Col>
 
                 <Col

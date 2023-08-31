@@ -21,20 +21,27 @@ import { capitalize, employeeOpts } from "../../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 const pageSize = 25;
 const { Title } = Typography;
 
 const Team = () => {
     const [current, setCurrent] = useState(1);
     const [teamList, setTeamList] = useState<ITeam[]>([]);
-    const [addTeam, setAddTeam] = useState<IAddTeam>({} as IAddTeam);
+    //const [addTeam, setAddTeam] = useState<IAddTeam>({} as IAddTeam);
+    const [addTeam, setAddTeam] = useState<IAddTeam>({
+        name: "", // Empty string as a placeholder
+        department: "", // Empty string as a placeholder
+        leader: [], // Empty array as a placeholder
+        member: [], // Empty array as a placeholder
+    });
     const [departmentList, setDepartmentList] = useState<IDepartment[]>([]);
     const [userList, setUserList] = useState<[]>([]);
     const [selectedTeam, setSelectedTeam] = useState<ITeam>({} as ITeam);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
-
+    const [loading, setLoading] = useState(true);
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
         useState<ITeam[]>([]);
@@ -59,7 +66,7 @@ const Team = () => {
             dataIndex: "department",
             width: "20%",
             render: (department: any) => (
-                <span className="actionColumn">
+                <span>
                     {department && department.name
                         ? department.name
                         : "Unknown Department"}
@@ -98,6 +105,7 @@ const Team = () => {
             dataIndex: "",
             key: "action",
             width: "10%",
+            className: "center-align-cell",
             render: (_: any, record: ITeam) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon
@@ -126,6 +134,7 @@ const Team = () => {
 
     const deleteClickHandler = (teamId: string) => {
         // Delete from  DB
+        setLoading(true);
         api.deleteTeam(teamId)
             .then((resp: any) => {
                 const updatedData = teamList.filter(
@@ -140,6 +149,9 @@ const Team = () => {
                 toast.error("Technical error while deleting Team.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
@@ -169,22 +181,37 @@ const Team = () => {
     }, []);
 
     const getTeam = () => {
-        api.getTeam().then((resp: any) => {
-            console.log(resp.data);
-            setTeamList(resp.data);
-        });
+        setLoading(true);
+        api.getTeam()
+            .then((resp: any) => {
+                console.log(resp.data);
+                setTeamList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const getUserList = () => {
-        api.getUserList().then((resp: any) => {
-            setUserList(resp.data);
-        });
+        setLoading(true);
+        api.getUserList()
+            .then((resp: any) => {
+                setUserList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const getDepartmentList = () => {
-        api.getDepartment().then((resp: any) => {
-            setDepartmentList(resp.data);
-        });
+        setLoading(true);
+        api.getDepartment()
+            .then((resp: any) => {
+                setDepartmentList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -221,31 +248,33 @@ const Team = () => {
     };
 
     const handleOk = () => {
-        //
-
         form.validateFields()
             .then((values) => {
                 try {
-                    console.log("modalMode", modalMode);
-                    //  return;
+                    setLoading(true);
                     const apiCall =
                         modalMode === "add"
                             ? api.createTeam(addTeam)
                             : api.updateTeam(addTeam, selectedTeam._id);
 
-                    apiCall.then((resp: any) => {
-                        const successMessage =
-                            modalMode === "add"
-                                ? "Team added."
-                                : "Team Updated.";
+                    apiCall
+                        .then((resp: any) => {
+                            const successMessage =
+                                modalMode === "add"
+                                    ? "Team added."
+                                    : "Team Updated.";
 
-                        toast.success(successMessage, {
-                            position: toast.POSITION.TOP_RIGHT,
+                            toast.success(successMessage, {
+                                position: toast.POSITION.TOP_RIGHT,
+                            });
+                            getTeam();
+                            setIsModalOpen(false);
+                        })
+                        .finally(() => {
+                            setLoading(false);
                         });
-                        form.resetFields();
-                        getTeam();
-                    });
                 } catch (ex) {
+                    setLoading(false);
                     toast.error("Technical error while creating Team", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
@@ -255,7 +284,6 @@ const Team = () => {
                 setIsModalOpen(true);
                 console.log("Validation failed:", errorInfo);
             });
-        setIsModalOpen(false);
     };
 
     // Search input change handler
@@ -328,6 +356,7 @@ const Team = () => {
                 <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 4 }}>
                     <Title level={4}>Teams</Title>
                     <ToastContainer autoClose={25000} />
+                    <LoadingSpinner isLoading={loading} />
                 </Col>
                 <Col
                     xs={{ span: 24 }}
@@ -507,12 +536,14 @@ const Team = () => {
                             >
                                 <Select
                                     allowClear
-                                    options={userList.map((user: any) => ({
-                                        value: user._id,
-                                        label: capitalize(
-                                            `${user.firstName} ${user.lastName}`
-                                        ),
-                                    }))}
+                                    options={[
+                                        ...userList.map((user: any) => ({
+                                            value: user._id,
+                                            label: capitalize(
+                                                `${user.firstName} ${user.lastName}`
+                                            ),
+                                        })),
+                                    ]}
                                     placeholder="Select Team Member"
                                     onChange={(value, event) => {
                                         inputChangeHandler(event, "member");

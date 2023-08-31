@@ -12,12 +12,7 @@ import {
     Table,
     Typography,
 } from "antd";
-import {
-    UserOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import "./Role.scss";
 import { AddRole as IAddRole, Role as IRole } from "./interfaces/IRole";
 import { ToastContainer, toast } from "react-toastify";
@@ -26,6 +21,7 @@ import api from "../../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -41,6 +37,8 @@ const Role = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [loading, setLoading] = useState(true);
+
     const columns = [
         {
             title: "Sr.No",
@@ -54,11 +52,14 @@ const Role = () => {
             title: "Role Name",
             dataIndex: "roleName",
             width: "30%",
+            sorter: (a: any, b: any) => a.roleName.localeCompare(b.roleName), // Add sorter for Role Name
         },
         {
             title: "Role Type",
             dataIndex: "roleTypeName",
             width: "25%",
+            sorter: (a: any, b: any) =>
+                a.roleTypeName.localeCompare(b.roleTypeName), // Add sorter for Role Type
         },
         {
             title: "No of users",
@@ -123,16 +124,24 @@ const Role = () => {
     }, []);
 
     const getAllRole = () => {
-        api.getRole().then((resp: any) => {
-            setRoleList(resp.data);
-        });
+        setLoading(true); // Set loading state to true
+        api.getRole()
+            .then((resp: any) => {
+                setRoleList(resp.data);
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
+            });
     };
 
+    // Search input change handler
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+    };
     const getData = (current: number, pageSize: number) => {
         const startIndex = (current - 1) * pageSize;
         let retVal = roleList;
-        const slicedData = roleList.slice(startIndex, startIndex + pageSize);
-
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
                 return item.roleName
@@ -153,7 +162,9 @@ const Role = () => {
 
     const deleteClickHandler = (roleId: string) => {
         // Delete from  DB
+        setLoading(true); // Reset loading state
         api.deleteRole(roleId)
+
             .then((resp: any) => {
                 const updatedData = roleList.filter(
                     (item: IRole) => item._id !== roleId
@@ -168,6 +179,9 @@ const Role = () => {
                 toast.error("Technical error while deleting Role.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
             });
     };
 
@@ -223,13 +237,13 @@ const Role = () => {
                         placeholder="Search..."
                         className="search-box"
                         bordered={false}
-                        //onChange={handleSearch}
+                        onChange={handleSearch}
                         prefix={<SearchOutlined />}
                     />
                 </Col>
             </Row>
             <ToastContainer autoClose={25000} />
-
+            <LoadingSpinner isLoading={loading} />
             <div>
                 <div className="client-details">
                     <Table

@@ -25,11 +25,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Console } from "console";
+import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 
 const { Title } = Typography;
 const pageSize = 25;
-const loadingPanel = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Department = () => {
     const [current, setCurrent] = useState(1);
@@ -50,7 +49,7 @@ const Department = () => {
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
         useState<IDepartment[]>([]);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const staticEmployees = [
         { EmployeeName: "Employee 1", EmployeeId: "1" },
@@ -175,6 +174,7 @@ const Department = () => {
 
     const deleteClickHandler = (departmentId: string) => {
         // Delete from  DB
+        setLoading(true); // Set loading state to true
         api.deleteDepartment(departmentId)
             .then((resp: any) => {
                 const updatedData = departmentList.filter(
@@ -184,6 +184,9 @@ const Department = () => {
                 toast.success("Department successfully deleted.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+            })
+            .finally(() => {
+                setLoading(false); // Reset loading state
             })
             .catch((error) => {
                 toast.error("Technical error while deleting Department.", {
@@ -407,8 +410,7 @@ const Department = () => {
             <ToastContainer autoClose={25000} />
 
             <div>
-                {loading && <Spin indicator={loadingPanel} />}{" "}
-                {/* Display a loading spinner */}
+                <LoadingSpinner isLoading={loading} />
                 <div className="client-details">
                     {!loading && (
                         <Table
