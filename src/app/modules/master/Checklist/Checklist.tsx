@@ -118,6 +118,23 @@ const Checklist = () => {
         },
     ];
 
+    // Custom Validation for Client row
+    const customValidationRule = (
+        rule: any,
+        value: any,
+        record: IQuestionDetails
+    ) => {
+        if (record.name === "") {
+            return Promise.resolve();
+        }
+
+        if (value === undefined) {
+            return Promise.reject(new Error(rule.message));
+        } else {
+            return Promise.resolve();
+        }
+    };
+
     const questionColumns = [
         {
             title: "Name",
@@ -138,8 +155,16 @@ const Checklist = () => {
                         {
                             required: true,
                             message: "Please enter checklist.",
+                            validator: (rule, value) => {
+                                return customValidationRule(
+                                    rule,
+                                    value,
+                                    record
+                                );
+                            },
                         },
                     ]}
+                    initialValue={record.name}
                 >
                     <Input
                         placeholder="Checklist"
@@ -154,8 +179,6 @@ const Checklist = () => {
                             }
                         }}
                         autoFocus={focusedQuestionId === record._id} // Set autoFocus based on the focused ID
-                        defaultValue={record.name}
-                        value={record.name}
                     />
                 </Form.Item>
             ),
@@ -339,8 +362,12 @@ const Checklist = () => {
         form.validateFields()
             .then((values) => {
                 try {
+                    // Remove blank questions from the array
+                    const filteredQuestions = questions.filter(
+                        (question) => question.name.trim() !== ""
+                    );
                     setLoading(true);
-                    addChecklist.question = questions;
+                    addChecklist.question = filteredQuestions;
                     //  return;
                     console.log("addChecklist", addChecklist);
                     const apiCall =
