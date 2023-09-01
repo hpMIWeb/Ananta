@@ -41,7 +41,6 @@ const items: MenuItem[] = [
         getItem("Role", "/role"),
         getItem("Team", "/team"),
         getItem("Checklist", "/checklist"),
-        getItem("Chart of Account", "/charofaccount"),
     ]),
 
     getItem("Files", "12", <FileOutlined />),
