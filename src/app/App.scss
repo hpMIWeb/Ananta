@@ -375,11 +375,12 @@ label,
 }
 
 .border-bottom {
-    border-radius: 0 !important ;
-    border-bottom: 1px solid #94999f;
+    border-radius: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
     box-shadow: none !important;
-    font-size: 16px;
-    color: #344050;
+    border-bottom: 1px solid #94999f;
 }
 
 .search-box {
@@ -435,4 +436,14 @@ label,
 
 .ant-select-item {
     transition: none !important;
+}
+
+.actionColumn {
+    display: inline-block;
+    align-items: center;
+    min-height: 20px;
+    text-align: center;
+}
+.center-align-value {
+    text-align: center;
 }

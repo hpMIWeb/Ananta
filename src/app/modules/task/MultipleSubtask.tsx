@@ -203,22 +203,31 @@ const MultipleSubtask = (props: any) => {
                                             },
                                         ]}
                                     >
-                                        {/* <TimePicker
-                                            placeholder="Time"
-                                            name="budget_time"
-                                            onChange={(date, dateString) => {
-                                                inputChangeHandler(
-                                                    dateString,
-                                                    subTaskItem,
-                                                    "budget_time"
-                                                );
-                                            }}
-                                            format={"HH:mm"}
-                                            className="w100"
-                                        /> */}
                                         <Input
                                             placeholder="Budget Time"
                                             name="budget_time"
+                                            onInput={(event) => {
+                                                const inputElement =
+                                                    event.target as HTMLInputElement;
+                                                let input = inputElement.value;
+                                                input = input.replace(
+                                                    /[^0-9]/g,
+                                                    ""
+                                                ); // Remove non-numeric characters
+
+                                                if (input.length >= 3) {
+                                                    input =
+                                                        input.slice(0, 2) +
+                                                        ":" +
+                                                        input.slice(2);
+                                                }
+
+                                                inputElement.value = input;
+                                                inputChangeHandler(
+                                                    event,
+                                                    subTaskItem
+                                                );
+                                            }}
                                             onChange={(event) => {
                                                 inputChangeHandler(
                                                     event,

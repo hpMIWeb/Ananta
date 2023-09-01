@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TabsProps, Tooltip } from "antd";
+import { Avatar, TabsProps, Tooltip } from "antd";
 import {
     Button,
     Space,
@@ -83,14 +83,14 @@ const TaskList = () => {
             title: "Title",
             dataIndex: "title",
             key: "title",
-            render: (text: string) => <span className="title">{text}</span>,
             width: "20%",
+            sorter: (a: any, b: any) => a.title.localeCompare(b.title),
+            render: (text: string) => <span className="title">{text}</span>,
         },
         {
             title: "Client",
             dataIndex: "",
             key: "",
-            width: "30%",
             render: (record: any) => (
                 <>
                     <span className="clientDiv">
@@ -104,18 +104,22 @@ const TaskList = () => {
             dataIndex: "assigned_to",
             key: "assigned_to",
             width: "10%",
-            render: (assigned_to: string) => (
-                <Tooltip title={assigned_to}>
-                    <div className="assigneeContainer">
-                        <img
-                            src={
-                                "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
-                            }
-                            alt="Assignee"
-                            className="assigneeImage"
-                        />
-                    </div>
-                </Tooltip>
+            render: (assigned_to: any) => (
+                <div className="assigneeContainer">
+                    <Avatar.Group
+                        maxCount={2}
+                        maxStyle={{
+                            color: "#f56a00",
+                            backgroundColor: "#fde3cf",
+                        }}
+                    >
+                        {assigned_to.map((assignee: any, index: any) => (
+                            <Tooltip key={index} title={assignee}>
+                                <Avatar src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80" />
+                            </Tooltip>
+                        ))}
+                    </Avatar.Group>
+                </div>
             ),
         },
         {
@@ -123,6 +127,7 @@ const TaskList = () => {
             key: "due_date",
             dataIndex: "due_date",
             width: "10%",
+
             render: (due_date: string) => {
                 return (
                     <span className="clientDiv dueDate">
@@ -135,43 +140,14 @@ const TaskList = () => {
                 );
             },
         },
-
         {
-            title: "",
-            key: "subtask",
-            dataIndex: "subtask",
-            width: "10%",
-            render: () => {
-                return (
-                    <FontAwesomeIcon
-                        icon={faAlignLeft}
-                        style={{
-                            fontSize: "13px",
-                        }}
-                    />
-                );
-            },
-        },
-        {
-            title: "Sub Task",
+            title: "Progress",
             key: "subtask",
             dataIndex: "subtask",
             width: "10%",
             render: (subtask: []) => {
                 if (subtask && subtask.length > 0) {
-                    return (
-                        // <div key={subtask.length} className="clientDiv">
-                        //     {subtask.filter((item: ISubTask) => {
-                        //         return (
-                        //             item.status === "completed" ||
-                        //             item.status === "complete"
-                        //         );
-                        //     }).length +
-                        //         "/" +
-                        //         subtask.length}
-                        // </div>
-                        <span className="clientDiv">0/0</span>
-                    );
+                    return <span className="clientDiv">0/0</span>;
                 } else {
                     return <span className="clientDiv">0/0</span>;
                 }
@@ -528,7 +504,6 @@ const TaskList = () => {
                             };
                         }}
                         columns={colInfo}
-                        showHeader={false}
                         pagination={{
                             defaultPageSize: 10,
                         }}

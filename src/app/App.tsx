@@ -21,6 +21,12 @@ import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
 import Login from "./modules/login/Login";
+import Department from "./modules/master/Department/Department";
+import Designation from "./modules/master/Designation/Designation";
+import Role from "./modules/master/Role/Role";
+import RoleAction from "./modules/master/Role/RoleAction";
+import Team from "./modules/master/Team/Team";
+import Checklist from "./modules/master/Checklist/Checklist";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -78,6 +84,25 @@ const App = () => {
                                     element={<ClientTimeSheet />}
                                 />
                                 <Route path="Setting" element={<Setting />} />
+                                {/* Master link */}
+                                <Route
+                                    path="department"
+                                    element={<Department />}
+                                />
+                                <Route
+                                    path="designation"
+                                    element={<Designation />}
+                                />{" "}
+                                <Route path="role" element={<Role />} />
+                                <Route
+                                    path="role-action"
+                                    element={<RoleAction />}
+                                />
+                                <Route path="team" element={<Team />} />
+                                <Route
+                                    path="checklist"
+                                    element={<Checklist />}
+                                />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
                         </Routes>

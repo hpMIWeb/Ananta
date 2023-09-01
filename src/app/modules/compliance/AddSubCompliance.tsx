@@ -213,15 +213,61 @@ const AddSubCompliance = (props: any) => {
                                                         message:
                                                             "Please select budget time.",
                                                     },
+                                                    {
+                                                        pattern:
+                                                            /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                                        message:
+                                                            "Please enter a valid time in the format HH:mm.",
+                                                    },
+                                                    ({ getFieldValue }) => ({
+                                                        validator(_, value) {
+                                                            if (
+                                                                value !==
+                                                                "00:00"
+                                                            ) {
+                                                                return Promise.resolve();
+                                                            }
+                                                            return Promise.reject(
+                                                                new Error(
+                                                                    "Budget Time cannot be set to 00:00."
+                                                                )
+                                                            );
+                                                        },
+                                                    }),
                                                 ]}
                                             >
-                                                <TimePicker
-                                                    placeholder="Time"
-                                                    name={"budget_time"}
-                                                    onChange={(
-                                                        date,
-                                                        dateString
-                                                    ) => {
+                                                <Input
+                                                    placeholder="Budget Time"
+                                                    name="budget_time"
+                                                    onInput={(event) => {
+                                                        const inputElement =
+                                                            event.target as HTMLInputElement;
+                                                        let input =
+                                                            inputElement.value;
+                                                        input = input.replace(
+                                                            /[^0-9]/g,
+                                                            ""
+                                                        ); // Remove non-numeric characters
+
+                                                        if (input.length >= 3) {
+                                                            input =
+                                                                input.slice(
+                                                                    0,
+                                                                    2
+                                                                ) +
+                                                                ":" +
+                                                                input.slice(2);
+                                                        }
+
+                                                        inputElement.value =
+                                                            input;
+                                                        inputChangeHandler(
+                                                            event,
+                                                            subComplianceItem,
+                                                            "budget_time"
+                                                        );
+                                                    }}
+                                                    onChange={(dateString) => {
                                                         inputChangeHandler(
                                                             dateString,
                                                             subComplianceItem,
@@ -229,7 +275,7 @@ const AddSubCompliance = (props: any) => {
                                                         );
                                                     }}
                                                     className="w100"
-                                                    format={"HH:mm"}
+                                                    maxLength={5}
                                                 />
                                             </Form.Item>
                                         </Col>

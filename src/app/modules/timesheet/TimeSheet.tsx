@@ -40,8 +40,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import "./TimeSheet.scss";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/en"; // Import the locale if needed
+
 const { Title } = Typography;
 const pageSize = 20;
+dayjs.extend(utc);
 
 const TimeSheet = () => {
     const [current, setCurrent] = useState(1);
@@ -114,6 +118,17 @@ const TimeSheet = () => {
         }
     };
 
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Tab") {
+            if (
+                event.currentTarget.name === "end_time" &&
+                selectedTableRow.is_new
+            ) {
+                event.preventDefault(); // Prevent form submission on Enter press
+                addNewTimesheetRow();
+            }
+        }
+    };
     const columns = [
         {
             title: "Start Time",
@@ -139,20 +154,46 @@ const TimeSheet = () => {
                                         );
                                     },
                                 },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
-                            <TimePicker
+                            <Input
                                 placeholder="Start Time"
                                 name="start_time"
-                                changeOnBlur={true}
-                                showNow={false}
-                                format={"HH:mm"}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "start_time"
-                                    );
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
+                                    inputChangeHandler(event);
                                 }}
+                                className="w100"
+                                maxLength={5}
                             />
                         </Form.Item>
                     );
@@ -165,7 +206,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(record.start_time).format("HH:mm")}
+                            {dayjs.utc(record.start_time).format("HH:mm")}
                         </span>
                     );
                 }
@@ -180,18 +221,47 @@ const TimeSheet = () => {
                                     return anyValidation(rule, value, record);
                                 },
                             },
+                            {
+                                pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                message:
+                                    "Please enter a valid time in the format HH:mm.",
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value !== "00:00") {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Budget Time cannot be set to 00:00."
+                                        )
+                                    );
+                                },
+                            }),
                         ]}
                     >
-                        <TimePicker
+                        <Input
                             placeholder="Start Time"
                             name={`start_time_${record._id}`}
-                            format="HH:mm"
-                            changeOnBlur={true}
-                            showNow={false}
-                            defaultValue={dayjs(record.start_time)}
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "start_time");
+                            onInput={(event) => {
+                                const inputElement =
+                                    event.target as HTMLInputElement;
+                                let input = inputElement.value;
+                                input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                if (input.length >= 3) {
+                                    input =
+                                        input.slice(0, 2) +
+                                        ":" +
+                                        input.slice(2);
+                                }
+
+                                inputElement.value = input;
+                                inputChangeHandler(event);
                             }}
+                            defaultValue={dayjs.utc(start_time).format("HH:mm")}
+                            className="w100"
+                            maxLength={5}
                         />
                     </Form.Item>
                 );
@@ -221,17 +291,46 @@ const TimeSheet = () => {
                                         );
                                     },
                                 },
+                                {
+                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                    message:
+                                        "Please enter a valid time in the format HH:mm.",
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
-                            <TimePicker
+                            <Input
                                 placeholder="End Time"
                                 name="end_time"
-                                changeOnBlur={true}
-                                showNow={false}
-                                format={"HH:mm"}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(dateString, "end_time");
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
+                                    inputChangeHandler(event);
                                 }}
+                                maxLength={5}
+                                className="w100"
                             />
                         </Form.Item>
                     );
@@ -244,7 +343,7 @@ const TimeSheet = () => {
                                     marginRight: "10px",
                                 }}
                             />
-                            {dayjs(record.end_time).format("HH:mm")}
+                            {dayjs.utc(record.end_time).format("HH:mm")}
                         </span>
                     );
                 }
@@ -259,18 +358,47 @@ const TimeSheet = () => {
                                     return anyValidation(rule, value, record);
                                 },
                             },
+                            {
+                                pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                message:
+                                    "Please enter a valid time in the format HH:mm.",
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (value !== "00:00") {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                        new Error(
+                                            "Budget Time cannot be set to 00:00."
+                                        )
+                                    );
+                                },
+                            }),
                         ]}
                     >
-                        <TimePicker
+                        <Input
                             placeholder="End Time"
                             name="end_time"
-                            defaultValue={dayjs(end_time)}
-                            format={"HH:mm"}
-                            changeOnBlur={true}
-                            showNow={false}
-                            onChange={(date, dateString) => {
-                                inputChangeHandler(dateString, "end_time");
+                            onInput={(event) => {
+                                const inputElement =
+                                    event.target as HTMLInputElement;
+                                let input = inputElement.value;
+                                input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                if (input.length >= 3) {
+                                    input =
+                                        input.slice(0, 2) +
+                                        ":" +
+                                        input.slice(2);
+                                }
+
+                                inputElement.value = input;
+                                inputChangeHandler(event);
                             }}
+                            defaultValue={dayjs.utc(end_time).format("HH:mm")}
+                            className="w100"
+                            maxLength={5}
                         />
                     </Form.Item>
                 );
@@ -809,11 +937,12 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => {
+            console.log("entry.start_time", entry.start_time);
             const startTime = entry.is_edit
-                ? dayjs(entry.start_time).format("YYYY-MM-DD HH:mm")
+                ? dayjs.utc(entry.start_time).format("YYYY-MM-DD HH:mm")
                 : selectedDate + " " + entry.start_time;
             const endTime = entry.is_edit
-                ? dayjs(entry.end_time).format("YYYY-MM-DD HH:mm")
+                ? dayjs.utc(entry.end_time).format("YYYY-MM-DD HH:mm")
                 : selectedDate + " " + entry.end_time;
 
             const payload = {
@@ -884,6 +1013,10 @@ const TimeSheet = () => {
                             );
                             return;
                         }
+                        console.log(
+                            "calculateTotalTime(selectedTableRow);",
+                            calculateTotalTime(selectedTableRow)
+                        );
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 
@@ -893,8 +1026,26 @@ const TimeSheet = () => {
                         selectedTableRow.end_time = value;
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
-                        if (selectedTableRow.is_new) {
-                            addNewTimesheetRow();
+
+                        if (
+                            value &&
+                            /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value)
+                        ) {
+                            // Assuming you have an isNew flag indicating if it's a new row
+                            if (
+                                selectedTableRow.is_new &&
+                                !hasEmptyStartEndTimeRow(timesheetAction)
+                            ) {
+                                addNewTimesheetRow();
+                            } else {
+                                toast.error(
+                                    "Start time should not be greater than end time.",
+                                    {
+                                        position: toast.POSITION.TOP_RIGHT,
+                                    }
+                                );
+                                //retur;
+                            }
                         }
                         break;
                     }
@@ -923,42 +1074,45 @@ const TimeSheet = () => {
         setSelectedTableRow(selectedTableRow);
     };
 
+    const hasEmptyStartEndTimeRow = (rows: any) => {
+        return rows.some(
+            (row: any) =>
+                row.start_time.trim() === "" && row.end_time.trim() === ""
+        );
+    };
+
     const dateFilter = (date: string) => {
         setFilterDate(date);
         getData(date);
     };
-
     const calculateTotalTime = (record: Timesheet) => {
-        console.log(record);
         let endTime = record.is_edit
-            ? dayjs(record.end_time).format("HH:mm").toString()
+            ? record.end_time
             : dayjs(record.end_time, "HH:mm");
         let startTime = record.is_edit
-            ? dayjs(record.start_time).format("HH:mm").toString()
+            ? record.start_time
             : dayjs(record.start_time, "HH:mm");
-        let diff = 0;
 
-        if (startTime) {
-            diff = dayjs(endTime).diff(
-                dayjs(record.start_time, "HH:mm"),
-                "minute"
-            );
+        if (!endTime || !startTime) {
+            return "";
         }
-        // if (startTime.isAfter(endTime)) {
-        //     toast.error("Start time should not be greater than end time.", {
-        //         position: toast.POSITION.TOP_RIGHT,
-        //     });
-        //     return "";
-        // }
 
+        endTime = dayjs(endTime);
+        startTime = dayjs(startTime);
+
+        if (!endTime.isValid() || !startTime.isValid()) {
+            return "";
+        }
+
+        let diff = endTime.diff(startTime, "minute");
         const hours = Math.floor(diff / 60);
         const minutes = diff % 60;
         const formattedDuration = `${hours}:${minutes
             .toString()
             .padStart(2, "0")}`;
-
-        return formattedDuration ? formattedDuration : "";
+        return formattedDuration;
     };
+
     // save time sheet code end
 
     //End Time sheet List

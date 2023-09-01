@@ -154,31 +154,47 @@ const SubTask = (props: any) => {
                                                 message:
                                                     "Please enter a valid time in the format HH:mm.",
                                             },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (value !== "00:00") {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(
+                                                        new Error(
+                                                            "Budget Time cannot be set to 00:00."
+                                                        )
+                                                    );
+                                                },
+                                            }),
                                         ]}
                                     >
-                                        {/* <TimePicker
-                                            placeholder="Time"
-                                            name="budget_time"
-                                            onChange={(date, dateString) => {
-                                                inputChangeHandler(
-                                                    dateString,
-                                                    subTaskItem,
-                                                    "budget_time"
-                                                );
-                                            }}
-                                            format={"HH:mm"}
-                                            className="w100"
-                                        /> */}
                                         <Input
                                             placeholder="Budget Time"
                                             name="budget_time"
-                                            onChange={(event) => {
+                                            onInput={(event) => {
+                                                const inputElement =
+                                                    event.target as HTMLInputElement;
+                                                let input = inputElement.value;
+                                                input = input.replace(
+                                                    /[^0-9]/g,
+                                                    ""
+                                                ); // Remove non-numeric characters
+
+                                                if (input.length >= 3) {
+                                                    input =
+                                                        input.slice(0, 2) +
+                                                        ":" +
+                                                        input.slice(2);
+                                                }
+
+                                                inputElement.value = input;
                                                 inputChangeHandler(
                                                     event,
                                                     subTaskItem
                                                 );
                                             }}
                                             className="w100"
+                                            maxLength={5}
                                         />
                                     </Form.Item>
                                 </Col>

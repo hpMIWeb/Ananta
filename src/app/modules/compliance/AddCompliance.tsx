@@ -105,53 +105,62 @@ const AddCompliance = () => {
     };
 
     const validate = () => {
-        let returnFlag = true;
+        let returnArray = {
+            status: true,
+            message: "Please set mandatory fields!",
+        };
 
         if (
             addCompliance.hasOwnProperty("start_date") &&
             addCompliance.start_date === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("due_date") &&
             addCompliance.due_date === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("mode") &&
             addCompliance.mode === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("title") &&
             addCompliance.title === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("workArea") &&
             addCompliance.workArea === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("remark") &&
             addCompliance.remark === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("budget_time") &&
             addCompliance.budget_time === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
+        } else if (
+            addCompliance.hasOwnProperty("budget_time") &&
+            addCompliance.budget_time === "00:00"
+        ) {
+            returnArray.status = false;
+            returnArray.message = "Enter valid budget time.";
         } else if (
             addCompliance.hasOwnProperty("priority") &&
             addCompliance.priority === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addCompliance.hasOwnProperty("billable") &&
             addCompliance.billable === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         }
 
         // Due date validation against the start date
@@ -159,40 +168,42 @@ const AddCompliance = () => {
         const dueDateValue = dayjs(addCompliance.due_date);
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (dueDateValue.isBefore(startDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
         // Start date validation against the due date
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (startDateValue.isAfter(dueDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
         // Clients validation
         if (complianceDetails === undefined || complianceDetails.length === 0) {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter enter at least 1 client details.";
         }
 
-        return returnFlag;
+        return returnArray;
     };
 
     const handleAddCompliance = () => {
-        if (!validate()) {
-            const errorMessage =
-                complianceDetails && complianceDetails.length === 0
-                    ? "Please select at least one Client."
-                    : "Please set mandatory fields";
-
-            toast.error(errorMessage, {
+        let validateTaskData = validate();
+        if (!validateTaskData.status) {
+            toast.error(validateTaskData.message, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            return;
+
+            return false;
         } else {
             const complianceData = JSON.parse(
                 JSON.stringify(complianceDetails)
@@ -540,25 +551,30 @@ const AddCompliance = () => {
                                 },
                             ]}
                         >
-                            {/* <TimePicker
-                                placeholder="Budget Time"
-                                name="budget_time"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "budget_time"
-                                    );
-                                }}
-                                className="w100"
-                                format={"HH:mm"}
-                            /> */}
                             <Input
                                 placeholder="Budget Time"
                                 name="budget_time"
                                 onChange={(event) => {
                                     inputChangeHandler(event);
                                 }}
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
+                                    inputChangeHandler(event);
+                                }}
                                 className="w100"
+                                maxLength={5}
                             />
                         </Form.Item>
                     </Col>

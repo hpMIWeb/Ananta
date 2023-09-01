@@ -86,6 +86,7 @@ const ComplianceList = () => {
             dataIndex: "title",
             key: "title",
             width: "30rem",
+            sorter: (a: any, b: any) => a.title.localeCompare(b.title),
             render: (text: string) => (
                 <span className="list-short-title">{text}</span>
             ),
@@ -107,8 +108,8 @@ const ComplianceList = () => {
         },
         {
             title: "Sub Compliance",
-            dataIndex: "start1_date",
-            key: "sub_compliance",
+            dataIndex: "",
+            key: "",
             width: "6rem",
             render: (start_date1: string) => (
                 <div className="clientDiv">
@@ -118,9 +119,9 @@ const ComplianceList = () => {
             ),
         },
         {
-            title: "task date",
-            dataIndex: "start_date",
-            key: "start_date",
+            title: "Process",
+            dataIndex: "",
+            key: "",
             render: (start_date: string) => (
                 <div className="clientDiv">
                     <FontAwesomeIcon icon={faAlignLeft} style={{}} />
@@ -560,7 +561,6 @@ const ComplianceList = () => {
                         }}
                         className=""
                         columns={colInfo}
-                        showHeader={false}
                         style={{ width: "100%" }}
                         size="small"
                         showSorterTooltip
@@ -670,7 +670,6 @@ const ComplianceList = () => {
                         }}
                         className=""
                         columns={colInfo}
-                        showHeader={false}
                         style={{ width: "100%" }}
                         size="small"
                         showSorterTooltip
@@ -780,7 +779,6 @@ const ComplianceList = () => {
                         }}
                         className=""
                         columns={colInfo}
-                        showHeader={false}
                         style={{ width: "100%" }}
                         size="small"
                         showSorterTooltip

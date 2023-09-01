@@ -46,6 +46,27 @@ const AddTask = () => {
     const selectModeRef = useRef(null);
     const initialValuesRef = useRef(new Task());
     const [form] = Form.useForm();
+    const allowedKeyCodes = [
+        8, // Backspace
+        9, // Tab
+        35, // End
+        36, // Home
+        37, // Left arrow
+        39, // Right arrow
+        46, // Delete
+        48, // 0
+        49, // 1
+        50, // 2
+        51, // 3
+        52, // 4
+        53, // 5
+        54, // 6
+        55, // 7
+        56, // 8
+        57, // 9
+        186, // ;
+        190, // .
+    ];
 
     // local states
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
@@ -85,56 +106,65 @@ const AddTask = () => {
     };
 
     const validate = () => {
-        let returnFlag = true;
+        let returnArray = {
+            status: true,
+            message: "Please set mandatory fields!",
+        };
 
         if (addTask.hasOwnProperty("start_date") && addTask.start_date === "") {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("due_date") &&
             addTask.due_date === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (addTask.hasOwnProperty("mode") && addTask.mode === "") {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (addTask.hasOwnProperty("title") && addTask.title === "") {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("client") &&
             addTask.client &&
             addTask.client.length === 0
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("workArea") &&
             addTask.workArea === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("remarks") &&
             addTask.remarks === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("budget_time") &&
             addTask.budget_time === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
+        } else if (
+            addTask.hasOwnProperty("budget_time") &&
+            addTask.budget_time === "00:00"
+        ) {
+            returnArray.status = false;
+            returnArray.message = "Enter valid budget time.";
         } else if (
             addTask.hasOwnProperty("priority") &&
             addTask.priority === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("billable") &&
             addTask.billable === ""
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         } else if (
             addTask.hasOwnProperty("assigned_to") &&
             addTask.assigned_to &&
             addTask.assigned_to.length === 0
         ) {
-            returnFlag = false;
+            returnArray.status = false;
         }
 
         // Due date validation against the start date
@@ -142,28 +172,32 @@ const AddTask = () => {
         const dueDateValue = dayjs(addTask.due_date);
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (dueDateValue.isBefore(startDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
         // Start date validation against the due date
         if (startDateValue.isValid() && dueDateValue.isValid()) {
             if (startDateValue.isAfter(dueDateValue)) {
-                returnFlag = false;
+                returnArray.status = false;
+                returnArray.message = "Enter dates.";
             }
         } else {
-            returnFlag = false;
+            returnArray.status = false;
+            returnArray.message = "Enter dates.";
         }
 
-        console.log(returnFlag);
-        return returnFlag;
+        return returnArray;
     };
 
     const handleAddTask = () => {
-        if (!validate()) {
-            toast.error("Please set mandatory fields", {
+        let validateTaskData = validate();
+        if (!validateTaskData.status) {
+            toast.error(validateTaskData.message, {
                 position: toast.POSITION.TOP_RIGHT,
             });
 
@@ -179,13 +213,18 @@ const AddTask = () => {
             addTask.timer = timer;
             addTask.actual_time = addTask.budget_time;
 
+            addTask.taskType = "single_task_without_subtask";
+            if (addTask.subtask.length > 0) {
+                addTask.taskType = "single_task_with_subtask";
+            }
+
+            console.log(addTask.subtask.length);
+
             let allTask =
                 taskList && taskList.length > 0 ? JSON.parse(taskList) : [];
             addTask._id =
                 allTask && allTask.length > 0 ? allTask.length + 1 : 1;
             allTask.push(addTask);
-
-            console.log("ALL TASK", allTask);
 
             // Save to DB
             try {
@@ -473,27 +512,41 @@ const AddTask = () => {
                                     message:
                                         "Please enter a valid time in the format HH:mm.",
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value !== "00:00") {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(
+                                            new Error(
+                                                "Budget Time cannot be set to 00:00."
+                                            )
+                                        );
+                                    },
+                                }),
                             ]}
                         >
-                            {/* <TimePicker
-                                placeholder="Budget Time"
-                                name="budget_time"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "budget_time"
-                                    );
-                                }}
-                                className="w100"
-                                format={"HH:mm"}
-                            /> */}
                             <Input
                                 placeholder="Budget Time"
                                 name="budget_time"
-                                onChange={(event) => {
+                                onInput={(event) => {
+                                    const inputElement =
+                                        event.target as HTMLInputElement;
+                                    let input = inputElement.value;
+                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+                                    if (input.length >= 3) {
+                                        input =
+                                            input.slice(0, 2) +
+                                            ":" +
+                                            input.slice(2);
+                                    }
+
+                                    inputElement.value = input;
                                     inputChangeHandler(event);
                                 }}
                                 className="w100"
+                                maxLength={5}
                             />
                         </Form.Item>
                     </Col>

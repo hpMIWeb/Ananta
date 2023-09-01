@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { FileOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+    FileOutlined,
+    TeamOutlined,
+    DatabaseOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import MenuItem from "antd/es/menu/MenuItem";
@@ -24,19 +28,30 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem("Task Master", "/", <TeamOutlined />, [
+    getItem("Task Master", "Task Master", <TeamOutlined />, [
         getItem("Task", "/task"),
         getItem("Compliance", "/compliance"),
         getItem("Timesheet", "/timesheet"),
         getItem("Approval", "/approval"),
         getItem("Settings", "/setting"),
     ]),
+    getItem("Master", "Master", <DatabaseOutlined />, [
+        getItem("Department", "/department"),
+        getItem("Designation", "/designation"),
+        getItem("Role", "/role"),
+        getItem("Team", "/team"),
+        getItem("Checklist", "/checklist"),
+    ]),
+
     getItem("Files", "12", <FileOutlined />),
     getItem("Logout", "/login"),
 ];
 
 const LayoutComponent = () => {
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
+    const [openKeys, setOpenKeys] = useState(["sub1"]);
+    const [breadcrumbTrail, setBreadcrumbTrail] = useState(["Home"]);
+    const rootSubmenuKeys = ["Task Master", "Master"];
     const {
         token: { colorBgContainer },
     } = theme.useToken();
@@ -45,8 +60,24 @@ const LayoutComponent = () => {
 
     const handleClick = (e: any) => {
         navigate(e.key);
+        console.log(e.keyPath);
+        const rearrangedTrail = [
+            breadcrumbTrail[0],
+            ...e.keyPath.slice().reverse(),
+        ];
+        setBreadcrumbTrail(rearrangedTrail);
+
         if (e.key === "/login") {
             localStorage.removeItem("authtoken");
+        }
+    };
+
+    const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+        const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+        if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
+            setOpenKeys(keys);
+        } else {
+            setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
         }
     };
 
@@ -59,9 +90,10 @@ const LayoutComponent = () => {
             >
                 <div className="demo-logo-vertical" />
                 <Menu
-                    theme="dark"
-                    defaultSelectedKeys={["6"]}
                     mode="inline"
+                    theme="dark"
+                    openKeys={openKeys}
+                    onOpenChange={onOpenChange}
                     items={items}
                     onClick={handleClick}
                 ></Menu>
@@ -71,8 +103,11 @@ const LayoutComponent = () => {
 
                 <Content style={{ margin: "0 16px" }}>
                     <Breadcrumb style={{ margin: "16px 0" }}>
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
-                        <Breadcrumb.Item>Bill</Breadcrumb.Item>
+                        {breadcrumbTrail.map((breadcrumb, index) => (
+                            <Breadcrumb.Item key={index}>
+                                {breadcrumb}
+                            </Breadcrumb.Item>
+                        ))}
                     </Breadcrumb>
                     <div
                         style={{
