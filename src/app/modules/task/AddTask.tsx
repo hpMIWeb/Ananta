@@ -11,8 +11,17 @@ import {
     TimePicker,
     Upload,
     Divider,
+    Calendar,
+    Popover,
+    Dropdown,
+    Radio,
+    Button,
+    RadioChangeEvent,
+    TabsProps,
+    Tabs,
+    Checkbox,
 } from "antd";
-import Button from "../../components/ui/Button/Index";
+
 import SubTask from "./SubTask";
 import {
     priorityOpts,
@@ -23,7 +32,12 @@ import {
     workAreaOpts,
 } from "../../utilities/utility";
 import dayjs from "dayjs";
-import { CloseOutlined } from "@ant-design/icons";
+import {
+    CloseOutlined,
+    CalendarOutlined,
+    CaretDownOutlined,
+    ClockCircleOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -38,35 +52,145 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
-const { Title } = Typography;
 
+const { Title } = Typography;
+const ttl = "Repeat Task";
+const cont = (
+    <Form>
+        <div>
+            <hr />
+            <p className="a7">Create New Copies</p>
+            <Radio.Group buttonStyle="solid">
+                <Radio.Button value="a" defaultChecked>
+                    Daily
+                </Radio.Button>
+                <Radio.Button value="b">Weakly</Radio.Button>
+                <Radio.Button value="c">Monthly</Radio.Button>
+                <Radio.Button value="d">Yearly</Radio.Button>
+            </Radio.Group>
+
+            <br />
+            <br />
+
+            <p className="a6">
+                Every <Select value={1} /> Day(s)
+            </p>
+            <p className="a7">
+                When Do you want to stop repeating this Task ?{" "}
+            </p>
+            <Radio.Group>
+                <Radio value={1}>
+                    <p className="a6">Do not stop repeating this Task</p>
+                </Radio>
+                <br />
+                <Radio value={2}>
+                    <p className="a6">
+                        On <DatePicker placeholder="" />
+                    </p>
+                </Radio>
+            </Radio.Group>
+            <br />
+            <br />
+            <p className="a7">Set Remainder</p>
+            <Select placeholder="Select Option" className="a8" />
+            <div className="a9">
+                <Button>Cancel</Button>&nbsp;&nbsp;
+                <Button type="primary">Done</Button>
+            </div>
+        </div>
+    </Form>
+);
+
+//Weakly
+/*  
+                <p className="a6">Every <Select value={1} /> Day(s)</p>
+                <div>
+                <p className="a6">On</p>&nbsp;&nbsp;&nbsp;
+                    <Checkbox.Group style={{width:'100%'}}>
+                    <Row>
+                        <Col>
+                            <Checkbox value="A">Sun</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="B">Mon</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="C">Tues</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="D">Wed</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="E">Thu</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="E">Fri</Checkbox>
+                        </Col>
+                        <Col>
+                            <Checkbox value="E">Sat</Checkbox>
+                        </Col>
+                    </Row>
+                    </Checkbox.Group>
+                
+                </div>
+                <p className="a7">When Do you want to stop repeating this Task ? </p>
+                <Radio.Group>
+                <Radio value={1}><p className="a6">Do not stop repeating this Task</p></Radio><br />
+                <Radio value={2}><p className="a6">On <DatePicker placeholder="" /></p></Radio>
+                </Radio.Group>
+                <br /><br />
+                <p className="a7">Set Remainder</p>
+                <Select placeholder="Select Option" className="a8" />
+                <div className="a9">
+                    <Button>Cancel</Button>&nbsp;&nbsp;
+                    <Button type="primary">Done</Button>
+                </div> 
+            */
+//Monthly
+/*  <br />
+                <br />
+                <Radio.Group>
+                    <Radio value={1}><p className="a6">Once in Every <Select value={1} /> Month(s) On <Select value={22} /> </p></Radio><br />
+                    <Radio value={2}><p className="a6">Once in Every <Select value={1} /> Month(s) On <Select value="Last" /> <Select value="Sunday" /> </p></Radio>
+                </Radio.Group>
+                
+                <p className="a7">When Do you want to stop repeating this Task ? </p>
+                <Radio.Group>
+                <Radio value={1}><p className="a6">Do not stop repeating this Task</p></Radio><br />
+                <Radio value={2}><p className="a6">On <DatePicker placeholder="" /></p></Radio>
+                </Radio.Group>
+                <br /><br />
+                <p className="a7">Set Remainder</p>
+                <Select placeholder="Select Option" className="a8" />
+                <div className="a9">
+                    <Button>Cancel</Button>&nbsp;&nbsp;
+                    <Button type="primary">Done</Button>
+                </div> 
+            */
+//Yearly
+/*
+            <br />
+            <br />
+            <p className="a6">Once in Every <Select value={1} /> Year(s) On <Select value="August" /> <Select value={22} /> </p>
+
+            <p className="a7">When Do you want to stop repeating this Task ? </p>
+                <Radio.Group>
+                <Radio value={1}><p className="a6">Do not stop repeating this Task</p></Radio><br />
+                <Radio value={2}><p className="a6">On <DatePicker placeholder="" /></p></Radio>
+                </Radio.Group>
+                <br /><br />
+                <p className="a7">Set Remainder</p>
+                <Select placeholder="Select Option" className="a8" />
+                <div className="a9">
+                    <Button>Cancel</Button>&nbsp;&nbsp;
+                    <Button type="primary">Done</Button>
+                </div> 
+        */
 const AddTask = () => {
     const dateFormat = "YYYY-MM-DD";
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
-    const initialValuesRef = useRef(new Task());
     const [form] = Form.useForm();
-    const allowedKeyCodes = [
-        8, // Backspace
-        9, // Tab
-        35, // End
-        36, // Home
-        37, // Left arrow
-        39, // Right arrow
-        46, // Delete
-        48, // 0
-        49, // 1
-        50, // 2
-        51, // 3
-        52, // 4
-        53, // 5
-        54, // 6
-        55, // 7
-        56, // 8
-        57, // 9
-        186, // ;
-        190, // .
-    ];
 
     // local states
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
@@ -306,6 +430,66 @@ const AddTask = () => {
                     </Button>
                 </div>
             </div>
+            <Row gutter={[8, 8]} className="form-row">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                    <div className="a1">
+                        <div className="a5">
+                            {<ClockCircleOutlined className="a2" />}
+                            &nbsp;
+                            <div>
+                                <p className="a3">Start Date</p>
+                                <p className="a4">
+                                    {" "}
+                                    Not set yet{" "}
+                                    <Popover
+                                        style={{ width: "20%" }}
+                                        placement="bottom"
+                                        content={
+                                            <div style={{ width: 300 }}>
+                                                <Calendar fullscreen={false} />
+                                            </div>
+                                        }
+                                    >
+                                        <CaretDownOutlined></CaretDownOutlined>
+                                    </Popover>{" "}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="aa5">
+                            <ClockCircleOutlined className="a2" />
+                            &nbsp;
+                            <div>
+                                <p className="a3">Due Date</p>
+                                <p className="a4">
+                                    {" "}
+                                    Not set yet{" "}
+                                    <Popover placement="bottom">
+                                        <CaretDownOutlined />
+                                    </Popover>
+                                </p>
+                            </div>
+                        </div>
+                        <div className="aa5">
+                            <ClockCircleOutlined className="a2" />
+                            &nbsp;
+                            <div>
+                                <p className="a3">Repeat Task</p>
+                                <p className="a4">
+                                    {" "}
+                                    Not set yet{" "}
+                                    <Popover
+                                        placement="bottom"
+                                        title={ttl}
+                                        content={cont}
+                                    >
+                                        <CaretDownOutlined />
+                                    </Popover>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
             <Form
                 form={form}
                 initialValues={{
