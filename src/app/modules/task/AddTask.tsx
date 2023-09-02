@@ -52,6 +52,9 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
+import Followers from "../../components/Followers/Followers";
+import Reminder from "../../components/Reminder/Reminder";
+import ChecklistModal from "../../components/ChecklistModal/ChecklistModal";
 
 const { Title } = Typography;
 const ttl = "Repeat Task";
@@ -446,7 +449,11 @@ const AddTask = () => {
                                         placement="bottom"
                                         content={
                                             <div style={{ width: 300 }}>
-                                                <Calendar fullscreen={false} />
+                                                <DatePicker
+                                                    showTime
+                                                    bordered={false}
+                                                    className="w100"
+                                                />
                                             </div>
                                         }
                                     >
@@ -856,6 +863,17 @@ const AddTask = () => {
                             />
                         </Form.Item>
                     </Col>
+                </Row>{" "}
+                <Row gutter={[8, 8]} className="form-row">
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <ChecklistModal />
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Reminder />
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
+                        <Followers />
+                    </Col>
                 </Row>
                 <Row gutter={[8, 8]} className="form-row">
                     <Divider />
@@ -871,7 +889,6 @@ const AddTask = () => {
                         ></Switch>
                     </Col>
                 </Row>
-
                 <Row
                     gutter={[8, 8]}
                     className={"form-row " + (!showSubTask ? "hide" : "")}

@@ -1,0 +1,23 @@
+.checklist-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+.checklist-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.checklist-icon {
+    font-size: 30px;
+}
+.checklist-label {
+    font-size: 12px;
+    color: gray;
+}
+.checklist-value {
+    font-size: 12px;
+    color: black;
+    margin-top: -14px;
+    font-weight: 600;
+    cursor: pointer;
+}

@@ -1,0 +1,23 @@
+.reminder-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+.reminder-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.reminder-icon {
+    font-size: 30px;
+}
+.reminder-label {
+    font-size: 12px;
+    color: gray;
+}
+.reminder-value {
+    font-size: 12px;
+    color: black;
+    margin-top: -14px;
+    font-weight: 600;
+    cursor: pointer;
+}
