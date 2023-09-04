@@ -13,34 +13,35 @@ import {
     Typography,
 } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import "./Checklist.scss";
+import "./DefaultChecklist.scss";
 import {
-    AddCheckList as IAddCheckList,
-    CheckList as ICheckList,
+    AddDefaultCheckList as IAddDefaultCheckList,
+    DefaultCheckList as IDefaultCheckList,
     QuestionDetails as IQuestionDetails,
-} from "./interface/IChecklist";
+} from "./interface/IDefaultChecklist";
 import api from "../../../utilities/apiServices";
-import { capitalize, setLocalstorage } from "../../../utilities/utility";
+import { capitalize } from "../../../utilities/utility";
 
-import { Department as IDepartment } from "../Department/interfaces/IDeparment";
+import { DefaultDepartment as IDefaultDepartment } from "../DefaultDepartment/interfaces/IDefaultDeparment";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
+import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
 
 const pageSize = 25;
 const { Title } = Typography;
 
-const Checklist = () => {
+const DefaultChecklist = () => {
     const [current, setCurrent] = useState(1);
-    const [checklistList, setChecklistList] = useState<ICheckList[]>([]);
-    const [addChecklist, setAddCheckList] = useState<IAddCheckList>(
-        {} as IAddCheckList
+    const [checklistList, setChecklistList] = useState<IDefaultCheckList[]>([]);
+    const [addChecklist, setAddCheckList] = useState<IAddDefaultCheckList>(
+        {} as IAddDefaultCheckList
     );
-    const [departmentList, setDepartmentList] = useState<IDepartment[]>([]);
-    const [selectedChecklist, setSelectedChecklist] = useState<ICheckList>(
-        {} as ICheckList
+    const [departmentList, setDepartmentList] = useState<IDefaultDepartment[]>(
+        []
     );
+    const [selectedChecklist, setSelectedChecklist] =
+        useState<IDefaultCheckList>({} as IDefaultCheckList);
 
     const questionObject = { _id: "1", name: "" } as IQuestionDetails;
     const [questions, setQuestions] = useState<IQuestionDetails[]>([
@@ -66,7 +67,7 @@ const Checklist = () => {
             title: "Checklist Name",
             dataIndex: "title",
             width: "55%",
-            sorter: (a: ICheckList, b: ICheckList) =>
+            sorter: (a: IDefaultCheckList, b: IDefaultCheckList) =>
                 a.title.localeCompare(b.title),
         },
         {
@@ -92,7 +93,7 @@ const Checklist = () => {
             key: "action",
             width: "10%",
             className: "center-align-cell",
-            render: (_: any, record: ICheckList) => (
+            render: (_: any, record: IDefaultCheckList) => (
                 <span className="actionColumn">
                     <FontAwesomeIcon
                         icon={faEdit}
@@ -213,10 +214,10 @@ const Checklist = () => {
 
     const deleteClickHandler = (checklistId: string) => {
         // Delete from  DB
-        api.deleteChecklist(checklistId)
+        api.deleteDefaultChecklist(checklistId)
             .then((resp: any) => {
                 const updatedData = checklistList.filter(
-                    (item: ICheckList) => item._id !== checklistId
+                    (item: IDefaultCheckList) => item._id !== checklistId
                 );
                 setChecklistList(updatedData);
                 toast.success("Checklist successfully deleted.", {
@@ -250,7 +251,7 @@ const Checklist = () => {
         }
     };
 
-    const editClickHandler = (checklist: ICheckList) => {
+    const editClickHandler = (checklist: IDefaultCheckList) => {
         setSelectedChecklist(checklist);
         form.setFieldsValue({
             title: checklist.title,
@@ -286,7 +287,7 @@ const Checklist = () => {
 
     const getChecklist = () => {
         setLoading(true);
-        api.getChecklist()
+        api.getDefaultChecklist()
             .then((resp: any) => {
                 console.log(resp.data);
                 setChecklistList(resp.data);
@@ -324,7 +325,7 @@ const Checklist = () => {
 
     const getDepartmentList = () => {
         setLoading(true);
-        api.getDepartment()
+        api.getDefaultDepartment()
             .then((resp: any) => {
                 setDepartmentList(resp.data);
             })
@@ -339,7 +340,7 @@ const Checklist = () => {
         console.log(mode);
         if (mode === "add") {
             form.setFieldsValue({ department: "", title: "", question: [] });
-            setAddCheckList({} as IAddCheckList);
+            setAddCheckList({} as IAddDefaultCheckList);
             setQuestions([questionObject]);
             setModalMode(mode);
             setIsModalOpen(true);
@@ -352,8 +353,8 @@ const Checklist = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
         setModalMode("add");
-        form.setFieldsValue({} as IAddCheckList);
-        setAddCheckList({} as IAddCheckList);
+        form.setFieldsValue({} as IAddDefaultCheckList);
+        setAddCheckList({} as IAddDefaultCheckList);
         setQuestions([questionObject]);
         setIsModalOpen(false);
     };
@@ -372,8 +373,8 @@ const Checklist = () => {
                     console.log("addChecklist", addChecklist);
                     const apiCall =
                         modalMode === "add"
-                            ? api.createChecklist(addChecklist)
-                            : api.updateChecklist(
+                            ? api.createDefaultChecklist(addChecklist)
+                            : api.updateDefaultChecklist(
                                   addChecklist,
                                   selectedChecklist._id
                               );
@@ -389,8 +390,8 @@ const Checklist = () => {
                                 position: toast.POSITION.TOP_RIGHT,
                             });
                             setModalMode("add");
-                            form.setFieldsValue({} as IAddCheckList);
-                            setAddCheckList({} as IAddCheckList);
+                            form.setFieldsValue({} as IAddDefaultCheckList);
+                            setAddCheckList({} as IAddDefaultCheckList);
                             setQuestions([questionObject]);
                             getChecklist();
                             setIsModalOpen(false);
@@ -633,4 +634,4 @@ const Checklist = () => {
     );
 };
 
-export default Checklist;
+export default DefaultChecklist;

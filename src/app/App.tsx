@@ -22,9 +22,14 @@ import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
 import Login from "./modules/login/Login";
 import Department from "./modules/master/Department/Department";
+import DefaultDepartment from "./modules/default-master/DefaultDepartment/DefaultDepartment";
 import Designation from "./modules/master/Designation/Designation";
+import DefaultDesignation from "./modules/default-master/DefaultDesignation/DefaultDesignation";
 import Role from "./modules/master/Role/Role";
+import DefaultRole from "./modules/default-master/Role/DefaultRole";
 import RoleAction from "./modules/master/Role/RoleAction";
+import DefaultRoleAction from "./modules/default-master/Role/DefaultRoleAction";
+import DefaultChecklist from "./modules/default-master/Checklist/DefaultChecklist";
 import Team from "./modules/master/Team/Team";
 import Checklist from "./modules/master/Checklist/Checklist";
 
@@ -102,6 +107,27 @@ const App = () => {
                                 <Route
                                     path="checklist"
                                     element={<Checklist />}
+                                />
+                                {/* Default Master link */}
+                                <Route
+                                    path="default-department"
+                                    element={<DefaultDepartment />}
+                                />{" "}
+                                <Route
+                                    path="default-designation"
+                                    element={<DefaultDesignation />}
+                                />{" "}
+                                <Route
+                                    path="default-role"
+                                    element={<DefaultRole />}
+                                />
+                                <Route
+                                    path="default-role-action"
+                                    element={<DefaultRoleAction />}
+                                />{" "}
+                                <Route
+                                    path="default-checklist"
+                                    element={<DefaultChecklist />}
                                 />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>

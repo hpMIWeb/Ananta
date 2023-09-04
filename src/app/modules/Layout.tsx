@@ -42,7 +42,13 @@ const items: MenuItem[] = [
         getItem("Team", "/team"),
         getItem("Checklist", "/checklist"),
     ]),
-
+    getItem("Default", "Default", <DatabaseOutlined />, [
+        getItem("Department", "/default-department"),
+        getItem("Designation", "/default-designation"),
+        getItem("Role", "/default-role"),
+        // getItem("Team", "/team"),
+        getItem("Checklist", "/default-checklist"),
+    ]),
     getItem("Files", "12", <FileOutlined />),
     getItem("Logout", "/login"),
 ];
