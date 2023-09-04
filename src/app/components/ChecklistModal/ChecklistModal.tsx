@@ -252,7 +252,11 @@ const ChecklistModal = (props: any) => {
                                                 type="primary"
                                                 danger
                                                 icon={<CloseOutlined />}
-                                                // onClick={cancelNewTaskHandler}
+                                                onClick={() =>
+                                                    setIsPopoverVisible(
+                                                        !isPopoverVisible
+                                                    )
+                                                }
                                                 size={"small"}
                                                 style={{ float: "right" }}
                                             ></Button>
@@ -306,8 +310,8 @@ const ChecklistModal = (props: any) => {
                                     </div>
                                 </div>
                             }
-                            visible={isPopoverVisible} // Control popover visibility
-                            onVisibleChange={handlePopoverVisibleChange} // Handle visibility change
+                            open={isPopoverVisible} // Control popover visibility
+                            onOpenChange={handlePopoverVisibleChange} // Handle visibility change
                             trigger="click" // Show popover on click
                             // overlayStyle={{ zIndex: 9999 }} // Adjust z-index as needed
                         >
