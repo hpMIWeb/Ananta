@@ -29,7 +29,7 @@ import Role from "./modules/master/Role/Role";
 import DefaultRole from "./modules/default-master/DefaultRole/DefaultRole";
 import RoleAction from "./modules/master/Role/RoleAction";
 import DefaultRoleAction from "./modules/default-master/DefaultRole/DefaultRoleAction";
-import DefaultChecklist from "./modules/default-master/Checklist/DefaultChecklist";
+import DefaultChecklist from "./modules/default-master/DefaultChecklist/DefaultChecklist";
 import Team from "./modules/master/Team/Team";
 import Checklist from "./modules/master/Checklist/Checklist";
 
