@@ -19,8 +19,9 @@ import { AddTimesheet } from "../modules/timesheet/interfaces/ITimesheet";
 import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
 import { ILogin } from "./globalInterfaces";
+import Cookies from "js-cookie";
 
-const token = getLocalStorage("authtoken");
+const token = Cookies.get("jwt_token"); // getLocalStorage("authtoken");
 //const apiURL = "http://localhost:8005/api/v1/";
 //const apiURL = "https://api.prod.nccountant.com/api/v1/";
 const apiURL = "https://api.staging.nccountant.com/api/v1/";

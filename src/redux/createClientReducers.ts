@@ -38,14 +38,16 @@ interface CreateClientReducersState {
     error: string | null;
 }
 
+const initialState: CreateClientReducersState = {
+    data: null,
+    loading: false,
+    success: false,
+    error: null,
+};
+
 const createClientReducersSlice = createSlice({
     name: "createClientReducersApi",
-    initialState: {
-        data: {},
-        loading: false,
-        success: false,
-        error: null,
-    } as CreateClientReducersState,
+    initialState,
     reducers: {
         resetStateCreateClient: (state) => {
             state.loading = false;

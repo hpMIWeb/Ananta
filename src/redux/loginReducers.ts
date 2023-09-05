@@ -23,16 +23,6 @@ export interface ILoginData {
     error: any;
 }
 
-export const loginUserApiTest = createAsyncThunk(
-    "login/loginUserApi",
-    async (thunkAPI) => {
-        console.log("login test");
-        return { test: "demo test" };
-        //const response = await axios.post(`${apiEndpoint}admin/login`);
-        //return response.data;
-    }
-);
-
 const initialState: ILoginData = {
     data: null,
     loading: false,
@@ -51,7 +41,7 @@ const loginSlice = createSlice({
             })
             .addCase(loginUserApi.fulfilled, (state, action) => {
                 const jwtToken = action.payload?.payload?.token;
-                localStorage.setItem("authtoken", jwtToken);
+                Cookies.set("jwt_token", jwtToken, { expires: 1 });
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;

@@ -11,6 +11,7 @@ import Icon from "../../components/ui/Icon/Index";
 import HeaderBox from "../Header/index";
 import MenuItem from "antd/es/menu/MenuItem";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
+import Cookies from "js-cookie";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -20,13 +21,15 @@ function getItem(
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
-    children?: MenuItem[]
+    children?: MenuItem[],
+    type?: "group"
 ): MenuItem {
     return {
         key,
         icon,
         children,
         label,
+        type,
     } as MenuItem;
 }
 
@@ -48,16 +51,16 @@ const items: MenuItem[] = [
         "5",
         <Icon name="management" width={17.5} height={14} />
     ),
-    getItem("Task Master", "6", <TeamOutlined />, [
-        getItem("Task", "7", "/task"),
-        getItem("Compliance", "8", "/compliance"),
-        getItem("Timesheet", "9", "/timesheet"),
-        getItem("Approval", "10", "/approval"),
-        getItem("Settings", "11", "/setting"),
+    getItem("Task Master", "6", <Icon name="features" width={16} />, [
+        getItem("Task", "7", <Icon name="modules" width={16} />),
+        getItem("Compliance", "8", <Icon name="modules" width={16} />),
+        getItem("Timesheet", "9", <Icon name="time" width={16} />),
+        getItem("Approval", "10", <Icon name="modules" width={16} />),
+        getItem("Settings", "11", <Icon name="profile" width={16} />),
     ]),
     getItem("Files", "20", <FileOutlined />),
-    getItem("Logout", "21"),
-    getItem("Roles", "22"),
+    getItem("Logout", "21", <Icon name="logout" width={16} />),
+    getItem("Roles", "22", <Icon name="modules" width={16} />),
 ];
 
 const LayoutComponent = ({
@@ -114,7 +117,8 @@ const LayoutComponent = ({
                 return;
             case "21": {
                 localStorage.removeItem("authtoken");
-                navigate("/login");
+                Cookies.remove("jwt_token");
+                //navigate("/login");
                 return;
             }
             case "22": {
@@ -143,6 +147,7 @@ const LayoutComponent = ({
                     defaultSelectedKeys={["6"]}
                     mode="inline"
                     items={items}
+                    inlineCollapsed={collapsed}
                     onClick={onMenuClick}
                     className={styles.navbarMenuList}
                 />

@@ -3,7 +3,7 @@ export const apiEndpoint =
     "https://api.staging.nccountant.com/api/v1/" ||
     process.env.REACT_APP_API_ENDPOINT;
 
-export const getAuthToken = localStorage.getItem("authToken");
+export const getAuthToken = Cookies.get("jwt_token");
 
 const compareIgnoreCaseWithTypo = (str1, str2) => {
     const tolerance = 2; // Adjust this value based on the allowed typo tolerance

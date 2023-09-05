@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
-import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { HotKeys } from "react-hotkeys";
 import store from "../states/store";
 import Layout from "./modules/Layout/index";
 import Home from "./modules/Home";
-import Dashboard from "./modules/Dashboard";
 import NoMatch from "./modules/NoMatch";
 import TaskList from "./modules/task/TaskList";
 import AddTask from "./modules/task/AddTask";
@@ -28,8 +24,12 @@ import useLocalStorage from "use-local-storage";
 import Team from "./modules/fileManager/Team";
 import Checklist from "./modules/fileManager/Checklist";
 import { getAuthToken } from "../utils/helpers";
-import { useDispatch } from "react-redux";
+import { useDispatch, Provider } from "react-redux";
 import { getUserInfoReducersApi } from "../redux/getUserInfoReducers";
+import PrivateRoute from "./components/PrivateRoute/Index";
+import Clients from "./modules/Clients/Index";
+import AddClient from "./modules/Clients/AddClient/Index";
+import Logout from "./modules/Logout/index";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -38,6 +38,7 @@ const keyMap = {
 };
 
 const App = () => {
+    const dispatch = useDispatch();
     const defaultDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
     ).matches;
@@ -71,54 +72,164 @@ const App = () => {
             style={{ paddingRight: 16 }}
             data-theme={theme}
         >
-            <HotKeys keyMap={keyMap} handlers={handlers}>
-                <BrowserRouter>
-                    <Routes>
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <Layout switchTheme={switchTheme} theme={theme} />
+                        }
+                    >
                         <Route path="login" element={<Login />} />
                         <Route
-                            path="/"
+                            index
+                            element={<PrivateRoute component={Home} />}
+                        />
+                        <Route
+                            index
+                            path="task"
+                            element={<PrivateRoute component={TaskList} />}
+                        />
+                        <Route
+                            path="add-task"
+                            element={<PrivateRoute component={AddTask} />}
+                        />
+                        <Route
+                            path="add-multi-task"
                             element={
-                                <Layout
-                                    switchTheme={switchTheme}
-                                    theme={theme}
-                                />
+                                <PrivateRoute component={AddMultipleTask} />
                             }
-                        >
-                            <Route element={<Home />} />
-                            <Route path="about" element={<Dashboard />} />
-                            <Route index path="task" element={<TaskList />} />
-                            <Route path="add-task" element={<AddTask />} />
-                            <Route
-                                path="add-multi-task"
-                                element={<AddMultipleTask />}
+                        />
+                        <Route
+                            path="compliance"
+                            element={
+                                <PrivateRoute component={ComplianceList} />
+                            }
+                        />
+                        <Route
+                            path="add-compliance"
+                            element={<PrivateRoute component={AddCompliance} />}
+                        />
+                        <Route
+                            path="approval"
+                            element={<PrivateRoute component={Approval} />}
+                        />
+                        <Route
+                            path="timesheet"
+                            element={<PrivateRoute component={TimeSheet} />}
+                        />
+                        <Route
+                            path="emp-time-sheet"
+                            element={<PrivateRoute component={EmpTimeSheet} />}
+                        />
+                        <Route
+                            path="client-time-sheet"
+                            element={
+                                <PrivateRoute component={ClientTimeSheet} />
+                            }
+                        />
+                        <Route
+                            path="Setting"
+                            element={<PrivateRoute component={Setting} />}
+                        />
+                        <Route
+                            path="Role"
+                            element={<PrivateRoute component={Role} />}
+                        />
+                        <Route
+                            path="Team"
+                            element={<PrivateRoute component={Team} />}
+                        />
+                        <Route
+                            path="Checklist"
+                            element={<PrivateRoute component={Checklist} />}
+                        />
+                        {/* <Route
+                                path="subscription"
+                                element={
+                                    <PrivateRoute component={Subscription} />
+                                }
                             />
                             <Route
-                                path="compliance"
-                                element={<ComplianceList />}
+                                path="subscription/add-subscription"
+                                element={
+                                    <PrivateRoute component={AddSubscription} />
+                                }
                             />
                             <Route
-                                path="add-compliance"
-                                element={<AddCompliance />}
-                            />
-                            <Route path="approval" element={<Approval />} />
-                            <Route path="timesheet" element={<TimeSheet />} />
-                            <Route
-                                path="emp-time-sheet"
-                                element={<EmpTimeSheet />}
+                                path="subscription/edit-subscription/:subscriptionId"
+                                element={
+                                    <PrivateRoute component={AddSubscription} />
+                                }
                             />
                             <Route
-                                path="client-time-sheet"
-                                element={<ClientTimeSheet />}
+                                path="addons/create"
+                                element={<PrivateRoute component={NewAddOns} />}
                             />
-                            <Route path="Setting" element={<Setting />} />
-                            <Route path="Role" element={<Role />} />
-                            <Route path="Team" element={<Team />} />
-                            <Route path="Checklist" element={<Checklist />} />
-                            <Route path="*" element={<NoMatch />} />
-                        </Route>
-                    </Routes>
-                </BrowserRouter>
-            </HotKeys>
+                            <Route
+                                path="addons/edit/:addonsId"
+                                element={<PrivateRoute component={NewAddOns} />}
+                            /> */}
+                        {/* <Route
+                                path="promocodes"
+                                element={
+                                    <PrivateRoute component={PromoCodes} />
+                                }
+                            />
+                            <Route
+                                path="promocodes/create"
+                                element={
+                                    <PrivateRoute component={AddPromoCode} />
+                                }
+                            />
+                            <Route
+                                path="promocodes/edit/:promocodeId"
+                                element={
+                                    <PrivateRoute component={AddPromoCode} />
+                                }
+                            /> */}
+                        <Route
+                            path="caclient"
+                            element={<PrivateRoute component={Clients} />}
+                        />
+                        <Route
+                            path="caclient/create"
+                            element={<PrivateRoute component={AddClient} />}
+                        />
+                        <Route
+                            path="caclient/edit/:clientId"
+                            element={<PrivateRoute component={AddClient} />}
+                        />
+                        {/* <Route
+                                path="caclient/createbulk"
+                                element={
+                                    <PrivateRoute component={BulkAddClient} />
+                                }
+                            /> */}
+                        {/* <Route
+                                path="employee"
+                                element={<PrivateRoute component={Employees} />}
+                            />
+                            <Route
+                                path="employee/add-employee"
+                                element={
+                                    <PrivateRoute component={AddEmployee} />
+                                }
+                            /> */}
+                        {/* <Route
+                                path="employee/edit-employee/:employeeId"
+                                element={
+                                    <PrivateRoute component={AddEmployee} />
+                                }
+                            /> */}
+                        <Route
+                            path="logout"
+                            element={<PrivateRoute component={Logout} />}
+                        />
+                        <Route path="*" element={<NoMatch />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 };

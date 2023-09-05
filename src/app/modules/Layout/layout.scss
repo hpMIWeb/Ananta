@@ -57,9 +57,39 @@
         position: fixed;
         width: 218px;
     }
+
+    .ant-menu-submenu-title {
+        background: transparent !important;
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+        margin-right: 0 !important;
+        padding-top: 5.6px;
+        padding-bottom: 5.6px;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        height: 31px;
+        color: var(--light-grey) !important;
+        &:hover {
+            color: var(--falcon-navbar-vertical-link-hover-color) !important;
+        }
+        .ant-menu-title-content {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: 12px;
+            position: absolute;
+            left: 18px;
+            line-height: 1.4;
+            margin-top: 5px;
+        }
+    }
 }
 .ant-layout-sider-collapsed {
     .ant-menu-item {
         line-height: 17px;
     }
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background-color: transparent !important;
+    margin-left: 15px;
 }

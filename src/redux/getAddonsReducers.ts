@@ -17,7 +17,7 @@ interface GetAddonsReducersListState {
 
 export const getAddonsReducersListApi = createAsyncThunk(
     "subscription/getAddonsReducers",
-    async (payload: Payload) => {
+    async (payload) => {
         const jwtToken = Cookies.get("jwt_token");
         const response = await axios.get(`${apiEndpoint}add-on/get-add-on`, {
             headers: {
