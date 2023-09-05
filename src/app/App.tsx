@@ -32,7 +32,8 @@ import DefaultRoleAction from "./modules/default-master/DefaultRole/DefaultRoleA
 import DefaultChecklist from "./modules/default-master/DefaultChecklist/DefaultChecklist";
 import Team from "./modules/master/Team/Team";
 import Checklist from "./modules/master/Checklist/Checklist";
-
+import DefaultIndustryType from "./modules/default-master/DefaultIndustryType/DefaultIndustryType";
+import DefaultLineOfBusiness from "./modules/default-master/DefaultLineOfBusiness/DefaultLineOfBusiness";
 const keyMap = {
     SNAP_LEFT: "command+left",
     DELETE_NODE: ["del", "backspace"],
@@ -128,6 +129,14 @@ const App = () => {
                                 <Route
                                     path="default-checklist"
                                     element={<DefaultChecklist />}
+                                />{" "}
+                                <Route
+                                    path="default-industry-type"
+                                    element={<DefaultIndustryType />}
+                                />
+                                <Route
+                                    path="default-line-of-business"
+                                    element={<DefaultLineOfBusiness />}
                                 />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>

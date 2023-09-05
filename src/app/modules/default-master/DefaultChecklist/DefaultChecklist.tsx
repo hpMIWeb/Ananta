@@ -18,7 +18,7 @@ import {
     AddDefaultCheckList as IAddDefaultCheckList,
     DefaultCheckList as IDefaultCheckList,
     QuestionDetails as IQuestionDetails,
-} from "./interface/IDefaultChecklist";
+} from "./interface/IDefaultCheck";
 import api from "../../../utilities/apiServices";
 import { capitalize } from "../../../utilities/utility";
 

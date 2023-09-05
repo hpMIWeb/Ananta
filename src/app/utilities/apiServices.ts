@@ -27,7 +27,9 @@ import { AddCheckList } from "../modules/master/Checklist/interface/IChecklist";
 import { AddDefaultDepartment } from "../modules/default-master/DefaultDepartment/interfaces/IDefaultDeparment";
 import { AddDefaultDesignation } from "../modules/default-master/DefaultDesignation/interfaces/IDefaultDesignation";
 import { AddDefaultRole } from "../modules/default-master/DefaultRole/interfaces/IDefaultRole";
-import { AddDefaultCheckList } from "../modules/default-master/Checklist/interface/IDefaultChecklist";
+import { AddDefaultCheckList } from "../modules/default-master/DefaultChecklist/interface/IDefaultCheck";
+import { AddDefaultIndustryType } from "../modules/default-master/DefaultIndustryType/interfaces/IDefaultIndustryType";
+import { AddDefaultLineOfBusiness } from "../modules/default-master/DefaultLineOfBusiness/interfaces/IDefaultLineOfBusiness";
 import { ILogin } from "./globalInterfaces";
 
 const token = getLocalStorage("authtoken");
@@ -940,6 +942,104 @@ export default {
             method: "PUT",
             url: "checklist/update-checklist/" + defaultChecklistId,
             data: defaultChecklist,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+
+    getDefaultIndustryType: () =>
+        instance({
+            method: "GET",
+            url: "industryType/get",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultIndustryType: (industryType: AddDefaultIndustryType) =>
+        instance({
+            method: "POST",
+            url: "industryType/create",
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultIndustryType: (industryTypeId: string) =>
+        instance({
+            method: "DELETE",
+            url: "industryType/delete/" + industryTypeId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultIndustryType: (
+        industryType: AddDefaultIndustryType,
+        industryTypeId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url: "industryType/update/" + industryTypeId,
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
+
+    getDefaultLineOfBusiness: () =>
+        instance({
+            method: "GET",
+            url: "lineOfBusiness/get",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultLineOfBusiness: (lineOfBusiness: AddDefaultLineOfBusiness) =>
+        instance({
+            method: "POST",
+            url: "lineOfBusiness/create",
+            data: lineOfBusiness,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultLineOfBusiness: (lineOfBusinessId: string) =>
+        instance({
+            method: "DELETE",
+            url: "lineOfBusiness/delete/" + lineOfBusinessId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultLineOfBusiness: (
+        lineOfBusiness: AddDefaultLineOfBusiness,
+        lineOfBusinessId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url: "lineOfBusiness/update/" + lineOfBusinessId,
+            data: lineOfBusiness,
             transformResponse: [
                 function (data) {
                     return data;
