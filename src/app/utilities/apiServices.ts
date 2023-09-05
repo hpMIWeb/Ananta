@@ -749,7 +749,7 @@ export default {
     getDefaultDepartment: () =>
         instance({
             method: "GET",
-            url: "deafultDepartment/get-department/",
+            url: "defaultDepartment/get-department/",
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -757,11 +757,11 @@ export default {
                 },
             ],
         }),
-    createDefaultDepartment: (defalutDepartment: AddDefaultDepartment) =>
+    createDefaultDepartment: (defaultDepartment: AddDefaultDepartment) =>
         instance({
             method: "POST",
-            url: "deafultDepartment/create-department/",
-            data: defalutDepartment,
+            url: "defaultDepartment/create-department/",
+            data: defaultDepartment,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -769,11 +769,11 @@ export default {
                 },
             ],
         }),
-    deleteDefaultDepartment: (defalutDepartmentId: string) =>
+    deleteDefaultDepartment: (defaultDepartmentId: string) =>
         instance({
             method: "DELETE",
             url:
-                "deafultDepartment/delete-department/id=" + defalutDepartmentId,
+                "defaultDepartment/delete-department/id=" + defaultDepartmentId,
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -782,14 +782,14 @@ export default {
             ],
         }),
     updateDefaultDepartment: (
-        defalutDepartment: AddDefaultDepartment,
-        defalutDepartmentId: string
+        defaultDepartment: AddDefaultDepartment,
+        defaultDepartmentId: string
     ) =>
         instance({
             method: "PUT",
             url:
-                "deafultDepartment/update-department/id=" + defalutDepartmentId,
-            data: defalutDepartment,
+                "defaultDepartment/update-department/id=" + defaultDepartmentId,
+            data: defaultDepartment,
             transformResponse: [
                 function (data) {
                     return data;
@@ -800,7 +800,7 @@ export default {
     getDefaultDesignation: () =>
         instance({
             method: "GET",
-            url: "deafultDesignation/get-designation/",
+            url: "defaultDesignation/get-designation/",
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
@@ -811,7 +811,7 @@ export default {
     createDefaultDesignation: (defaultDesignation: AddDefaultDesignation) =>
         instance({
             method: "POST",
-            url: "deafultDesignation/create-designation/",
+            url: "defaultDesignation/create-designation/",
             data: defaultDesignation,
             transformResponse: [
                 function (data) {
@@ -824,7 +824,7 @@ export default {
         instance({
             method: "DELETE",
             url:
-                "deafultDesignation/delete-designation/id=" +
+                "defaultDesignation/delete-designation/id=" +
                 defaultDesignationId,
             transformResponse: [
                 function (data) {
@@ -840,7 +840,7 @@ export default {
         instance({
             method: "PUT",
             url:
-                "deafultDesignation/update-designation/id=" +
+                "defaultDesignation/update-designation/id=" +
                 defaultDesignationId,
             data: defaultDesignation,
             transformResponse: [

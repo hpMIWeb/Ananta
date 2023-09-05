@@ -19,7 +19,7 @@ import api from "../../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import {
     DefaultDepartment as IDefaultDepartment,
-    AddDefaultDepartment as IAddDefalutDepartment,
+    AddDefaultDepartment as IAddDefaultDepartment,
 } from "./interfaces/IDefaultDeparment";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,8 +36,8 @@ const DefaultDepartment = () => {
     const [departmentList, setDepartmentList] = useState<IDefaultDepartment[]>(
         []
     );
-    const [addDepartment, setAddDepartment] = useState<IAddDefalutDepartment>(
-        {} as IAddDefalutDepartment
+    const [addDepartment, setAddDepartment] = useState<IAddDefaultDepartment>(
+        {} as IAddDefaultDepartment
     );
     const [selectedDepartment, setSelectedDepartment] =
         useState<IDefaultDepartment>({} as IDefaultDepartment);
@@ -309,7 +309,7 @@ const DefaultDepartment = () => {
                                 position: toast.POSITION.TOP_RIGHT,
                             });
 
-                            form.setFieldsValue({} as IAddDefalutDepartment);
+                            form.setFieldsValue({} as IAddDefaultDepartment);
                             setSelectedDepartment({} as IDefaultDepartment);
                             form.setFieldsValue({ name: "", description: "" });
                             getDepartmentList();
