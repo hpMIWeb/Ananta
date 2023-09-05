@@ -30,6 +30,8 @@ import PrivateRoute from "./components/PrivateRoute/Index";
 import Clients from "./modules/Clients/Index";
 import AddClient from "./modules/Clients/AddClient/Index";
 import Logout from "./modules/Logout/index";
+import Subscription from "./modules/Subscription/Index";
+import AddSubscription from "./modules/Subscription/AddSubscription/Index";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -144,12 +146,17 @@ const App = () => {
                             path="Checklist"
                             element={<PrivateRoute component={Checklist} />}
                         />
-                        {/* <Route
-                                path="subscription"
-                                element={
-                                    <PrivateRoute component={Subscription} />
-                                }
-                            />
+                        <Route
+                            path="subscription"
+                            element={<PrivateRoute component={Subscription} />}
+                        />
+                        <Route
+                            path="subscription/add-subscription"
+                            element={
+                                <PrivateRoute component={AddSubscription} />
+                            }
+                        />
+                        {/* 
                             <Route
                                 path="subscription/add-subscription"
                                 element={

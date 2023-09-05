@@ -58,6 +58,7 @@ const items: MenuItem[] = [
         getItem("Approval", "10", <Icon name="modules" width={16} />),
         getItem("Settings", "11", <Icon name="profile" width={16} />),
     ]),
+
     getItem("Files", "20", <FileOutlined />),
     getItem("Logout", "21", <Icon name="logout" width={16} />),
     getItem("Roles", "22", <Icon name="modules" width={16} />),

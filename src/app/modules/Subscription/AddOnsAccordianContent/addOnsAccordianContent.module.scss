@@ -1,0 +1,25 @@
+@import "../../../../styles/variables.scss";
+.addOnsAccordianContentWrapper{
+    padding: 20px !important;
+  color: var(--light-grey) !important;
+  background: var(--card-background) !important;
+  margin: 8px 0 16px 0;
+  border: 1px solid var(--falcon-border-color) !important;
+}
+
+.descLabel{
+  font-size: 13.33px;
+  line-height: 18.66px;
+}
+
+.cardDescBtn{
+  margin-top: -4px;
+  path{
+    fill: var(--falcon-body-color);
+  }
+}
+
+.semiBold{
+  font-weight: 600;
+  line-height: 19.59px;
+}

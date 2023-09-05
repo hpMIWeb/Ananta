@@ -1,0 +1,41 @@
+.selectCustomHeight{
+    .ant-select-selector{
+        height: 36px !important;
+        border: 1px solid var(--falcon-border-color) !important;
+        border-radius: 0.25rem;
+        .ant-select-selection-placeholder{
+            line-height: 34px !important;
+        }
+        .ant-select-selection-item{
+            line-height: 34px !important;
+        }
+        .ant-select-selection-search-input{
+            height: 34px  !important;
+        }
+    }
+}
+.formItemSelect33{
+    .ant-select-selector{
+        height: 33px !important;
+        border: 1px solid var(--falcon-border-color) !important;
+        border-radius: 0.25rem;
+        .ant-select-selection-placeholder{
+            line-height: 31px !important;
+        }
+        .ant-select-selection-item{
+            line-height: 31px !important;
+        }
+        .ant-select-selection-search-input{
+            height: 31px  !important;
+        }
+    }
+}
+.addOnSelectDropdown{
+    .ant-select-selector{
+        border: 0px !important;
+        box-shadow: none !important;
+        .ant-select-selection-item{
+            color: #2c7be5;
+        }
+    }
+}
