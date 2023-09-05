@@ -891,7 +891,7 @@ export default {
     updateDefaultRole: (defaultRole: AddDefaultRole, defaultRoleId: string) =>
         instance({
             method: "PUT",
-            url: "role/id=" + defaultRoleId,
+            url: "defaultRole/id=" + defaultRoleId,
             data: defaultRole,
             transformResponse: [
                 function (data) {
@@ -940,7 +940,7 @@ export default {
     ) =>
         instance({
             method: "PUT",
-            url: "checklist/update-checklist/" + defaultChecklistId,
+            url: "defaultChecklist/update-checklist/" + defaultChecklistId,
             data: defaultChecklist,
             transformResponse: [
                 function (data) {
