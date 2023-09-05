@@ -26,7 +26,7 @@ import { AddCheckList } from "../modules/master/Checklist/interface/IChecklist";
 
 import { AddDefaultDepartment } from "../modules/default-master/DefaultDepartment/interfaces/IDefaultDeparment";
 import { AddDefaultDesignation } from "../modules/default-master/DefaultDesignation/interfaces/IDefaultDesignation";
-import { AddDefaultRole } from "../modules/default-master/Role/interfaces/IDefaultRole";
+import { AddDefaultRole } from "../modules/default-master/DefaultRole/interfaces/IDefaultRole";
 import { AddDefaultCheckList } from "../modules/default-master/Checklist/interface/IDefaultChecklist";
 import { ILogin } from "./globalInterfaces";
 
