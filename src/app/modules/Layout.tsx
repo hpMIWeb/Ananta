@@ -58,7 +58,7 @@ const LayoutComponent = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [openKeys, setOpenKeys] = useState(["sub1"]);
     const [breadcrumbTrail, setBreadcrumbTrail] = useState(["Home"]);
-    const rootSubmenuKeys = ["Task Master", "Master"];
+    const rootSubmenuKeys = ["Task Master", "Master", "Default"];
     const {
         token: { colorBgContainer },
     } = theme.useToken();
