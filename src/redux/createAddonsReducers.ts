@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { apiEndpoint, getAuthToken } from "../utils/helpers";
+import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
@@ -24,7 +25,7 @@ const initialState: State = {
 export const createAddonsReducersReducersApi = createAsyncThunk(
     "createAddonsReducers",
     async ({ payload, addonsId }: Payload) => {
-        const jwtToken = getAuthToken;
+        const jwtToken = Cookies.get("jwt_token");
         const response = !addonsId
             ? await axios.post(`${apiEndpoint}add-on/create-add-on`, payload, {
                   headers: {

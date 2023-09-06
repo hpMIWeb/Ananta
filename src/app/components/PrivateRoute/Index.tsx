@@ -3,9 +3,7 @@ import { getAuthToken } from "../../../utils/helpers";
 import Cookies from "js-cookie";
 
 const PrivateRoute = ({ component: Component, ...rest }: any) => {
-    //const jwtToken = getAuthToken;
     const jwtToken = Cookies.get("jwt_token");
-
     return jwtToken ? <Component {...rest} /> : <Navigate to="/login" />;
 };
 

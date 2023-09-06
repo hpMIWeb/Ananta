@@ -20,6 +20,7 @@ import { AddLeave } from "../modules/aproval/interfaces/IApproval";
 import { Settings } from "../modules/Setting/interfaces/Isetting";
 import { ILogin } from "./globalInterfaces";
 import Cookies from "js-cookie";
+import { getAuthToken } from "../../utils/helpers";
 
 const token = Cookies.get("jwt_token"); // getLocalStorage("authtoken");
 //const apiURL = "http://localhost:8005/api/v1/";

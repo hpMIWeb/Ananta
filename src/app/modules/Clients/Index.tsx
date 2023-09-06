@@ -32,7 +32,8 @@ const Clients = () => {
     };
 
     useEffect(() => {
-        //dispatch(getClientsReducersApi());
+        // @ts-ignore
+        dispatch(getClientsReducersApi());
     }, []);
 
     const cardDesc = () => {

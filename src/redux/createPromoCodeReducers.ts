@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { apiEndpoint, getAuthToken } from "../utils/helpers";
+import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
@@ -11,7 +12,7 @@ interface Payload {
 export const createPromoCodeApi = createAsyncThunk(
     "createPromoCode",
     async ({ payload, promoId }: Payload) => {
-        const jwtToken = getAuthToken;
+        const jwtToken = Cookies.get("jwt_token");
         const response = !promoId
             ? await axios.post(
                   `${apiEndpoint}promocode/create-promocode`,
