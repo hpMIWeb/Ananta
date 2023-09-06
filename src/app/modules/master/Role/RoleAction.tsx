@@ -140,16 +140,7 @@ const RoleAction = () => {
                         {isEditMode ? "Update Role" : "Create New Role"}
                     </Title>
                 </div>
-                <div className="add-task-cancel">
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<CloseOutlined />}
-                        onClick={cancelNewRoleHandler}
-                    >
-                        Cancel
-                    </Button>
-                </div>
+                <div className="add-task-cancel"></div>
             </Row>
             <Divider></Divider>
             <ToastContainer autoClose={25000} />
@@ -204,14 +195,29 @@ const RoleAction = () => {
                 </Row>
                 <Divider></Divider>
                 <Row gutter={[8, 8]} className="form-row">
-                    <Button
-                        htmlType="submit"
-                        type="primary"
-                        className="w100"
-                        onClick={handleRoleAction}
-                    >
-                        {isEditMode ? "Update Role" : "Add Role"}
-                    </Button>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 20 }}
+                    ></Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }}>
+                        <Button
+                            type="primary"
+                            danger
+                            onClick={cancelNewRoleHandler}
+                        >
+                            Cancel
+                        </Button>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }}>
+                        <Button
+                            htmlType="submit"
+                            type="primary"
+                            onClick={handleRoleAction}
+                        >
+                            {isEditMode ? "Update Role" : "Add Role"}
+                        </Button>
+                    </Col>
                 </Row>
             </Form>
         </div>
