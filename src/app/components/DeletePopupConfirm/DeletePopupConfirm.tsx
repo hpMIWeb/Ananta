@@ -18,6 +18,8 @@ const DeletePopupConfirm = (props: any) => {
     );
 
     const showConfirm = () => {
+        console.log("props", props);
+        //TODO:: icon need make dynamicaly
         confirm({
             title: popUpTitle,
             icon: <ExclamationCircleFilled />,
