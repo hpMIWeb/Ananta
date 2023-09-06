@@ -200,7 +200,7 @@ const SubscriptionTab = () => {
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     sortState={sortState}
-                    setSortState={sortState}
+                    setSortHandler={sortState}
                 />
             }
             <div className={styles.subscriptionHeaderBtnWrapper}>

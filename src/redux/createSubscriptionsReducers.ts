@@ -5,7 +5,7 @@ import { apiEndpoint, getAuthToken } from "../utils/helpers";
 
 interface Payload {
     payload: any;
-    subscriptionId: string;
+    subscriptionId: string | undefined;
 }
 
 export const createSubscriptionsReducersApi = createAsyncThunk(

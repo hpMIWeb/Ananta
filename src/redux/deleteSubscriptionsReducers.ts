@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { apiEndpoint, getAuthToken } from "../utils/helpers";
 
 interface Payload {
-    subscriptionId: string;
+    subscriptionId: string | undefined;
 }
 
 export const deleteSubscriptionsReducersApi = createAsyncThunk(

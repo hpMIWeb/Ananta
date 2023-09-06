@@ -11,11 +11,11 @@ const SearchFilterBar = ({
     searchValue,
     setSearchValue,
     sortState = {},
-    setSortState = () => {},
+    setSortHandler = () => {},
     showAddOn = false,
     defaultSortLabel,
     initialAddOnsValue = "All Addons",
-}) => {
+}: any) => {
     const [expandSort, setExpandSort] = useState(false);
     // const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
 
@@ -28,7 +28,7 @@ const SearchFilterBar = ({
 
     const sortLabel = defaultSortLabel || initialSortLabel;
 
-    const onSortClick = (type) => {
+    const onSortClick = (type: string) => {
         let direction = sortLabel[type].asc;
         if (
             sortState &&
@@ -44,7 +44,7 @@ const SearchFilterBar = ({
             direction = "";
         }
 
-        setSortState({ type, sortOrder: direction });
+        setSortHandler({ type, sortOrder: direction });
     };
 
     return (
@@ -61,7 +61,7 @@ const SearchFilterBar = ({
                         )}
                         placeholder="Search"
                         value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
+                        onChange={(e: any) => setSearchValue(e.target.value)}
                         prefix={
                             <Icon width={13.33} height={13.33} name="search" />
                         }
@@ -83,8 +83,8 @@ const SearchFilterBar = ({
                                 <Icon name="downArrow" width={9} height={14} />
                             }
                             value={sortState?.addOnValue}
-                            onChange={(value) => {
-                                setSortState((prev) => ({
+                            onChange={(value: any) => {
+                                setSortHandler((prev: any) => ({
                                     ...prev,
                                     addOnValue: value,
                                 }));
@@ -192,16 +192,16 @@ const SearchFilterBar = ({
                                         width={
                                             sortState.type === label
                                                 ? sortState.sortOrder
-                                                    ? "15"
-                                                    : "18"
-                                                : "18"
+                                                    ? 15
+                                                    : 18
+                                                : 18
                                         }
                                         height={
                                             sortState.type === label
                                                 ? sortState.sortOrder
-                                                    ? "17"
-                                                    : "21"
-                                                : "21"
+                                                    ? 17
+                                                    : 21
+                                                : 21
                                         }
                                     />
                                 </div>

@@ -29,7 +29,7 @@ const AddSubscription = () => {
         success: successSubscriptionsSuccess,
     } = useSelector((state: any) => state.deleteSubscriptions);
 
-    const handleFeatureToggle = (feature: any) => {
+    const handleFeatureToggle = (feature: string) => {
         setFeatureState((prevState: any) => ({
             ...prevState,
             [feature]: !prevState[feature],
@@ -46,12 +46,13 @@ const AddSubscription = () => {
     ];
 
     const formValues = {
-        features: Object.fromEntries(
-            featureList.map((task: any) => [
-                task.feature.replace(/\s+/g, "_"),
-                featureState[task.feature] || false,
-            ])
-        ),
+        // TODO:
+        // features: Object.fromEntries(
+        //     featureList.map((task: any) => [
+        //         task.feature.replace(/\s+/g, "_"),
+        //         featureState[task.feature] || false,
+        //     ])
+        // ),
     };
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const AddSubscription = () => {
                 employee_client: e.employee_client,
                 client_vendor: e.client_vendor,
             },
-            features: formValues?.features,
+            //features: formValues?.features,
             subscribers_count: 0,
         };
         delete payload.employee_ca;
@@ -199,7 +200,7 @@ const AddSubscription = () => {
                             </div>
                         </div>
 
-                        <div className="formFieldRowWrapper">
+                        <div className="formFieldRowWrappprever">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">
                                     Storage Space
@@ -373,11 +374,11 @@ const AddSubscription = () => {
                                             <Switch
                                                 size="small"
                                                 className="smallCheckBox"
-                                                checked={
-                                                    featureState[
-                                                        task.feature
-                                                    ] ?? task.defaultState
-                                                }
+                                                // checked={
+                                                //     featureState[
+                                                //         task.feature
+                                                //     ] ?? task.defaultState
+                                                // }
                                                 onChange={() =>
                                                     handleFeatureToggle(
                                                         task.feature
