@@ -48,6 +48,9 @@ const Department = () => {
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
         useState<IDepartment[]>([]);
+    const [tableRowSelected, setTableRowSelected] = useState<IAddDepartment>(
+        {} as IAddDepartment
+    );
 
     const [loading, setLoading] = useState(true);
 
@@ -74,6 +77,12 @@ const Department = () => {
             key: "name",
             width: "70%",
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+            render: (text: string, record: IDepartment) => (
+                <div>
+                    <span className="">{text}</span>
+                    <p className="description">{record.description}</p>
+                </div>
+            ),
         },
         {
             title: "Employee",
@@ -422,6 +431,13 @@ const Department = () => {
                             style={{ width: "100%" }}
                             className="table-striped-rows  departmentTable"
                             bordered
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: (event) => {
+                                        setTableRowSelected(record);
+                                    },
+                                };
+                            }}
                         />
                     )}
                 </div>
