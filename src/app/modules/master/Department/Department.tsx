@@ -27,6 +27,8 @@ import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined, LoadingOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
+
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -120,17 +122,12 @@ const Department = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+                    <DeletePopupConfirm
+                        title="Do you Want to delete these items?"
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Department"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete  Department"
+                    />
                 </span>
             ),
         },
@@ -447,11 +444,12 @@ const Department = () => {
                 title={
                     modalMode === "add"
                         ? "Add New Department"
-                        : "Edit Department"
+                        : "Edit " + selectedDepartment.name + " Department"
                 }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
+                okText={modalMode === "add" ? "Add" : "Update"}
             >
                 <Form form={form} initialValues={addDepartment}>
                     <Row gutter={[8, 8]} className="form-row">
@@ -521,13 +519,30 @@ const Department = () => {
             >
                 <Row gutter={[8, 8]} className="form-row">
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <Button
-                            type="primary"
-                            style={{ marginBottom: "10px" }}
-                            className="w100"
+                        <Row
+                            gutter={[8, 8]}
+                            className="form-row"
+                            style={{ marginTop: "0" }}
                         >
-                            Add Employee
-                        </Button>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                                style={{
+                                    float: "right",
+                                    marginBottom: "10px",
+                                    marginTop: "7px",
+                                }}
+                            >
+                                <Input
+                                    placeholder="Search..."
+                                    className="search-box"
+                                    bordered={false}
+                                    //  onChange={handleSearch}
+                                    prefix={<SearchOutlined />}
+                                />
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
 
