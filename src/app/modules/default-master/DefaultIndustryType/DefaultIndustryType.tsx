@@ -35,8 +35,9 @@ const DefaultIndustryType = () => {
     const [industryTypeList, setIndustryTypeList] = useState<
         IDefaultIndustryType[]
     >([]);
-    const [addIndustryType, setAddIndustryType] =
-        useState<IAddDefaultIndustryType>({} as IAddDefaultIndustryType);
+    const [addIndustryType, setAddIndustryType] = useState<
+        [IAddDefaultIndustryType]
+    >([{} as IAddDefaultIndustryType]);
     const [selectedIndustryType, setSelectedIndustryType] =
         useState<IDefaultIndustryType>({} as IDefaultIndustryType);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -44,6 +45,7 @@ const DefaultIndustryType = () => {
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(true);
+    const [industryNames, setIndustryNames] = useState();
 
     const columns = [
         {
@@ -94,6 +96,15 @@ const DefaultIndustryType = () => {
         },
     ];
 
+    // const removeIndustryName = (name: any) => {
+    //     const updatedNames = industryNames.filter(
+    //         (item: any) => item.name !== name
+    //     );
+    //     setIndustryNames(updatedNames);
+    // };
+
+ 
+
     useEffect(() => {
         getIndustryTypeList();
     }, []);
@@ -138,9 +149,11 @@ const DefaultIndustryType = () => {
         form.setFieldsValue({
             name: industryType.name,
         });
-        setAddIndustryType({
-            name: industryType.name,
-        });
+        setAddIndustryType([
+            {
+                name: industryType.name,
+            },
+        ]);
         showModal("edit"); // Open the modal
     };
 
@@ -215,6 +228,7 @@ const DefaultIndustryType = () => {
             ...addIndustryType,
             [name]: value,
         });
+        setIndustryNames([...industryNames,  [name]: value]);
     };
 
     const handleOk = () => {
@@ -226,9 +240,11 @@ const DefaultIndustryType = () => {
                     setLoading(true); // Set loading state to true
                     const apiCall =
                         modalMode === "add"
-                            ? api.createDefaultIndustryType(addIndustryType)
+                            ? api.createMultipleDefaultIndustryType(
+                                  addIndustryType
+                              )
                             : api.updateDefaultIndustryType(
-                                  addIndustryType,
+                                  addIndustryType[0],
                                   selectedIndustryType._id
                               );
 
@@ -377,6 +393,19 @@ const DefaultIndustryType = () => {
                                     name="name"
                                     onChange={(event) => {
                                         inputChangeHandler(event);
+                                    }}
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Tab") {
+                                            event.preventDefault(); // Prevent the default Tab behavior
+                                            const name =
+                                                form.getFieldValue("name");
+                                            if (name) {
+                                                addIndustryName(name);
+                                                form.setFieldsValue({
+                                                    name: "",
+                                                }); // Clear the text field
+                                            }
+                                        }
                                     }}
                                 />
                             </Form.Item>

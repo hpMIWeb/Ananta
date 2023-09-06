@@ -972,6 +972,20 @@ export default {
                 },
             ],
         }),
+    createMultipleDefaultIndustryType: (
+        industryType: AddDefaultIndustryType[]
+    ) =>
+        instance({
+            method: "POST",
+            url: "industryType/create",
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
     deleteDefaultIndustryType: (industryTypeId: string) =>
         instance({
             method: "DELETE",
