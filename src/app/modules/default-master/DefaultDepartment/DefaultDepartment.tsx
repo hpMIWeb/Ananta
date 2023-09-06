@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined, LoadingOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
 
 const { Title } = Typography;
 const pageSize = 25;
@@ -51,6 +52,8 @@ const DefaultDepartment = () => {
         useState<IDefaultDepartment[]>([]);
 
     const [loading, setLoading] = useState(true);
+    const [tableRowSelected, setTableRowSelected] =
+        useState<IAddDefaultDepartment>({} as IAddDefaultDepartment);
 
     const staticEmployees = [
         { EmployeeName: "Employee 1", EmployeeId: "1" },
@@ -75,6 +78,12 @@ const DefaultDepartment = () => {
             key: "name",
             width: "70%",
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+            render: (text: string, record: IDefaultDepartment) => (
+                <div>
+                    <span className="">{text}</span>
+                    <p className="description">{record.description}</p>
+                </div>
+            ),
         },
         {
             title: "Employee",
@@ -112,17 +121,12 @@ const DefaultDepartment = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+                    <DeletePopupConfirm
+                        popUpTitle={`Do you want to delete ${record.name} Department?`}
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Department"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete  Department"
+                    />
                 </span>
             ),
         },
@@ -432,11 +436,12 @@ const DefaultDepartment = () => {
                 title={
                     modalMode === "add"
                         ? "Add New Department"
-                        : "Edit Department"
+                        : "Edit " + selectedDepartment.name + " Department"
                 }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
+                okText={modalMode === "add" ? "Add" : "Update"}
             >
                 <Form form={form} initialValues={addDepartment}>
                     <Row gutter={[8, 8]} className="form-row">

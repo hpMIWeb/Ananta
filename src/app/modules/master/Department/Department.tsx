@@ -123,7 +123,7 @@ const Department = () => {
                     />
                     <Divider type="vertical" />
                     <DeletePopupConfirm
-                        title="Do you Want to delete these items?"
+                        popUpTitle={`Do you want to delete ${record.name} Department?`}
                         content=""
                         onConfirm={() => deleteClickHandler(record._id)}
                         button-label="Delete  Department"
