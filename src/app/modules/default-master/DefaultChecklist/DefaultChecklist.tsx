@@ -27,6 +27,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
 
 const pageSize = 25;
 const { Title } = Typography;
@@ -103,17 +104,12 @@ const DefaultChecklist = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+                    <DeletePopupConfirm
+                        popUpTitle={`Do you want to delete ${record.title} Checklist?`}
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Department"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete  Checklist"
+                    />
                 </span>
             ),
         },

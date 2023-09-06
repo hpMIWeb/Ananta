@@ -25,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -117,17 +118,12 @@ const DefaultDesignation = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+                    <DeletePopupConfirm
+                        popUpTitle={`Do you want to delete ${record.name} Designation?`}
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Designation"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete  Designation"
+                    />
                 </span>
             ),
         },
@@ -445,11 +441,12 @@ const DefaultDesignation = () => {
                 title={
                     modalMode === "add"
                         ? "Add New Designation"
-                        : "Edit Designation"
-                } // Modify the title
+                        : "Edit " + selectedDesignation.name + " Designation"
+                }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
+                okText={modalMode === "add" ? "Add" : "Update"}
             >
                 <Form form={form} initialValues={addDesignation}>
                     <Row gutter={[8, 8]} className="form-row">
