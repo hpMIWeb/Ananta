@@ -301,7 +301,6 @@ const Checklist = () => {
 
         questionObject._id = (questions.length + 1).toString();
         setQuestions([...questions, questionObject]);
-
         // Focus on the new row by setting its ID as the focused ID
         setFocusedQuestionId(questionObject._id);
     };
@@ -360,6 +359,7 @@ const Checklist = () => {
     const showModal = (mode: string) => {
         console.log(mode);
         if (mode === "add") {
+            setQuestions([]);
             form.setFieldsValue({ department: "", title: "", question: [] });
             setAddCheckList({} as IAddCheckList);
             setModalMode(mode);
@@ -378,7 +378,7 @@ const Checklist = () => {
         setModalMode("add");
         form.setFieldsValue({} as IAddCheckList);
         setAddCheckList({} as IAddCheckList);
-        // setQuestions([questionObject]);
+        setQuestions([]);
         setIsModalOpen(false);
     };
     const handleOk = () => {
@@ -673,7 +673,8 @@ const Checklist = () => {
                                                 allowClear
                                                 options={departmentList.map(
                                                     (departmentList) => ({
-                                                        value: departmentList._id,
+                                                        value:
+                                                            departmentList._id,
                                                         label: capitalize(
                                                             departmentList.name
                                                         ),
