@@ -1035,6 +1035,20 @@ export default {
                 },
             ],
         }),
+    createMultipleDefaultLineOfBusiness: (
+        lineOfBusiness: AddDefaultLineOfBusiness[]
+    ) =>
+        instance({
+            method: "POST",
+            url: "lineOfBusiness/multiple-create",
+            data: lineOfBusiness,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
     deleteDefaultLineOfBusiness: (lineOfBusinessId: string) =>
         instance({
             method: "DELETE",

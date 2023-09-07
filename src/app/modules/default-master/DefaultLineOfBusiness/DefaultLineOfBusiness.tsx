@@ -11,6 +11,7 @@ import {
     Popconfirm,
     Divider,
     Spin,
+    Tag,
 } from "antd";
 import "./DefaultLineOfBusiness.scss";
 
@@ -25,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
 
 const { Title } = Typography;
 const pageSize = 25;
@@ -37,13 +39,17 @@ const DefaultLineOfBusiness = () => {
     >([]);
     const [addLineOfBusiness, setAddLineOfBusiness] =
         useState<IAddDefaultLineOfBusiness>({} as IAddDefaultLineOfBusiness);
-    const [selectedIndustryType, setSelectedIndustryType] =
+    const [selectedLineOfBusiness, setSelectedLineOfBusiness] =
         useState<IDefaultLineOfBusiness>({} as IDefaultLineOfBusiness);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(true);
+
+    const [selectedBusinessTypes, setSelectedBusinessTypes] = useState<
+        IAddDefaultLineOfBusiness[]
+    >([]);
 
     const columns = [
         {
@@ -78,17 +84,13 @@ const DefaultLineOfBusiness = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+
+                    <DeletePopupConfirm
+                        popUpTitle={`Do you want to delete ${record.name} Line Of Business?`}
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Line Of Business"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete Line Of Business"
+                    />
                 </span>
             ),
         },
@@ -138,7 +140,7 @@ const DefaultLineOfBusiness = () => {
 
     const editClickHandler = (industryType: IDefaultLineOfBusiness) => {
         setModalMode("edit"); // Set mode to "edit"
-        setSelectedIndustryType(industryType);
+        setSelectedLineOfBusiness(industryType);
         form.setFieldsValue({
             name: industryType.name,
         });
@@ -190,6 +192,7 @@ const DefaultLineOfBusiness = () => {
 
     const showModal = (mode: "add" | "edit") => {
         console.log("mode", mode);
+        setSelectedBusinessTypes([]);
         if (mode === "add") {
             form.resetFields();
             form.setFieldsValue({ name: "" });
@@ -219,6 +222,15 @@ const DefaultLineOfBusiness = () => {
             ...addLineOfBusiness,
             [name]: value,
         });
+        // Handle Tab key press to add industry name as an object
+        if (event.key === "Tab" && value.trim() !== "") {
+            event.preventDefault(); // Prevent the default Tab behavior
+            setSelectedBusinessTypes([
+                ...selectedBusinessTypes,
+                { name: value.trim() },
+            ]);
+            form.setFieldsValue({ name: "" }); // Clear the input field
+        }
     };
 
     const handleOk = () => {
@@ -230,10 +242,12 @@ const DefaultLineOfBusiness = () => {
                     setLoading(true); // Set loading state to true
                     const apiCall =
                         modalMode === "add"
-                            ? api.createDefaultLineOfBusiness(addLineOfBusiness)
+                            ? api.createMultipleDefaultLineOfBusiness(
+                                  selectedBusinessTypes
+                              )
                             : api.updateDefaultLineOfBusiness(
                                   addLineOfBusiness,
-                                  selectedIndustryType._id
+                                  selectedLineOfBusiness._id
                               );
 
                     apiCall
@@ -250,9 +264,10 @@ const DefaultLineOfBusiness = () => {
                             form.setFieldsValue(
                                 {} as IAddDefaultLineOfBusiness
                             );
-                            setSelectedIndustryType(
+                            setSelectedLineOfBusiness(
                                 {} as IDefaultLineOfBusiness
                             );
+                            setSelectedBusinessTypes([]);
                             form.setFieldsValue({ name: "", description: "" });
                             getLineOfBusiness();
                             setIsModalOpen(false);
@@ -278,8 +293,9 @@ const DefaultLineOfBusiness = () => {
     const handleCancel = () => {
         setModalMode("add"); // Set mode to "add"
         form.setFieldsValue({ name: "", description: "" });
-        setSelectedIndustryType({} as IDefaultLineOfBusiness);
+        setSelectedLineOfBusiness({} as IDefaultLineOfBusiness);
         setIsModalOpen(false);
+        setSelectedBusinessTypes([]);
     };
 
     /*Modal action end */
@@ -357,12 +373,36 @@ const DefaultLineOfBusiness = () => {
                 title={
                     modalMode === "add"
                         ? "Add New Line Of Business"
-                        : "Edit Line Of Business"
+                        : "Edit " +
+                          selectedLineOfBusiness.name +
+                          " Industry Type"
                 }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
+                okText={modalMode === "add" ? "Add" : "Update"}
             >
+                <div className="selected-industries">
+                    {selectedBusinessTypes.map((businessName, index) => (
+                        <Tag
+                            key={index}
+                            closable
+                            onClose={() => {
+                                // Handle tag close to remove the tag
+                                const updatedLineOfBusinessNames = [
+                                    ...selectedBusinessTypes,
+                                ];
+                                updatedLineOfBusinessNames.splice(index, 1);
+                                setSelectedBusinessTypes(
+                                    updatedLineOfBusinessNames
+                                );
+                            }}
+                            style={{ marginTop: "8px" }}
+                        >
+                            {businessName.name}
+                        </Tag>
+                    ))}
+                </div>
                 <Form form={form} initialValues={addLineOfBusiness}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
@@ -385,6 +425,22 @@ const DefaultLineOfBusiness = () => {
                                     name="name"
                                     onChange={(event) => {
                                         inputChangeHandler(event);
+                                    }}
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Tab") {
+                                            event.preventDefault(); // Prevent the default Tab behavior
+                                            const name =
+                                                form.getFieldValue("name");
+                                            if (name) {
+                                                form.setFieldsValue({
+                                                    name: "",
+                                                }); // Clear the input field
+                                                setSelectedBusinessTypes([
+                                                    ...selectedBusinessTypes,
+                                                    { name: name.trim() },
+                                                ]);
+                                            }
+                                        }
                                     }}
                                 />
                             </Form.Item>

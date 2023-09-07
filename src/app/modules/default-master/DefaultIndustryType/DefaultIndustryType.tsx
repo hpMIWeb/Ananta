@@ -46,11 +46,9 @@ const DefaultIndustryType = () => {
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(true);
-    const [industryNames, setIndustryNames] = useState<
-        IAddDefaultIndustryType[]
-    >([]);
+
     const [selectedIndustryNames, setSelectedIndustryNames] = useState<
-        { name: string }[]
+        IAddDefaultIndustryType[]
     >([]);
 
     const columns = [
@@ -91,19 +89,12 @@ const DefaultIndustryType = () => {
                         popUpTitle={`Do you want to delete ${record.name} Industry Type?`}
                         content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                        button-label="Delete  Industry Type"
+                        button-label="Delete Industry Type"
                     />
                 </span>
             ),
         },
     ];
-
-    // const removeIndustryName = (name: any) => {
-    //     const updatedNames = industryNames.filter(
-    //         (item: any) => item.name !== name
-    //     );
-    //     setIndustryNames(updatedNames);
-    // };
 
     useEffect(() => {
         getIndustryTypeList();
@@ -201,7 +192,6 @@ const DefaultIndustryType = () => {
         if (mode === "add") {
             form.resetFields();
             form.setFieldsValue({ name: "" });
-            setIndustryNames([]);
             setModalMode(mode);
             setIsModalOpen(true);
         } else {
@@ -300,6 +290,7 @@ const DefaultIndustryType = () => {
         form.setFieldsValue({ name: "", description: "" });
         setSelectedIndustryType({} as IDefaultIndustryType);
         setIsModalOpen(false);
+        setSelectedIndustryNames([]);
     };
 
     /*Modal action end */
