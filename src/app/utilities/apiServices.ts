@@ -977,7 +977,7 @@ export default {
     ) =>
         instance({
             method: "POST",
-            url: "industryType/create",
+            url: "industryType/multiple-create",
             data: industryType,
             transformResponse: [
                 function (data) {

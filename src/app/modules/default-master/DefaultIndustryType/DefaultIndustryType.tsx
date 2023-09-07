@@ -11,6 +11,7 @@ import {
     Popconfirm,
     Divider,
     Spin,
+    Tag,
 } from "antd";
 import "./DefaultIndustryType.scss";
 
@@ -25,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../LoadingSpinner"; // Update the path accordingly
+import DeletePopupConfirm from "../../../components/DeletePopupConfirm/DeletePopupConfirm";
 
 const { Title } = Typography;
 const pageSize = 25;
@@ -35,9 +37,8 @@ const DefaultIndustryType = () => {
     const [industryTypeList, setIndustryTypeList] = useState<
         IDefaultIndustryType[]
     >([]);
-    const [addIndustryType, setAddIndustryType] = useState<
-        [IAddDefaultIndustryType]
-    >([{} as IAddDefaultIndustryType]);
+    const [addIndustryType, setAddIndustryType] =
+        useState<IAddDefaultIndustryType>({} as IAddDefaultIndustryType);
     const [selectedIndustryType, setSelectedIndustryType] =
         useState<IDefaultIndustryType>({} as IDefaultIndustryType);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -45,7 +46,12 @@ const DefaultIndustryType = () => {
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(true);
-    const [industryNames, setIndustryNames] = useState();
+    const [industryNames, setIndustryNames] = useState<
+        IAddDefaultIndustryType[]
+    >([]);
+    const [selectedIndustryNames, setSelectedIndustryNames] = useState<
+        { name: string }[]
+    >([]);
 
     const columns = [
         {
@@ -80,17 +86,13 @@ const DefaultIndustryType = () => {
                         onClick={() => editClickHandler(record)}
                     />
                     <Divider type="vertical" />
-                    <Popconfirm
-                        title="Sure to delete?"
+
+                    <DeletePopupConfirm
+                        popUpTitle={`Do you want to delete ${record.name} Industry Type?`}
+                        content=""
                         onConfirm={() => deleteClickHandler(record._id)}
-                    >
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                            className="btn-at"
-                            title="Delete Industry Type"
-                            style={{ color: "#fa5c7c" }}
-                        />
-                    </Popconfirm>
+                        button-label="Delete  Industry Type"
+                    />
                 </span>
             ),
         },
@@ -102,8 +104,6 @@ const DefaultIndustryType = () => {
     //     );
     //     setIndustryNames(updatedNames);
     // };
-
- 
 
     useEffect(() => {
         getIndustryTypeList();
@@ -149,11 +149,9 @@ const DefaultIndustryType = () => {
         form.setFieldsValue({
             name: industryType.name,
         });
-        setAddIndustryType([
-            {
-                name: industryType.name,
-            },
-        ]);
+        setAddIndustryType({
+            name: industryType.name,
+        });
         showModal("edit"); // Open the modal
     };
 
@@ -199,9 +197,11 @@ const DefaultIndustryType = () => {
 
     const showModal = (mode: "add" | "edit") => {
         console.log("mode", mode);
+        setSelectedIndustryNames([]);
         if (mode === "add") {
             form.resetFields();
             form.setFieldsValue({ name: "" });
+            setIndustryNames([]);
             setModalMode(mode);
             setIsModalOpen(true);
         } else {
@@ -228,23 +228,34 @@ const DefaultIndustryType = () => {
             ...addIndustryType,
             [name]: value,
         });
-        setIndustryNames([...industryNames,  [name]: value]);
+
+        // Handle Tab key press to add industry name as an object
+        if (event.key === "Tab" && value.trim() !== "") {
+            event.preventDefault(); // Prevent the default Tab behavior
+            setSelectedIndustryNames([
+                ...selectedIndustryNames,
+                { name: value.trim() },
+            ]);
+            form.setFieldsValue({ name: "" }); // Clear the input field
+        }
     };
 
     const handleOk = () => {
         form.validateFields()
             .then((values) => {
-                console.log("ok modalMode", modalMode);
+                console.log("ok modalMode", selectedIndustryNames);
+
+                // return;
                 //return;
                 try {
                     setLoading(true); // Set loading state to true
                     const apiCall =
                         modalMode === "add"
                             ? api.createMultipleDefaultIndustryType(
-                                  addIndustryType
+                                  selectedIndustryNames
                               )
                             : api.updateDefaultIndustryType(
-                                  addIndustryType[0],
+                                  addIndustryType,
                                   selectedIndustryType._id
                               );
 
@@ -261,6 +272,7 @@ const DefaultIndustryType = () => {
 
                             form.setFieldsValue({} as IAddDefaultIndustryType);
                             setSelectedIndustryType({} as IDefaultIndustryType);
+                            setSelectedIndustryNames([]);
                             form.setFieldsValue({ name: "", description: "" });
                             getIndustryTypeList();
                             setIsModalOpen(false);
@@ -365,12 +377,33 @@ const DefaultIndustryType = () => {
                 title={
                     modalMode === "add"
                         ? "Add New Industry Type"
-                        : "Edit Industry Type"
+                        : "Edit " + selectedIndustryType.name + " Industry Type"
                 }
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
+                okText={modalMode === "add" ? "Add" : "Update"}
             >
+                {/* Display selected industry names as tags */}
+                <div className="selected-industries">
+                    {selectedIndustryNames.map((industry, index) => (
+                        <Tag
+                            key={index}
+                            closable
+                            onClose={() => {
+                                // Handle tag close to remove the tag
+                                const updatedIndustryNames = [
+                                    ...selectedIndustryNames,
+                                ];
+                                updatedIndustryNames.splice(index, 1);
+                                setSelectedIndustryNames(updatedIndustryNames);
+                            }}
+                            style={{ marginTop: "8px" }}
+                        >
+                            {industry.name}
+                        </Tag>
+                    ))}
+                </div>
                 <Form form={form} initialValues={addIndustryType}>
                     <Row gutter={[8, 8]} className="form-row">
                         <Col
@@ -400,10 +433,13 @@ const DefaultIndustryType = () => {
                                             const name =
                                                 form.getFieldValue("name");
                                             if (name) {
-                                                addIndustryName(name);
                                                 form.setFieldsValue({
                                                     name: "",
-                                                }); // Clear the text field
+                                                }); // Clear the input field
+                                                setSelectedIndustryNames([
+                                                    ...selectedIndustryNames,
+                                                    { name: name.trim() },
+                                                ]);
                                             }
                                         }
                                     }}
