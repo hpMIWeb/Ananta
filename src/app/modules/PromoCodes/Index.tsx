@@ -58,6 +58,7 @@ const PromoCodes = () => {
 
     const cardDesc = (cardDetails: any) => {
         const {
+            displayIndex,
             description,
             startDateTime,
             endDateTime,
@@ -225,12 +226,16 @@ const PromoCodes = () => {
                         setSearchValue={setSearchValue}
                         sortState={sortState}
                         setSortState={setSortState}
+                        setSortStateHandler={(options: any) => {
+                            setSortState(options);
+                        }}
                     />
                 </div>
                 {loading && <CardContentSkeletonLoader />}
                 {!loading &&
-                    promoFilteredValue.map((promo: any) => (
+                    promoFilteredValue.map((promo: any, index: number) => (
                         <SubscriptionCard
+                            displayIndex={index + 1}
                             key={promo._id}
                             id={promo._id}
                             planName={promo.name}

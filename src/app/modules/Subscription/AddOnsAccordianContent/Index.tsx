@@ -10,12 +10,16 @@ import {
 import { useEffect } from "react";
 import { useAppDispatch } from "../../../../states/store";
 
-const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }: any) => {
+const AddOnsAccordianContent = ({
+    handleEditBtnClick,
+    addOnsDetail,
+    displayIndex,
+}: any) => {
     const dispatch = useAppDispatch();
     const createAddonSuccess = useSelector(
         (state: any) => state.createAddon.success
     );
-    console.log("addOnsDetail", addOnsDetail);
+    console.log("addOnsDetail", displayIndex);
     const cardDesc = () => {
         return [
             {
@@ -112,6 +116,7 @@ const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }: any) => {
     return (
         <div className={classNames(styles.addOnsAccordianContentWrapper)}>
             <SubscriptionCardContent
+                displayIndex={displayIndex}
                 key={addOnsDetail._id}
                 id={addOnsDetail._id}
                 planName={addOnsDetail.add_on_title}

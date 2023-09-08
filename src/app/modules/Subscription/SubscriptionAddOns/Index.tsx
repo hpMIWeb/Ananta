@@ -17,7 +17,6 @@ const SubscriptionAddOns = () => {
     const { loading, data: addonsListCardList } = useSelector(
         (state: any) => state.getAddonsList
     );
-    console.log("addonsListCardList", addonsListCardList);
     const [searchValue, setSearchValue] = useState("");
     const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
@@ -67,8 +66,9 @@ const SubscriptionAddOns = () => {
                         displayedPaginationItems,
                         searchValue,
                         sortState
-                    ).map((addOns: any) => (
+                    ).map((addOns: any, index: number) => (
                         <AddOnsAccordianContent
+                            displayIndex={index + 1}
                             key={addOns._id}
                             addOnsDetail={addOns}
                             handleEditBtnClick={handleEditBtnClick}

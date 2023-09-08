@@ -7,6 +7,7 @@ import SubscriptionCardPoint from "./SubscriptionCardPoint";
 import { useNavigate } from "react-router-dom";
 
 const SubscriptionCardContent = ({
+    displayIndex,
     id,
     cardDesc,
     cardDetails,
@@ -32,7 +33,9 @@ const SubscriptionCardContent = ({
                 <div className="me-auto">
                     <div className="d-flex">
                         <div className="flex-shrink-0">
-                            <span className={styles.cardPointCounter}>1</span>
+                            <span className={styles.cardPointCounter}>
+                                {displayIndex}
+                            </span>
                         </div>
                         <div className="flex-grow-1 ms-2">
                             <h5
