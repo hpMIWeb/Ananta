@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import SubscriptionCardContent from "../../../components/SubscriptionCard/SubscriptionCardContent";
+import SubscriptionCardContent from "../../../components/ui/SubscriptionCard/SubscriptionCardContent";
 
 import styles from "./addOnsAccordianContent.module.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,12 +8,14 @@ import {
     resetStateCreateAddons,
 } from "../../../../redux/createAddonsReducers";
 import { useEffect } from "react";
+import { useAppDispatch } from "../../../../states/store";
 
-const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }) => {
-    const dispatch = useDispatch();
+const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }: any) => {
+    const dispatch = useAppDispatch();
     const createAddonSuccess = useSelector(
-        (state) => state.createAddon.success
+        (state: any) => state.createAddon.success
     );
+    console.log("addOnsDetail", addOnsDetail);
     const cardDesc = () => {
         return [
             {
@@ -92,7 +94,7 @@ const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }) => {
         ];
     };
 
-    const onChangeActiveClick = (e, id) => {
+    const onChangeActiveClick = (e: any, id: any) => {
         dispatch(
             createAddonsReducersReducersApi({
                 payload: { status: !!e ? "Active" : "Inactive" },

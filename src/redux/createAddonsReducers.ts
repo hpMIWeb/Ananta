@@ -5,7 +5,7 @@ import { apiEndpoint, getAuthToken } from "../utils/helpers";
 
 interface Payload {
     payload: any;
-    addonsId: string;
+    addonsId: string | undefined;
 }
 interface State {
     data: any;

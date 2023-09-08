@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "./subscription.module.scss";
-import Tabs from "../../components/Tabs/Index";
+import Tabs from "../../components/ui/Tabs/Index";
 import SubscriptionTab from "./SubscriptionTab/Index";
 import SubscriptionAddOns from "./SubscriptionAddOns/Index";
 import { useEffect } from "react";

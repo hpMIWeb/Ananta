@@ -2,14 +2,14 @@ import { Button, Form, Input, Select } from "antd";
 import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./addSubscription.module.scss";
-import Switch from "../../../components/Switch/Index";
-import Icon from "../../../components/Icon/Index";
+import Switch from "../../../components/ui/Switch/Index";
+import Icon from "../../../components/ui//Icon/Index";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSubscriptionsReducersApi } from "../../../../redux/createSubscriptionsReducers";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
-import FormContentSkeletonLoader from "../../../components/FormContentSkeletonLoader/Index";
+import FormContentSkeletonLoader from "../../../components/ui/FormContentSkeletonLoader/Index";
 import { deleteSubscriptionsReducersApi } from "../../../../redux/deleteSubscriptionsReducers";
 import { useAppDispatch } from "../../../../states/store";
 
@@ -47,12 +47,12 @@ const AddSubscription = () => {
 
     const formValues = {
         // TODO:
-        // features: Object.fromEntries(
-        //     featureList.map((task: any) => [
-        //         task.feature.replace(/\s+/g, "_"),
-        //         featureState[task.feature] || false,
-        //     ])
-        // ),
+        features: Object.fromEntries(
+            featureList.map((task: any) => [
+                task.feature.replace(/\s+/g, "_"),
+                //   featureState[task.feature] || false,
+            ])
+        ),
     };
 
     useEffect(() => {
@@ -89,6 +89,10 @@ const AddSubscription = () => {
                 subscriptionId: subscriptionId,
             })
         );
+    };
+
+    const onCancelClick = () => {
+        navigation("/subscription");
     };
 
     useEffect(() => {
@@ -559,13 +563,14 @@ const AddSubscription = () => {
                                         </Button>
                                     )}
                                     <Button
-                                        danger
-                                        loading={loading}
+                                        onClick={onCancelClick}
+                                        loading={deleteSubscriptionsLoading}
+                                        className={styles.deleteBtn}
                                         type="primary"
-                                        htmlType="submit"
+                                        danger
                                     >
-                                        {"Cancel"}
-                                    </Button>{" "}
+                                        Cancel
+                                    </Button>
                                     <Button
                                         loading={loading}
                                         type="primary"

@@ -1,16 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../../../components/Button/Index";
-import SubscriptionCard from "../../../components/SubscriptionCard/Index";
+import Button from "../../../components/ui/Button/Index";
+import SubscriptionCard from "../../../components/ui/SubscriptionCard/Index";
 import styles from "./subscriptionTab.module.scss";
-import Icon from "../../../components/Icon/Index";
-import SearchFilterBar from "../../../components/SearchFilterBar/Index";
+import Icon from "../../../components/ui/Icon/Index";
+import SearchFilterBar from "../../../components/ui/SearchFilterBar/Index";
 import classNames from "classnames";
-import Pagination from "../../../components/Pagination/Index";
-import SubscriptionHistoryModal from "../../../components/SubscriptionCard/SubscriptionHistoryModal";
+import Pagination from "../../../components/ui/Pagination/Index";
+import SubscriptionHistoryModal from "../../../components/ui/SubscriptionCard/SubscriptionHistoryModal";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import NoDataAvailable from "../../../components/NoDataAvailable/Index";
-import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
+import NoDataAvailable from "../../../components/ui/NoDataAvailable/Index";
+import CardContentSkeletonLoader from "../../../components/ui/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../../utils/helpers";
 import {
     createSubscriptionsReducersApi,

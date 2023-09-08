@@ -1,22 +1,23 @@
 import { useState } from "react";
-import Button from "../../../components/Button/Index";
+import Button from "../../../components/ui/Button/Index";
 import styles from "./subscriptionAddOns.module.scss";
 import AddOnsAccordianContent from "../AddOnsAccordianContent/Index";
-import Icon from "../../../components/Icon/Index";
+import Icon from "../../../components/ui/Icon/Index";
 import { useNavigate } from "react-router-dom";
-import SearchFilterBar from "../../../components/SearchFilterBar/Index";
+import SearchFilterBar from "../../../components/ui/SearchFilterBar/Index";
 import classNames from "classnames";
-import Pagination from "../../../components/Pagination/Index";
-import NoDataAvailable from "../../../components/NoDataAvailable/Index";
+import Pagination from "../../../components/ui/Pagination/Index";
+import NoDataAvailable from "../../../components/ui/NoDataAvailable/Index";
 import { useSelector } from "react-redux";
-import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
+import CardContentSkeletonLoader from "../../../components/ui/CardContentSkeletonLoader/Index";
 
 import { getFilteredValue } from "../../../../utils/helpers";
 
 const SubscriptionAddOns = () => {
     const { loading, data: addonsListCardList } = useSelector(
-        (state) => state.getAddonsList
+        (state: any) => state.getAddonsList
     );
+    console.log("addonsListCardList", addonsListCardList);
     const [searchValue, setSearchValue] = useState("");
     const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
@@ -28,7 +29,7 @@ const SubscriptionAddOns = () => {
         navigation("/addons/create");
     };
 
-    const handleEditBtnClick = (id) => {
+    const handleEditBtnClick = (id: string) => {
         navigation(`/addons/edit/${id}`);
     };
 
@@ -62,9 +63,8 @@ const SubscriptionAddOns = () => {
                     getFilteredValue(
                         displayedPaginationItems,
                         searchValue,
-                        sortState,
-                        sortState?.addOnValue
-                    ).map((addOns) => (
+                        sortState
+                    ).map((addOns: any) => (
                         <AddOnsAccordianContent
                             key={addOns._id}
                             addOnsDetail={addOns}
