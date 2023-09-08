@@ -5,7 +5,7 @@ import { apiEndpoint, getAuthToken } from "../utils/helpers";
 
 interface Payload {
     payload: any;
-    promoId: string;
+    promoId: string | undefined;
 }
 
 export const createPromoCodeApi = createAsyncThunk(
