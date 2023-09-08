@@ -41,6 +41,9 @@ const SubscriptionAddOns = () => {
                 setSearchValue={setSearchValue}
                 sortState={sortState}
                 setSortState={setSortState}
+                setSortStateHandler={(options: any) => {
+                    setSortState(options);
+                }}
             />
             <div className="d-flex w-100">
                 <div className="ms-auto">

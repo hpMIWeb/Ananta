@@ -197,10 +197,13 @@ const SubscriptionTab = () => {
         <div>
             {
                 <SearchFilterBar
+                    showAddOn
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     sortState={sortState}
-                    setSortHandler={sortState}
+                    setSortStateHandler={(options: any) => {
+                        setSortState(options);
+                    }}
                 />
             }
             <div className={styles.subscriptionHeaderBtnWrapper}>
