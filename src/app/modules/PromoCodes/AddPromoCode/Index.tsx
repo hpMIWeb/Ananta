@@ -190,7 +190,7 @@ const AddPromoCode = () => {
                         <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                             <Form.Item
                                 name="type"
-                                className="customAddFormSelectPeriodOptions"
+                                //className="customAddFormSelectPeriodOptions"
                                 rules={[
                                     {
                                         required: true,
@@ -248,10 +248,7 @@ const AddPromoCode = () => {
                                 Maximum Discount Value
                             </label>
                         </div>
-                        <div
-                            style={{ marginLeft: "-8px" }}
-                            className="col-12 col-sm-6 col-md-4 formInputWrapper"
-                        >
+                        <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                             <Form.Item
                                 name="maxDiscount"
                                 rules={[

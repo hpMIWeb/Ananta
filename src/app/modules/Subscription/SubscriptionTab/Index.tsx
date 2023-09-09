@@ -208,10 +208,7 @@ const SubscriptionTab = () => {
             }
             <div className={styles.subscriptionHeaderBtnWrapper}>
                 <Button
-                    className={classNames(
-                        styles.newSubscriptionBtn,
-                        "me-1 mb-1 mt-1"
-                    )}
+                    className={classNames(styles.newSubscriptionBtn)}
                     onClick={handleNewSubscriptionClick}
                     type="primary"
                 >

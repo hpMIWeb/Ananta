@@ -204,7 +204,7 @@ const AddSubscription = () => {
                             </div>
                         </div>
 
-                        <div className="formFieldRowWrappprever">
+                        <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">
                                     Storage Space
