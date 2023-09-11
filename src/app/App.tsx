@@ -32,6 +32,11 @@ import AddClient from "./modules/Clients/AddClient/Index";
 import Logout from "./modules/Logout/index";
 import Employees from "./modules/Employees/Index";
 import AddEmployee from "./modules/Employees/AddEmployee/Index";
+import Subscription from "./modules/Subscription/Index";
+import AddSubscription from "./modules/Subscription/AddSubscription/Index";
+import NewAddOns from "./modules/Subscription/NewAddOns/Index";
+import PromoCodes from "./modules/PromoCodes/Index";
+import AddPromoCode from "./modules/PromoCodes/AddPromoCode/Index";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -146,50 +151,52 @@ const App = () => {
                             path="Checklist"
                             element={<PrivateRoute component={Checklist} />}
                         />
-                        {/* <Route
-                                path="subscription"
-                                element={
-                                    <PrivateRoute component={Subscription} />
-                                }
-                            />
-                            <Route
-                                path="subscription/add-subscription"
-                                element={
-                                    <PrivateRoute component={AddSubscription} />
-                                }
-                            />
-                            <Route
-                                path="subscription/edit-subscription/:subscriptionId"
-                                element={
-                                    <PrivateRoute component={AddSubscription} />
-                                }
-                            />
-                            <Route
-                                path="addons/create"
-                                element={<PrivateRoute component={NewAddOns} />}
-                            />
-                            <Route
-                                path="addons/edit/:addonsId"
-                                element={<PrivateRoute component={NewAddOns} />}
-                            /> */}
-                        {/* <Route
-                                path="promocodes"
-                                element={
-                                    <PrivateRoute component={PromoCodes} />
-                                }
-                            />
-                            <Route
-                                path="promocodes/create"
-                                element={
-                                    <PrivateRoute component={AddPromoCode} />
-                                }
-                            />
-                            <Route
-                                path="promocodes/edit/:promocodeId"
-                                element={
-                                    <PrivateRoute component={AddPromoCode} />
-                                }
-                            /> */}
+                        <Route
+                            path="subscription"
+                            element={<PrivateRoute component={Subscription} />}
+                        />
+                        <Route
+                            path="subscription/add-subscription"
+                            element={
+                                <PrivateRoute component={AddSubscription} />
+                            }
+                        />
+                        <Route
+                            path="subscription/add-subscription"
+                            element={
+                                <PrivateRoute component={AddSubscription} />
+                            }
+                        />
+                        <Route
+                            path="subscription/edit-subscription/:subscriptionId"
+                            element={
+                                <PrivateRoute component={AddSubscription} />
+                            }
+                        />
+                        <Route
+                            path="addons/create"
+                            element={<PrivateRoute component={NewAddOns} />}
+                        />
+                        <Route
+                            path="addons/edit/:addonsId"
+                            element={<PrivateRoute component={NewAddOns} />}
+                        />
+                        <Route
+                            path="promocodes"
+                            element={<PrivateRoute component={PromoCodes} />}
+                        />
+                        <Route
+                            path="promocodes/create"
+                            element={<PrivateRoute component={AddPromoCode} />}
+                        />
+                        <Route
+                            path="promocodes/edit/:promocodeId"
+                            element={<PrivateRoute component={AddPromoCode} />}
+                        />
+                        {/* 
+                           
+                            */}
+                        {/*  */}
                         <Route
                             path="caclient"
                             element={<PrivateRoute component={Clients} />}

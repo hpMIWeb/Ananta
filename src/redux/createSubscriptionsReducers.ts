@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
-    subscriptionId: string;
+    subscriptionId: string | undefined;
 }
 
 export const createSubscriptionsReducersApi = createAsyncThunk(

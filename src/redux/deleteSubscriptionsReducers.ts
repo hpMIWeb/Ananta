@@ -5,7 +5,7 @@ import { apiEndpoint, getAuthToken } from "../utils/helpers";
 import Cookies from "js-cookie";
 
 interface Payload {
-    subscriptionId: string;
+    subscriptionId: string | undefined;
 }
 
 export const deleteSubscriptionsReducersApi = createAsyncThunk(

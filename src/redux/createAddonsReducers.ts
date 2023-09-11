@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
-    addonsId: string;
+    addonsId: string | undefined;
 }
 interface State {
     data: any;

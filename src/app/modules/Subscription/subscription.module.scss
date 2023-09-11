@@ -1,0 +1,9 @@
+@import "../../../styles/variables.scss";
+.subscriptionCardBox{
+    border: 0 !important;
+    background-color: var(--falcon-card-bg) !important;
+    box-shadow: var(--falcon-box-shadow);
+}
+.subscriptionCardBody{
+    padding: 20px;
+}
