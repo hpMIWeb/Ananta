@@ -4,6 +4,8 @@ import loginReducers from "../redux/loginReducers";
 import getClientsReducers from "../redux/getClientsReducers";
 import createClientReducers from "../redux/createClientReducers";
 import getAddonsReducers from "../redux/getAddonsReducers";
+import getEmployeesReducers from "../redux/getEmployeesReducers";
+import getRolesReducers from "../redux/getRolesReducers";
 import { useDispatch } from "react-redux";
 
 const store = configureStore({
@@ -13,6 +15,8 @@ const store = configureStore({
         getClientsReducers,
         createClientReducers,
         getAddonsReducers,
+        getEmployeesReducers,
+        getRolesReducers,
     },
 });
 

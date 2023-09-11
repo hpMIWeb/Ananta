@@ -30,6 +30,8 @@ import PrivateRoute from "./components/PrivateRoute/Index";
 import Clients from "./modules/Clients/Index";
 import AddClient from "./modules/Clients/AddClient/Index";
 import Logout from "./modules/Logout/index";
+import Employees from "./modules/Employees/Index";
+import AddEmployee from "./modules/Employees/AddEmployee/Index";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -206,22 +208,18 @@ const App = () => {
                                     <PrivateRoute component={BulkAddClient} />
                                 }
                             /> */}
-                        {/* <Route
-                                path="employee"
-                                element={<PrivateRoute component={Employees} />}
-                            />
-                            <Route
-                                path="employee/add-employee"
-                                element={
-                                    <PrivateRoute component={AddEmployee} />
-                                }
-                            /> */}
-                        {/* <Route
-                                path="employee/edit-employee/:employeeId"
-                                element={
-                                    <PrivateRoute component={AddEmployee} />
-                                }
-                            /> */}
+                        <Route
+                            path="employee"
+                            element={<PrivateRoute component={Employees} />}
+                        />
+                        <Route
+                            path="employee/add-employee"
+                            element={<PrivateRoute component={AddEmployee} />}
+                        />
+                        <Route
+                            path="employee/edit-employee/:employeeId"
+                            element={<PrivateRoute component={AddEmployee} />}
+                        />
                         <Route
                             path="logout"
                             element={<PrivateRoute component={Logout} />}
