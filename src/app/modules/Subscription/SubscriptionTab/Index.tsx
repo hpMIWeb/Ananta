@@ -194,7 +194,7 @@ const SubscriptionTab = () => {
     }, [editSubscriptionsSuccess]);
 
     return (
-        <div>
+        <div className="scrollable-container">
             {
                 <SearchFilterBar
                     showAddOn
@@ -206,16 +206,7 @@ const SubscriptionTab = () => {
                     }}
                 />
             }
-            <div className={styles.subscriptionHeaderBtnWrapper}>
-                <Button
-                    className={classNames(styles.newSubscriptionBtn)}
-                    onClick={handleNewSubscriptionClick}
-                    type="primary"
-                >
-                    <Icon name="plus" width={12.25} height={14} />
-                    New
-                </Button>
-            </div>
+
             {loading && <CardContentSkeletonLoader />}
             {!loading &&
                 getFilteredValue(

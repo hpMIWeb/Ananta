@@ -1,9 +1,19 @@
 @import "../../../styles/variables.scss";
-.subscriptionCardBox{
+.subscriptionCardBox {
     border: 0 !important;
     background-color: var(--falcon-card-bg) !important;
     box-shadow: var(--falcon-box-shadow);
+    position: sticky !important;
+    top: 0 !important; /* Adjust the value based on your layout and design */
+    padding: 10px;
+    z-index: 1;
 }
-.subscriptionCardBody{
+.subscriptionCardBody {
     padding: 20px;
+}
+
+.scrollable-container {
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling for the container */
+    padding: 20px; /* Add some padding as needed */
 }
