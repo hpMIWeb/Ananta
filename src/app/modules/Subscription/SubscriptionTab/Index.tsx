@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../../components/ui/Button/Index";
 import SubscriptionCard from "../../../components/ui/SubscriptionCard/Index";
 import styles from "./subscriptionTab.module.scss";
+import "./subscriptionTab.module.scss";
 import Icon from "../../../components/ui/Icon/Index";
 import SearchFilterBar from "../../../components/ui/SearchFilterBar/Index";
 import classNames from "classnames";
@@ -194,7 +195,7 @@ const SubscriptionTab = () => {
     }, [editSubscriptionsSuccess]);
 
     return (
-        <div className="scrollable-container">
+        <div>
             {
                 <SearchFilterBar
                     showAddOn
@@ -206,33 +207,41 @@ const SubscriptionTab = () => {
                     }}
                 />
             }
+            <div
+                className="scrollable-container"
+                style={{
+                    minHeight: "500px",
+                    maxHeight: "500px",
+                    overflow: "auto",
+                }}
+            >
+                {loading && <CardContentSkeletonLoader />}
+                {!loading &&
+                    getFilteredValue(
+                        displayedPaginationItems,
+                        searchValue,
+                        sortState
+                    ).map((card: any, index: number) => (
+                        <SubscriptionCard
+                            displayIndex={index + 1}
+                            key={card._id}
+                            id={card._id}
+                            cardDesc={cardDescContent}
+                            planName={card.plan_name}
+                            isActive={card.status === "Active"}
+                            cardDetails={card}
+                            handleEditBtnClick={handleEditBtnClick}
+                            onChangeActiveClick={onChangeActiveClick}
+                            handleSubscriptionHistoryModalClick={
+                                handleSubscriptionHistoryModalClick
+                            }
+                        />
+                    ))}
 
-            {loading && <CardContentSkeletonLoader />}
-            {!loading &&
-                getFilteredValue(
-                    displayedPaginationItems,
-                    searchValue,
-                    sortState
-                ).map((card: any, index: number) => (
-                    <SubscriptionCard
-                        displayIndex={index + 1}
-                        key={card._id}
-                        id={card._id}
-                        cardDesc={cardDescContent}
-                        planName={card.plan_name}
-                        isActive={card.status === "Active"}
-                        cardDetails={card}
-                        handleEditBtnClick={handleEditBtnClick}
-                        onChangeActiveClick={onChangeActiveClick}
-                        handleSubscriptionHistoryModalClick={
-                            handleSubscriptionHistoryModalClick
-                        }
-                    />
-                ))}
-
-            {!loading && !subscriptionCardList.length && (
-                <NoDataAvailable name="No Clients Available!" />
-            )}
+                {!loading && !subscriptionCardList.length && (
+                    <NoDataAvailable name="No Clients Available!" />
+                )}
+            </div>
             <Pagination
                 data={subscriptionCardList}
                 setPaginationDisplayedItems={setPaginationDisplayedItems}

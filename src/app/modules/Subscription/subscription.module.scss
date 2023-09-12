@@ -13,7 +13,8 @@
 }
 
 .scrollable-container {
-    height: 100%;
-    overflow-y: auto; /* Enable vertical scrolling for the container */
     padding: 20px; /* Add some padding as needed */
+    min-height: 500px;
+    overflow: auto;
+    max-height: 500px;
 }

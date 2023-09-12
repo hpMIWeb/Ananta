@@ -4,39 +4,42 @@ import store from "../states/store";
 import Layout from "./modules/Layout/index";
 import Home from "./modules/Home";
 import NoMatch from "./modules/NoMatch";
+import Login from "./modules/login/Login";
+import PrivateRoute from "./components/PrivateRoute/Index";
+import Subscription from "./modules/Subscription/Index";
+import useLocalStorage from "use-local-storage";
+// import "./App.scss";
+import "../styles/index.scss";
+import "./App.scoped.css";
+import "antd/dist/reset.css";
+import AddSubscription from "./modules/Subscription/AddSubscription/Index";
+import NewAddOns from "./modules/Subscription/NewAddOns/Index";
+import PromoCodes from "./modules/PromoCodes/Index";
+import AddPromoCode from "./modules/PromoCodes/AddPromoCode/Index";
+import Clients from "./modules/Clients/Index";
+import AddClient from "./modules/Clients/AddClient/Index";
+import BulkAddClient from "./modules/Clients/AddClient/BulkAddClient/Index";
+import Logout from "./modules/Logout/index";
+import { getAuthToken } from "../utils/helpers";
+import { useDispatch, Provider } from "react-redux";
+import { getUserInfoReducersApi } from "../redux/getUserInfoReducers";
+import Employees from "./modules/Employees/Index";
+import AddEmployee from "./modules/Employees/AddEmployee/Index";
+
+// code
 import TaskList from "./modules/task/TaskList";
 import AddTask from "./modules/task/AddTask";
 import AddMultipleTask from "./modules/task/AddMultipleTask";
 import TimeSheet from "./modules/timesheet/TimeSheet";
 import ComplianceList from "./modules/compliance/ComplianceList";
-// import "./App.scss";
-import "../styles/index.scss";
-import "./App.scoped.css";
-import "antd/dist/reset.css";
 import AddCompliance from "./modules/compliance/AddCompliance";
 import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
-import Login from "./modules/login/Login";
 import Role from "./modules/fileManager/Role";
-import useLocalStorage from "use-local-storage";
 import Team from "./modules/fileManager/Team";
 import Checklist from "./modules/fileManager/Checklist";
-import { getAuthToken } from "../utils/helpers";
-import { useDispatch, Provider } from "react-redux";
-import { getUserInfoReducersApi } from "../redux/getUserInfoReducers";
-import PrivateRoute from "./components/PrivateRoute/Index";
-import Clients from "./modules/Clients/Index";
-import AddClient from "./modules/Clients/AddClient/Index";
-import Logout from "./modules/Logout/index";
-import Employees from "./modules/Employees/Index";
-import AddEmployee from "./modules/Employees/AddEmployee/Index";
-import Subscription from "./modules/Subscription/Index";
-import AddSubscription from "./modules/Subscription/AddSubscription/Index";
-import NewAddOns from "./modules/Subscription/NewAddOns/Index";
-import PromoCodes from "./modules/PromoCodes/Index";
-import AddPromoCode from "./modules/PromoCodes/AddPromoCode/Index";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -209,12 +212,10 @@ const App = () => {
                             path="caclient/edit/:clientId"
                             element={<PrivateRoute component={AddClient} />}
                         />
-                        {/* <Route
-                                path="caclient/createbulk"
-                                element={
-                                    <PrivateRoute component={BulkAddClient} />
-                                }
-                            /> */}
+                        <Route
+                            path="caclient/createbulk"
+                            element={<PrivateRoute component={BulkAddClient} />}
+                        />
                         <Route
                             path="employee"
                             element={<PrivateRoute component={Employees} />}

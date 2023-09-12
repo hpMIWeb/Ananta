@@ -3,9 +3,10 @@ body {
     font-family: "Poppins", sans-serif !important;
     background-color: #edf2f9 !important;
 }
+/* 
 span {
     font-family: "Poppins", sans-serif !important;
-}
+} */
 
 .description-label {
     font-size: 13.33px;
@@ -33,9 +34,11 @@ span {
     padding-left: 8px !important;
     padding-right: 8px !important;
 }
+
 .success-text {
     color: var(--falcon-success-rgb) !important;
 }
+
 .promocode-link {
     color: #2c7be5;
     cursor: pointer;
