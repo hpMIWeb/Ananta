@@ -3,7 +3,7 @@ import styles from "./subscription.module.scss";
 import Tabs from "../../components/ui/Tabs/Index";
 import SubscriptionTab from "./SubscriptionTab/Index";
 import SubscriptionAddOns from "./SubscriptionAddOns/Index";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getSubscriptionsListApi } from "../../../redux/getSubscriptionsReducers";
 import { resetStateCreateSubscriptions } from "../../../redux/createSubscriptionsReducers";
@@ -20,6 +20,7 @@ const Subscription = () => {
         console.log(key);
     };
     const navigation = useNavigate();
+    const [cardHeight, setCardHeight] = useState(0);
 
     const items = [
         {
@@ -40,6 +41,11 @@ const Subscription = () => {
         dispatch(resetStateCreateSubscriptions());
         dispatch(resetStateDeleteSubscriptions());
         dispatch(resetStateCreateAddons());
+
+        //TODO: need to make this `height` dynamically (Total height - header height - footer height)
+        const totalHeight = window.innerHeight - 70 - 20 - 36;
+        console.log(window.innerHeight);
+        setCardHeight(totalHeight);
     }, []);
 
     const handleNewSubscriptionClick = () => {
@@ -48,7 +54,7 @@ const Subscription = () => {
 
     return (
         <div
-            style={{ height: 820 }} //TODO: need to make this `height` dynamically (Total height - header height - footer height)
+            style={{ height: cardHeight }}
             className={classNames("card ", styles.addSubscriptionCardWrapper)}
         >
             <div className={styles.subscriptionCardBody}>
