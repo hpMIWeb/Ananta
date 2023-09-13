@@ -48,10 +48,8 @@ const Subscription = () => {
 
     return (
         <div
-            className={classNames(
-                "card mb-3",
-                styles.addSubscriptionCardWrapper
-            )}
+            style={{ height: 820 }} //TODO: need to make this `height` dynamically (Total height - header height - footer height)
+            className={classNames("card ", styles.addSubscriptionCardWrapper)}
         >
             <div className={styles.subscriptionCardBody}>
                 <Tabs

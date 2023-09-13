@@ -210,8 +210,8 @@ const SubscriptionTab = () => {
             <div
                 className="scrollable-container"
                 style={{
-                    minHeight: "500px",
-                    maxHeight: "500px",
+                    minHeight: "570px",
+                    maxHeight: "570px",
                     overflow: "auto",
                 }}
             >
