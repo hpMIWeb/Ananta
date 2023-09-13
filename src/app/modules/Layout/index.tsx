@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { FileOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+    FileOutlined,
+    TeamOutlined,
+    DatabaseOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { HIDE_LAYOUT_ROUTES } from "../../../utils/constant";
@@ -58,10 +62,22 @@ const items: MenuItem[] = [
         getItem("Approval", "10", <Icon name="modules" width={16} />),
         getItem("Settings", "11", <Icon name="profile" width={16} />),
     ]),
-
-    getItem("Files", "20", <FileOutlined />),
-    getItem("Logout", "21", <Icon name="logout" width={16} />),
-    getItem("Roles", "22", <Icon name="modules" width={16} />),
+    getItem("Master", "12", <DatabaseOutlined width={16} />, [
+        getItem("Department", "13"),
+        getItem("Designation", "14"),
+        getItem("Role", "15"),
+        getItem("Team", "16"),
+        getItem("Checklist", "17"),
+    ]),
+    getItem("Default", "18", <DatabaseOutlined />, [
+        getItem("Department", "19"),
+        getItem("Designation", "20"),
+        getItem("Role", "21"),
+        getItem("Checklist", "22"),
+        getItem("Industry Type", "23"),
+        getItem("Line Of Business", "24"),
+    ]),
+    getItem("Logout", "25", <Icon name="logout" width={16} />),
 ];
 
 const LayoutComponent = ({
@@ -116,14 +132,47 @@ const LayoutComponent = ({
             case "11":
                 navigate("/setting");
                 return;
-            case "21": {
+            case "13":
+                navigate("/department");
+                return;
+            case "14":
+                navigate("/designation");
+                return;
+            case "15":
+                navigate("/role");
+                return;
+            case "16":
+                navigate("/team");
+                return;
+            case "17":
+                navigate("/checklist");
+                return;
+            case "18":
+                navigate("/default-department");
+                return;
+            case "19":
+                navigate("/default-department");
+                return;
+            case "20":
+                navigate("/default-designation");
+                return;
+            case "21":
+                navigate("/default-role");
+                return;
+            case "22":
+                navigate("/default-checklist");
+                return;
+            case "23":
+                navigate("/default-industry-type");
+                return;
+            case "24":
+                navigate("/default-line-of-business");
+                return;
+
+            case "25": {
                 localStorage.removeItem("authtoken");
                 Cookies.remove("jwt_token");
                 //navigate("/login");
-                return;
-            }
-            case "22": {
-                navigate("/Role");
                 return;
             }
         }

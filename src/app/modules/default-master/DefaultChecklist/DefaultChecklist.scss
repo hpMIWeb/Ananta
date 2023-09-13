@@ -1,0 +1,29 @@
+.checklist-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checklist-modal .ant-modal-content {
+    width: 900px; /* Adjust the width value as needed */
+}
+
+.modal-content {
+    overflow: hidden; /* Hide the content overflow */
+}
+
+.question-details {
+    max-height: 40vh; /* Set maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.question-details::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+}
+
+.question-details::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #bcbbbb;
+}

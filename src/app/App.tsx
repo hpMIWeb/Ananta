@@ -37,9 +37,24 @@ import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Approval from "./modules/aproval/Aproval";
 import Setting from "./modules/Setting/Setting";
-import Role from "./modules/fileManager/Role";
-import Team from "./modules/fileManager/Team";
-import Checklist from "./modules/fileManager/Checklist";
+//import Role from "./modules/fileManager/Role";
+//import Team from "./modules/fileManager/Team";
+//import Checklist from "./modules/fileManager/Checklist";
+//master code
+
+import Department from "./modules/master/Department/Department";
+import DefaultDepartment from "./modules/default-master/DefaultDepartment/DefaultDepartment";
+import Designation from "./modules/master/Designation/Designation";
+import DefaultDesignation from "./modules/default-master/DefaultDesignation/DefaultDesignation";
+import Role from "./modules/master/Role/Role";
+import DefaultRole from "./modules/default-master/DefaultRole/DefaultRole";
+import RoleAction from "./modules/master/Role/RoleAction";
+import DefaultRoleAction from "./modules/default-master/DefaultRole/DefaultRoleAction";
+import DefaultChecklist from "./modules/default-master/DefaultChecklist/DefaultChecklist";
+import Team from "./modules/master/Team/Team";
+import Checklist from "./modules/master/Checklist/Checklist";
+import DefaultIndustryType from "./modules/default-master/DefaultIndustryType/DefaultIndustryType";
+import DefaultLineOfBusiness from "./modules/default-master/DefaultLineOfBusiness/DefaultLineOfBusiness";
 
 const keyMap = {
     SNAP_LEFT: "command+left",
@@ -143,18 +158,6 @@ const App = () => {
                             element={<PrivateRoute component={Setting} />}
                         />
                         <Route
-                            path="Role"
-                            element={<PrivateRoute component={Role} />}
-                        />
-                        <Route
-                            path="Team"
-                            element={<PrivateRoute component={Team} />}
-                        />
-                        <Route
-                            path="Checklist"
-                            element={<PrivateRoute component={Checklist} />}
-                        />
-                        <Route
                             path="subscription"
                             element={<PrivateRoute component={Subscription} />}
                         />
@@ -227,6 +230,42 @@ const App = () => {
                         <Route
                             path="employee/edit-employee/:employeeId"
                             element={<PrivateRoute component={AddEmployee} />}
+                        />
+                        {/* Master link */}
+                        <Route path="department" element={<Department />} />
+                        <Route
+                            path="designation"
+                            element={<Designation />}
+                        />{" "}
+                        <Route path="role" element={<Role />} />
+                        <Route path="role-action" element={<RoleAction />} />
+                        <Route path="team" element={<Team />} />
+                        <Route path="checklist" element={<Checklist />} />
+                        {/* Default Master link */}
+                        <Route
+                            path="default-department"
+                            element={<DefaultDepartment />}
+                        />{" "}
+                        <Route
+                            path="default-designation"
+                            element={<DefaultDesignation />}
+                        />{" "}
+                        <Route path="default-role" element={<DefaultRole />} />
+                        <Route
+                            path="default-role-action"
+                            element={<DefaultRoleAction />}
+                        />{" "}
+                        <Route
+                            path="default-checklist"
+                            element={<DefaultChecklist />}
+                        />{" "}
+                        <Route
+                            path="default-industry-type"
+                            element={<DefaultIndustryType />}
+                        />
+                        <Route
+                            path="default-line-of-business"
+                            element={<DefaultLineOfBusiness />}
                         />
                         <Route
                             path="logout"
