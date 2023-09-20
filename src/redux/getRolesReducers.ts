@@ -8,7 +8,7 @@ export const getRolesReducersApi = createAsyncThunk(
     "getRolesReducersApi",
     async (payload) => {
         const jwtToken = Cookies.get("jwt_token");
-        const response = await axios.get(`${apiEndpoint}role/`, {
+        const response = await axios.get(`${apiEndpoint}role/get-all-role`, {
             headers: {
                 Authorization: `Bearer ${jwtToken}`,
             },

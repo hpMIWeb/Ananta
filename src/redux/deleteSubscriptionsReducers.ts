@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { apiEndpoint, getAuthToken } from "../utils/helpers";
+import Cookies from "js-cookie";
 
 interface Payload {
     subscriptionId: string | undefined;
@@ -10,7 +11,7 @@ interface Payload {
 export const deleteSubscriptionsReducersApi = createAsyncThunk(
     "deleteSubscriptions",
     async ({ subscriptionId }: Payload) => {
-        const jwtToken = getAuthToken;
+        const jwtToken = Cookies.get("jwt_token");
         const response = await axios.delete(
             `${apiEndpoint}subscription/delete-subscription/id=${subscriptionId}`,
             {

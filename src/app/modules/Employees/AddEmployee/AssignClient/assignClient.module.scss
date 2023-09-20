@@ -1,0 +1,62 @@
+@import "../../../../../styles/variables.scss";
+.subscriptionFormFooter {
+  padding-right: 8px !important;
+  padding-left: 8px !important;
+}
+.nextBtn {
+  min-width: 104px;
+}
+.padding8 {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.paymentFormRow {
+  margin-left: -8px !important;
+  margin-right: -8px !important;
+}
+.invoiceAmount {
+  font-family: $body-font-family;
+  line-height: 1.4;
+  color: var(--falcon-body-color);
+}
+.instrumentFieldBox {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.addPaymentRowBtn {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+.deleteCardBtn {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clientHeaderText {
+  color: var(--falcon-headings-color);
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-family: $btn-font-family;
+  font-size: 1.2rem;
+}
+.clientList {
+  min-height: 200px;
+  max-height: 200px;
+  overflow: auto;
+  margin-top: 15px;
+}
+.clientNameLabel {
+  font-weight: 600;
+  font-size: 15px;
+  padding: 3px 10px;
+  margin: 4px 0;
+  cursor: pointer;
+  font-family: $body-font-family;
+  text-shadow: none !important;
+  color: var(--text-label) !important;
+}
+.selectedClientNameLabel{
+  background-color: #74819430;
+}

@@ -1,0 +1,26 @@
+@import "../../../../../styles/variables.scss";
+
+.nextBtn {
+  min-width: 104px;
+}
+
+.addOwnerInfoBtn {
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  column-gap: 3px;
+}
+
+.formFooterAction {
+  margin-top: 8px !important;
+  margin-bottom: 8px;
+}
+.ownerInfoCardLine{
+  height: 1px;
+  margin: 1rem 0;
+  color: var(--falcon-border-color);
+  background-color: currentColor;
+  border: 0;
+  opacity: 1;
+  margin-top: 0px;
+}
