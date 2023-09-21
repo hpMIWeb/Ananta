@@ -11,46 +11,63 @@ import { getAddonsReducersListApi } from "../../../redux/getAddonsReducers";
 import { resetStateCreateAddons } from "../../../redux/createAddonsReducers";
 import { resetStateDeleteSubscriptions } from "../../../redux/deleteSubscriptionsReducers";
 import { useAppDispatch } from "../../states/store";
+import Button from "../../../components/Button/Index";
+import Icon from "../../../components/Icon/Index";
 
 const Subscription = () => {
-  const dispatch = useAppDispatch();
-  const onChange = (key: any) => {
-    console.log(key);
-  };
+    const dispatch = useAppDispatch();
+    const onChange = (key: any) => {
+        console.log(key);
+    };
 
-  const items = [
-    {
-      key: "1",
-      label: `Subscription`,
-      children: <SubscriptionTab />,
-    },
-    {
-      key: "2",
-      label: `AddOns`,
-      children: <SubscriptionAddOns />,
-    },
-  ];
+    const items = [
+        {
+            key: "1",
+            label: `Subscription`,
+            children: <SubscriptionTab />,
+        },
+        {
+            key: "2",
+            label: `AddOns`,
+            children: <SubscriptionAddOns />,
+        },
+    ];
 
-  useEffect(() => {
-    dispatch(getSubscriptionsListApi());
-    dispatch(getAddonsReducersListApi());
-    dispatch(resetStateCreateSubscriptions());
-    dispatch(resetStateDeleteSubscriptions());
-    dispatch(resetStateCreateAddons());
-  }, []);
+    useEffect(() => {
+        dispatch(getSubscriptionsListApi());
+        dispatch(getAddonsReducersListApi());
+        dispatch(resetStateCreateSubscriptions());
+        dispatch(resetStateDeleteSubscriptions());
+        dispatch(resetStateCreateAddons());
+    }, []);
 
-  return (
-    <div className={classNames("card mb-3", styles.subscriptionCardBox)}>
-      <div className={styles.subscriptionCardBody}>
-        <Tabs
-          className="subscriptionTabs"
-          defaultActiveKey="1"
-          items={items}
-          onChange={onChange}
-        />
-      </div>
-    </div>
-  );
+    return (
+        <div className={classNames("card mb-3", styles.subscriptionCardBox)}>
+            <div className={styles.subscriptionCardBody}>
+                <Tabs
+                    className="subscriptionTabs"
+                    defaultActiveKey="1"
+                    items={items}
+                    onChange={onChange}
+                    tabBarExtraContent={
+                        <div className={styles.subscriptionHeaderBtnWrapper}>
+                            <Button
+                                className={classNames(
+                                    styles.newSubscriptionBtn,
+                                    "me-1 mb-1 mt-1"
+                                )}
+                                //  onClick={handleNewSubscriptionClick}
+                                type="primary"
+                            >
+                                <Icon name="plus" width={12.25} height={14} />
+                                New
+                            </Button>
+                        </div>
+                    }
+                />
+            </div>
+        </div>
+    );
 };
 
 export default Subscription;
