@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Switch } from "antd";
 import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./newAddOns.module.scss";
@@ -29,6 +29,7 @@ const NewAddOns = () => {
   }, [addonsCardList]);
 
   const onFinish = (e: any) => {
+    console.log(e)
     dispatch(
       createAddonsReducersReducersApi({
         payload: { ...e, subscribers_count: 0 },
@@ -52,6 +53,11 @@ const NewAddOns = () => {
     }
   }, [success]);
 
+  const handleSwitchChange = (value: any) => {
+    form.setFieldsValue({ display_on_portal: value });
+  };
+
+  const display_on_portal = Form.useWatch("display_on_portal", form);
   return (
     <div className={classNames("card mb-3", styles.addSubscriptionCardWrapper)}>
       <div
@@ -93,6 +99,8 @@ const NewAddOns = () => {
               remember: true,
               add_on_type: "Storage Space",
               time_period_type: "DAY",
+              status: "Active",
+              display_on_portal: true,
             }}
             onFinish={onFinish}
             autoComplete="off"
@@ -251,6 +259,24 @@ const NewAddOns = () => {
                     ]}
                   />
                 </Form.Item>
+              </div>
+            </div>
+            
+            <div className="formFieldRowWrapper">
+              <div className="col-auto formLabelWrapper">
+                <label className="form-label">Display on Portal</label>
+              </div>
+              <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                <div className={styles.featureCheckBoxLabelWrapper}>
+                  <Switch
+                    checked={display_on_portal}
+                    defaultChecked
+                    size="small"
+                    onChange={handleSwitchChange}
+                    className="smallCheckBox"
+                  ></Switch>
+                  <label className={styles.featureCheckBoxLabel}>Yes</label>
+                </div>
               </div>
             </div>
 
