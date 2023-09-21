@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { useAppDispatch } from "../../../states/store";
 
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
 const AddPromoCode = () => {
   const { promocodeId } = useParams();
   const dispatch = useAppDispatch();
@@ -209,7 +212,7 @@ const AddPromoCode = () => {
 
           <div className="formFieldRowWrapper formAddPromoWrapper">
             <div className="col-auto formLabelWrapper">
-              <label className="form-label">Discount Amount</label>
+              <label className="form-label"> {couponType === "Percentage" ? "Discount Percentage" : "Discount Price"}</label>
             </div>
             <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
               <Form.Item
@@ -223,7 +226,9 @@ const AddPromoCode = () => {
                 ]}
               >
                 <InputNumber
-                  placeholder="Discount Amount"
+                   placeholder={
+          couponType === "Percentage" ? "Discount Percentage" : "Discount Price"
+        }
                   className="customInputNumber"
                   style={{ width: "100%" }}
                 />
@@ -231,34 +236,35 @@ const AddPromoCode = () => {
             </div>
           </div>
 
-          <div className="formFieldRowWrapper formAddPromoWrapper">
-            <div className="col-auto formLabelWrapper">
-              <label className="form-label">Minimum Discount Value</label>
-            </div>
-            <div
-              style={{ marginLeft: "-8px" }}
-              className="col-12 col-sm-6 col-md-4 formInputWrapper"
-            >
-              <Form.Item
-                name="maxDiscount"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please Enter your Minimum Discount Value!",
-                  },
-                ]}
-              >
-                <Input
-                  placeholder="Minimum Discount Value"
-                  className="customAddFormInputText"
-                />
-              </Form.Item>
-            </div>
-          </div>
+
+            {couponType === "Percentage" && (
+              <div className="formFieldRowWrapper formAddPromoWrapper">
+                <div className="col-auto formLabelWrapper">
+                  <label className="form-label">Maximum Discount Value</label>
+                </div>
+                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                  <Form.Item
+                    name="maxDiscount"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter your Maximum Discount Value!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Maximum Discount Value"
+                      className="customAddFormInputText"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+            )}
+
 
           <div className="formFieldRowWrapper formAddPromoWrapper">
             <div className="col-auto formLabelWrapper">
-              <label className="form-label">Maximum Order Value</label>
+              <label className="form-label">Minimum Order Value</label>
             </div>
             <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
               <Form.Item
@@ -266,12 +272,12 @@ const AddPromoCode = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please Enter your Maximum Order Value!",
+                    message: "Please Enter your Minimum Order Value!",
                   },
                 ]}
               >
                 <Input
-                  placeholder="Maximum Order Value"
+                  placeholder="Minimum Order Value"
                   className="customAddFormInputText"
                 />
               </Form.Item>
@@ -402,6 +408,21 @@ const AddPromoCode = () => {
                 />
               </Form.Item>
             </div>
+            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                <div className={styles.featureCheckBoxLabelWrapper}>
+                  <label className={styles.featureCheckBoxLabel}>
+                    Not Applicable
+                  </label>
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    className="smallCheckBox"
+                  ></Switch>
+                  <label className={styles.featureCheckBoxLabel}>
+                    Unlimited
+                  </label>
+                </div>
+              </div>
           </div>
 
           <div className="formFieldRowWrapper formAddPromoWrapper">
@@ -424,13 +445,28 @@ const AddPromoCode = () => {
                 />
               </Form.Item>
             </div>
+            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                <div className={styles.featureCheckBoxLabelWrapper}>
+                  <label className={styles.featureCheckBoxLabel}>
+                    Not Applicable
+                  </label>
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    className="smallCheckBox"
+                  ></Switch>
+                  <label className={styles.featureCheckBoxLabel}>
+                    Unlimited
+                  </label>
+                </div>
+              </div>
           </div>
 
           <div className="formFieldRowWrapper formAddPromoWrapper">
             <div className="col-auto formLabelWrapper">
               <label className="form-label">Terms & Conditions</label>
             </div>
-            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+            <div className="col-12 col-sm-6 col-md-8 formInputWrapper">
               <Form.Item
                 name="termsAndConditions"
                 rules={[
@@ -440,10 +476,13 @@ const AddPromoCode = () => {
                   },
                 ]}
               >
-                <Input
-                  placeholder="Terms & Conditions"
+                
+                <ReactQuill
+                                theme="snow"
+                                placeholder="Terms & Conditions"
                   className="customAddFormInputText"
-                />
+                            />
+                            
               </Form.Item>
             </div>
           </div>
