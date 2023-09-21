@@ -46,9 +46,7 @@ const SubscriptionTab = () => {
     },
   ]);
 
-  const handleNewSubscriptionClick = () => {
-    navigation("/subscription/add-subscription");
-  };
+ 
 
   const handleSubscriptionHistoryModalClick = () => {
     setModalOpen(true);
@@ -201,16 +199,7 @@ const SubscriptionTab = () => {
         addonOption={addonOption}
         initialAddOnsValue="All Subscription"
       />
-      <div className={styles.subscriptionHeaderBtnWrapper}>
-        <Button
-          className={classNames(styles.newSubscriptionBtn, "me-1 mb-1 mt-1")}
-          onClick={handleNewSubscriptionClick}
-          type="primary"
-        >
-          <Icon name="plus" width={12.25} height={14} />
-          New
-        </Button>
-      </div>
+ 
       {loading && <CardContentSkeletonLoader />}
       {!loading &&
         getFilteredValue(displayedPaginationItems, searchValue, sortState).map(

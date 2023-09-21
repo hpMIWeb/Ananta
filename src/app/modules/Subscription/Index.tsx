@@ -3,7 +3,7 @@ import styles from "./subscription.module.scss";
 import Tabs from "../../../components/Tabs/Index";
 import SubscriptionTab from "./SubscriptionTab/Index";
 import SubscriptionAddOns from "./SubscriptionAddOns/Index";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getSubscriptionsListApi } from "../../../redux/getSubscriptionsReducers";
 import { resetStateCreateSubscriptions } from "../../../redux/createSubscriptionsReducers";
@@ -13,11 +13,14 @@ import { resetStateDeleteSubscriptions } from "../../../redux/deleteSubscription
 import { useAppDispatch } from "../../states/store";
 import Button from "../../../components/Button/Index";
 import Icon from "../../../components/Icon/Index";
+import { useNavigate } from "react-router-dom";
 
 const Subscription = () => {
     const dispatch = useAppDispatch();
+    const navigation = useNavigate();
+    const [activeTab, setActiveTab] = useState("1");
     const onChange = (key: any) => {
-        console.log(key);
+        setActiveTab(key);
     };
 
     const items = [
@@ -32,6 +35,14 @@ const Subscription = () => {
             children: <SubscriptionAddOns />,
         },
     ];
+
+    const handleNewClick = () => {
+        if (activeTab === "1") {
+            navigation("/subscription/add-subscription");
+        } else {
+            navigation("/addons/create");
+        }
+    };
 
     useEffect(() => {
         dispatch(getSubscriptionsListApi());
@@ -56,7 +67,7 @@ const Subscription = () => {
                                     styles.newSubscriptionBtn,
                                     "me-1 mb-1 mt-1"
                                 )}
-                                //  onClick={handleNewSubscriptionClick}
+                                onClick={handleNewClick}
                                 type="primary"
                             >
                                 <Icon name="plus" width={12.25} height={14} />
