@@ -434,7 +434,12 @@ const Department = () => {
               style={{ width: "100%" }}
               className="r4 table-striped-rows"
               bordered
+              pagination={false}
             />
+             {/* <Pagination
+          data={getEmployeesList}
+          setPaginationDisplayedItems={setPaginationDisplayedItems}
+        /> */}
           </div>
         )}
         <Modal
