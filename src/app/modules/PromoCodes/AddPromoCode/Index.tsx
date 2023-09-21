@@ -9,10 +9,11 @@ import { getPromocodeReducersListApi } from "../../../../redux/getPromocodeReduc
 import { createPromoCodeApi } from "../../../../redux/createPromoCodeReducers";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { useAppDispatch } from "../../../states/store";
 
 const AddPromoCode = () => {
   const { promocodeId } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigate();
   const [form] = Form.useForm();
   const [couponType, setCouponType] = useState("Percentage");
@@ -25,6 +26,7 @@ const AddPromoCode = () => {
   const { loading, success } = useSelector(
     (state: any) => state.createPromoCode
   );
+  const [selectedCouponType, setSelectedCouponType] = useState("Percentage");
 
   useEffect(() => {
     //const params = {};
@@ -45,12 +47,12 @@ const AddPromoCode = () => {
   const onFinish = (e: any) => {
     // @ts-ignore
     //TODO:: need to solve
-    // dispatch(
-    //   createPromoCodeApi({
-    //     payload: { ...e, subscribers_count: 0, promoId: promocodeId },
-    //     promoId: promocodeId,
-    //   })
-    // );
+    dispatch(
+      createPromoCodeApi({
+        payload: { ...e, subscribers_count: 0, promoId: promocodeId },
+        promoId: promocodeId,
+      })
+    );
   };
 
   const validateDiscountAmount = (_: any, value: any) => {
@@ -231,7 +233,7 @@ const AddPromoCode = () => {
 
           <div className="formFieldRowWrapper formAddPromoWrapper">
             <div className="col-auto formLabelWrapper">
-              <label className="form-label">Maximum Discount Value</label>
+              <label className="form-label">Minimum Discount Value</label>
             </div>
             <div
               style={{ marginLeft: "-8px" }}
@@ -242,12 +244,12 @@ const AddPromoCode = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please Enter your Maximum Discount Value!",
+                    message: "Please Enter your Minimum Discount Value!",
                   },
                 ]}
               >
                 <Input
-                  placeholder="Maximum Discount Value"
+                  placeholder="Minimum Discount Value"
                   className="customAddFormInputText"
                 />
               </Form.Item>

@@ -76,6 +76,26 @@ const SubscriptionHistoryModal = ({ modalOpen, setModalOpen }) => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+    }, {
+      title: "Modules",
+      dataIndex: "users",
+      key: "users",
+      children: [
+        {
+          title: "TaskManager",
+          dataIndex: "TaskManager",
+          key: "TaskManager",
+        },{
+          title: "FileManager",
+          dataIndex: "FileManager",
+          key: "FileManager",
+        },{
+          title: "E-Commerce",
+          dataIndex: "E-Commerce",
+          key: "E-Commerce",
+        },
+        
+      ],
     },
   ];
 
@@ -95,6 +115,7 @@ const SubscriptionHistoryModal = ({ modalOpen, setModalOpen }) => {
       price: "10,000.00",
       displayOnPortal: "Yes",
       status: "Active",
+      TaskManager: "Active",
     },
     {
       key: "2",
@@ -111,6 +132,7 @@ const SubscriptionHistoryModal = ({ modalOpen, setModalOpen }) => {
       price: "15,000.00",
       displayOnPortal: "No",
       status: "Inactive",
+      TaskManager: "Active",
     },
     {
       key: "3",
@@ -127,6 +149,7 @@ const SubscriptionHistoryModal = ({ modalOpen, setModalOpen }) => {
       price: "30,000.00",
       displayOnPortal: "Yes",
       status: "Active",
+      TaskManager: "Active",
     },
   ];
 

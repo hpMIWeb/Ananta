@@ -230,6 +230,7 @@ const SubscriptionTab = () => {
       <SubscriptionHistoryModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
+        
       />
     </div>
   );
