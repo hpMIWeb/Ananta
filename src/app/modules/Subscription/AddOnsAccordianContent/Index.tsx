@@ -7,9 +7,10 @@ import {
   resetStateCreateAddons,
 } from "../../../../redux/createAddonsReducers";
 import { useEffect } from "react";
+import { useAppDispatch } from "../../../states/store";
 
 const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }: any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const createAddonSuccess = useSelector(
     (state: any) => state.createAddon.success
   );
@@ -64,13 +65,13 @@ const AddOnsAccordianContent = ({ handleEditBtnClick, addOnsDetail }: any) => {
   };
 
   const onChangeActiveClick = (e: any, id: any) => {
-    //TODO:: check
-    // dispatch(
-    //   createAddonsReducersReducersApi({
-    //     payload: { status: !!e ? "Active" : "Inactive" },
-    //     addonsId: id,
-    //   })
-    // );
+    //TODO:: check response message
+    dispatch(
+      createAddonsReducersReducersApi({
+        payload: { status: !!e ? "Active" : "Inactive" },
+        addonsId: id,
+      })
+    );
   };
 
   useEffect(() => {
