@@ -31,6 +31,8 @@ const SubscriptionTab = () => {
   const [searchValue, setSearchValue] = useState("");
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
+  const [selectedSubscriptionHistory,setSelectedSubscriptionHistory] = useState();
+  const [selectedSubscriptionId,setSelectedSubscriptionId] = useState('');
   const [addonOption, setAddonOption] = useState([
     {
       value: "All Subscription",
@@ -48,7 +50,9 @@ const SubscriptionTab = () => {
 
  
 
-  const handleSubscriptionHistoryModalClick = () => {
+  const handleSubscriptionHistoryModalClick = (subscriptionHistory:any,subscriptionId:string) => {
+    setSelectedSubscriptionHistory(subscriptionHistory)
+    setSelectedSubscriptionId(subscriptionId)
     setModalOpen(true);
   };
 
@@ -216,6 +220,8 @@ const SubscriptionTab = () => {
               handleSubscriptionHistoryModalClick={
                 handleSubscriptionHistoryModalClick
               }
+              historyData={card.editHistory}
+
             />
           )
         )}
@@ -230,6 +236,9 @@ const SubscriptionTab = () => {
       <SubscriptionHistoryModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
+        subscriptionHistoryData={selectedSubscriptionHistory}
+        subscriptionId={selectedSubscriptionId}
+
         
       />
     </div>

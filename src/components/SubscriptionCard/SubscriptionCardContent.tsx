@@ -20,6 +20,7 @@ const SubscriptionCardContent = ({
   onChangeActiveClick = () => {},
   handleEditBtnClick = () => {},
   handleSubscriptionHistoryModalClick = () => {},
+  historyData
 }: any) => {
   const navigation = useNavigate();
   const onChangeActive = (e: any) => {
@@ -97,7 +98,7 @@ const SubscriptionCardContent = ({
               <button
                 style={{ marginLeft: 4, fontSize: 13, lineHeight: "22px" }}
                 className={styles.transparentHistoryBtn}
-                onClick={() => handleSubscriptionHistoryModalClick()}
+                onClick={() => handleSubscriptionHistoryModalClick(historyData,id)}
               >
                 (History)
               </button>
