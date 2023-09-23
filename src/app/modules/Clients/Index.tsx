@@ -14,6 +14,8 @@ import { getClientsReducersApi, } from "../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../redux/createClientReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
+import dayjs from 'dayjs';
+
 
 const Clients = () => {
     const navigation = useNavigate();
@@ -107,7 +109,7 @@ const Clients = () => {
                         <p className="mb-0 fs--1 description-label">
                             Gold Subscription
                         </p>
-                        <p className="semiBold">Expire on - 2023-09-18</p>
+                          <p className="semiBold">Expire on - {dayjs(cardInfo.subscriptionDetails.endDate).format('YYYY-MM-DD')}</p>
                     </>
                 ),
             },
