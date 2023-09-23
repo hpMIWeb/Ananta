@@ -81,7 +81,8 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
 
   const onFinish = (value: any) => {
     setFormValue(value);
-    onChange(2);
+    //onChange(2); redirect to branch
+    onChange(4);
   };
 
   return (
@@ -97,7 +98,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
       >
         <div style={{ marginTop: 2 }} className="row">
           <div className="col-12 col-md-9 col-lg-9">
-            <div className="row">
+            {/* <div className="row">
               <div className={classNames("col-12 col-md-4 col-lg-4")}>
                 <div className="mb-3">
                   <label className="form-label">
@@ -123,7 +124,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   </Form.Item>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className={classNames("row", styles.formFieldWrapper)}>
               <div
                 className={classNames(
@@ -173,7 +174,8 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   </Form.Item>
                 </div>
               </div>
-              <div
+             
+               <div
                 className={classNames(
                   "col-12 col-md-4 col-lg-4",
                   styles.fieldPadding8
@@ -181,7 +183,35 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
               >
                 <div>
                   <label className="form-label">
-                    Pan Number<sup className="text-danger fs--1">*</sup>
+                   Client ID<sup className="text-danger fs--1">*</sup>
+                  </label>
+                  <Form.Item
+                    name="clientId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter your Client ID!",
+                      },
+                      
+                    ]}
+                  >
+                    <Input
+                      placeholder="Client ID"
+                      className="customAddFormInputText"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+             
+               <div
+                className={classNames(
+                  "col-12 col-md-4 col-lg-4",
+                  styles.fieldPadding8
+                )}
+              >
+                <div>
+                  <label className="form-label">
+                    Firm Pan<sup className="text-danger fs--1">*</sup>
                   </label>
                   <Form.Item
                     name="firmPAN"
@@ -203,7 +233,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   </Form.Item>
                 </div>
               </div>
-              <div
+               <div
                 className={classNames(
                   "col-12 col-md-4 col-lg-4",
                   styles.fieldPadding8
@@ -211,7 +241,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
               >
                 <div>
                   <label className="form-label">
-                    GSTIN<sup className="text-danger fs--1">*</sup>
+                    Firm GST<sup className="text-danger fs--1">*</sup>
                   </label>
                   <Form.Item
                     name="firmGSTIN"
@@ -233,7 +263,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   </Form.Item>
                 </div>
               </div>
-              <div
+              {/* <div
                 className={classNames(
                   "col-12 col-md-4 col-lg-4",
                   styles.fieldPadding8
@@ -258,8 +288,8 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                     />
                   </Form.Item>
                 </div>
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 className={classNames(
                   "col-12 col-md-4 col-lg-4",
                   styles.fieldPadding8
@@ -280,6 +310,33 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   >
                     <Input
                       placeholder="Select Line of Business"
+                      className="customAddFormInputText"
+                    />
+                  </Form.Item>
+                </div>
+              </div> */}
+               <div
+                className={classNames(
+                  "col-12 col-md-4 col-lg-4",
+                  styles.fieldPadding8
+                )}
+              >
+                <div>
+                  <label className="form-label">
+                    Firm Registration No<sup className="text-danger fs--1">*</sup>
+                  </label>
+                  <Form.Item
+                    name="firmRegistrationNo"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter your Firm Registration No!",
+                      },
+                    
+                    ]}
+                  >
+                    <Input
+                      placeholder="Firm Registration No"
                       className="customAddFormInputText"
                     />
                   </Form.Item>

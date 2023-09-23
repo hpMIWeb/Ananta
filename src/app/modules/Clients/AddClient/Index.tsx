@@ -20,6 +20,7 @@ import { createClientReducersApi } from "../../../../redux/createClientReducers"
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
+import Select from "../../../../components/Select/Index";
 
 const AddClient = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -105,21 +106,21 @@ const AddClient = () => {
   };
 
   const items = [
-    {
+   {
       key: 1,
       label: `Basic Info`,
       children: <BasicInfo onChange={onChange} setFormValue={setFormValue} />,
     },
-    {
-      key: 2,
-      label: `Branches`,
-      children: <Branches onChange={onChange} setFormValue={setFormValue} />,
-    },
-    {
-      key: 3,
-      label: `Bank Details`,
-      children: <BankDetails onChange={onChange} setFormValue={setFormValue} />,
-    },
+    // {
+    //   key: 2,
+    //   label: `Branches`,
+    //   children: <Branches onChange={onChange} setFormValue={setFormValue} />,
+    // },
+    // {
+    //   key: 3,
+    //   label: `Bank Details`,
+    //   children: <BankDetails onChange={onChange} setFormValue={setFormValue} />,
+    // },
     {
       key: 4,
       label: `Owner Details`,
@@ -142,17 +143,17 @@ const AddClient = () => {
         <PaymentTabAddClient onChange={onChange} setFormValue={setFormValue} />
       ),
     },
-    {
-      key: 7,
-      label: `Vault`,
-      children: (
-        <VaultTabAddClient
-          onChange={onChange}
-          setFormValue={setFormValue}
-          loading={loading}
-        />
-      ),
-    },
+    // {
+    //   key: 7,
+    //   label: `Vault`,
+    //   children: (
+    //     <VaultTabAddClient
+    //       onChange={onChange}
+    //       setFormValue={setFormValue}
+    //       loading={loading}
+    //     />
+    //   ),
+    // },
   ];
 
   const handleBulkClick = () => {
@@ -197,6 +198,36 @@ const AddClient = () => {
       </div>
       <div className={styles.addClientDetailBox}>
         {getClientsListLoading && clientId && <FormContentSkeletonLoader />}
+          <div className="row">
+                <div className={classNames("col-12 col-md-4 col-lg-4")}>
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Client Type<sup className="text-danger fs--1">*</sup>
+                    </label>
+                    <Form.Item
+                      name="clientType"
+                      className="customAddClientSelectOptions"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please Enter Client Type!",
+                        },
+                      ]}
+                    >
+                      <Select
+                        options={[
+                          { value: "ca", label: "CA" },
+                          { value: "accountant", label: "Accountant" },
+                          { value: "tax_consultant", label: "Tax Consultant" },
+                          { value: "business_enterprise", label: "Business Enterprise" },
+                        ]}
+                        placeholder="Select Type"
+                      />
+                    </Form.Item>
+                  </div>
+                </div>
+          </div>
+          
         {!(getClientsListLoading && clientId) && (
           <Tabs
             tabBarExtraContent={operations}
