@@ -19,11 +19,12 @@ import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../../redux/createClientReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
+import { useAppDispatch } from "../../../states/store";
 
 const AddClient = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [clientValue, setClientValue] = useState({});
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigate();
   const { clientId } = useParams();
   const [form] = Form.useForm();
