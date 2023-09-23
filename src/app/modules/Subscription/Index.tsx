@@ -69,6 +69,7 @@ const Subscription = () => {
                                 )}
                                 onClick={handleNewClick}
                                 type="primary"
+                                style={{ marginTop: "-10px" }}
                             >
                                 <Icon name="plus" width={12.25} height={14} />
                                 New

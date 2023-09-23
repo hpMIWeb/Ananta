@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "./subscriptionCard.module.scss";
-import SubscriptionCardIcon from "./SubscriptionCardIcon/Index";
+import SubscriptionCardIcon from "./SubscriptionCardIcon/Index.js";
 
 const SubscriptionCardPoint = ({ card }) => {
   const { customRender, styles = {} } = card;

@@ -17,8 +17,24 @@ const AddSubscription = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
   const [featureState, setFeatureState] = useState({});
-  const [subscriptionCategory, setSubscriptionCategory] = useState();
+  const [isSpaceUnlimited, setIsSpaceUnlimited] = useState<boolean>(false);
+  const [isTransactionCreditsUnlimited, setIsTransactionCreditsUnlimited] = useState<boolean>(false);
+  const [isClientUnlimited, setIsClientUnlimited] = useState<boolean>(false);
+  const [isBranchUnlimited, setIsBranchUnlimited] = useState<boolean>(false);
+  const [subscriptionCategory, setSubscriptionCategory] = useState<string>("consultant"); // Initialize with a default category
 
+
+  const handleIsSpaceUnlimitedChange = (value: boolean) => {
+    setIsSpaceUnlimited(value);
+  };
+
+  const handleIsTransactionCreditsUnlimitedChange = (value: boolean) => {
+    setIsTransactionCreditsUnlimited(value);
+  };
+  const handleIsClientUnlimitedChange = (value: boolean) => {
+    setIsClientUnlimited(value);
+  };
+  
   const { subscriptionId } = useParams();
   const [form] = Form.useForm();
   const { data: subscriptionCardList, loading: subscriptionCardListLoading } =
@@ -94,6 +110,11 @@ const AddSubscription = () => {
     );
   };
 
+
+  const onCancelClick = () => {
+    navigation("/subscription");
+  };
+
   useEffect(() => {
     if (subscriptionCardList.length && subscriptionId) {
       const currentCardDetail = subscriptionCardList.find(
@@ -118,6 +139,8 @@ const AddSubscription = () => {
   const handleSwitchChange = (value: any) => {
     form.setFieldsValue({ display_on_portal: value });
   };
+
+  
 
   const display_on_portal = Form.useWatch("display_on_portal", form);
 
@@ -165,6 +188,8 @@ const AddSubscription = () => {
               period_type: "MONTH",
               status: "Active",
               display_on_portal: true,
+              category:subscriptionCategory
+
             }}
             onFinish={onFinish}
             autoComplete="off"
@@ -190,14 +215,17 @@ const AddSubscription = () => {
                     options={[
                       { value: "consultant", label: "Consultant" },
                       {
-                        value: "Business_enterprise",
+                        value: "business_enterprise",
                         label: "Business Enterprise",
                       },
+                      
                     ]}
+                    onChange={(value) => setSubscriptionCategory(value)}
                   />
                 </Form.Item>
               </div>
             </div>
+
             <div className="formFieldRowWrapper">
               <div className="col-auto formLabelWrapper">
                 <label className="form-label">Subscription Plan Name</label>
@@ -219,6 +247,7 @@ const AddSubscription = () => {
                 </Form.Item>
               </div>
             </div>
+
             <div className="formFieldRowWrapper">
               <div className="col-auto formLabelWrapper">
                 <label className="form-label">Storage Space</label>
@@ -237,6 +266,7 @@ const AddSubscription = () => {
                     placeholder="Storage Size"
                     className="customAddFormInputText position-relative"
                     suffix={<div className="inputSuffix">GB</div>}
+                    disabled={isSpaceUnlimited}
                   />
                 </Form.Item>
               </div>
@@ -246,11 +276,10 @@ const AddSubscription = () => {
                     Not Applicable
                   </label>
                   <Switch
-                    checked={display_on_portal}
-                    defaultChecked
-                    size="small"
-                    onChange={handleSwitchChange}
+                    checked={isSpaceUnlimited}
+                    onChange={handleIsSpaceUnlimitedChange}
                     className="smallCheckBox"
+                    size="small"
                   ></Switch>
                   <label className={styles.featureCheckBoxLabel}>
                     Unlimited
@@ -258,44 +287,88 @@ const AddSubscription = () => {
                 </div>
               </div>
             </div>
-            <div className="formFieldRowWrapper">
-              <div className="col-auto formLabelWrapper">
-                <label className="form-label">No Of Clients</label>
-              </div>
-              <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                <Form.Item
-                  name="no_of_client"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please Enter your No Of Clients!",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="No Of Clients"
-                    className="customAddFormInputText"
-                  />
-                </Form.Item>
-              </div>
-              <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                <div className={styles.featureCheckBoxLabelWrapper}>
-                  <label className={styles.featureCheckBoxLabel}>
-                    Not Applicable
-                  </label>
-                  <Switch
-                    checked={display_on_portal}
-                    defaultChecked
-                    size="small"
-                    onChange={handleSwitchChange}
-                    className="smallCheckBox"
-                  ></Switch>
-                  <label className={styles.featureCheckBoxLabel}>
-                    Unlimited
-                  </label>
+
+          
+            {subscriptionCategory === "consultant" && (
+               <div className="formFieldRowWrapper">
+               <div className="col-auto formLabelWrapper">
+                 <label className="form-label">No Of Clients</label>
+               </div>
+               <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                 <Form.Item
+                   name="no_of_client"
+                   rules={[
+                     {
+                       required: true,
+                       message: "Please Enter your No Of Clients!",
+                     },
+                   ]}
+                 >
+                   <Input
+                     placeholder="No Of Clients"
+                     className="customAddFormInputText"
+                     disabled={isClientUnlimited}
+                   />
+                 </Form.Item>
+               </div>
+ 
+               <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                 <div className={styles.featureCheckBoxLabelWrapper}>
+                   <label className={styles.featureCheckBoxLabel}>
+                     Not Applicable
+                   </label>
+                   <Switch
+                     size="small"
+                     checked={isClientUnlimited}
+                     onChange={handleIsClientUnlimitedChange}
+                     
+                     className="smallCheckBox"
+                   ></Switch>
+                   <label className={styles.featureCheckBoxLabel}>
+                     Unlimited
+                   </label>
+                 </div>
+               </div>
+             </div>
+            )}
+
+            {subscriptionCategory === "business_enterprise" && (
+              <div className="formFieldRowWrapper">
+                <div className="col-auto formLabelWrapper">
+                  <label className="form-label">Branches</label>
+                </div>
+                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                  <Form.Item
+                    name="branches"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter the number of branches",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Number Of Branches"
+                      className="customAddFormInputText"
+                      disabled={isBranchUnlimited}
+                    />
+                  </Form.Item>
+                </div>
+                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                  <div className={styles.featureCheckBoxLabelWrapper}>
+                    <label className={styles.featureCheckBoxLabel}>Not Applicable</label>
+                    <Switch
+                      size="small"
+                      checked={isBranchUnlimited}
+                      onChange={setIsBranchUnlimited}
+                      className="smallCheckBox"
+                    />
+                    <label className={styles.featureCheckBoxLabel}>Unlimited</label>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
             <div className="formFieldRowWrapper">
               <div className="col-auto formLabelWrapper">
                 <label className="form-label">No Of Users</label>
@@ -312,11 +385,13 @@ const AddSubscription = () => {
                 >
                   <Input
                     className="customAddFormInputText"
-                    suffix={<div className="inputSuffix">CA Office Users</div>}
+                    suffix={<div className="inputSuffix">{subscriptionCategory === "business_enterprise"?"Office Users":"CA Office Users"}</div>}
                   />
                 </Form.Item>
               </div>
             </div>
+
+            {subscriptionCategory === "consultant" && (
             <div className="formFieldRowWrapper">
               <div className="col-auto formLabelWrapper">
                 <label className="form-label"></label>
@@ -340,6 +415,8 @@ const AddSubscription = () => {
                 </Form.Item>
               </div>
             </div>
+            )}
+
             <div className="formFieldRowWrapper">
               <div className="col-auto formLabelWrapper">
                 <label className="form-label"></label>
@@ -357,7 +434,7 @@ const AddSubscription = () => {
                   <Input
                     className="customAddFormInputText"
                     suffix={
-                      <div className="inputSuffix">Client Vendor Users</div>
+                      <div className="inputSuffix">{subscriptionCategory === "business_enterprise"?"Vendor Users":"Client Vendor Users"}</div>
                     }
                   />
                 </Form.Item>
@@ -380,6 +457,7 @@ const AddSubscription = () => {
                   <Input
                     placeholder="No Of Transaction Credits"
                     className="customAddFormInputText"
+                    disabled={isTransactionCreditsUnlimited}
                   />
                 </Form.Item>
               </div>
@@ -389,10 +467,9 @@ const AddSubscription = () => {
                     Not Applicable
                   </label>
                   <Switch
-                    checked={display_on_portal}
-                    defaultChecked
+                    checked={isTransactionCreditsUnlimited}
                     size="small"
-                    onChange={handleSwitchChange}
+                      onChange={handleIsTransactionCreditsUnlimitedChange}
                     className="smallCheckBox"
                   ></Switch>
                   <label className={styles.featureCheckBoxLabel}>
@@ -554,6 +631,15 @@ const AddSubscription = () => {
                       Delete
                     </Button>
                   )}
+                   <Button
+                      onClick={onCancelClick}
+                      loading={deleteSubscriptionsLoading}
+                      className={styles.deleteBtn}
+                      type="primary"
+                      danger
+                    >
+                      Cancel
+                    </Button>
                   <Button loading={loading} type="primary" htmlType="submit">
                     {!subscriptionId ? "Add Plan" : "Update"}
                   </Button>

@@ -16,9 +16,10 @@ import SubscriptionCardPoint from "../../../../../components/SubscriptionCard/Su
 import SubscriptionAddonsCard from "./SubscriptionAddonsCard";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
 import { JSX } from "react/jsx-runtime";
+import { useAppDispatch } from "../../../../states/store";
 
 const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const subscriptionCardList = useSelector(
     (state: any) => state.getSubscriptionsListApi.data
   );

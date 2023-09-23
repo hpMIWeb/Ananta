@@ -40,7 +40,18 @@ const items: MenuItem[] = [
     getItem(
         "Clients",
         "4",
-        <Icon name="management" width={17.5} height={14} />
+        <Icon name="management" width={17.5} height={14} />,
+        [
+            getItem(
+                "Dashboard",
+                "25",
+                <Icon name="management" width={17.5} height={14} />
+            ),getItem(
+                "Settings",
+                "25",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+        ]
     ),
     getItem(
         "Employees",
@@ -164,9 +175,7 @@ const LayoutComponent = ({
             case "3":
                 navigate("/promocodes");
                 return;
-            case "4":
-                navigate("/caclient");
-                return;
+           
             case "5":
                 navigate("/employee");
                 return;
@@ -223,12 +232,12 @@ const LayoutComponent = ({
                 navigate("/default-line-of-business");
                 return;
 
-            case "25": {
-                localStorage.removeItem("authtoken");
-                // Cookies.remove("jwt_token");
-                //navigate("/login");
+            case "25":
+                navigate("/caclient");
                 return;
-            }
+            case "26":
+                navigate("/caclient");
+                return;
         }
     };
 

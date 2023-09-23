@@ -35,6 +35,24 @@ const Clients = () => {
     dispatch(getClientsReducersApi());
   }, []);
 
+  const [addonOption, setAddonOption] = useState([
+    {
+      label: "All Clients",
+      value: "all_clients",
+    },
+    {
+      value: "CA",
+      label: "CA",
+    }, {
+      label: "Tax Consultant",
+      value: "tax_consultant",
+    },
+    {
+      label: "Business Enterprise",
+      value: "business_enterprise",
+    },
+  ]);
+
   const cardDesc = () => {
     return [
       {
@@ -150,7 +168,7 @@ const Clients = () => {
             showAddOn={true}
             setSearchValue={setSearchValue}
             sortState={sortState}
-            //setSortState={setSortState}
+           addonOption={addonOption}
           />
         </div>
         {getClientsLoading && <CardContentSkeletonLoader />}
@@ -166,9 +184,9 @@ const Clients = () => {
               planNameLabelBlue
               column={3}
               cardDetails={card}
-              titleDesc="Beatrice"
-              planNameLabel="Firm GST"
-              planName="First Firm"
+              titleDesc={card.clientType}
+              planNameLabel={card.firmGSTIN}
+              planName={card.firmName}
               cardDesc={cardDesc}
               isProfileViewAction
             />
