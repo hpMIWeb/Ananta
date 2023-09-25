@@ -342,58 +342,7 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
                   </Form.Item>
                 </div>
               </div>
-              <div
-                className={classNames(
-                  "col-12 col-md-4 col-lg-4",
-                  styles.fieldPadding8
-                )}
-              >
-                <div>
-                  <label className="form-label">
-                    Group Name<sup className="text-danger fs--1">*</sup>
-                  </label>
-                  <Form.Item
-                    name="groupName"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please Enter your Group Name!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder="Group Name"
-                      className="customAddFormInputText"
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-              <div
-                className={classNames(
-                  "col-12 col-md-4 col-lg-4",
-                  styles.fieldPadding8
-                )}
-              >
-                <div>
-                  <label className="form-label">
-                    File Number<sup className="text-danger fs--1">*</sup>
-                  </label>
-                  <Form.Item
-                    name="fileNumber"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please Enter your File Number!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder="File Number"
-                      className="customAddFormInputText"
-                    />
-                  </Form.Item>
-                </div>
-              </div>
+            
             </div>
             <div className="row"></div>
           </div>
@@ -539,6 +488,60 @@ const BasicInfo = ({ onChange, setFormValue }: any) => {
               </Form.Item>
             </div>
           </div>
+        </div>
+        <div className={classNames("row", styles.formFieldWrapper)}>
+          <div
+                className={classNames(
+                  "col-12 col-md-4 col-lg-4",
+                  styles.fieldPadding8
+                )}
+              >
+                <div>
+                  <label className="form-label">
+                    Group Name<sup className="text-danger fs--1">*</sup>
+                  </label>
+                  <Form.Item
+                    name="groupName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter your Group Name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Group Name"
+                      className="customAddFormInputText"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div
+                className={classNames(
+                  "col-12 col-md-4 col-lg-4",
+                  styles.fieldPadding8
+                )}
+              >
+                <div>
+                  <label className="form-label">
+                    File Number<sup className="text-danger fs--1">*</sup>
+                  </label>
+                  <Form.Item
+                    name="fileNumber"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Enter your File Number!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="File Number"
+                      className="customAddFormInputText"
+                    />
+                  </Form.Item>
+                </div>
+        </div>
         </div>
         <div className="row">
           <div className="col-12 my-2 text-end">

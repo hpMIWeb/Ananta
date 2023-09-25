@@ -19,7 +19,8 @@ const PaymentTabAddClient = ({ onChange, setFormValue }: any) => {
   });
   const onFinish = (values: any) => {
     setFormValue(values);
-    onChange(7);
+    //onChange(7);
+    onChange(8);
   };
 
   const addMoreOwnerCard = () => {
@@ -237,7 +238,7 @@ const PaymentTabAddClient = ({ onChange, setFormValue }: any) => {
               <Button
                 style={{ minWidth: 104, marginRight: 12 }}
                 className="greyBtn"
-                onClick={() => onChange(2)}
+                onClick={() => onChange(5)}
               >
                 Previous
               </Button>

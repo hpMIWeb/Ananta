@@ -541,7 +541,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
               <Button
                 style={{ minWidth: 104, marginRight: 12 }}
                 className="greyBtn"
-                onClick={() => onChange(2)}
+                onClick={() => onChange(4)}
               >
                 Previous
               </Button>

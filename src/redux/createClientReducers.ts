@@ -12,6 +12,7 @@ interface Payload {
 export const createClientReducersApi = createAsyncThunk(
     "createClientReducers",
     async ({ payload, subscriptionId }: Payload) => {
+        console.log(payload)
         const jwtToken = Cookies.get("jwt_token");
         const response = !subscriptionId
             ? await axios.post(`${apiEndpoint}admin/client-signup`, payload, {

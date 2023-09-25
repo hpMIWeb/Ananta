@@ -15,11 +15,12 @@ import { createClientReducersApi } from "../../../redux/createClientReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
 import dayjs from 'dayjs';
+import { useAppDispatch } from "../../states/store";
 
 
 const Clients = () => {
     const navigation = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const getClientsLoading = useSelector(
         (state: any) => state.getClients.loading
@@ -35,12 +36,12 @@ const Clients = () => {
     };
 
   const onChangeActiveClick = (e: any, id: any) => {
-    // dispatch(
-    //   createClientReducersApi({
-    //     payload: { status: !!e ? "Active" : "Inactive" },
-    //     subscriptionId: id,
-    //   })
-    // );
+    dispatch(
+      createClientReducersApi({
+        payload: { status: !!e ? "Active" : "Inactive" },
+        subscriptionId: id,
+      })
+    );
   };
     useEffect(() => {
         // @ts-ignore

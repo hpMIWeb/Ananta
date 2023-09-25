@@ -35,8 +35,10 @@ const AddClient = () => {
   const getClientsListLoading = useSelector(
     (state: any) => state.getClients.loading
   );
+  const [clientType, setClientType] = useState("ca");
   const getClientsList = useSelector((state: any) => state.getClients.data);
   const { loading, success } = useSelector((state: any) => state.createClient);
+  
 
   useEffect(() => {
     if (!getClientsListSuccess) {
@@ -89,6 +91,7 @@ const AddClient = () => {
 
   const onChange = (key: number, formValue: any) => {
     if (key === 8) {
+      
       const payload = { ...clientValue, ...formValue };
       delete payload.subscriptionPlan;
       delete payload.startDate;
@@ -98,6 +101,7 @@ const AddClient = () => {
       delete payload.instrumentDate;
       delete payload.instrumentId;
       delete payload.instrumentAmount;
+      payload.clientType = clientType;
       // @ts-ignore
       dispatch(createClientReducersApi({ payload: payload }));
     } else {
@@ -222,6 +226,7 @@ const AddClient = () => {
                           { value: "business_enterprise", label: "Business Enterprise" },
                         ]}
                         placeholder="Select Type"
+                        onChange={(value:any) => setClientType(value)}
                       />
                     </Form.Item>
                   </div>
