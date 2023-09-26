@@ -46,9 +46,10 @@ const items: MenuItem[] = [
                 "Dashboard",
                 "25",
                 <Icon name="management" width={17.5} height={14} />
-            ),getItem(
+            ),
+            getItem(
                 "Settings",
-                "25",
+                "26",
                 <Icon name="management" width={17.5} height={14} />
             ),
         ]
@@ -56,8 +57,21 @@ const items: MenuItem[] = [
     getItem(
         "Employees",
         "5",
-        <Icon name="management" width={17.5} height={14} />
+        <Icon name="management" width={17.5} height={14} />,
+        [
+            getItem(
+                "Dashboard",
+                "27",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+            getItem(
+                "Settings",
+                "28",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+        ]
     ),
+
     getItem("Master", "12", <Icon name="management" width={16} height={14} />, [
         getItem(
             "Department",
@@ -175,7 +189,7 @@ const LayoutComponent = ({
             case "3":
                 navigate("/promocodes");
                 return;
-           
+
             case "5":
                 navigate("/employee");
                 return;
@@ -237,6 +251,12 @@ const LayoutComponent = ({
                 return;
             case "26":
                 navigate("/caclient");
+                return;
+            case "27":
+                navigate("/employee");
+                return;
+            case "28":
+                navigate("/employee");
                 return;
         }
     };

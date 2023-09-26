@@ -64,6 +64,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                 styles.formFieldWrapper
                             )}
                         >
+                            {" "}
                             <div
                                 className={classNames(
                                     "col-12 col-md-3 col-lg-3",
@@ -75,57 +76,18 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                         style={{ marginBottom: 7 }}
                                         className="custom-label"
                                     >
-                                        Role
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
+                                        Department
                                     </label>
                                     <Form.Item
-                                        name="role"
-                                        className="customAddFormSelectOptions"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Select your Role!",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            placeholder="Select Role"
-                                            options={getRolesList.map(
-                                                (role: any) => ({
-                                                    label: role.roleName,
-                                                    value: role._id,
-                                                })
-                                            )}
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Designation
-                                    </label>
-                                    <Form.Item
-                                        name="designation"
+                                        name="department"
                                         className="customAddFormSelectOptions"
                                     >
                                         <Select
-                                            placeholder="Select Designation"
-                                            options={getRoleTypesList.map(
-                                                (role: any) => ({
-                                                    label: role?.role_type,
-                                                    value: role?._id,
+                                            placeholder="Select Department"
+                                            options={getDepartmentsList.map(
+                                                (department: any) => ({
+                                                    label: department?.name,
+                                                    value: department?._id,
                                                 })
                                             )}
                                         />
@@ -180,18 +142,57 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                         style={{ marginBottom: 7 }}
                                         className="custom-label"
                                     >
-                                        Department
+                                        Designation
                                     </label>
                                     <Form.Item
-                                        name="department"
+                                        name="designation"
                                         className="customAddFormSelectOptions"
                                     >
                                         <Select
-                                            placeholder="Select Department"
-                                            options={getDepartmentsList.map(
+                                            placeholder="Select Designation"
+                                            options={getRoleTypesList.map(
                                                 (role: any) => ({
-                                                    label: role?.department_name,
+                                                    label: role?.role_type,
                                                     value: role?._id,
+                                                })
+                                            )}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-3 col-lg-3",
+                                    styles.fieldPadding8
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <label
+                                        style={{ marginBottom: 7 }}
+                                        className="custom-label"
+                                    >
+                                        Role
+                                        <sup className="text-danger fs--1">
+                                            *
+                                        </sup>
+                                    </label>
+                                    <Form.Item
+                                        name="role"
+                                        className="customAddFormSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Select your Role!",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            placeholder="Select Role"
+                                            options={getRolesList.map(
+                                                (role: any) => ({
+                                                    label: role.roleName,
+                                                    value: role._id,
                                                 })
                                             )}
                                         />
