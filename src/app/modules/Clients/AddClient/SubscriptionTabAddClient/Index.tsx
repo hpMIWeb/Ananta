@@ -7,7 +7,7 @@ import {
 } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { DatePicker, Form, Select } from "antd";
+import { Card, DatePicker, Drawer, Form, Select } from "antd";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Button from "../../../../../components/Button/Index";
 import Icon from "../../../../../components/Icon/Index";
@@ -15,13 +15,18 @@ import Input from "../../../../../components/Input/Index";
 import SubscriptionCardPoint from "../../../../../components/SubscriptionCard/SubscriptionCardPoint";
 import SubscriptionAddonsCard from "./SubscriptionAddonsCard";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
+import { getPromocodeReducersListApi } from "../../../../../redux/getPromocodeReducers";
 import { JSX } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../states/store";
+import { Option } from "antd/es/mentions";
 
 const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
         (state: any) => state.getSubscriptionsListApi.data
+    );
+    const promoCardList = useSelector(
+        (state: any) => state.getPromocodeList.data
     );
     const [subscriptionAddons, setSubscriptionAddons] = useState<any>([]);
     const [form] = Form.useForm();
@@ -29,11 +34,21 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const subscriptionType = Form.useWatch("subscriptionType", form);
     const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
     const roundOff = Form.useWatch("roundOff", form) || 0;
+    const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
 
     useEffect(() => {
         // @ts-ignore
         dispatch(getAddonsReducersListApi());
+        dispatch(getPromocodeReducersListApi());
     }, []);
+
+    const showDrawer = () => {
+        setOpenPromoCodeDrawer(true);
+    };
+
+    const onClose = () => {
+        setOpenPromoCodeDrawer(false);
+    };
 
     const [subscriptionValue, setSubscriptionValue] = useState<any>({});
 
@@ -256,6 +271,24 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         onChange(6);
     };
 
+    const [selectedCoupon, setSelectedCoupon] = useState(null);
+
+    const couponOptions = [
+        { value: "CODE10", label: "CODE10 - 10% off" },
+        { value: "SAVE20", label: "SAVE20 - 20% off" },
+        { value: "FREESHIP", label: "FREESHIP - Free Shipping" },
+    ];
+
+    const applyCoupon = () => {
+        if (selectedCoupon) {
+            // You can implement the logic to apply the selected coupon here
+            // For this example, we'll display a success message.
+            //    message.success(`Coupon "${selectedCoupon}" applied successfully!`);
+        } else {
+            //  message.error("Please select a coupon.");
+        }
+    };
+
     return (
         <Form
             name="basic"
@@ -450,7 +483,10 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
 
                                     <div className="row rowPadding">
                                         <div className="col">
-                                            <p className="text-end mb-1 promocode-link">
+                                            <p
+                                                className="text-end mb-1 promocode-link"
+                                                onClick={showDrawer}
+                                            >
                                                 Apply Promo Code
                                             </p>
                                         </div>
@@ -639,6 +675,29 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                     </div>
                 </div>
             </div>
+            <Drawer
+                title="Basic Drawer"
+                placement="right"
+                onClose={onClose}
+                open={openPromoCodeDrawer}
+            >
+                {promoCardList.map((coupon: any) => (
+                    <Card
+                        key={coupon._id}
+                        style={{
+                            marginBottom: "16px",
+                            borderRadius: "10px",
+                            padding: "16px",
+                            textAlign: "center",
+                        }}
+                    >
+                        <p style={{ margin: "16px 0" }}>{coupon.name}</p>
+                        <Button type="primary" style={{ width: "100%" }}>
+                            Apply Coupon
+                        </Button>
+                    </Card>
+                ))}
+            </Drawer>
         </Form>
     );
 };
