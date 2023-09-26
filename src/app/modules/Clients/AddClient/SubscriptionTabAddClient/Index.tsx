@@ -7,10 +7,11 @@ import {
 } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, DatePicker, Drawer, Form, Select } from "antd";
+import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Button from "../../../../../components/Button/Index";
 import Icon from "../../../../../components/Icon/Index";
+import { SearchOutlined } from "@ant-design/icons";
 import Input from "../../../../../components/Input/Index";
 import SubscriptionCardPoint from "../../../../../components/SubscriptionCard/SubscriptionCardPoint";
 import SubscriptionAddonsCard from "./SubscriptionAddonsCard";
@@ -35,9 +36,23 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
     const roundOff = Form.useWatch("roundOff", form) || 0;
     const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
+    const [totalAddonAmount, setTotalAddonAmount] = useState(0);
 
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
+
+    // Search input change handler
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        // Filter the promo codes based on the search input
+        const filteredCodes = promoCardList.filter((code: any) =>
+            code.name.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredPromoCodes(filteredCodes);
+    };
     useEffect(() => {
         // @ts-ignore
+        console.log("totalAddonAmount", totalAddonAmount);
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
     }, []);
@@ -374,6 +389,9 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                     cardIndex={index}
                                     handleAddonChange={handleAddonChange}
                                     handleRemoveAddon={handleRemoveAddon}
+                                    subscriptionAddons={subscriptionAddons} // Pass the subscriptionAddons array
+                                    totalAddonAmount={totalAddonAmount} // Pass the total addon amount
+                                    setTotalAddonAmount={setTotalAddonAmount} // Pass the function to update total
                                 />
                             )
                         )}
@@ -681,7 +699,31 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 onClose={onClose}
                 open={openPromoCodeDrawer}
             >
-                {promoCardList.map((coupon: any) => (
+                <Row
+                    gutter={[8, 8]}
+                    className="form-row"
+                    style={{ marginTop: "0" }}
+                >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 24 }}
+                        style={{
+                            float: "right",
+                            marginBottom: "10px",
+                            marginTop: "7px",
+                        }}
+                    >
+                        <Input
+                            placeholder="Search..."
+                            className="search-box"
+                            bordered={false}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined />}
+                        />
+                    </Col>
+                </Row>
+                {filteredPromoCodes.map((coupon: any) => (
                     <Card
                         key={coupon._id}
                         style={{

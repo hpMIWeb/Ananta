@@ -9,8 +9,16 @@ import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers
 import { useDispatch, useSelector } from "react-redux";
 
 const SubscriptionAddonsCard = memo(
-    ({ handleAddonChange, handleRemoveAddon, cardIndex }: any) => {
-        const [selectNumber, setSelectNumber] = useState(0);
+    ({
+        handleAddonChange,
+        handleRemoveAddon,
+        cardIndex,
+        subscriptionAddons,
+        setTotalAddonAmount,
+    }: any) => {
+        const [selectNumber, setSelectNumber] = useState(1);
+        const currentAddon = subscriptionAddons[cardIndex];
+
         const [addOnType, setAddOnType] = useState("");
         const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
 
@@ -38,11 +46,24 @@ const SubscriptionAddonsCard = memo(
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
-            console.log(selectedAddonData.price);
-
-            setSelectedAddonPrice(selectedAddonData.price);
+            //  setSelectedAddonPrice(selectedAddonData.price);
+            setSelectedAddonPrice(selectedAddonData.price * selectNumber);
             handleAddonChange(cardIndex, "addOnPlans", value);
         };
+
+        useEffect(() => {
+            // Recalculate the total price when either quantity or addon value changes
+            const selectedAddonData = addonsCardList.find(
+                (a: any) => a._id === currentAddon.addOnPlans
+            );
+            const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
+            setSelectedAddonPrice(addonPrice * selectNumber);
+            const total = subscriptionAddons.reduce(
+                (acc: any, addon: any) => acc + addon.selectedAddonsPrice,
+                0
+            );
+            setTotalAddonAmount(total);
+        }, [currentAddon.addOnPlans, selectNumber]);
 
         const getAddOnsListOptions = getAddOnsList().map((a: any) => ({
             value: a._id,
