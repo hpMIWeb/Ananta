@@ -23,229 +23,259 @@ import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 
 const AddClient = () => {
-  const [activeTab, setActiveTab] = useState(1);
-  const [clientValue, setClientValue] = useState({});
-  const dispatch = useAppDispatch();
-  const navigation = useNavigate();
-  const { clientId } = useParams();
-  const [form] = Form.useForm();
-  const getClientsListSuccess = useSelector(
-    (state: any) => state.getClients.success
-  );
-  const getClientsListLoading = useSelector(
-    (state: any) => state.getClients.loading
-  );
-  const [clientType, setClientType] = useState("ca");
-  const getClientsList = useSelector((state: any) => state.getClients.data);
-  const { loading, success } = useSelector((state: any) => state.createClient);
-  
+    const [activeTab, setActiveTab] = useState(1);
+    const [clientValue, setClientValue] = useState({});
+    const dispatch = useAppDispatch();
+    const navigation = useNavigate();
+    const { clientId } = useParams();
+    const [form] = Form.useForm();
+    const getClientsListSuccess = useSelector(
+        (state: any) => state.getClients.success
+    );
+    const getClientsListLoading = useSelector(
+        (state: any) => state.getClients.loading
+    );
+    const [clientType, setClientType] = useState("ca");
+    const getClientsList = useSelector((state: any) => state.getClients.data);
+    const { loading, success } = useSelector(
+        (state: any) => state.createClient
+    );
 
-  useEffect(() => {
-    if (!getClientsListSuccess) {
-      // @ts-ignore
-      dispatch(getClientsReducersApi());
-    }
-    // @ts-ignore
-    dispatch(getSubscriptionsListApi());
-  }, []);
+    useEffect(() => {
+        if (!getClientsListSuccess) {
+            // @ts-ignore
+            dispatch(getClientsReducersApi());
+        }
+        // @ts-ignore
+        dispatch(getSubscriptionsListApi());
+    }, []);
 
-  const setFormValue = (formValue: any) => {
-    setClientValue((prev) => ({ ...prev, ...formValue }));
-  };
+    const setFormValue = (formValue: any) => {
+        setClientValue((prev) => ({ ...prev, ...formValue }));
+    };
 
-  const handleCancelClick = () => {
-    navigation("/caclient");
-  };
+    const handleCancelClick = () => {
+        navigation("/caclient");
+    };
 
-  useEffect(() => {
-    if (getClientsList.length && clientId) {
-      const currentCardDetail = getClientsList.find(
-        (s: any) => s._id === clientId
-      );
-      form.setFieldsValue(currentCardDetail);
-    }
-  }, [getClientsList, clientId, form]);
+    useEffect(() => {
+        if (getClientsList.length && clientId) {
+            const currentCardDetail = getClientsList.find(
+                (s: any) => s._id === clientId
+            );
+            form.setFieldsValue(currentCardDetail);
+        }
+    }, [getClientsList, clientId, form]);
 
-  useEffect(() => {
-    if (success) {
-      navigation("/caclient");
-    }
-  }, [success]);
+    useEffect(() => {
+        if (success) {
+            navigation("/caclient");
+        }
+    }, [success]);
 
-  const operations = (
-    <Button
-      onClick={handleCancelClick}
-      className={classNames("cancelBtn", styles.cancelAddClientBtn)}
-      type="primary"
-      danger
-    >
-      <Icon
-        className={styles.cancelBtnIcon}
-        name="cross"
-        height={18}
-        width={18}
-      />
-      Cancel
-    </Button>
-  );
+    const operations = (
+        <Button
+            onClick={handleCancelClick}
+            className={classNames("cancelBtn", styles.cancelAddClientBtn)}
+            type="primary"
+            danger
+        >
+            <Icon
+                className={styles.cancelBtnIcon}
+                name="cross"
+                height={18}
+                width={18}
+            />
+            Cancel
+        </Button>
+    );
 
-  const onChange = (key: number, formValue: any) => {
-    if (key === 8) {
-      
-      const payload = { ...clientValue, ...formValue };
-      delete payload.subscriptionPlan;
-      delete payload.startDate;
-      delete payload.paymentTerms;
-      delete payload.paymentMode;
-      delete payload.instrumentType;
-      delete payload.instrumentDate;
-      delete payload.instrumentId;
-      delete payload.instrumentAmount;
-      payload.clientType = clientType;
-      // @ts-ignore
-      dispatch(createClientReducersApi({ payload: payload }));
-    } else {
-      setActiveTab(key);
-    }
-  };
+    const onChange = (key: number, formValue: any) => {
+        if (key === 8) {
+            const payload = { ...clientValue, ...formValue };
+            delete payload.subscriptionPlan;
+            delete payload.startDate;
+            delete payload.paymentTerms;
+            delete payload.paymentMode;
+            delete payload.instrumentType;
+            delete payload.instrumentDate;
+            delete payload.instrumentId;
+            delete payload.instrumentAmount;
+            payload.clientType = clientType;
+            // @ts-ignore
+            dispatch(createClientReducersApi({ payload: payload }));
+        } else {
+            setActiveTab(key);
+        }
+    };
 
-  const items = [
-   {
-      key: 1,
-      label: `Basic Info`,
-      children: <BasicInfo onChange={onChange} setFormValue={setFormValue} />,
-    },
-    // {
-    //   key: 2,
-    //   label: `Branches`,
-    //   children: <Branches onChange={onChange} setFormValue={setFormValue} />,
-    // },
-    // {
-    //   key: 3,
-    //   label: `Bank Details`,
-    //   children: <BankDetails onChange={onChange} setFormValue={setFormValue} />,
-    // },
-    {
-      key: 4,
-      label: `Owner Details`,
-      children: <OwnerInfo onChange={onChange} setFormValue={setFormValue} />,
-    },
-    {
-      key: 5,
-      label: `Subscription`,
-      children: (
-        <SubscriptionTabAddClient
-          onChange={onChange}
-          setFormValue={setFormValue}
-        />
-      ),
-    },
-    {
-      key: 6,
-      label: `Payment`,
-      children: (
-        <PaymentTabAddClient onChange={onChange} setFormValue={setFormValue} />
-      ),
-    },
-    // {
-    //   key: 7,
-    //   label: `Vault`,
-    //   children: (
-    //     <VaultTabAddClient
-    //       onChange={onChange}
-    //       setFormValue={setFormValue}
-    //       loading={loading}
-    //     />
-    //   ),
-    // },
-  ];
+    const items = [
+        {
+            key: 1,
+            label: `Basic Info`,
+            children: (
+                <BasicInfo
+                    onChange={onChange}
+                    setFormValue={setFormValue}
+                    clientType={clientType}
+                />
+            ),
+        },
+        // {
+        //   key: 2,
+        //   label: `Branches`,
+        //   children: <Branches onChange={onChange} setFormValue={setFormValue} />,
+        // },
+        // {
+        //   key: 3,
+        //   label: `Bank Details`,
+        //   children: <BankDetails onChange={onChange} setFormValue={setFormValue} />,
+        // },
+        {
+            key: 4,
+            label: `Owner Details`,
+            children: (
+                <OwnerInfo onChange={onChange} setFormValue={setFormValue} />
+            ),
+        },
+        {
+            key: 5,
+            label: `Subscription`,
+            children: (
+                <SubscriptionTabAddClient
+                    onChange={onChange}
+                    setFormValue={setFormValue}
+                />
+            ),
+        },
+        {
+            key: 6,
+            label: `Payment`,
+            children: (
+                <PaymentTabAddClient
+                    onChange={onChange}
+                    setFormValue={setFormValue}
+                />
+            ),
+        },
+        // {
+        //   key: 7,
+        //   label: `Vault`,
+        //   children: (
+        //     <VaultTabAddClient
+        //       onChange={onChange}
+        //       setFormValue={setFormValue}
+        //       loading={loading}
+        //     />
+        //   ),
+        // },
+    ];
 
-  const handleBulkClick = () => {
-    navigation("/caclient/createbulk");
-  };
+    const handleBulkClick = () => {
+        navigation("/caclient/createbulk");
+    };
 
-  return (
-    <div className={classNames("card mb-3", styles.addPromoCodeCardWrapper)}>
-      <div
-        className={classNames(
-          "card-header d-flex",
-          styles.promoCodeCardHeaderBox
-        )}
-        style={{ minHeight: 90 }}
-      >
-        <div className="d-flex align-items-center w-100">
-          <div className="me-auto">
-            <h5
-              className={classNames(
-                "my-2 text-white position-relative z-index-1",
-                styles.addPromoCodeLabel
-              )}
-            >
-              Add Client
-            </h5>
-          </div>
-          <div className="ms-auto z-index-1">
-            <Button onClick={handleBulkClick} className={styles.newPromoBtn}>
-              Add In Bulk
-            </Button>
-          </div>
-        </div>
+    return (
         <div
-          style={{
-            backgroundImage: `url(${addSubImg})`,
-          }}
-          className={classNames(
-            "rounded-3 rounded-bottom-0",
-            styles.addPromoCodeImg
-          )}
-        ></div>
-      </div>
-      <div className={styles.addClientDetailBox}>
-        {getClientsListLoading && clientId && <FormContentSkeletonLoader />}
-          <div className="row">
-                <div className={classNames("col-12 col-md-4 col-lg-4")}>
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Client Type<sup className="text-danger fs--1">*</sup>
-                    </label>
-                    <Form.Item
-                      name="clientType"
-                      className="customAddClientSelectOptions"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please Enter Client Type!",
-                        },
-                      ]}
-                    >
-                      <Select
-                        options={[
-                          { value: "ca", label: "CA" },
-                          { value: "accountant", label: "Accountant" },
-                          { value: "tax_consultant", label: "Tax Consultant" },
-                          { value: "business_enterprise", label: "Business Enterprise" },
-                        ]}
-                        placeholder="Select Type"
-                        onChange={(value:any) => setClientType(value)}
-                      />
-                    </Form.Item>
-                  </div>
+            className={classNames("card mb-3", styles.addPromoCodeCardWrapper)}
+        >
+            <div
+                className={classNames(
+                    "card-header d-flex",
+                    styles.promoCodeCardHeaderBox
+                )}
+                style={{ minHeight: 90 }}
+            >
+                <div className="d-flex align-items-center w-100">
+                    <div className="me-auto">
+                        <h5
+                            className={classNames(
+                                "my-2 text-white position-relative z-index-1",
+                                styles.addPromoCodeLabel
+                            )}
+                        >
+                            Add Client
+                        </h5>
+                    </div>
+                    <div className="ms-auto z-index-1">
+                        <Button
+                            onClick={handleBulkClick}
+                            className={styles.newPromoBtn}
+                        >
+                            Add In Bulk
+                        </Button>
+                    </div>
                 </div>
-          </div>
-          
-        {!(getClientsListLoading && clientId) && (
-          <Tabs
-            tabBarExtraContent={operations}
-            className="subscriptionTabs"
-            defaultActiveKey="1"
-            activeKey={activeTab}
-            items={items}
-            onChange={onChange}
-          />
-        )}
-      </div>
-    </div>
-  );
+                <div
+                    style={{
+                        backgroundImage: `url(${addSubImg})`,
+                    }}
+                    className={classNames(
+                        "rounded-3 rounded-bottom-0",
+                        styles.addPromoCodeImg
+                    )}
+                ></div>
+            </div>
+            <div className={styles.addClientDetailBox}>
+                {getClientsListLoading && clientId && (
+                    <FormContentSkeletonLoader />
+                )}
+                <div className="row">
+                    <div className={classNames("col-12 col-md-4 col-lg-4")}>
+                        <div className="mb-3">
+                            <label className="form-label">
+                                Client Type
+                                <sup className="text-danger fs--1">*</sup>
+                            </label>
+                            <Form.Item
+                                name="clientType"
+                                className="customAddClientSelectOptions"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please Enter Client Type!",
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    options={[
+                                        { value: "ca", label: "CA" },
+                                        {
+                                            value: "accountant",
+                                            label: "Accountant",
+                                        },
+                                        {
+                                            value: "tax_consultant",
+                                            label: "Tax Consultant",
+                                        },
+                                        {
+                                            value: "business_enterprise",
+                                            label: "Business Enterprise",
+                                        },
+                                    ]}
+                                    placeholder="Select Type"
+                                    onChange={(value: any) =>
+                                        setClientType(value)
+                                    }
+                                />
+                            </Form.Item>
+                        </div>
+                    </div>
+                </div>
+
+                {!(getClientsListLoading && clientId) && (
+                    <Tabs
+                        tabBarExtraContent={operations}
+                        className="subscriptionTabs"
+                        defaultActiveKey="1"
+                        activeKey={activeTab}
+                        items={items}
+                        onChange={onChange}
+                    />
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default AddClient;

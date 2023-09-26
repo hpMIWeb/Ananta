@@ -396,6 +396,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }) => {
                   </Form.Item>
                 </div>
               </div>
+              
               <div
                 className={classNames(
                   "col-12 col-md-4 col-lg-4",

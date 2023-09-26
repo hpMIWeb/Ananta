@@ -305,7 +305,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 )}
               </div>
             </div>
-            {[...subscriptionAddons].map((addOns, index) => (
+            {[...subscriptionAddons].map((addOns:any, index:number) => (
               <SubscriptionAddonsCard
                 key={index}
                 cardIndex={index}
