@@ -9,16 +9,15 @@ import { useNavigate } from "react-router-dom";
 import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
 import NoDataAvailable from "../../../components/NoDataAvailable/Index";
-import { useDispatch, useSelector } from "react-redux";
-import { getClientsReducersApi, } from "../../../redux/getClientsReducers";
-import { createClientReducersApi } from "../../../redux/createClientReducers";
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { createAssociatePartnerReducersApi } from "../../../redux/createAssociatePartnerReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 
-
-const Clients = () => {
+const AssociatePartners = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
     const getClientsList = useSelector((state: any) => state.getClients.data);
@@ -30,19 +29,34 @@ const Clients = () => {
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
         []
     );
+    const [addonOption, setAddonOption] = useState([
+        { value: "ca", label: "CA" },
+        {
+            value: "accountant",
+            label: "Accountant",
+        },
+        {
+            value: "tax_consultant",
+            label: "Tax Consultant",
+        },
+        {
+            value: "business_enterprise",
+            label: "Business Enterprise",
+        },
+    ]);
 
-    const handleNewClientClick = () => {
-        navigation("/caclient/create");
+    const handleNewAssociatePartnerClick = () => {
+        navigation("/associatePartners/create");
     };
 
-  const onChangeActiveClick = (e: any, id: any) => {
-    dispatch(
-      createClientReducersApi({
-        payload: { status: !!e ? "Active" : "Inactive" },
-        subscriptionId: id,
-      })
-    );
-  };
+    const onChangeActiveClick = (e: any, id: any) => {
+        dispatch(
+            createAssociatePartnerReducersApi({
+                payload: { status: !!e ? "Active" : "Inactive" },
+                subscriptionId: id,
+            })
+        );
+    };
     useEffect(() => {
         // @ts-ignore
         dispatch(getClientsReducersApi());
@@ -57,7 +71,9 @@ const Clients = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">Clients</p>
-                        <p className="semiBold">0/{cardInfo.assignClients.length}</p>
+                        <p className="semiBold">
+                            0/{cardInfo.assignClients.length}
+                        </p>
                     </>
                 ),
             },
@@ -110,7 +126,12 @@ const Clients = () => {
                         <p className="mb-0 fs--1 description-label">
                             Gold Subscription
                         </p>
-                          <p className="semiBold">Expire on - {dayjs(cardInfo.subscriptionDetails.endDate).format('YYYY-MM-DD')}</p>
+                        <p className="semiBold">
+                            Expire on -{" "}
+                            {dayjs(cardInfo.subscriptionDetails.endDate).format(
+                                "YYYY-MM-DD"
+                            )}
+                        </p>
                     </>
                 ),
             },
@@ -141,12 +162,12 @@ const Clients = () => {
                                 styles.promoCodesLabel
                             )}
                         >
-                            Clients
+                            Associate Partners
                         </h5>
                     </div>
                     <div className={classNames("ms-auto z-index-1")}>
                         <Button
-                            onClick={handleNewClientClick}
+                            onClick={handleNewAssociatePartnerClick}
                             className={styles.newPromoBtn}
                         >
                             <Icon width={12.25} height={14} name="plus" />
@@ -167,9 +188,10 @@ const Clients = () => {
             <div className={styles.promoCodesBottomWrapper}>
                 <div style={{ marginBottom: 24 }}>
                     <SearchFilterBar
-                        showAddOn
                         defaultSortLabel={clientSortLabel}
-                        initialAddOnsValue="All Clients"
+                        showAddOn={true}
+                        addonOption={addonOption}
+                        initialAddOnsValue="All Partner"
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
                         sortState={sortState}
@@ -213,4 +235,4 @@ const Clients = () => {
     );
 };
 
-export default Clients;
+export default AssociatePartners;

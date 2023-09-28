@@ -84,8 +84,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
 
     const onFinish = (value: any) => {
         setFormValue(value);
-        //onChange(2); redirect to branch
-        onChange(4);
+        onChange(2);
     };
 
     return (
@@ -176,23 +175,23 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                             >
                                 <div>
                                     <label className="form-label">
-                                        Client ID
+                                        Partner ID
                                         <sup className="text-danger fs--1">
                                             *
                                         </sup>
                                     </label>
                                     <Form.Item
-                                        name="clientId"
+                                        name="partnerId"
                                         rules={[
                                             {
                                                 required: true,
                                                 message:
-                                                    "Please Enter your Client ID!",
+                                                    "Please Enter your Partner ID!",
                                             },
                                         ]}
                                     >
                                         <Input
-                                            placeholder="Client ID"
+                                            placeholder="Partner ID"
                                             className="customAddFormInputText"
                                         />
                                     </Form.Item>

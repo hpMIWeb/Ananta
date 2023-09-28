@@ -55,14 +55,7 @@ const AddSubscription = () => {
         }));
     };
 
-    const featureList = [
-        { feature: "TaskManager" },
-        { feature: "FileManager" },
-        { feature: "E-Commerce" },
-        { feature: "Tamplate-Customization_for_import" },
-        { feature: "Live_reports_on_client_mobile_app" },
-        { feature: "Client_login_mobile_app" },
-    ];
+    const featureList: any = [];
 
     const formValues = {
         // TODO:

@@ -10,13 +10,12 @@ import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
 import NoDataAvailable from "../../../components/NoDataAvailable/Index";
 import { useDispatch, useSelector } from "react-redux";
-import { getClientsReducersApi, } from "../../../redux/getClientsReducers";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../redux/createClientReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
-
 
 const Clients = () => {
     const navigation = useNavigate();
@@ -35,14 +34,14 @@ const Clients = () => {
         navigation("/caclient/create");
     };
 
-  const onChangeActiveClick = (e: any, id: any) => {
-    dispatch(
-      createClientReducersApi({
-        payload: { status: !!e ? "Active" : "Inactive" },
-        subscriptionId: id,
-      })
-    );
-  };
+    const onChangeActiveClick = (e: any, id: any) => {
+        dispatch(
+            createClientReducersApi({
+                payload: { status: !!e ? "Active" : "Inactive" },
+                subscriptionId: id,
+            })
+        );
+    };
     useEffect(() => {
         // @ts-ignore
         dispatch(getClientsReducersApi());
@@ -57,7 +56,9 @@ const Clients = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">Clients</p>
-                        <p className="semiBold">0/{cardInfo.assignClients.length}</p>
+                        <p className="semiBold">
+                            0/{cardInfo.assignClients.length}
+                        </p>
                     </>
                 ),
             },
@@ -110,7 +111,12 @@ const Clients = () => {
                         <p className="mb-0 fs--1 description-label">
                             Gold Subscription
                         </p>
-                          <p className="semiBold">Expire on - {dayjs(cardInfo.subscriptionDetails.endDate).format('YYYY-MM-DD')}</p>
+                        <p className="semiBold">
+                            Expire on -{" "}
+                            {dayjs(cardInfo.subscriptionDetails.endDate).format(
+                                "YYYY-MM-DD"
+                            )}
+                        </p>
                     </>
                 ),
             },

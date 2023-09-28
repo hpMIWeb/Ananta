@@ -18,7 +18,7 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
         );
 
         setFormValue({ ownerDetails: Object.values(filteredValue) });
-        onChange(5);
+        onChange(4);
     };
 
     const ownerDetailsFormValue = Form.useWatch("ownerDetails", form) || {};

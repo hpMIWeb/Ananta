@@ -4,16 +4,12 @@ import styles from "./addClient.module.scss";
 import Tabs from "../../../../components/Tabs/Index";
 import Button from "../../../../components/Button/Index";
 import Icon from "../../../../components/Icon/Index";
-import SubscriptionTabAddClient from "./SubscriptionTabAddClient/Index";
 import { useEffect, useState } from "react";
 import OwnerInfo from "./OwnerInfo/Index";
-import PaymentTabAddClient from "./PaymentTabAddClient/Index";
 import { useNavigate, useParams } from "react-router-dom";
 import BasicInfo from "./BasicInfo/Index";
-import Branches from "./Branches/Index";
 import BankDetails from "./BankDetails/Index";
-import VaultTabAddClient from "./VaultTabAddClient/Index";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Form } from "antd";
 import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../../redux/createClientReducers";
@@ -22,7 +18,7 @@ import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReduc
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 
-const AddClient = () => {
+const AddAssociatePartners = () => {
     const [activeTab, setActiveTab] = useState(1);
     const [clientValue, setClientValue] = useState({});
     const dispatch = useAppDispatch();
@@ -35,18 +31,17 @@ const AddClient = () => {
     const getClientsListLoading = useSelector(
         (state: any) => state.getClients.loading
     );
-    const [clientType, setClientType] = useState("ca");
+    const [partnerType, setPartnerType] = useState("ca");
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const { loading, success } = useSelector(
         (state: any) => state.createClient
     );
 
     useEffect(() => {
+        //TODO:: Need to convert in GET API
         if (!getClientsListSuccess) {
-            // @ts-ignore
             dispatch(getClientsReducersApi());
         }
-        // @ts-ignore
         dispatch(getSubscriptionsListApi());
     }, []);
 
@@ -55,7 +50,7 @@ const AddClient = () => {
     };
 
     const handleCancelClick = () => {
-        navigation("/caclient");
+        navigation("/associatePartners");
     };
 
     useEffect(() => {
@@ -69,7 +64,7 @@ const AddClient = () => {
 
     useEffect(() => {
         if (success) {
-            navigation("/caclient");
+            navigation("/associatePartners");
         }
     }, [success]);
 
@@ -91,17 +86,10 @@ const AddClient = () => {
     );
 
     const onChange = (key: number, formValue: any) => {
-        if (key === 8) {
+        if (key === 4) {
             const payload = { ...clientValue, ...formValue };
-            delete payload.subscriptionPlan;
-            delete payload.startDate;
-            delete payload.paymentTerms;
-            delete payload.paymentMode;
-            delete payload.instrumentType;
-            delete payload.instrumentDate;
-            delete payload.instrumentId;
-            delete payload.instrumentAmount;
-            payload.clientType = clientType;
+
+            payload.partnerType = partnerType;
             // @ts-ignore
             dispatch(createClientReducersApi({ payload: payload }));
         } else {
@@ -112,72 +100,49 @@ const AddClient = () => {
     const items = [
         {
             key: 1,
-            label: `Basic Info`,
+            label: `Firm Info`,
             children: (
                 <BasicInfo
                     onChange={onChange}
                     setFormValue={setFormValue}
-                    clientType={clientType}
+                    partnerType={partnerType}
                 />
             ),
         },
-        // {
-        //   key: 2,
-        //   label: `Branches`,
-        //   children: <Branches onChange={onChange} setFormValue={setFormValue} />,
-        // },
-        // {
-        //   key: 3,
-        //   label: `Bank Details`,
-        //   children: <BankDetails onChange={onChange} setFormValue={setFormValue} />,
-        // },
         {
-            key: 4,
+            key: 2,
             label: `Owner Details`,
             children: (
                 <OwnerInfo
                     onChange={onChange}
                     setFormValue={setFormValue}
-                    clientType={clientType}
+                    partnerType={partnerType}
                 />
             ),
         },
         {
-            key: 5,
-            label: `Subscription`,
+            key: 3,
+            label: `Revenue Program`,
             children: (
-                <SubscriptionTabAddClient
+                <OwnerInfo
                     onChange={onChange}
                     setFormValue={setFormValue}
+                    partnerType={partnerType}
                 />
             ),
         },
         {
-            key: 6,
-            label: `Payment`,
+            key: 4,
+            label: `Bank Details`,
             children: (
-                <PaymentTabAddClient
+                <BankDetails
                     onChange={onChange}
                     setFormValue={setFormValue}
+                    partnerType={partnerType}
                 />
             ),
         },
-        // {
-        //   key: 7,
-        //   label: `Vault`,
-        //   children: (
-        //     <VaultTabAddClient
-        //       onChange={onChange}
-        //       setFormValue={setFormValue}
-        //       loading={loading}
-        //     />
-        //   ),
-        // },
     ];
-
-    const handleBulkClick = () => {
-        navigation("/caclient/createbulk");
-    };
 
     return (
         <div
@@ -198,15 +163,22 @@ const AddClient = () => {
                                 styles.addPromoCodeLabel
                             )}
                         >
-                            Add Client
+                            Add New Associate P
                         </h5>
                     </div>
                     <div className="ms-auto z-index-1">
                         <Button
-                            onClick={handleBulkClick}
+                            onClick={handleCancelClick}
                             className={styles.newPromoBtn}
+                            danger
                         >
-                            Add In Bulk
+                            <Icon
+                                className={styles.cancelBtnIcon}
+                                name="cross"
+                                height={18}
+                                width={18}
+                            />
+                            Cancel
                         </Button>
                     </div>
                 </div>
@@ -232,7 +204,7 @@ const AddClient = () => {
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
-                                name="clientType"
+                                name="partnerType"
                                 className="customAddClientSelectOptions"
                                 rules={[
                                     {
@@ -259,7 +231,7 @@ const AddClient = () => {
                                     ]}
                                     placeholder="Select Type"
                                     onChange={(value: any) =>
-                                        setClientType(value)
+                                        setPartnerType(value)
                                     }
                                 />
                             </Form.Item>
@@ -269,7 +241,7 @@ const AddClient = () => {
 
                 {!(getClientsListLoading && clientId) && (
                     <Tabs
-                        tabBarExtraContent={operations}
+                        // tabBarExtraContent={operations}
                         className="subscriptionTabs"
                         defaultActiveKey="1"
                         activeKey={activeTab}
@@ -282,4 +254,4 @@ const AddClient = () => {
     );
 };
 
-export default AddClient;
+export default AddAssociatePartners;
