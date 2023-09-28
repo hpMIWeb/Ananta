@@ -135,7 +135,11 @@ const AddClient = () => {
             key: 4,
             label: `Owner Details`,
             children: (
-                <OwnerInfo onChange={onChange} setFormValue={setFormValue} />
+                <OwnerInfo
+                    onChange={onChange}
+                    setFormValue={setFormValue}
+                    clientType={clientType}
+                />
             ),
         },
         {

@@ -38,16 +38,16 @@ const Employees = () => {
         dispatch(getEmployeesReducersApi());
     }, []);
 
-    const cardDesc = () => {
+    const cardDesc = (cardData: any) => {
         return [
             {
                 iconName: "client",
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Employees
+                            Department
                         </p>
-                        <p className="semiBold">8/10</p>
+                        <p className="semiBold"></p>
                     </>
                 ),
             },
@@ -177,9 +177,9 @@ const Employees = () => {
                             planNameLabelBlue
                             column={3}
                             cardDetails={card}
-                            titleDesc="Beatrice"
-                            planNameLabel="Firm GST"
-                            planName="First Firm"
+                            titleDesc={card.employeeId}
+                            // planNameLabel={card.employeeId}
+                            planName={card.firstName + " " + card.lastName}
                             cardDesc={cardDesc}
                             isProfileViewAction
                         />

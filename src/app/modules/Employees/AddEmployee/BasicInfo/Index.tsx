@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { DatePicker, Form, InputNumber, Select } from "antd";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 import styles from "./basicInfo.module.scss";
 import Input from "../../../../../components/Input/Index";
@@ -431,9 +431,9 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                         ]}
                                     >
                                         <PhoneInput
-                                            containerClass="phoneNumberContainerClassInput"
-                                            countryCode="in"
                                             placeholder="Mobile"
+                                            containerClass="phoneNumberContainerClassInput"
+                                            country="in"
                                             onChange={(data: any) => {
                                                 const { hasError } = data;
                                                 form.setFieldsValue({
@@ -484,18 +484,13 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                         ]}
                                     >
                                         <PhoneInput
+                                            placeholder="Mobile"
                                             containerClass="phoneNumberContainerClassInput"
-                                            countryCode="in"
-                                            placeholder="Alt Mobile"
+                                            country="in"
                                             onChange={(data: any) => {
-                                                const {
-                                                    hasError,
-                                                    phoneNumber,
-                                                    countryCode,
-                                                } = data;
+                                                const { hasError } = data;
                                                 form.setFieldsValue({
-                                                    alternateMobile_hasError:
-                                                        hasError,
+                                                    mobile_hasError: hasError,
                                                 });
                                             }}
                                         />

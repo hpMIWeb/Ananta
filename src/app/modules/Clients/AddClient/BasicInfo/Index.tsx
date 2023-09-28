@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import styles from "./basicInfo.module.scss";
 import { Form, Select } from "antd";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 import Input from "../../../../../components/Input/Index";
 import TextArea from "antd/es/input/TextArea";
@@ -344,7 +344,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                                     </Form.Item>
                                 </div>
                             </div>
-                            {/* <div
+                            <div
                                 className={classNames(
                                     "col-12 col-md-4 col-lg-4",
                                     styles.fieldPadding8
@@ -365,12 +365,11 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                                                 message:
                                                     "Please Enter your Mobile!",
                                             },
-                                            
                                         ]}
                                     >
                                         <PhoneInput
                                             containerClass="phoneNumberContainerClassInput"
-                                            country="US"
+                                            country="in"
                                             placeholder="Mobile"
                                             onChange={(data: any) => {
                                                 const { hasError } = data;
@@ -381,7 +380,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                                         />
                                     </Form.Item>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                         <div className="row"></div>
                     </div>
@@ -580,21 +579,12 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                     >
                         <div>
                             <label className="form-label">
-                                File Number
+                                Referred BY
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
-                            <Form.Item
-                                name="fileNumber"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Please Enter your File Number!",
-                                    },
-                                ]}
-                            >
+                            <Form.Item name=" referredBy">
                                 <Input
-                                    placeholder="File Number"
+                                    placeholder="Referred By"
                                     className="customAddFormInputText"
                                 />
                             </Form.Item>
