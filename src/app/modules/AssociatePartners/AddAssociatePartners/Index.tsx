@@ -163,7 +163,7 @@ const AddAssociatePartners = () => {
                                 styles.addPromoCodeLabel
                             )}
                         >
-                            Add New Associate P
+                            Add New Associate Partner
                         </h5>
                     </div>
                     <div className="ms-auto z-index-1">
