@@ -109,9 +109,9 @@ const Employees = () => {
 
     const clientSortLabel = {
         Name: { asc: "Ascending", desc: "Descending" },
-        Employees: { asc: "Ascending", desc: "Descending" },
+        Client: { asc: "Ascending", desc: "Descending" },
         "Transactions Processed": { asc: "Ascending", desc: "Descending" },
-        //Employees: { asc: "Highest", desc: "Lowest" },
+        Employees: { asc: "Ascending", desc: "Descending" },
         Storage: { asc: "Highest", desc: "Lowest" },
     };
 
@@ -161,7 +161,7 @@ const Employees = () => {
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
                         sortState={sortState}
-                        //setSortState={setSortState}
+                        setSortState={setSortState}
                     />
                 </div>
                 {getEmployeesLoading && <CardContentSkeletonLoader />}
