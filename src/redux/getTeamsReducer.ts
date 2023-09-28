@@ -4,11 +4,11 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { apiEndpoint } from "../utils/helpers";
 
-export const getRolesReducersApi = createAsyncThunk(
-    "getRolesReducersApi",
+export const getTeamReducersApi = createAsyncThunk(
+    "getTeamReducersApi",
     async (payload) => {
         const jwtToken = Cookies.get("jwt_token");
-        const response = await axios.get(`${apiEndpoint}role/`, {
+        const response = await axios.get(`${apiEndpoint}team/get-team`, {
             headers: {
                 Authorization: `Bearer ${jwtToken}`,
             },
@@ -18,8 +18,8 @@ export const getRolesReducersApi = createAsyncThunk(
     }
 );
 
-const getRolesReducersSlice = createSlice({
-    name: "getRolesReducersApi",
+const getTeamReducersSlice = createSlice({
+    name: "getTeamReducersApi",
     initialState: {
         data: {},
         loading: false,
@@ -29,21 +29,21 @@ const getRolesReducersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getRolesReducersApi.pending, (state) => {
+            .addCase(getTeamReducersApi.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(getRolesReducersApi.fulfilled, (state, action) => {
+            .addCase(getTeamReducersApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.data = action.payload.payload?.allRole;
+                state.data = action.payload.payload?.allTeam;
             })
-            .addCase(getRolesReducersApi.rejected, (state, action) => {
+            .addCase(getTeamReducersApi.rejected, (state: any, action) => {
                 state.loading = false;
                 state.success = false;
                 state.error = action.error.message;
-                toast.error("An error occurred during Addons List."); // Display error toast
+                toast.error("An error occurred during Team List."); // Display error toast
             });
     },
 });
 
-export default getRolesReducersSlice.reducer;
+export default getTeamReducersSlice.reducer;

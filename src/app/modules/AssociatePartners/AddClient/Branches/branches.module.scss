@@ -1,0 +1,34 @@
+@import "../../../../../styles/variables.scss";
+.featureCheckBoxLabel {
+  line-height: 1.45rem;
+  font-size: 0.8333333333rem !important;
+  letter-spacing: 0.02em;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem;
+  font-family: $btn-font-family;
+  color: var(--falcon-body-color);
+  padding-left: 7px;
+}
+.featureCheckBoxLabelWrapper {
+  margin-bottom: 6px;
+}
+.branchesContentWrapper {
+  margin-top: 16px;
+}
+.branchFieldWrapper {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.fieldPadding8 {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.deleteCardBtn {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .branchInfoCard{
+    margin-bottom: 28px !important;
+  }

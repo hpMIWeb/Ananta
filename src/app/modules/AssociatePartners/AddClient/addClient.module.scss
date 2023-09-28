@@ -1,0 +1,64 @@
+@import "../../../../styles/variables.scss";
+
+.addPromoCodeCardWrapper{
+    border: 0px solid var(--falcon-card-border-color) !important;
+    border-radius: 10px !important;
+}
+.promoCodeCardHeaderBox{
+    padding: 16px 20px !important;
+    border-bottom: 0px !important;
+    position: sticky !important;
+    top: 70px;
+    z-index: 10;
+    box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+}
+.addPromoCodeLabel{
+    z-index: 1;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: $btn-font-family ;
+}
+.addPromoCodeImg{
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    backface-visibility: hidden;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+.addClientDetailBox{
+    padding: 20px;
+    background-color: var(--falcon-light-rgb);
+}
+.cancelBtnIcon{
+    transform: rotate(45deg);
+    margin-right: 2px;
+}
+.cancelAddClientBtn{
+    margin-bottom: 5px;
+}
+.newPromoBtn {
+    z-index: 1;
+    display: flex;
+    column-gap: 4px;
+    align-items: center;
+    color: #fff;
+    border-color: #fff;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    padding: 5px 16px;
+    font-weight: 500;
+    &:hover {
+      color: #fff !important;
+      background-color: #2c7be5 !important;
+      border-color: #2c7be5 !important;
+    }
+  }

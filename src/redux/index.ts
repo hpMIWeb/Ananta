@@ -15,24 +15,26 @@ import createEmployeeReducers from "./createEmployeeReducers";
 import getRolesReducers from "./getRolesReducers";
 import getRoleTypeReducers from "./getRoleTypeReducers";
 import getDepartmentsReducers from "./getDepartmentsReducers";
+import getTeamsReducer from "./getTeamsReducer";
 
 export const store = configureStore({
-  reducer: {
-    login: loginReducers,
-    userInfo: getUserInfoReducers,
-    getSubscriptionsListApi: getSubscriptionsListSlice,
-    createSubscriptions: createSubscriptionsReducersSlice,
-    deleteSubscriptions: deleteSubscriptionsReducersSlice,
-    getAddonsList: getAddonsReducersListSlice,
-    createAddon: createAddonsReducersReducersSlice,
-    getPromocodeList: getPromocodeReducersListSlice,
-    createPromoCode: createPromoCodeReducers,
-    getClients : getClientsReducers,
-    getEmployees : getEmployeesReducers,
-    getRoles : getRolesReducers,
-    getRoleType : getRoleTypeReducers,
-    getDepartments : getDepartmentsReducers,
-    createClient : createClientReducers,
-    createEmployee : createEmployeeReducers,
-  },
+    reducer: {
+        login: loginReducers,
+        userInfo: getUserInfoReducers,
+        getSubscriptionsListApi: getSubscriptionsListSlice,
+        createSubscriptions: createSubscriptionsReducersSlice,
+        deleteSubscriptions: deleteSubscriptionsReducersSlice,
+        getAddonsList: getAddonsReducersListSlice,
+        createAddon: createAddonsReducersReducersSlice,
+        getPromocodeList: getPromocodeReducersListSlice,
+        createPromoCode: createPromoCodeReducers,
+        getClients: getClientsReducers,
+        getEmployees: getEmployeesReducers,
+        getRoles: getRolesReducers,
+        getRoleType: getRoleTypeReducers,
+        getDepartments: getDepartmentsReducers,
+        createClient: createClientReducers,
+        createEmployee: createEmployeeReducers,
+        getTeams: getTeamsReducer,
+    },
 });

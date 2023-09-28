@@ -11,6 +11,8 @@ const initialBranchInfoData = [{ type: "default", index: 0 }];
 
 const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
     const getRolesList = useSelector((state: any) => state.getRoles.data) || [];
+    const getTeamList = useSelector((state: any) => state.getTeams.data) || [];
+    console.log("getTeamList", getTeamList);
     const getRoleTypesList =
         useSelector((state: any) => state.getRoleType.data) || [];
     const getDepartmentsList =
@@ -113,20 +115,12 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                     >
                                         <Select
                                             placeholder="Select Team"
-                                            options={[
-                                                {
-                                                    label: "Team 1",
-                                                    value: "team1",
-                                                },
-                                                {
-                                                    label: "Team 2",
-                                                    value: "team2",
-                                                },
-                                                {
-                                                    label: "Team 3",
-                                                    value: "team3",
-                                                },
-                                            ]}
+                                            options={getTeamList.map(
+                                                (team: any) => ({
+                                                    label: team?.name,
+                                                    value: team?._id,
+                                                })
+                                            )}
                                         />
                                     </Form.Item>
                                 </div>

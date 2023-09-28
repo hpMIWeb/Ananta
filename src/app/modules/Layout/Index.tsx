@@ -71,7 +71,23 @@ const items: MenuItem[] = [
             ),
         ]
     ),
-
+    getItem(
+        "Associate Partners",
+        "29",
+        <Icon name="management" width={17.5} height={14} />,
+        [
+            getItem(
+                "Dashboard",
+                "30",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+            getItem(
+                "Settings",
+                "31",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+        ]
+    ),
     getItem("Master", "12", <Icon name="management" width={16} height={14} />, [
         getItem(
             "Department",
@@ -157,27 +173,6 @@ const LayoutComponent = ({
         return <Outlet />;
     }
 
-    // const onMenuClick: MenuClickEventHandler = (event) => {
-    //   switch (event.key) {
-    //     case "1":
-    //       navigate("/");
-    //       return;
-    //     case "2":
-    //       navigate("/subscription");
-    //       return;
-    //     case "3":
-    //       navigate("/promocodes");
-    //       return;
-    //     case "4":
-    //       navigate("/caclient");
-    //       return;
-    //     case "5":
-    //       navigate("/employee");
-    //       return;
-    //   }
-    //   // Your code here
-    // };
-
     const onMenuClick: MenuClickEventHandler = (event) => {
         switch (event.key) {
             case "1":
@@ -257,6 +252,15 @@ const LayoutComponent = ({
                 return;
             case "28":
                 navigate("/employee");
+                return;
+            case "29":
+                navigate("/associatePartners");
+                return;
+            case "30":
+                navigate("/associatePartners");
+                return;
+            case "31":
+                navigate("/associatePartners");
                 return;
         }
     };

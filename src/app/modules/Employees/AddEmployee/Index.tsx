@@ -19,6 +19,7 @@ import AssignClient from "./AssignClient/Index";
 import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
 import { getRolesReducersApi } from "../../../../redux/getRolesReducers";
 import { getRoleTypeReducersApi } from "../../../../redux/getRoleTypeReducers";
+import { getTeamReducersApi } from "../../../../redux/getTeamsReducer";
 import { getDepartmentsReducersApi } from "../../../../redux/getDepartmentsReducers";
 import { useAppDispatch } from "../../../states/store";
 
@@ -48,6 +49,7 @@ const AddEmployee = () => {
         dispatch(getRoleTypeReducersApi());
         dispatch(getDepartmentsReducersApi());
         dispatch(getClientsReducersApi());
+        dispatch(getTeamReducersApi());
         if (!getEmployeesListSuccess) {
             dispatch(getEmployeesReducersApi());
         }
@@ -120,7 +122,7 @@ const AddEmployee = () => {
         },
         {
             key: 2,
-            label: `Organisation Details`,
+            label: `Organization Details`,
             children: (
                 <OrganisationDetails
                     onChange={onChange}
