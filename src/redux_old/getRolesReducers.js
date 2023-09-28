@@ -35,7 +35,7 @@ const getRolesReducersSlice = createSlice({
             .addCase(getRolesReducersApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.data = action.payload.payload?.allRole;
+                state.data = action.payload.payload;
             })
             .addCase(getRolesReducersApi.rejected, (state, action) => {
                 state.loading = false;

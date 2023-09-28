@@ -35,7 +35,7 @@ const getTeamReducersSlice = createSlice({
             .addCase(getTeamReducersApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.data = action.payload.payload?.allTeam;
+                state.data = action.payload.payload;
             })
             .addCase(getTeamReducersApi.rejected, (state: any, action) => {
                 state.loading = false;

@@ -21,6 +21,7 @@ import { getRolesReducersApi } from "../../../../redux/getRolesReducers";
 import { getRoleTypeReducersApi } from "../../../../redux/getRoleTypeReducers";
 import { getTeamReducersApi } from "../../../../redux/getTeamsReducer";
 import { getDepartmentsReducersApi } from "../../../../redux/getDepartmentsReducers";
+import { getDesignationReducersApi } from "../../../../redux/getDesignationReducers";
 import { useAppDispatch } from "../../../states/store";
 
 const AddEmployee = () => {
@@ -50,6 +51,7 @@ const AddEmployee = () => {
         dispatch(getDepartmentsReducersApi());
         dispatch(getClientsReducersApi());
         dispatch(getTeamReducersApi());
+        dispatch(getDesignationReducersApi());
         if (!getEmployeesListSuccess) {
             dispatch(getEmployeesReducersApi());
         }
@@ -96,6 +98,7 @@ const AddEmployee = () => {
     );
 
     const onChange = (key: any, formInfo: any) => {
+        console.log("key", key);
         if (key === 6) {
             const payload = { ...employeeDetails, ...formInfo };
             dispatch(

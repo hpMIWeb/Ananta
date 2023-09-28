@@ -16,6 +16,7 @@ import getRolesReducers from "./getRolesReducers";
 import getRoleTypeReducers from "./getRoleTypeReducers";
 import getDepartmentsReducers from "./getDepartmentsReducers";
 import getTeamsReducer from "./getTeamsReducer";
+import getDesignationReducers from "./getDesignationReducers";
 
 export const store = configureStore({
     reducer: {
@@ -36,5 +37,6 @@ export const store = configureStore({
         createClient: createClientReducers,
         createEmployee: createEmployeeReducers,
         getTeams: getTeamsReducer,
+        getDesignation: getDesignationReducers,
     },
 });

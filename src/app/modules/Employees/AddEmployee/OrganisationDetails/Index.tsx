@@ -12,14 +12,15 @@ const initialBranchInfoData = [{ type: "default", index: 0 }];
 const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
     const getRolesList = useSelector((state: any) => state.getRoles.data) || [];
     const getTeamList = useSelector((state: any) => state.getTeams.data) || [];
-    console.log("getTeamList", getTeamList);
+    const getDesignationList =
+        useSelector((state: any) => state.getDesignation.data) || [];
+
     const getRoleTypesList =
         useSelector((state: any) => state.getRoleType.data) || [];
     const getDepartmentsList =
         useSelector((state: any) => state.getDepartments.data) || [];
     const [branchInfoData, setBranchInfoData] = useState<any>([]);
     const [branchChecked, setBranchChecked] = useState(false);
-    console.log("getDepartmentsList", getDepartmentsList);
     const onFinish = (value: any) => {
         setEmployeeInfo(value);
         onChange(3);
@@ -144,10 +145,10 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                     >
                                         <Select
                                             placeholder="Select Designation"
-                                            options={getRoleTypesList.map(
-                                                (role: any) => ({
-                                                    label: role?.role_type,
-                                                    value: role?._id,
+                                            options={getDesignationList.map(
+                                                (designation: any) => ({
+                                                    label: designation?.name,
+                                                    value: designation?._id,
                                                 })
                                             )}
                                         />
@@ -217,11 +218,10 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                             },
                                         ]}
                                     >
-                                        <InputNumber
+                                        <Input
                                             style={{ width: "100%" }}
                                             className="customInputNumber"
                                             placeholder="Aadhar Number"
-                                            min={0}
                                         />
                                     </Form.Item>
                                 </div>

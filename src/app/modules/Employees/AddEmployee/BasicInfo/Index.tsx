@@ -107,24 +107,25 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
     }, []);
 
     const onFinish = (value: any) => {
-        const mobilePhoneNumber = value.mobile.phoneNumber;
-        const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
-        const combinedMobile = `${
-            value.mobile.validData.countryCode || "+91"
-        }${formattedMobilePhoneNumber}`;
+        // const mobilePhoneNumber = value.mobile.phoneNumber;
+        // const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
+        // const combinedMobile = `${
+        //     value.mobile.validData.countryCode || "+91"
+        // }${formattedMobilePhoneNumber}`;
 
-        const alternateMobilePhoneNumber = value.alternateMobile.phoneNumber;
-        const combinedAlternateMobile = alternateMobilePhoneNumber
-            ? `${
-                  value.alternateMobile.countryCode || "+91"
-              }${alternateMobilePhoneNumber}`
-            : null;
+        // const alternateMobilePhoneNumber = value.alternateMobile.phoneNumber;
+        // const combinedAlternateMobile = alternateMobilePhoneNumber
+        //     ? `${
+        //           value.alternateMobile.countryCode || "+91"
+        //       }${alternateMobilePhoneNumber}`
+        //     : null;
         setEmployeeInfo({
             ...value,
             employeeId: `${value.employeeId}`,
-            mobile: combinedMobile?.replace(/-/g, ""),
-            alternateMobile: combinedAlternateMobile?.replace(/-/g, ""),
+            mobile: value.mobile.phoneNumber,
+            alternateMobile: value.alternateMobile.phoneNumber,
         });
+        console.log("ONvnjnjnk", value.alternateMobile.phoneNumber);
         onChange(2);
     };
 
