@@ -58,7 +58,8 @@ const BankInfoCard = () => {
                                 </Form.Item>
                             </div>
                         </div>
-
+                    </div>{" "}
+                    <div className={classNames("row", styles.formFieldWrapper)}>
                         <div
                             className={classNames(
                                 "col-12 col-md-4 col-lg-4",
@@ -134,6 +135,8 @@ const BankInfoCard = () => {
                                 </Form.Item>
                             </div>
                         </div>
+                    </div>
+                    <div className={classNames("row", styles.formFieldWrapper)}>
                         <div
                             className={classNames(
                                 "col-12 col-md-4 col-lg-4",

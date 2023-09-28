@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import styles from "./emergencyInfoCardBox.module.scss";
 import { Form, InputNumber } from "antd";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 import Input from "../../../../../components/Input/Index";
 
 const EmergencyInfoCardBox = ({ form }: any) => {
@@ -110,7 +111,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                             >
                                 <PhoneInput
                                     containerClass="phoneNumberContainerClassInput"
-                                    countryCode="in"
+                                    country="in"
                                     placeholder="Mobile"
                                     onChange={(data: any) => {
                                         const { hasError } = data;
@@ -165,7 +166,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                             >
                                 <PhoneInput
                                     containerClass="phoneNumberContainerClassInput"
-                                    countryCode="in"
+                                    country="in"
                                     placeholder="Alt Mobile"
                                     onChange={(data: any) => {
                                         const {

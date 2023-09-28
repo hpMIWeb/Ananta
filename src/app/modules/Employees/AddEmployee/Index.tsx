@@ -101,6 +101,8 @@ const AddEmployee = () => {
         console.log("key", key);
         if (key === 6) {
             const payload = { ...employeeDetails, ...formInfo };
+            console.log("payload", payload);
+
             dispatch(
                 createEmployeeReducersApi({
                     payload: payload,
@@ -133,16 +135,16 @@ const AddEmployee = () => {
                 />
             ),
         },
-        {
-            key: 3,
-            label: `Assign Clients`,
-            children: (
-                <AssignClient
-                    onChange={onChange}
-                    setEmployeeInfo={setEmployeeInfo}
-                />
-            ),
-        },
+        // {
+        //     key: 3,
+        //     label: `Assign Clients`,
+        //     children: (
+        //         <AssignClient
+        //             onChange={onChange}
+        //             setEmployeeInfo={setEmployeeInfo}
+        //         />
+        //     ),
+        // },
         {
             key: 4,
             label: `Bank Details`,
