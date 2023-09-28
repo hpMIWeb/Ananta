@@ -23,7 +23,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
     const [branchChecked, setBranchChecked] = useState(false);
     const onFinish = (value: any) => {
         setEmployeeInfo(value);
-        onChange(4);
+        onChange(3);
     };
 
     const addMoreOwnerCard = () => {

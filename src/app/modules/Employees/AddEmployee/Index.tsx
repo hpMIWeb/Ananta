@@ -135,16 +135,16 @@ const AddEmployee = () => {
                 />
             ),
         },
-        // {
-        //     key: 3,
-        //     label: `Assign Clients`,
-        //     children: (
-        //         <AssignClient
-        //             onChange={onChange}
-        //             setEmployeeInfo={setEmployeeInfo}
-        //         />
-        //     ),
-        // },
+        {
+            key: 3,
+            label: `Assign Clients`,
+            children: (
+                <AssignClient
+                    onChange={onChange}
+                    setEmployeeInfo={setEmployeeInfo}
+                />
+            ),
+        },
         {
             key: 4,
             label: `Bank Details`,
