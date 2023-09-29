@@ -112,7 +112,7 @@ const AddClient = () => {
     const items = [
         {
             key: 1,
-            label: `Basic Info`,
+            label: `Firm Info`,
             children: (
                 <BasicInfo
                     onChange={onChange}
@@ -133,7 +133,7 @@ const AddClient = () => {
         // },
         {
             key: 4,
-            label: `Owner Details`,
+            label: `Owner Info`,
             children: (
                 <OwnerInfo
                     onChange={onChange}
