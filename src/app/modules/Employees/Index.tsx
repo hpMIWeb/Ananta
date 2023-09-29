@@ -9,14 +9,16 @@ import { useNavigate } from "react-router-dom";
 import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
 import NoDataAvailable from "../../../components/NoDataAvailable/Index";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import { createEmployeeReducersApi } from "../../../redux/createEmployeeReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
+import { useAppDispatch } from "../../states/store";
 
 const Employees = () => {
     const navigation = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const getEmployeesList = useSelector(
         (state: any) => state.getEmployees.data
     );
@@ -38,6 +40,15 @@ const Employees = () => {
         dispatch(getEmployeesReducersApi());
     }, []);
 
+    const onChangeActiveClick = (e: any, id: any) => {
+        console.log("EMomklfnvl");
+        dispatch(
+            createEmployeeReducersApi({
+                payload: { status: !!e ? "Active" : "Inactive" },
+                subscriptionId: id,
+            })
+        );
+    };
     const cardDesc = (cardData: any) => {
         return [
             {
@@ -217,6 +228,7 @@ const Employees = () => {
                             planName={card.firstName + " " + card.lastName}
                             cardDesc={cardDesc}
                             isProfileViewAction
+                            onChangeActiveClick={onChangeActiveClick}
                         />
                     ))}
 

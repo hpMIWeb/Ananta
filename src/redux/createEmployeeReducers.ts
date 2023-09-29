@@ -19,15 +19,11 @@ export const createEmployeeReducersApi = createAsyncThunk(
                       Authorization: `Bearer ${jwtToken}`,
                   },
               })
-            : await axios.put(
-                  `${apiEndpoint}admin/employee-signup/id=${subscriptionId}`,
-                  payload,
-                  {
-                      headers: {
-                          Authorization: `Bearer ${jwtToken}`,
-                      },
-                  }
-              );
+            : await axios.put(`${apiEndpoint}admin/update-profile`, payload, {
+                  headers: {
+                      Authorization: `Bearer ${jwtToken}`,
+                  },
+              });
         return response.data;
     }
 );

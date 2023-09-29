@@ -25,15 +25,11 @@ export const createAssociatePartnerReducersApi = createAsyncThunk(
                       },
                   }
               )
-            : await axios.put(
-                  `${apiEndpoint}admin/associated-partner-signup/id=${subscriptionId}`,
-                  payload,
-                  {
-                      headers: {
-                          Authorization: `Bearer ${jwtToken}`,
-                      },
-                  }
-              );
+            : await axios.put(`${apiEndpoint}admin/update-profile`, payload, {
+                  headers: {
+                      Authorization: `Bearer ${jwtToken}`,
+                  },
+              });
         return response.data;
     }
 );

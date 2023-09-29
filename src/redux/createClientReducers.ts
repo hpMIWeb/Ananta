@@ -12,7 +12,7 @@ interface Payload {
 export const createClientReducersApi = createAsyncThunk(
     "createClientReducers",
     async ({ payload, subscriptionId }: Payload) => {
-        console.log(payload)
+        console.log(payload);
         const jwtToken = Cookies.get("jwt_token");
         const response = !subscriptionId
             ? await axios.post(`${apiEndpoint}admin/client-signup`, payload, {
@@ -20,15 +20,11 @@ export const createClientReducersApi = createAsyncThunk(
                       Authorization: `Bearer ${jwtToken}`,
                   },
               })
-            : await axios.put(
-                  `${apiEndpoint}admin/client-signup/id=${subscriptionId}`,
-                  payload,
-                  {
-                      headers: {
-                          Authorization: `Bearer ${jwtToken}`,
-                      },
-                  }
-              );
+            : await axios.put(`${apiEndpoint}admin/update-profile`, payload, {
+                  headers: {
+                      Authorization: `Bearer ${jwtToken}`,
+                  },
+              });
         return response.data;
     }
 );
