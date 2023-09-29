@@ -65,14 +65,14 @@ const Subscription = () => {
                             <Button
                                 className={classNames(
                                     styles.newSubscriptionBtn,
-                                    "me-1 mb-1 mt-1 mb-2"
+                                    "me-3"
                                 )}
                                 onClick={handleNewClick}
                                 type="primary"
-                                style={{ marginTop: "-10px" }}
+                                style={{ marginBottom: "12px" }}
                             >
                                 <Icon name="plus" width={12.25} height={14} />
-                                 New
+                                New
                             </Button>
                         </div>
                     }

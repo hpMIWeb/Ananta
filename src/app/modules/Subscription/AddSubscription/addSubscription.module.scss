@@ -1,78 +1,81 @@
 @import "../../../../styles/variables.scss";
 .addSubscriptionImg {
-  position: absolute;
-  width: 100%;
-  min-height: 100%;
-  top: 0;
-  left: 0;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-  backface-visibility: hidden;
-  background-repeat: no-repeat;
-  z-index: 0;
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    backface-visibility: hidden;
+    background-repeat: no-repeat;
+    z-index: 0;
 }
 .addSubscriptionLabel {
-  z-index: 1;
-  font-size: 1.2rem;
-  font-weight: 500;
-  line-height: 1.2;
-  font-family: $btn-font-family;
+    z-index: 1;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: $btn-font-family;
 }
 .subscriptionCardHeaderBox {
-  padding: 16px 20px !important;
-  border-bottom: 0px !important;
-  position: sticky !important;
-  top: 70px;
-  z-index: 10;
-  box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+    padding: 16px 20px !important;
+    border-bottom: 0px !important;
+    position: sticky !important;
+    top: 70px;
+    z-index: 10;
+    box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1),
+        0 3px 6px 0 rgba(0, 0, 0, 0.07);
 }
 .customAddFormWrapper {
-  padding: 20px;
-  background-color: var(--falcon-light-rgb);
+    padding: 20px;
+    background-color: var(--falcon-light-rgb);
 }
 .formLabelWrapper {
-  padding-left: 8px !important;
-  padding-right: 8px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
 }
 
 .featureCheckBoxWrapper {
-  padding: 8px 0;
-  margin-bottom: 24px;
+    padding: 8px 0;
+    margin-bottom: 24px;
 }
 .featureCheckBoxLabel {
-  line-height: 1.45rem;
-  font-size: 0.8333333333rem !important;
-  letter-spacing: 0.02em;
-  font-weight: 500 !important;
-  margin-bottom: 0.5rem;
-  font-family: $btn-font-family;
-  color: var(--falcon-body-color);
-  padding-left: 7px;
+    line-height: 1.45rem;
+    font-size: 0.8333333333rem !important;
+    letter-spacing: 0.02em;
+    font-weight: 500 !important;
+    margin-bottom: 0.5rem;
+    font-family: $btn-font-family;
+    color: var(--falcon-body-color);
+    padding-left: 7px;
+    margin-right: 5px;
 }
 .featureCheckBoxLabelWrapper {
-  margin-bottom: 5.5px;
+    margin-bottom: 5.5px;
 }
 .addSubscriptionCardWrapper {
-  border: 0px solid var(--falcon-card-border-color) !important;
-  border-radius: 10px !important;
+    border: 0px solid var(--falcon-card-border-color) !important;
+    border-radius: 10px !important;
 }
 .rupeesInputIcon {
-  position: absolute;
-  left: -20px;
-  font-size: 16px;
-  letter-spacing: 0.02em;
-  font-weight: 500 !important;
-  color: var(--falcon-body-color);
-  path {
-    fill: var(--falcon-body-color) !important;
-  }
+    position: absolute;
+    left: -20px;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    font-weight: 500 !important;
+    color: var(--falcon-body-color);
+    path {
+        fill: var(--falcon-body-color) !important;
+    }
 }
 .deleteBtn {
-  border: none !important;
-  margin-right: 20px;
-  &:hover {
-    background: transparent !important;
-    background-color: #ff7875 !important;
-  }
+    border: none !important;
+    margin-right: 20px;
+    background-color: gray;
+    &:hover {
+        background: transparent !important;
+        background-color: gray !important;
+    }
 }
