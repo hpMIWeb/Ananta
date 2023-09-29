@@ -17,6 +17,8 @@ import getRoleTypeReducers from "./getRoleTypeReducers";
 import getDepartmentsReducers from "./getDepartmentsReducers";
 import getTeamsReducer from "./getTeamsReducer";
 import getDesignationReducers from "./getDesignationReducers";
+import getAssociatePaetnerReducers from "./getAssociatePartnerReducers";
+import getAssociatePartnerReducers from "./getAssociatePartnerReducers";
 
 export const store = configureStore({
     reducer: {
@@ -38,5 +40,6 @@ export const store = configureStore({
         createEmployee: createEmployeeReducers,
         getTeams: getTeamsReducer,
         getDesignation: getDesignationReducers,
+        getAssociatePartner: getAssociatePartnerReducers,
     },
 });

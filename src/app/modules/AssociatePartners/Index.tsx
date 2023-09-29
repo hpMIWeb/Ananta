@@ -10,7 +10,7 @@ import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
 import NoDataAvailable from "../../../components/NoDataAvailable/Index";
 import { useSelector } from "react-redux";
-import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getAssociatePartnerReducersApi } from "../../../redux/getAssociatePartnerReducers";
 import { createAssociatePartnerReducersApi } from "../../../redux/createAssociatePartnerReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
@@ -20,9 +20,11 @@ import { useAppDispatch } from "../../states/store";
 const AssociatePartners = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
-    const getClientsList = useSelector((state: any) => state.getClients.data);
-    const getClientsLoading = useSelector(
-        (state: any) => state.getClients.loading
+    const getAssociatePartnerList = useSelector(
+        (state: any) => state.getAssociatePartner.data
+    );
+    const getAssociatePartnerLoading = useSelector(
+        (state: any) => state.getAssociatePartner.loading
     );
     const [searchValue, setSearchValue] = useState("");
     const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
@@ -59,7 +61,7 @@ const AssociatePartners = () => {
     };
     useEffect(() => {
         // @ts-ignore
-        dispatch(getClientsReducersApi());
+        dispatch(getAssociatePartnerReducersApi());
     }, []);
 
     const cardDesc = (cardInfo: any) => {
@@ -88,50 +90,13 @@ const AssociatePartners = () => {
                     </>
                 ),
             },
+
             {
-                iconName: "transaction",
+                iconName: "sale",
                 descComponent: (
                     <>
-                        <p className="mb-0 fs--1 description-label">
-                            Transaction Credits
-                        </p>
-                        <p className="semiBold">12423/15000</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "storage",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Storage</p>
+                        <p className="mb-0 fs--1 description-label">Sales</p>
                         <p className="semiBold">2 / 4 GB</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "subscribe",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Associated Partners
-                        </p>
-                        <p className="semiBold">3</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "cash",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Gold Subscription
-                        </p>
-                        <p className="semiBold">
-                            Expire on -{" "}
-                            {dayjs(cardInfo.subscriptionDetails.endDate).format(
-                                "YYYY-MM-DD"
-                            )}
-                        </p>
                     </>
                 ),
             },
@@ -188,20 +153,19 @@ const AssociatePartners = () => {
             <div className={styles.promoCodesBottomWrapper}>
                 <div style={{ marginBottom: 24 }}>
                     <SearchFilterBar
-                        defaultSortLabel={clientSortLabel}
-                        showAddOn={true}
-                        addonOption={addonOption}
-                        initialAddOnsValue="All Partner"
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
                         sortState={sortState}
+                        showAddOn={true}
+                        addonOption={addonOption}
+                        initialAddOnsValue="All Partner"
                         setSortStateHandler={(options: any) => {
                             setSortState(options);
                         }}
                     />
                 </div>
-                {getClientsLoading && <CardContentSkeletonLoader />}
-                {!getClientsLoading &&
+                {getAssociatePartnerLoading && <CardContentSkeletonLoader />}
+                {!getAssociatePartnerLoading &&
                     getFilteredValue(
                         displayedPaginationItems,
                         searchValue,
@@ -223,11 +187,12 @@ const AssociatePartners = () => {
                         />
                     ))}
 
-                {!getClientsLoading && !getClientsList.length && (
-                    <NoDataAvailable name="No Clients Available!" />
-                )}
+                {!getAssociatePartnerLoading &&
+                    !getAssociatePartnerList.length && (
+                        <NoDataAvailable name="No Clients Available!" />
+                    )}
                 <Pagination
-                    data={getClientsList}
+                    data={getAssociatePartnerList}
                     setPaginationDisplayedItems={setPaginationDisplayedItems}
                 />
             </div>

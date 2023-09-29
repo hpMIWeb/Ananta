@@ -56,9 +56,9 @@ const Employees = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Employees
+                            Designation
                         </p>
-                        <p className="semiBold">9</p>
+                        <p className="semiBold">Accountant</p>
                     </>
                 ),
             },
@@ -67,9 +67,9 @@ const Employees = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Transaction Credits
+                            Sub Profile
                         </p>
-                        <p className="semiBold">12423/15000</p>
+                        <p className="semiBold">100</p>
                     </>
                 ),
             },
@@ -77,8 +77,10 @@ const Employees = () => {
                 iconName: "storage",
                 descComponent: (
                     <>
-                        <p className="mb-0 fs--1 description-label">Storage</p>
-                        <p className="semiBold">2 / 4 GB</p>
+                        <p className="mb-0 fs--1 description-label">
+                            Client Assign
+                        </p>
+                        <p className="semiBold">5</p>
                     </>
                 ),
             },
@@ -87,9 +89,9 @@ const Employees = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Associated Partners
+                            Current Task
                         </p>
-                        <p className="semiBold">3</p>
+                        <p className="semiBold">3/6</p>
                     </>
                 ),
             },
@@ -98,9 +100,42 @@ const Employees = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Gold Subscription
+                            Total Task
                         </p>
-                        <p className="semiBold">Expire on - 2023-09-18</p>
+                        <p className="semiBold">56/85</p>
+                    </>
+                ),
+            },
+            {
+                iconName: "order",
+                descComponent: (
+                    <>
+                        <p className="mb-0 fs--1 description-label">
+                            Pending Approval
+                        </p>
+                        <p className="semiBold">56</p>
+                    </>
+                ),
+            },
+            {
+                iconName: "time",
+                descComponent: (
+                    <>
+                        <p className="mb-0 fs--1 description-label">
+                            Total Hours
+                        </p>
+                        <p className="semiBold">45:11 Hours</p>
+                    </>
+                ),
+            },
+            {
+                iconName: "time",
+                descComponent: (
+                    <>
+                        <p className="mb-0 fs--1 description-label">
+                            Billable Hours
+                        </p>
+                        <p className="semiBold">45:11 Hours</p>
                     </>
                 ),
             },

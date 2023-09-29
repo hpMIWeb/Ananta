@@ -13,6 +13,7 @@ export const createAssociatePartnerReducersApi = createAsyncThunk(
     "createAssociatePartnerReducers",
     async ({ payload, subscriptionId }: Payload) => {
         console.log(payload);
+        console.log("subscriptionId", subscriptionId);
         const jwtToken = Cookies.get("jwt_token");
         const response = !subscriptionId
             ? await axios.post(
@@ -25,7 +26,7 @@ export const createAssociatePartnerReducersApi = createAsyncThunk(
                   }
               )
             : await axios.put(
-                  `${apiEndpoint}admin/client-signup/id=${subscriptionId}`,
+                  `${apiEndpoint}admin/associated-partner-signup/id=${subscriptionId}`,
                   payload,
                   {
                       headers: {
