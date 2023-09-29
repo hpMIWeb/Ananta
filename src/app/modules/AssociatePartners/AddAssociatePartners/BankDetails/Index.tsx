@@ -3,12 +3,18 @@ import { Form } from "antd";
 import CardBottomAction from "../EmergencyInfo/CardBottomAction";
 import { useState } from "react";
 import BankInfoCard from "./BankInfoCard";
+import { filterObjectByKey } from "../../../../../utils/helpers";
 
-const BankDetails = ({ onChange, setEmployeeInfo }: any) => {
+const BankDetails = ({ onChange, setFormValue }: any) => {
     const [bankInfoData, setBankInfoData] = useState<any>([]);
 
     const onFinish = (value: any) => {
-        setEmployeeInfo({ clientBankDetails: value });
+        const filteredValue = filterObjectByKey(
+            value.ownerDetails,
+            bankInfoData.map((a: any) => a.name)
+        );
+
+        setFormValue({ clientBankDetails: Object.values(filteredValue) });
         onChange(5);
     };
 

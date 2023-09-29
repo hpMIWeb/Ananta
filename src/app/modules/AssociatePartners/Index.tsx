@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./clients.module.scss";
+import styles from "./associatePartner.module.scss";
 import addSubImg from "../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import SubscriptionCard from "../../../components/SubscriptionCard/Index";

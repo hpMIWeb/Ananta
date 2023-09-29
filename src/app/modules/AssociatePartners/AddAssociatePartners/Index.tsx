@@ -1,6 +1,6 @@
 import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
-import styles from "./addClient.module.scss";
+import styles from "./addAssociatePartner.module.scss";
 import Tabs from "../../../../components/Tabs/Index";
 import Button from "../../../../components/Button/Index";
 import Icon from "../../../../components/Icon/Index";
@@ -12,7 +12,7 @@ import BankDetails from "./BankDetails/Index";
 import { useSelector } from "react-redux";
 import { Form } from "antd";
 import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
-import { createClientReducersApi } from "../../../../redux/createClientReducers";
+import { createAssociatePartnerReducersApi } from "../../../../redux/createAssociatePartnerReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
@@ -20,7 +20,7 @@ import Select from "../../../../components/Select/Index";
 
 const AddAssociatePartners = () => {
     const [activeTab, setActiveTab] = useState(1);
-    const [clientValue, setClientValue] = useState({});
+    const [associatePartnerValue, setAssociatePartner] = useState({});
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
     const { clientId } = useParams();
@@ -46,7 +46,7 @@ const AddAssociatePartners = () => {
     }, []);
 
     const setFormValue = (formValue: any) => {
-        setClientValue((prev) => ({ ...prev, ...formValue }));
+        setAssociatePartner((prev) => ({ ...prev, ...formValue }));
     };
 
     const handleCancelClick = () => {
@@ -86,12 +86,15 @@ const AddAssociatePartners = () => {
     );
 
     const onChange = (key: number, formValue: any) => {
-        if (key === 4) {
-            const payload = { ...clientValue, ...formValue };
+        if (key === 5) {
+            const payload = { ...associatePartnerValue, ...formValue };
 
             payload.partnerType = partnerType;
+            payload.industryType = "Gold";
+            payload.lineOfBusiness = "Gold";
+            payload.fileNumber = "cnjkdcjk";
             // @ts-ignore
-            dispatch(createClientReducersApi({ payload: payload }));
+            dispatch(createAssociatePartnerReducersApi({ payload: payload }));
         } else {
             setActiveTab(key);
         }
@@ -200,7 +203,7 @@ const AddAssociatePartners = () => {
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
                             <label className="form-label">
-                                Client Type
+                                Partners Type
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
