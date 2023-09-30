@@ -7,18 +7,32 @@ import AssignClientBox from "./AssignClientBox";
 import { useSelector } from "react-redux";
 import Input from "../../../../../components/Input/Index";
 import { SearchOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { apiEndpoint } from "../../../../../utils/helpers";
 
 const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
     const getClients = useSelector((state: any) => state.getClients.data);
     const [addedClientList, setAddedClientList] = useState<any>([]);
     const [clientList, setClientList] = useState<any>(getClients);
+    const [assignClient, setAssignClient] = useState<any>([]);
 
     const [selectedClients, setSelectedClients] = useState<any>([]);
 
     const [modalOpen, setModalOpen] = useState(false);
     const onFinish = () => {
-        setEmployeeInfo({ assignClients: selectedClients });
+        console.log(assignClient);
+        setEmployeeInfo({ assignClients: assignClient });
         onChange(4);
+    };
+
+    const getPostalCodeData = async (changedValues: any) => {
+        try {
+            const response = await axios.get(`${apiEndpoint}`);
+            const { Country, State, District } =
+                response?.data[0]?.PostOffice[0];
+        } catch (error) {
+            console.error("Error fetching location data:", error);
+        }
     };
 
     useEffect(() => {
@@ -37,6 +51,9 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
             setSelectedClients(
                 selectedClients.filter((client: any) => client.id !== clientId)
             );
+            setAssignClient(
+                assignClient.filter((client: any) => client !== clientId)
+            );
         } else {
             // If the client is not selected, add it
             const selectedClient = clientList.find(
@@ -47,9 +64,13 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                     ...selectedClients,
                     { id: selectedClient._id, name: selectedClient.firmName },
                 ]);
+                setAssignClient((prevAssignClient: any) => [
+                    ...prevAssignClient,
+                    clientId, // Add only the ID to assignClient
+                ]);
             }
         }
-        console.log("selectedClients", selectedClients);
+        console.log("assignClient", assignClient);
     };
 
     // Render clients with checkboxes in the modal body
@@ -100,7 +121,9 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                     )}
                 >
                     <div className="d-flex">
-                        <div className="me-auto"></div>
+                        <div className="me-auto">
+                            {/* Leave this div empty */}
+                        </div>
                         <div className="ms-auto">
                             <Button
                                 className={styles.nextBtn}
@@ -114,13 +137,35 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                     </div>
                 </div>
             </div>
+            <div className={classNames("row", styles.paymentFormRow)}>
+                <div
+                    className={classNames(
+                        "col-12 my-2",
+                        styles.subscriptionFormFooter,
+                        styles.selectedClientsContainer // Add this class
+                    )}
+                >
+                    <div className="d-flex">
+                        <div className="me-auto">
+                            {`Selected Client List`}
+                            {selectedClients.map(
+                                (client: any, index: number) => (
+                                    <div key={index}>
+                                        {`${index + 1}: ${client.name}`}
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Modal
                 title={`List Of Client`}
                 centered
                 open={modalOpen}
                 onOk={() => setModalOpen(false)}
                 onCancel={() => setModalOpen(false)}
-                width={400} // Set the modal width as needed
+                width={755} // Set the modal width as needed
             >
                 <div className={classNames("row", styles.paymentFormRow)}>
                     <div className={classNames("col-12 my-2")}>
@@ -148,7 +193,7 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                     </div>
                 </div>
                 <div className={classNames("row", styles.paymentFormRow)}>
-                    <div className={classNames("col-12 my-2")}>
+                    <div className={classNames("col-6 my-2")}>
                         <Input
                             placeholder="Search..."
                             className="search-box"

@@ -3,6 +3,7 @@ import { Form } from "antd";
 import { useState } from "react";
 import CardBottomAction from "./CardBottomAction";
 import EmergencyInfoCardBox from "../EmergencyInfoCardBox/Index";
+import { filterObjectByKey } from "../../../../../utils/helpers";
 
 const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
     const [form] = Form.useForm();
@@ -11,24 +12,29 @@ const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
     ]);
 
     const onFinish = (value: any) => {
-        const mobilePhoneNumber = value.mobile.phoneNumber;
-        const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
-        const combinedMobile = `${
-            value.mobile.validData.countryCode || "+91"
-        }${formattedMobilePhoneNumber}`;
+        // const mobilePhoneNumber = value.mobile.phoneNumber;
+        // const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
+        // const combinedMobile = `${
+        //     value.mobile.validData.countryCode || "+91"
+        // }${formattedMobilePhoneNumber}`;
 
-        const alternateMobilePhoneNumber = value.alternateMobile.phoneNumber;
-        const combinedAlternateMobile = alternateMobilePhoneNumber
-            ? `${
-                  value.alternateMobile.countryCode || "+91"
-              }${alternateMobilePhoneNumber}`
-            : null;
+        // const alternateMobilePhoneNumber = value.alternateMobile.phoneNumber;
+        // const combinedAlternateMobile = alternateMobilePhoneNumber
+        //     ? `${
+        //           value.alternateMobile.countryCode || "+91"
+        //       }${alternateMobilePhoneNumber}`
+        //     : null;
         const emergencyDetails = {
             ...value,
-            mobile: combinedMobile?.replace(/-/g, ""),
-            alternateMobile: combinedAlternateMobile?.replace(/-/g, ""),
+            mobile: value.mobile?.replace(/-/g, ""),
+            alternateMobile: value.alternateMobile?.replace(/-/g, ""),
         };
-        setEmployeeInfo({ emergencyDetails });
+        const filteredValue = filterObjectByKey(
+            value.ownerDetails,
+            ownerInfoData.map((a: any) => a.name)
+        );
+
+        setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
         onChange(6, { emergencyDetails });
     };
 

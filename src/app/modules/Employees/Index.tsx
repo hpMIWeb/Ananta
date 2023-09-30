@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./clients.module.scss";
+import styles from "./employee.module.scss";
 import addSubImg from "../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import SubscriptionCard from "../../../components/SubscriptionCard/Index";
@@ -77,10 +77,23 @@ const Employees = () => {
                 iconName: "transaction",
                 descComponent: (
                     <>
-                        <p className="mb-0 fs--1 description-label">
-                            Sub Profile
-                        </p>
-                        <p className="semiBold">100</p>
+                        {cardData.subProfile.length > 0 ? (
+                            <div>
+                                <p className="mb-0 fs--1 description-label">
+                                    Sub Profile
+                                </p>
+                                <p className="semiBold">
+                                    {cardData.subProfile.length}
+                                </p>
+                            </div>
+                        ) : (
+                            <div>
+                                <p className="mb-0 fs--1 description-label">
+                                    Role
+                                </p>
+                                <p className="semiBold">Role Name</p>
+                            </div>
+                        )}
                     </>
                 ),
             },
