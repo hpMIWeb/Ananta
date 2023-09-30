@@ -91,7 +91,7 @@ const AddOnHistoryModal = ({
             onCancel={() => setModalOpen(false)}
         >
             <div className={styles.historyTableWrapper}>
-                <div className={styles.historyTableContainer}>
+                <div>
                     <Table columns={columns} data={subscriptionHistoryData} />
                 </div>
             </div>

@@ -760,7 +760,6 @@ const AddSubscription = () => {
                                     )}
                                     <Button
                                         onClick={onCancelClick}
-                                        loading={deleteSubscriptionsLoading}
                                         className={styles.deleteBtn}
                                         type="primary"
                                         danger
