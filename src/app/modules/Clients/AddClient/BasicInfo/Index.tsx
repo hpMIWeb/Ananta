@@ -11,8 +11,14 @@ import uploadLogo from "../../../../../assets/images/upload_logo.png";
 import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Icon from "../../../../../components/Icon/Index";
 
-const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
+const BasicInfo = ({
+    onChange,
+    setFormValue,
+    clientType,
+    handleCancelClick,
+}: any) => {
     const [countriesListData, setCountriesListData] = useState<any>([]);
     const [statesListData, setStatesListData] = useState<any>([]);
     const [citiesListData, setCitiesListData] = useState<any>([]);
@@ -109,6 +115,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
         //onChange(2); redirect to branch
         onChange(4);
     };
+    //  handleCancelClick();
 
     return (
         <div>
@@ -616,13 +623,21 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                 <div className="row">
                     <div className="col-12 my-2 text-end">
                         <Form.Item>
-                            <Button
-                                className={styles.nextBtn}
-                                type="primary"
-                                htmlType="submit"
-                            >
-                                Next
-                            </Button>
+                            <div className="ms-auto">
+                                <Button
+                                    className="greyBtn"
+                                    style={{ minWidth: 104, marginRight: 12 }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    className={styles.nextBtn}
+                                    type="primary"
+                                    htmlType="submit"
+                                >
+                                    Next
+                                </Button>
+                            </div>
                         </Form.Item>
                     </div>
                 </div>

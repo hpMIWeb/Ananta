@@ -109,6 +109,10 @@ const AddClient = () => {
         }
     };
 
+    const onCancelClick = () => {
+        navigation("/caclient");
+    };
+
     const items = [
         {
             key: 1,
@@ -118,6 +122,7 @@ const AddClient = () => {
                     onChange={onChange}
                     setFormValue={setFormValue}
                     clientType={clientType}
+                    handleCancelClick={handleCancelClick}
                 />
             ),
         },
