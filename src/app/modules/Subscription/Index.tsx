@@ -14,11 +14,13 @@ import { useAppDispatch } from "../../states/store";
 import Button from "../../../components/Button/Index";
 import Icon from "../../../components/Icon/Index";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Subscription = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
     const [activeTab, setActiveTab] = useState("1");
+
     const onChange = (key: any) => {
         setActiveTab(key);
     };

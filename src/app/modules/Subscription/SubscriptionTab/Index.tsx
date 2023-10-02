@@ -17,10 +17,13 @@ import {
     resetStateCreateSubscriptions,
 } from "../../../../redux/createSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
+import Cookies from "js-cookie";
+import { capitalize } from "../../../utilities/utility";
 
 const SubscriptionTab = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
+    const roleType = Cookies.get("role");
     const { loading, data: subscriptionCardList = [] } = useSelector(
         (state: any) => state.getSubscriptionsListApi
     );
@@ -36,7 +39,7 @@ const SubscriptionTab = () => {
     const [selectedSubscriptionHistory, setSelectedSubscriptionHistory] =
         useState();
     const [selectedSubscriptionId, setSelectedSubscriptionId] = useState("");
-    const [addonOption, setAddonOption] = useState([
+    const [superAdminAddon, setSuperAdminAddonOption] = useState([
         {
             value: "All Subscription",
             label: "All Subscription",
@@ -50,7 +53,21 @@ const SubscriptionTab = () => {
             label: "Business Enterprise",
         },
     ]);
-
+    const [caAdminAddonOption, setCAdminAddonOption] = useState([
+        {
+            value: "All Subscription",
+            label: "All Subscription",
+        },
+        {
+            value: "client",
+            label: "Client",
+        },
+        {
+            value: "associate_partner",
+            label: "Associate Partner",
+        },
+    ]);
+    const addonOption = roleType === "1" ? superAdminAddon : caAdminAddonOption;
     const handleSubscriptionHistoryModalClick = (
         subscriptionHistory: any,
         subscriptionId: string
@@ -90,106 +107,287 @@ const SubscriptionTab = () => {
             (key) => features[key] === true
         );
 
-        return [
-            {
-                iconName: "time",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            {cardInfo.period_type === "DAY" && "Days"}
-                            {cardInfo.period_type === "MONTH" && "Months"}
-                        </p>
-                        <p className="semiBold">{cardInfo.period}</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "cash",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Price</p>
-                        <p className="mb-0 fs--1 semiBold">
-                            Rs. {cardInfo.price}
-                        </p>
-                    </>
-                ),
-            },
-            {
-                iconName: "transaction",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Transaction Credits
-                        </p>
-                        <p className="semiBold">
-                            {cardInfo.no_of_transactions}
-                        </p>
-                    </>
-                ),
-            },
-            {
-                iconName: "client",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Clients</p>
-                        <p className="semiBold">{cardInfo.no_of_client}</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "storage",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Storage</p>
-                        <p className="semiBold">{cardInfo.storage_space} GB</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "subscribe",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Subscribers
-                        </p>
-                        <p className="semiBold">{cardInfo.subscribers_count}</p>
-                    </>
-                ),
-            },
-            {},
-            {},
-            {
-                iconName: "clientLogin",
-                styles: { width: "50%" },
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Users</p>
-                        <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
-                            <li>CA Office Users - {cardInfo.no_of_client}</li>
-                            <li>
-                                Client Office Users - {cardInfo.no_of_employee}
-                            </li>
-                            <li>
-                                Client Vendors Users -{" "}
-                                {cardInfo.no_of_client_login}
-                            </li>
-                        </ul>
-                    </>
-                ),
-            },
-            {
-                iconName: "features",
-                styles: { width: "50%" },
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Modules</p>
-                        <div style={{ display: "flex", columnGap: 15 }}>
-                            {generateFeatureLists(keysWithTrueValue)}
-                        </div>
-                    </>
-                ),
-            },
-        ];
+        // Conditionally render the content based on roleType
+        if (roleType === "1") {
+            //super admin code
+            return [
+                {
+                    iconName: "time",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Validity
+                            </p>
+                            <p className="semiBold">{cardInfo.period}</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "cash",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Price
+                            </p>
+                            <p className="mb-0 fs--1 semiBold">
+                                Rs. {cardInfo.price}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "transaction",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Transaction Credits
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.no_of_transactions}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Clients
+                            </p>
+                            <p className="semiBold">{cardInfo.no_of_client}</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "storage",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Storage
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.storage_space} GB
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "subscribe",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Subscribers
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.subscribers_count}
+                            </p>
+                        </>
+                    ),
+                },
+                {},
+                {},
+                {
+                    iconName: "clientLogin",
+                    styles: { width: "50%" },
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Users
+                            </p>
+                            <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
+                                <li>
+                                    CA Office Users - {cardInfo.no_of_client}
+                                </li>
+                                <li>
+                                    Client Office Users -{" "}
+                                    {cardInfo.no_of_employee}
+                                </li>
+                                <li>
+                                    Client Vendors Users -{" "}
+                                    {cardInfo.no_of_client_login}
+                                </li>
+                            </ul>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "features",
+                    styles: { width: "50%" },
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Modules
+                            </p>
+                            <div style={{ display: "flex", columnGap: 15 }}>
+                                {generateFeatureLists(keysWithTrueValue)}
+                            </div>
+                        </>
+                    ),
+                },
+            ];
+        } else {
+            return [
+                {
+                    iconName: "time",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Validity
+                            </p>
+                            <p className="semiBold">{cardInfo.period}</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "time",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Validity
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.period}{" "}
+                                {capitalize(cardInfo.period_type)}
+                            </p>
+                        </>
+                    ),
+                },
+
+                {
+                    iconName: "cash",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Price
+                            </p>
+                            <p className="mb-0 fs--1 semiBold">
+                                Rs. {cardInfo.price}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "subscribe",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Subscribers
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.subscribers_count}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "storage",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Storage
+                            </p>
+                            <p className="semiBold">
+                                {cardInfo.storage_space} GB
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "storage",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Branches
+                            </p>
+                            <p className="semiBold">2</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "storage",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Turnover Limit
+                            </p>
+                            <p className="semiBold">Rs 150000/-</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "transaction",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Transaction Credits
+                            </p>
+                            <p className="semiBold">Not Applicable</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "clientLogin",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Transaction
+                            </p>
+                            <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
+                                <li>
+                                    Sale & Purchase- {cardInfo.no_of_client}
+                                </li>
+                                <li>
+                                    Credit & Debit Notes -{" "}
+                                    {cardInfo.no_of_employee}
+                                </li>
+                                <li>
+                                    Client Vendors Users -{" "}
+                                    {cardInfo.no_of_client_login}
+                                </li>
+                            </ul>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "features",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Modules
+                            </p>
+                            <div style={{ display: "flex", columnGap: 15 }}>
+                                {generateFeatureLists(keysWithTrueValue)}
+                            </div>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "clientLogin",
+
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Users
+                            </p>
+                            <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
+                                <li>
+                                    CA Office Users - {cardInfo.no_of_client}
+                                </li>
+                                <li>
+                                    Client Office Users -{" "}
+                                    {cardInfo.no_of_employee}
+                                </li>
+                                <li>
+                                    Client Vendors Users -{" "}
+                                    {cardInfo.no_of_client_login}
+                                </li>
+                            </ul>
+                        </>
+                    ),
+                },
+            ];
+        }
     };
 
     const onChangeActiveClick = (e: any, id: any) => {

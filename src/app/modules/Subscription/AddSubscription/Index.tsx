@@ -12,22 +12,47 @@ import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReduc
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { deleteSubscriptionsReducersApi } from "../../../../redux/deleteSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
+import Cookies from "js-cookie";
 
 const AddSubscription = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
+    const roleType = Cookies.get("role");
     const [featureState, setFeatureState] = useState<any>();
     const [isSpaceUnlimited, setIsSpaceUnlimited] = useState<boolean>(false);
     const [isTransactionCreditsUnlimited, setIsTransactionCreditsUnlimited] =
         useState<boolean>(false);
     const [isClientUnlimited, setIsClientUnlimited] = useState<boolean>(false);
     const [isBranchUnlimited, setIsBranchUnlimited] = useState<boolean>(false);
-    const [subscriptionCategory, setSubscriptionCategory] =
-        useState<string>("consultant"); // Initialize with a default category
+    const [isTurnoverUnlimited, setIsTurnoverUnlimited] =
+        useState<boolean>(false);
+    const [subscriptionCategory, setSubscriptionCategory] = useState<string>(); // Initialize with a default category
 
     const handleIsSpaceUnlimitedChange = (value: boolean) => {
         setIsSpaceUnlimited(value);
     };
+    const [superAdminOptions, setSuperAdminOptions] = useState([
+        {
+            value: "consultant",
+            label: "Consultant",
+        },
+        {
+            value: "business_enterprise",
+            label: "Business Enterprise",
+        },
+    ]);
+    const [caAdminOption, setCAdminOption] = useState([
+        {
+            value: "client",
+            label: "Client",
+        },
+        {
+            value: "associate_partner",
+            label: "Associate Partner",
+        },
+    ]);
+    const categoryOptions =
+        roleType === "1" ? superAdminOptions : caAdminOption;
 
     const handleIsTransactionCreditsUnlimitedChange = (value: boolean) => {
         setIsTransactionCreditsUnlimited(value);
@@ -212,16 +237,7 @@ const AddSubscription = () => {
                                 >
                                     <Select
                                         placeholder="Select Category"
-                                        options={[
-                                            {
-                                                value: "consultant",
-                                                label: "Consultant",
-                                            },
-                                            {
-                                                value: "business_enterprise",
-                                                label: "Business Enterprise",
-                                            },
-                                        ]}
+                                        options={categoryOptions}
                                         onChange={(value) =>
                                             setSubscriptionCategory(value)
                                         }
@@ -369,62 +385,90 @@ const AddSubscription = () => {
                             </div>
                         )}
 
-                        {subscriptionCategory === "business_enterprise" && (
+                        {subscriptionCategory === "business_enterprise" ||
+                            (subscriptionCategory === "client" && (
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label">
+                                            Branches
+                                        </label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <Form.Item
+                                            name="branches"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please Enter the number of branches",
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                placeholder="Number Of Branches"
+                                                className="customAddFormInputText"
+                                                disabled={isBranchUnlimited}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div
+                                            className={
+                                                styles.featureCheckBoxLabelWrapper
+                                            }
+                                        >
+                                            <label
+                                                className={
+                                                    styles.featureCheckBoxLabel
+                                                }
+                                            >
+                                                Not Applicable
+                                            </label>
+                                            <Switch
+                                                size="small"
+                                                checked={isBranchUnlimited}
+                                                onChange={setIsBranchUnlimited}
+                                                className="smallCheckBox"
+                                            />
+                                            <label
+                                                className={
+                                                    styles.featureCheckBoxLabel
+                                                }
+                                            >
+                                                Unlimited
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        {subscriptionCategory === "consultant" && (
                             <div className="formFieldRowWrapper">
                                 <div className="col-auto formLabelWrapper">
-                                    <label className="form-label">
-                                        Branches
-                                    </label>
+                                    <label className="form-label"></label>
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                                     <Form.Item
-                                        name="branches"
+                                        name="employee_client"
                                         rules={[
                                             {
                                                 required: true,
                                                 message:
-                                                    "Please Enter the number of branches",
+                                                    "Please Enter your Client Office Users Number!",
                                             },
                                         ]}
                                     >
                                         <Input
-                                            placeholder="Number Of Branches"
                                             className="customAddFormInputText"
-                                            disabled={isBranchUnlimited}
+                                            suffix={
+                                                <div className="inputSuffix">
+                                                    Client Office Users
+                                                </div>
+                                            }
                                         />
                                     </Form.Item>
                                 </div>
-                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                    <div
-                                        className={
-                                            styles.featureCheckBoxLabelWrapper
-                                        }
-                                    >
-                                        <label
-                                            className={
-                                                styles.featureCheckBoxLabel
-                                            }
-                                        >
-                                            Not Applicable
-                                        </label>
-                                        <Switch
-                                            size="small"
-                                            checked={isBranchUnlimited}
-                                            onChange={setIsBranchUnlimited}
-                                            className="smallCheckBox"
-                                        />
-                                        <label
-                                            className={
-                                                styles.featureCheckBoxLabel
-                                            }
-                                        >
-                                            Unlimited
-                                        </label>
-                                    </div>
-                                </div>
                             </div>
                         )}
-
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">
@@ -457,35 +501,6 @@ const AddSubscription = () => {
                             </div>
                         </div>
 
-                        {subscriptionCategory === "consultant" && (
-                            <div className="formFieldRowWrapper">
-                                <div className="col-auto formLabelWrapper">
-                                    <label className="form-label"></label>
-                                </div>
-                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                    <Form.Item
-                                        name="employee_client"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your Client Office Users Number!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            className="customAddFormInputText"
-                                            suffix={
-                                                <div className="inputSuffix">
-                                                    Client Office Users
-                                                </div>
-                                            }
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                        )}
-
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label"></label>
@@ -515,6 +530,100 @@ const AddSubscription = () => {
                                 </Form.Item>
                             </div>
                         </div>
+
+                        {subscriptionCategory === "client" && (
+                            <div>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label">
+                                            Turnover
+                                        </label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <Form.Item
+                                            name="turnover"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please Enter the number of turnover",
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                placeholder="turnover"
+                                                className="customAddFormInputText"
+                                                disabled={isTurnoverUnlimited}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div
+                                            className={
+                                                styles.featureCheckBoxLabelWrapper
+                                            }
+                                        >
+                                            <label
+                                                className={
+                                                    styles.featureCheckBoxLabel
+                                                }
+                                            >
+                                                Not Applicable
+                                            </label>
+                                            <Switch
+                                                size="small"
+                                                checked={isTurnoverUnlimited}
+                                                onChange={
+                                                    setIsTurnoverUnlimited
+                                                }
+                                                className="smallCheckBox"
+                                            />
+                                            <label
+                                                className={
+                                                    styles.featureCheckBoxLabel
+                                                }
+                                            >
+                                                Unlimited
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label">
+                                            Transaction
+                                        </label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <Form.Item
+                                            name="turnover"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please Enter the number of turnover",
+                                                },
+                                            ]}
+                                        >
+                                            <Select
+                                                style={{ width: 130 }}
+                                                options={[
+                                                    {
+                                                        value: "MONTH",
+                                                        label: "Months",
+                                                    },
+                                                    {
+                                                        value: "DAY",
+                                                        label: "Days",
+                                                    },
+                                                ]}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">
