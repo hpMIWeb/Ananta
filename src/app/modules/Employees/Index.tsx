@@ -229,8 +229,9 @@ const Employees = () => {
                         displayedPaginationItems,
                         searchValue,
                         sortState
-                    ).map((card: any) => (
+                    ).map((card: any, index: number) => (
                         <SubscriptionCard
+                            displayIndex={index + 1}
                             key={card._id}
                             id={card._id}
                             planNameLabelBlue

@@ -250,8 +250,9 @@ const PromoCodes = () => {
                 </div>
                 {loading && <CardContentSkeletonLoader />}
                 {!loading &&
-                    promoFilteredValue.map((promo: any) => (
+                    promoFilteredValue.map((promo: any, index: number) => (
                         <SubscriptionCard
+                            displayIndex={index + 1}
                             key={promo._id}
                             id={promo._id}
                             planName={promo.name}
