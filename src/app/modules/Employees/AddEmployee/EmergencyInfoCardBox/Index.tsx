@@ -87,10 +87,6 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                             <Form.Item
                                 name="mobile"
                                 rules={[
-                                    {
-                                        required: true,
-                                        message: "Please Enter your Mobile!",
-                                    },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             const hasError =
@@ -136,34 +132,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                             >
                                 Alternative Mobile
                             </label>
-                            <Form.Item
-                                name="alternateMobile"
-                                rules={[
-                                    ({ getFieldValue }) => ({
-                                        validator(_, value) {
-                                            if (
-                                                getFieldValue(
-                                                    "alternateMobile_hasError"
-                                                )
-                                            ) {
-                                                return Promise.reject(
-                                                    new Error(
-                                                        "Please enter a valid number."
-                                                    )
-                                                );
-                                            }
-                                            if (!value) {
-                                                return Promise.reject(
-                                                    new Error(
-                                                        "Alternate mobile is required."
-                                                    )
-                                                );
-                                            }
-                                            return Promise.resolve();
-                                        },
-                                    }),
-                                ]}
-                            >
+                            <Form.Item name="alternateMobile">
                                 <PhoneInput
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"

@@ -70,7 +70,7 @@ const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
                 <div className="row">
                     <div className={styles.formFooterAction}>
                         <CardBottomAction
-                            showAdd={false}
+                            showAdd={true}
                             loading={loading}
                             addCardClick={addMoreOwnerCard}
                             onChange={onChange}

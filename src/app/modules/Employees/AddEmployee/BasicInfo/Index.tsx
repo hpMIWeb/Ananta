@@ -456,34 +456,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                     <label className="form-label">
                                         Alt Mobile
                                     </label>
-                                    <Form.Item
-                                        name="alternateMobile"
-                                        rules={[
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (
-                                                        getFieldValue(
-                                                            "alternateMobile_hasError"
-                                                        )
-                                                    ) {
-                                                        return Promise.reject(
-                                                            new Error(
-                                                                "Please enter a valid number."
-                                                            )
-                                                        );
-                                                    }
-                                                    if (!value) {
-                                                        return Promise.reject(
-                                                            new Error(
-                                                                "Alternate mobile is required."
-                                                            )
-                                                        );
-                                                    }
-                                                    return Promise.resolve();
-                                                },
-                                            }),
-                                        ]}
-                                    >
+                                    <Form.Item name="alternateMobile">
                                         <PhoneInput
                                             placeholder="Mobile"
                                             containerClass="phoneNumberContainerClassInput"

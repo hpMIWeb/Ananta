@@ -435,6 +435,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                 <CardBottomAction
                     addCardClick={addMoreOwnerCard}
                     onChange={onChange}
+                    showAdd={false}
                 />
             </Form>
         </div>
