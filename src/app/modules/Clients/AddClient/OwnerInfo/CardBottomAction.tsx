@@ -27,14 +27,7 @@ const CardBottomAction = ({
                 >
                     Previous
                 </Button>
-                <Button
-                    onClick={handleCancelClick}
-                    className="greyBtn"
-                    style={{ minWidth: 104, marginRight: 12 }}
-                    danger
-                >
-                    Cancel
-                </Button>
+
                 <Button
                     className={styles.nextBtn}
                     type="primary"
