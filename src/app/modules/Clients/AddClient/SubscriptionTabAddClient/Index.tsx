@@ -135,15 +135,17 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                     </>
                 ),
             },
-            // {
-            //   iconName: "employee",
-            //   descComponent: (
-            //     <>
-            //       <p className="mb-0 fs--1 description-label">Employees</p>
-            //       <p className="semiBold">{details.no_of_employee}</p>
-            //     </>
-            //   ),
-            // },
+            {
+                iconName: "employee",
+                descComponent: (
+                    <>
+                        <p className="mb-0 fs--1 description-label">
+                            Employees
+                        </p>
+                        <p className="semiBold">{details.no_of_employee}0</p>
+                    </>
+                ),
+            },
             {
                 iconName: "users",
                 className: "w-100",

@@ -83,9 +83,7 @@ const AddEmployee = () => {
     const operations = (
         <Button
             onClick={handleCancelClick}
-            className={classNames("cancelBtn", styles.cancelAddEmployeeBtn)}
-            type="primary"
-            danger
+            className={classNames("greyBtn", styles.cancelAddEmployeeBtn)}
         >
             <Icon
                 className={styles.cancelBtnIcon}

@@ -76,9 +76,7 @@ const AddClient = () => {
     const operations = (
         <Button
             onClick={handleCancelClick}
-            className={classNames("cancelBtn", styles.cancelAddClientBtn)}
-            type="primary"
-            danger
+            className={classNames("greyBtn", styles.cancelAddClientBtn)}
         >
             <Icon
                 className={styles.cancelBtnIcon}

@@ -610,9 +610,11 @@ const AddPromoCode = () => {
                                 )}
                                 <Button
                                     onClick={onCancelClick}
-                                    className={styles.deleteBtn}
-                                    type="primary"
-                                    danger
+                                    style={{
+                                        minWidth: 104,
+                                        marginRight: 12,
+                                    }}
+                                    className="greyBtn"
                                 >
                                     Cancel
                                 </Button>

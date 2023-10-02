@@ -625,12 +625,6 @@ const BasicInfo = ({
                         <Form.Item>
                             <div className="ms-auto">
                                 <Button
-                                    className="greyBtn"
-                                    style={{ minWidth: 104, marginRight: 12 }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
                                     className={styles.nextBtn}
                                     type="primary"
                                     htmlType="submit"

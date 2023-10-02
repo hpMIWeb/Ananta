@@ -21,6 +21,9 @@ const SubscriptionAddonsCard = memo(
 
         const [addOnType, setAddOnType] = useState("");
         const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
+        const [selectAddonDetails, setSelectedAddonDetails] = useState<any>(
+            {} as any
+        );
         const [addOnListOpts, setAddOnListOpts] = useState([]);
 
         const addonsCardList = useSelector(
@@ -40,7 +43,8 @@ const SubscriptionAddonsCard = memo(
                 "addOnQuantity",
                 value,
                 selectedAddonsPrice,
-                currentAddon.addOnPlanName
+                currentAddon.addOnPlanName,
+                setSelectedAddonDetails
             );
         };
 
@@ -59,7 +63,9 @@ const SubscriptionAddonsCard = memo(
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
+            console.log("selectedAddonData", selectedAddonData);
             //  setSelectedAddonPrice(selectedAddonData.price);
+            setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
             handleAddonChange(
                 cardIndex,
@@ -265,18 +271,14 @@ const SubscriptionAddonsCard = memo(
                                     />
                                 </Button>
                             </div>
-                            <div
-                                //style={{ paddingLeftshortlisted: 8 }}
-                                className="col-auto align-self-center"
-                            >
-                                <Button
-                                    className={classNames(styles.infoCardBtn)}
-                                    type="primary"
-                                >
-                                    <Icon height={14} width={14} name="info" />
-                                </Button>
-                            </div>
                         </div>
+                    </div>
+                    <div className="row g-0">
+                        <span>
+                            {selectAddonDetails.add_on_title} for{" "}
+                            {selectAddonDetails.time_period}{" "}
+                            {selectAddonDetails.time_period_type}
+                        </span>
                     </div>
                 </div>
                 <div className="col-auto align-self-center">

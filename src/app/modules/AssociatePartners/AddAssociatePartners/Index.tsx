@@ -71,9 +71,7 @@ const AddAssociatePartners = () => {
     const operations = (
         <Button
             onClick={handleCancelClick}
-            className={classNames("cancelBtn", styles.cancelAddClientBtn)}
-            type="primary"
-            danger
+            className={classNames("greyBtn", styles.cancelAddClientBtn)}
         >
             <Icon
                 className={styles.cancelBtnIcon}
@@ -169,21 +167,6 @@ const AddAssociatePartners = () => {
                             Add New Associate Partner
                         </h5>
                     </div>
-                    <div className="ms-auto z-index-1">
-                        <Button
-                            onClick={handleCancelClick}
-                            className={styles.newPromoBtn}
-                            danger
-                        >
-                            <Icon
-                                className={styles.cancelBtnIcon}
-                                name="cross"
-                                height={18}
-                                width={18}
-                            />
-                            Cancel
-                        </Button>
-                    </div>
                 </div>
                 <div
                     style={{
@@ -244,7 +227,7 @@ const AddAssociatePartners = () => {
 
                 {!(getClientsListLoading && clientId) && (
                     <Tabs
-                        // tabBarExtraContent={operations}
+                        tabBarExtraContent={operations}
                         className="subscriptionTabs"
                         defaultActiveKey="1"
                         activeKey={activeTab}
