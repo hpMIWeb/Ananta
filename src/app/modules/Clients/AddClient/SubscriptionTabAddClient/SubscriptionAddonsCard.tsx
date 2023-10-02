@@ -21,25 +21,38 @@ const SubscriptionAddonsCard = memo(
 
         const [addOnType, setAddOnType] = useState("");
         const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
+        const [addOnListOpts, setAddOnListOpts] = useState([]);
 
         const addonsCardList = useSelector(
             (state: any) => state.getAddonsList.data
         );
 
-        const getAddOnsList = () => {
-            return addonsCardList.filter(
-                (a: any) => a.add_on_type === addOnType
-            );
-        };
+        // const getAddOnsList = () => {
+        //     return addonsCardList.filter(
+        //         (a: any) => a.add_on_type === addOnType
+        //     );
+        // };
 
         const handleQtyChange = (value: any) => {
             setSelectNumber(value);
-            handleAddonChange(cardIndex, "addOnQuantity", value);
+            handleAddonChange(
+                cardIndex,
+                "addOnQuantity",
+                value,
+                selectedAddonsPrice,
+                currentAddon.addOnPlanName
+            );
         };
 
         const handleAddonTypeChange = (value: any) => {
             setAddOnType(value);
-            handleAddonChange(cardIndex, "addOnType", value);
+            handleAddonChange(
+                cardIndex,
+                "addOnType",
+                value,
+                selectedAddonsPrice,
+                currentAddon.addOnPlanName
+            );
         };
 
         const handleAddonPlanChange = (value: any) => {
@@ -48,7 +61,13 @@ const SubscriptionAddonsCard = memo(
             )[0];
             //  setSelectedAddonPrice(selectedAddonData.price);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
-            handleAddonChange(cardIndex, "addOnPlans", value);
+            handleAddonChange(
+                cardIndex,
+                "addOnPlans",
+                value,
+                selectedAddonsPrice,
+                currentAddon.addOnPlanName
+            );
         };
 
         useEffect(() => {
@@ -58,17 +77,39 @@ const SubscriptionAddonsCard = memo(
             );
             const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
             setSelectedAddonPrice(addonPrice * selectNumber);
+            console.log(selectedAddonData);
+            currentAddon.addonsPrice = addonPrice * selectNumber;
             const total = subscriptionAddons.reduce(
-                (acc: any, addon: any) => acc + addon.selectedAddonsPrice,
+                (acc: any, addon: any) => acc + addon.addonsPrice,
                 0
             );
             setTotalAddonAmount(total);
-        }, [currentAddon.addOnPlans, selectNumber]);
+        }, [currentAddon.addOnPlans, selectNumber, subscriptionAddons]);
 
-        const getAddOnsListOptions = getAddOnsList().map((a: any) => ({
-            value: a._id,
-            label: a.add_on_title,
-        }));
+        // const getAddOnsListOptions = getAddOnsList().map((a: any) => ({
+        //     value: a._id,
+        //     label: a.add_on_title,
+        // }));
+
+        // page load effect
+        useEffect(() => {
+            const addOnList = addonsCardList
+                .filter((a: any) => a.add_on_type === addOnType)
+                .map((a: any) => ({
+                    value: a._id,
+                    label: a.add_on_title,
+                }));
+            console.log(addOnList);
+            setAddOnListOpts(addOnList);
+        }, [addOnType]);
+
+        const handlerIncrease = () => {
+            setSelectNumber((prev) => prev + 1);
+        };
+
+        const handlerDecrease = () => {
+            setSelectNumber((prev) => prev - 1);
+        };
 
         return (
             <div className="row g-3 js-addons-row">
@@ -125,7 +166,7 @@ const SubscriptionAddonsCard = memo(
                         </div>
                         <div className="col-6">
                             <Form.Item
-                                name="addOnPlans"
+                                // name="addOnPlans" //TODO: need to check this - due to this Id display as value
                                 className="customAddClientSelectOptions formItemSelect33"
                                 rules={[
                                     {
@@ -136,8 +177,14 @@ const SubscriptionAddonsCard = memo(
                                 ]}
                             >
                                 <Select
-                                    options={[...getAddOnsListOptions]}
-                                    showSearch
+                                    options={
+                                        // getAddOnsListOptions &&
+                                        // getAddOnsListOptions.length > 0
+                                        //     ? getAddOnsListOptions
+                                        //     : []
+                                        addOnListOpts
+                                    }
+                                    // showSearch
                                     onChange={(e: any) =>
                                         handleAddonPlanChange(e)
                                     }
@@ -157,9 +204,17 @@ const SubscriptionAddonsCard = memo(
                                 >
                                     Qty
                                 </label>
-                                <Form.Item name="addOnQuantity">
+                                <Form.Item
+                                    //name="addOnQuantity" //TODO: Need to think on this - how to update the field on final submit button
+                                    initialValue={selectNumber}
+                                >
                                     <InputNumber
                                         style={{ width: 110 }}
+                                        onKeyPress={(event: any) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }}
                                         defaultValue={1}
                                         className="customInputNumber"
                                         addonBefore={
@@ -167,11 +222,7 @@ const SubscriptionAddonsCard = memo(
                                                 disabled={selectNumber === 0}
                                                 style={{ padding: 10 }}
                                                 className="transparentBtn"
-                                                onClick={() =>
-                                                    setSelectNumber(
-                                                        (prev) => prev - 1
-                                                    )
-                                                }
+                                                onClick={handlerDecrease}
                                             >
                                                 -
                                             </Button>
@@ -180,11 +231,7 @@ const SubscriptionAddonsCard = memo(
                                             <Button
                                                 style={{ padding: 10 }}
                                                 className="transparentBtn"
-                                                onClick={() =>
-                                                    setSelectNumber(
-                                                        (prev) => prev + 1
-                                                    )
-                                                }
+                                                onClick={handlerIncrease}
                                             >
                                                 +
                                             </Button>
@@ -192,9 +239,12 @@ const SubscriptionAddonsCard = memo(
                                         value={selectNumber}
                                         onChange={(e: any) => {
                                             handleQtyChange(e);
-                                            setSelectNumber(e);
+                                            // setSelectNumber(e);
                                         }}
                                         min={0}
+                                        max={100}
+                                        step={1}
+                                        controls
                                     />
                                 </Form.Item>
                             </div>

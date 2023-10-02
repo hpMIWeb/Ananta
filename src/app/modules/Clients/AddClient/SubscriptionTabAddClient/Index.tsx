@@ -209,7 +209,9 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         const newAddon = {
             addOnType: "",
             addOnPlans: "",
+            addOnPlanName: "",
             addOnQuantity: 1,
+            addonsPrice: 0,
         };
         setSubscriptionAddons((prevAddons: any) => [...prevAddons, newAddon]);
     };
@@ -234,16 +236,35 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         setSubscriptionAddons(updatedAddons);
     };
 
-    const handleAddonChange = (index: number, field: any, value: any) => {
+    const handleAddonChange = (
+        index: number,
+        field: any,
+        value: any,
+        priceValue: number,
+        addOnPlanName: string
+    ) => {
         const updatedAddons = subscriptionAddons.map(
             (addon: any, i: number) => {
                 if (i === index) {
-                    return { ...addon, [field]: value };
+                    return {
+                        ...addon,
+                        [field]: value,
+                        addonsPrice: priceValue,
+                        planName: addOnPlanName,
+                    };
                 }
                 return addon;
             }
         );
         setSubscriptionAddons(updatedAddons);
+        // if (updatedAddons) {
+        //     // const addOnTotalPrice = updatedAddons.reduce(
+        //     //     (acc: any, addon: any) => acc + addon.price,
+        //     //     0
+        //     // );
+        //     console.log(addOnTotalPrice);
+        // }
+        console.log(totalAddonAmount);
     };
 
     const onFinish = (values: any) => {
@@ -259,6 +280,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
             addOnType: addon.addOnType,
             addOnPlans: addon.addOnPlans,
             addOnQuantity: addon.addOnQuantity,
+            addonsPrice: addon.price,
         }));
 
         const period_type =
@@ -390,7 +412,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                     handleAddonChange={handleAddonChange}
                                     handleRemoveAddon={handleRemoveAddon}
                                     subscriptionAddons={subscriptionAddons} // Pass the subscriptionAddons array
-                                    totalAddonAmount={totalAddonAmount} // Pass the total addon amount
+                                    //totalAddonAmount={totalAddonAmount} // Pass the total addon amount
                                     setTotalAddonAmount={setTotalAddonAmount} // Pass the function to update total
                                 />
                             )
@@ -490,9 +512,12 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                     id="total"
                                                 >
                                                     Rs.{" "}
-                                                    {
-                                                        selectedSubscriptionPlan.price
-                                                    }
+                                                    {selectedSubscriptionPlan.price +
+                                                        (subscriptionAddons &&
+                                                        subscriptionAddons.length >
+                                                            0
+                                                            ? totalAddonAmount
+                                                            : 0)}
                                                     /-
                                                 </p>
                                             </div>
