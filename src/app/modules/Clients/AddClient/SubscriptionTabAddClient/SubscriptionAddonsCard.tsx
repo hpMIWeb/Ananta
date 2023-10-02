@@ -274,11 +274,13 @@ const SubscriptionAddonsCard = memo(
                         </div>
                     </div>
                     <div className="row g-0">
-                        <span>
-                            {selectAddonDetails.add_on_title} for{" "}
+                        <p className="semiBold" style={{ color: "#20c997" }}>
+                            {selectAddonDetails.add_on_title}
+                            {" @ RS "}
+                            {selectAddonDetails.price} /-{"   , For "}
                             {selectAddonDetails.time_period}{" "}
                             {selectAddonDetails.time_period_type}
-                        </span>
+                        </p>
                     </div>
                 </div>
                 <div className="col-auto align-self-center">
