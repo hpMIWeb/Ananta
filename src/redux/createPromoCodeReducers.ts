@@ -61,13 +61,13 @@ const createPromoCodeReducersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-                toast.success("Subscription Created Successfully");
+                toast.success("Promo code Created Successfully");
             })
             .addCase(createPromoCodeApi.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 // state.error = action.error.message;
-                toast.error("An error occurred during Creating Subscription."); // Display error toast
+                toast.error("An error occurred during Creating Promo code."); // Display error toast
             });
     },
 });

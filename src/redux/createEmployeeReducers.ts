@@ -53,13 +53,13 @@ const createEmployeeReducersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-                toast.success("Subscription Created Successfully");
+                toast.success("Employee Created Successfully");
             })
             .addCase(createEmployeeReducersApi.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 //TODO: state.error = action.error.message;
-                toast.error("An error occurred during Creating Subscription."); // Display error toast
+                toast.error("An error occurred during Creating Employee."); // Display error toast
             });
     },
 });

@@ -76,7 +76,7 @@ const createAssociatePartnerReducersSlice = createSlice({
                     state.loading = false;
                     state.success = true;
                     state.data = action.payload;
-                    toast.success("Subscription Created Successfully");
+                    toast.success("Associate Partner Created Successfully");
                 }
             )
             .addCase(
@@ -86,7 +86,7 @@ const createAssociatePartnerReducersSlice = createSlice({
                     state.success = false;
                     state.error = action.error.message;
                     toast.error(
-                        "An error occurred during Creating Subscription."
+                        "An error occurred during Creating Associate Partner."
                     );
                 }
             );
