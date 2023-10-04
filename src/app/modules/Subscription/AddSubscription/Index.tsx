@@ -17,7 +17,7 @@ import Cookies from "js-cookie";
 const AddSubscription = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
-    const roleType = Cookies.get("role");
+    const roleType = Cookies.get("roleTypeName");
     const [featureState, setFeatureState] = useState<any>();
     const [isSpaceUnlimited, setIsSpaceUnlimited] = useState<boolean>(false);
     const [isTransactionCreditsUnlimited, setIsTransactionCreditsUnlimited] =
@@ -606,15 +606,10 @@ const AddSubscription = () => {
                                             ]}
                                         >
                                             <Select
-                                                style={{ width: 130 }}
                                                 options={[
                                                     {
-                                                        value: "MONTH",
-                                                        label: "Months",
-                                                    },
-                                                    {
-                                                        value: "DAY",
-                                                        label: "Days",
+                                                        value: "applicable",
+                                                        label: "Applicable",
                                                     },
                                                 ]}
                                             />
@@ -623,6 +618,121 @@ const AddSubscription = () => {
                                 </div>
                             </div>
                         )}
+
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Sales & Purchase
+                                    </label>
+
+                                    <Form.Item name="sales_and_purchase">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Credit & Debit Notes
+                                    </label>
+
+                                    <Form.Item name="credit_and_debit_notes">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Receipt & Payment
+                                    </label>
+
+                                    <Form.Item name="receipt_and_payments">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Contras
+                                    </label>
+
+                                    <Form.Item name="contras">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Journals
+                                    </label>
+
+                                    <Form.Item name="journals">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="formFieldRowWrapper">
+                            <div className="col-auto formLabelWrapper">
+                                <label className="form-label"></label>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                <div className="formPeriodWrapper">
+                                    <label className="form-label">
+                                        Stock Journals
+                                    </label>
+
+                                    <Form.Item name="stock_journals">
+                                        <Input
+                                            placeholder="No of Transaction"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
@@ -675,46 +785,64 @@ const AddSubscription = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label">Modules</label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className={styles.featureCheckBoxWrapper}>
-                                    {featureList.map(
-                                        (task: any, index: any) => (
-                                            <div key={index}>
-                                                <Switch
-                                                    size="small"
-                                                    className="smallCheckBox"
-                                                    checked={
-                                                        featureState[
+
+                        {/* {hide when role is ca admin} */}
+                        {roleType !== "client" && (
+                            <div className="formFieldRowWrapper">
+                                <div className="col-auto formLabelWrapper">
+                                    <label className="form-label">
+                                        Modules
+                                    </label>
+                                </div>
+                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                    <div
+                                        className={
+                                            styles.featureCheckBoxWrapper
+                                        }
+                                    >
+                                        {featureList.map(
+                                            (task: any, index: any) => (
+                                                <div key={index}>
+                                                    <Switch
+                                                        size="small"
+                                                        className="smallCheckBox"
+                                                        checked={
+                                                            featureState[
+                                                                task.feature
+                                                            ] ??
+                                                            task.defaultState
+                                                        }
+                                                        onChange={() =>
+                                                            handleFeatureToggle(
+                                                                task.feature
+                                                            )
+                                                        }
+                                                    />
+                                                    <label
+                                                        className={
+                                                            styles.featureCheckBoxLabel
+                                                        }
+                                                    >
+                                                        {
                                                             task.feature
-                                                        ] ?? task.defaultState
-                                                    }
-                                                    onChange={() =>
-                                                        handleFeatureToggle(
-                                                            task.feature
-                                                        )
-                                                    }
-                                                />
-                                                <label
-                                                    className={
-                                                        styles.featureCheckBoxLabel
-                                                    }
-                                                >
-                                                    {
-                                                        task.feature
-                                                            .replace(/_/g, " ") // Replace underscores with spaces
-                                                            .replace(/-/g, " ") // Replace hyphens with spaces
-                                                    }
-                                                </label>
-                                            </div>
-                                        )
-                                    )}
+                                                                .replace(
+                                                                    /_/g,
+                                                                    " "
+                                                                ) // Replace underscores with spaces
+                                                                .replace(
+                                                                    /-/g,
+                                                                    " "
+                                                                ) // Replace hyphens with spaces
+                                                        }
+                                                    </label>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
+
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">Validity</label>

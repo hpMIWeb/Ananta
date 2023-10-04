@@ -23,7 +23,7 @@ import { capitalize } from "../../../utilities/utility";
 const SubscriptionTab = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
-    const roleType = Cookies.get("role");
+    const roleType = Cookies.get("roleTypeName");
     const { loading, data: subscriptionCardList = [] } = useSelector(
         (state: any) => state.getSubscriptionsListApi
     );
@@ -67,7 +67,8 @@ const SubscriptionTab = () => {
             label: "Associate Partner",
         },
     ]);
-    const addonOption = roleType === "1" ? superAdminAddon : caAdminAddonOption;
+    const addonOption =
+        roleType === "superadmin" ? superAdminAddon : caAdminAddonOption;
     const handleSubscriptionHistoryModalClick = (
         subscriptionHistory: any,
         subscriptionId: string

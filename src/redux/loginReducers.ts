@@ -43,7 +43,10 @@ const loginSlice = createSlice({
                 const jwtToken = action.payload?.payload?.token;
                 const role = action.payload?.payload?.admin.roleTypeId;
                 Cookies.set("jwt_token", jwtToken, { expires: 1 });
-                Cookies.set("role", role, {
+                Cookies.set("roleTypeId", role._id, {
+                    expires: 1,
+                });
+                Cookies.set("roleTypeName", role.role_type, {
                     expires: 1,
                 });
                 state.loading = false;

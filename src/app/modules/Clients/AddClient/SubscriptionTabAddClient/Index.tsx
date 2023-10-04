@@ -20,6 +20,7 @@ import { getPromocodeReducersListApi } from "../../../../../redux/getPromocodeRe
 import { JSX } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../states/store";
 import { Option } from "antd/es/mentions";
+import { toast } from "react-toastify";
 
 const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const dispatch = useAppDispatch();
@@ -40,6 +41,8 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
 
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
+    const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
+    const [couponDiscount, setCouponDiscount] = useState<number>(0);
 
     // Search input change handler
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,7 +230,8 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         period_type
     );
 
-    const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
+    const taxableValue =
+        selectedSubscriptionPlan.price - adminDiscount - couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
     const invoiceAmount = taxableValue + gstAmount + parseFloat(roundOff);
 
@@ -310,21 +314,37 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         onChange(6);
     };
 
-    const [selectedCoupon, setSelectedCoupon] = useState(null);
-
-    const couponOptions = [
-        { value: "CODE10", label: "CODE10 - 10% off" },
-        { value: "SAVE20", label: "SAVE20 - 20% off" },
-        { value: "FREESHIP", label: "FREESHIP - Free Shipping" },
-    ];
-
-    const applyCoupon = () => {
+    useEffect(() => {
         if (selectedCoupon) {
-            // You can implement the logic to apply the selected coupon here
-            // For this example, we'll display a success message.
-            //    message.success(`Coupon "${selectedCoupon}" applied successfully!`);
+            let discountVal = selectedCoupon.ammount;
+            if (selectedCoupon.type === "Percentage") {
+                const pctValue =
+                    (selectedSubscriptionPlan.price * selectedCoupon.ammount) /
+                    100;
+                discountVal = pctValue;
+            }
+
+            // Validate `maxDiscount`
+            if (discountVal > selectedCoupon.maxDiscount) {
+                discountVal = selectedCoupon.maxDiscount;
+            }
+
+            // Validate `discountValue` with actual plan price
+            if (discountVal > selectedSubscriptionPlan.price) {
+                discountVal = selectedSubscriptionPlan.price;
+            }
+
+            setCouponDiscount(discountVal);
+        }
+    }, [selectedCoupon]);
+
+    const applyCoupon = (coupon: any) => {
+        setSelectedCoupon(coupon);
+        setOpenPromoCodeDrawer(false);
+        if (coupon) {
+            toast.success(`Coupon "${coupon.name}" applied successfully!`);
         } else {
-            //  message.error("Please select a coupon.");
+            toast.error("Please select a coupon.");
         }
     };
 
@@ -541,7 +561,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                     className="text-end mb-1 success-text"
                                                     id="total"
                                                 >
-                                                    -Rs. 0/-
+                                                    -Rs. {couponDiscount}/-
                                                 </p>
                                             </div>
                                         </div>
@@ -721,7 +741,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 </div>
             </div>
             <Drawer
-                title="Basic Drawer"
+                title="Apply Coupon"
                 placement="right"
                 onClose={onClose}
                 open={openPromoCodeDrawer}
@@ -761,7 +781,13 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                         }}
                     >
                         <p style={{ margin: "16px 0" }}>{coupon.name}</p>
-                        <Button type="primary" style={{ width: "100%" }}>
+                        <Button
+                            type="primary"
+                            style={{ width: "100%" }}
+                            onClick={() => {
+                                applyCoupon(coupon);
+                            }}
+                        >
                             Apply Coupon
                         </Button>
                     </Card>
