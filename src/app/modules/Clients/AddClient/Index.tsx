@@ -21,10 +21,12 @@ import FormContentSkeletonLoader from "../../../../components/FormContentSkeleto
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
+import Cookies from "js-cookie";
 
 const AddClient = () => {
     const [activeTab, setActiveTab] = useState(1);
     const [clientValue, setClientValue] = useState({});
+    const roleType = Cookies.get("roleTypeName");
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
     const { clientId } = useParams();
@@ -41,6 +43,33 @@ const AddClient = () => {
         (state: any) => state.createClient
     );
 
+    let clientTypeOption = [
+        { value: "ca", label: "CA" },
+        {
+            value: "accountant",
+            label: "Accountant",
+        },
+        {
+            value: "tax_consultant",
+            label: "Tax Consultant",
+        },
+        {
+            value: "business_enterprise",
+            label: "Business Enterprise",
+        },
+    ];
+    if (roleType !== "superadmin") {
+        clientTypeOption = [
+            {
+                value: "regular",
+                label: "Regular",
+            },
+            {
+                value: "non_regular",
+                label: "Non Regular",
+            },
+        ];
+    }
     useEffect(() => {
         if (!getClientsListSuccess) {
             // @ts-ignore
@@ -147,7 +176,7 @@ const AddClient = () => {
         },
         {
             key: 5,
-            label: `Subscription`,
+            label: roleType === "superadmin" ? `Subscription` : `Billing`,
             children: (
                 <SubscriptionTabAddClient
                     onChange={onChange}
@@ -245,21 +274,7 @@ const AddClient = () => {
                                 ]}
                             >
                                 <Select
-                                    options={[
-                                        { value: "ca", label: "CA" },
-                                        {
-                                            value: "accountant",
-                                            label: "Accountant",
-                                        },
-                                        {
-                                            value: "tax_consultant",
-                                            label: "Tax Consultant",
-                                        },
-                                        {
-                                            value: "business_enterprise",
-                                            label: "Business Enterprise",
-                                        },
-                                    ]}
+                                    options={clientTypeOption}
                                     placeholder="Select Type"
                                     onChange={(value: any) =>
                                         setClientType(value)

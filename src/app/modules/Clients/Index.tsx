@@ -16,10 +16,12 @@ import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLo
 import { getFilteredValue } from "../../../utils/helpers";
 import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
+import Cookies from "js-cookie";
 
 const Clients = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
+    const roleType = Cookies.get("roleTypeName");
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const getClientsLoading = useSelector(
         (state: any) => state.getClients.loading
@@ -50,78 +52,162 @@ const Clients = () => {
     const cardDesc = (cardInfo: any) => {
         console.log("cardInfo");
 
-        return [
-            {
-                iconName: "client",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Clients</p>
-                        <p className="semiBold">
-                            0/{cardInfo.assignClients.length}
-                        </p>
-                    </>
-                ),
-            },
-            {
-                iconName: "employee",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Employees
-                        </p>
-                        <p className="semiBold">9</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "transaction",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Transaction Credits
-                        </p>
-                        <p className="semiBold">12423/15000</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "storage",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Storage</p>
-                        <p className="semiBold">2 / 4 GB</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "subscribe",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Associated Partners
-                        </p>
-                        <p className="semiBold">3</p>
-                    </>
-                ),
-            },
-            {
-                iconName: "cash",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Gold Subscription
-                        </p>
-                        <p className="semiBold">
-                            Expire on -{" "}
-                            {dayjs(cardInfo.subscriptionDetails.endDate).format(
-                                "YYYY-MM-DD"
-                            )}
-                        </p>
-                    </>
-                ),
-            },
-        ];
+        if (roleType === "superadmin") {
+            //super admin code
+            return [
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Clients
+                            </p>
+                            <p className="semiBold">
+                                0/{cardInfo.assignClients.length}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "employee",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Employees
+                            </p>
+                            <p className="semiBold">9</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "transaction",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Transaction Credits
+                            </p>
+                            <p className="semiBold">12423/15000</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "storage",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Storage
+                            </p>
+                            <p className="semiBold">2 / 4 GB</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "subscribe",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Associated Partners
+                            </p>
+                            <p className="semiBold">3</p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "cash",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Gold Subscription
+                            </p>
+                            <p className="semiBold">
+                                Expire on -{" "}
+                                {dayjs(
+                                    cardInfo.subscriptionDetails.endDate
+                                ).format("YYYY-MM-DD")}
+                            </p>
+                        </>
+                    ),
+                },
+            ];
+        } else {
+            //super admin code
+            return [
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Clients
+                            </p>
+                            <p className="semiBold">
+                                0/{cardInfo.assignClients.length}
+                            </p>
+                        </>
+                    ),
+                },
+                {},
+                {
+                    iconName: "cash",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Gold Subscription
+                            </p>
+                            <p className="semiBold">
+                                Expire on -{" "}
+                                {dayjs(
+                                    cardInfo.subscriptionDetails.endDate
+                                ).format("YYYY-MM-DD")}
+                            </p>
+                        </>
+                    ),
+                },
+            ];
+        }
     };
+
+    const [superAdminAddon, setSuperAdminAddonOption] = useState([
+        {
+            value: "Storage Space",
+            label: "Storage Space",
+        },
+        {
+            value: "No. Of Clients",
+            label: "No. Of Clients",
+        },
+        {
+            value: "No. Of Employees",
+            label: "No. Of Employees",
+        },
+        {
+            value: "No. Of Client Login",
+            label: "No. Of Client Login",
+        },
+        {
+            value: "No. Of Transactions",
+            label: "No. Of Transactions",
+        },
+        {
+            value: "Features List",
+            label: "Features List",
+        },
+    ]);
+    const [caAdminAddonOption, setCAdminAddonOption] = useState([
+        {
+            value: "All Client",
+            label: "All Subscription",
+        },
+        {
+            value: "regular",
+            label: "Regular",
+        },
+        {
+            value: "non_regular",
+            label: "Non Regular",
+        },
+    ]);
+    const addonOption =
+        roleType === "superadmin" ? superAdminAddon : caAdminAddonOption;
 
     const clientSortLabel = {
         Name: { asc: "Ascending", desc: "Descending" },
@@ -182,6 +268,7 @@ const Clients = () => {
                         setSortStateHandler={(options: any) => {
                             setSortState(options);
                         }}
+                        addonOption={addonOption}
                     />
                 </div>
                 {getClientsLoading && <CardContentSkeletonLoader />}

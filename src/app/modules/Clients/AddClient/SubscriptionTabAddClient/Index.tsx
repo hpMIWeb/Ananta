@@ -370,6 +370,51 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                         <div className="row g-3">
                             <div
                                 className={classNames(
+                                    "col-6",
+                                    styles.subscriptionFormColumn
+                                )}
+                            >
+                                <div className="mb-2">
+                                    <label
+                                        className={classNames(
+                                            "form-label",
+                                            styles.subscriptionFormLabel
+                                        )}
+                                    >
+                                        Billing Method
+                                        <sup className="text-danger fs--1">
+                                            *
+                                        </sup>
+                                    </label>
+                                    <Form.Item
+                                        name="billingType"
+                                        className="customAddClientSelectOptions"
+                                    >
+                                        <Select
+                                            options={[
+                                                {
+                                                    value: "subscription",
+                                                    label: "Subscription",
+                                                },
+                                                {
+                                                    value: "invoicing",
+                                                    label: "Invoicing",
+                                                },
+                                                {
+                                                    value: "pay_per_use",
+                                                    label: "Pay Per Use",
+                                                },
+                                            ]}
+                                            showSearch
+                                            placeholder="Select Billing Type"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>{" "}
+                        <div className="row g-3">
+                            <div
+                                className={classNames(
                                     "col",
                                     styles.subscriptionFormColumn
                                 )}
