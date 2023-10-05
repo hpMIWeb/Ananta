@@ -6,24 +6,28 @@ import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
-    subscriptionId: string;
+    employeeId: string;
 }
 
 export const createEmployeeReducersApi = createAsyncThunk(
     "createEmployeeReducers",
-    async ({ payload, subscriptionId }: Payload) => {
+    async ({ payload, employeeId }: Payload) => {
         const jwtToken = Cookies.get("jwt_token");
-        const response = !subscriptionId
+        const response = !employeeId
             ? await axios.post(`${apiEndpoint}admin/employee-signup`, payload, {
                   headers: {
                       Authorization: `Bearer ${jwtToken}`,
                   },
               })
-            : await axios.put(`${apiEndpoint}admin/update-profile`, payload, {
-                  headers: {
-                      Authorization: `Bearer ${jwtToken}`,
-                  },
-              });
+            : await axios.put(
+                  `${apiEndpoint}admin/update-profile/${employeeId}`,
+                  payload,
+                  {
+                      headers: {
+                          Authorization: `Bearer ${jwtToken}`,
+                      },
+                  }
+              );
         return response.data;
     }
 );
@@ -53,7 +57,11 @@ const createEmployeeReducersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-                toast.success("Employee Created Successfully");
+                toast.success(
+                    action.meta.arg.employeeId === ""
+                        ? "Employee Created Successfully."
+                        : "Employee Updated Successfully."
+                );
             })
             .addCase(createEmployeeReducersApi.rejected, (state, action) => {
                 state.loading = false;

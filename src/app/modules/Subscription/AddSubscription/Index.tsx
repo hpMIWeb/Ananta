@@ -52,7 +52,7 @@ const AddSubscription = () => {
         },
     ]);
     const categoryOptions =
-        roleType === "1" ? superAdminOptions : caAdminOption;
+        roleType === "superadmin" ? superAdminOptions : caAdminOption;
 
     const handleIsTransactionCreditsUnlimitedChange = (value: boolean) => {
         setIsTransactionCreditsUnlimited(value);
@@ -83,7 +83,7 @@ const AddSubscription = () => {
     const featureList: any = [];
 
     const formValues = {
-        // TODO:
+        // TODO: need to check why no append
         features: Object.fromEntries(
             featureList.map((task: any) => [
                 task.feature.replace(/\s+/g, "_"),
@@ -108,6 +108,14 @@ const AddSubscription = () => {
             },
             features: formValues?.features,
             subscribers_count: 0,
+            transactions: {
+                sales_and_purchase: e.sales_and_purchase,
+                credit_and_debit_notes: e.credit_and_debit_notes,
+                recipt_and_payments: e.receipt_and_payments,
+                contras: e.contras,
+                journals: e.journals,
+                stock_journals: e.stock_journals,
+            },
         };
         delete payload.employee_ca;
         delete payload.employee_client;
@@ -441,34 +449,7 @@ const AddSubscription = () => {
                                     </div>
                                 </div>
                             ))}
-                        {subscriptionCategory === "consultant" && (
-                            <div className="formFieldRowWrapper">
-                                <div className="col-auto formLabelWrapper">
-                                    <label className="form-label"></label>
-                                </div>
-                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                    <Form.Item
-                                        name="employee_client"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your Client Office Users Number!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            className="customAddFormInputText"
-                                            suffix={
-                                                <div className="inputSuffix">
-                                                    Client Office Users
-                                                </div>
-                                            }
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                        )}
+
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label">
@@ -491,9 +472,9 @@ const AddSubscription = () => {
                                         suffix={
                                             <div className="inputSuffix">
                                                 {subscriptionCategory ===
-                                                "business_enterprise"
-                                                    ? "Office Users"
-                                                    : "CA Office Users"}
+                                                "consultant"
+                                                    ? "CA Office Users"
+                                                    : "Office Users"}
                                             </div>
                                         }
                                     />
@@ -501,6 +482,38 @@ const AddSubscription = () => {
                             </div>
                         </div>
 
+                        {subscriptionCategory !== "business_enterprise" &&
+                            subscriptionCategory !== "client" && (
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <Form.Item
+                                            name="employee_client"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please Enter your Client Office Users Number!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                className="customAddFormInputText"
+                                                suffix={
+                                                    <div className="inputSuffix">
+                                                        {subscriptionCategory ===
+                                                        "associate_partner"
+                                                            ? "Client Users"
+                                                            : "Client Office Users"}
+                                                    </div>
+                                                }
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                            )}
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">
                                 <label className="form-label"></label>
@@ -521,9 +534,9 @@ const AddSubscription = () => {
                                         suffix={
                                             <div className="inputSuffix">
                                                 {subscriptionCategory ===
-                                                "business_enterprise"
-                                                    ? "Vendor Users"
-                                                    : "Client Vendor Users"}
+                                                "consultant"
+                                                    ? "Client Vendor Users"
+                                                    : "Vendor Users"}
                                             </div>
                                         }
                                     />
@@ -595,16 +608,7 @@ const AddSubscription = () => {
                                         </label>
                                     </div>
                                     <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                        <Form.Item
-                                            name="turnover"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Please Enter the number of turnover",
-                                                },
-                                            ]}
-                                        >
+                                        <Form.Item name="transaction">
                                             <Select
                                                 options={[
                                                     {
@@ -612,236 +616,250 @@ const AddSubscription = () => {
                                                         label: "Applicable",
                                                     },
                                                 ]}
+                                                defaultValue={"applicable"}
                                             />
                                         </Form.Item>
                                     </div>
                                 </div>
                             </div>
                         )}
+                        {subscriptionCategory === "client" && (
+                            <>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Sales & Purchase
+                                            </label>
 
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Sales & Purchase
-                                    </label>
-
-                                    <Form.Item name="sales_and_purchase">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="sales_and_purchase">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Credit & Debit Notes
-                                    </label>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Credit & Debit Notes
+                                            </label>
 
-                                    <Form.Item name="credit_and_debit_notes">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="credit_and_debit_notes">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Receipt & Payment
-                                    </label>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Receipt & Payment
+                                            </label>
 
-                                    <Form.Item name="receipt_and_payments">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="receipt_and_payments">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Contras
-                                    </label>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Contras
+                                            </label>
 
-                                    <Form.Item name="contras">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="contras">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Journals
-                                    </label>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Journals
+                                            </label>
 
-                                    <Form.Item name="journals">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="journals">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label"></label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div className="formPeriodWrapper">
-                                    <label className="form-label">
-                                        Stock Journals
-                                    </label>
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label"></label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div className="formPeriodWrapper">
+                                            <label className="form-label">
+                                                Stock Journals
+                                            </label>
 
-                                    <Form.Item name="stock_journals">
-                                        <Input
-                                            placeholder="No of Transaction"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                            <Form.Item name="stock_journals">
+                                                <Input
+                                                    placeholder="No of Transaction"
+                                                    className="customAddFormInputText"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="formFieldRowWrapper">
-                            <div className="col-auto formLabelWrapper">
-                                <label className="form-label">
-                                    Transaction Credits
-                                </label>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <Form.Item
-                                    name="no_of_transactions"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                "Please Enter your Transaction Credits!",
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder="No Of Transaction Credits"
-                                        className="customAddFormInputText"
-                                        disabled={isTransactionCreditsUnlimited}
-                                    />
-                                </Form.Item>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                <div
-                                    className={
-                                        styles.featureCheckBoxLabelWrapper
-                                    }
-                                >
-                                    <label
-                                        className={styles.featureCheckBoxLabel}
-                                    >
-                                        Not Applicable
-                                    </label>
-                                    <Switch
-                                        checked={isTransactionCreditsUnlimited}
-                                        size="small"
-                                        onChange={
-                                            handleIsTransactionCreditsUnlimitedChange
-                                        }
-                                        className="smallCheckBox"
-                                    ></Switch>
-                                    <label
-                                        className={styles.featureCheckBoxLabel}
-                                    >
-                                        Unlimited
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* {hide when role is ca admin} */}
-                        {roleType !== "client" && (
+                            </>
+                        )}
+                        {subscriptionCategory !== "client" && (
                             <div className="formFieldRowWrapper">
                                 <div className="col-auto formLabelWrapper">
                                     <label className="form-label">
-                                        Modules
+                                        Transaction Credits
                                     </label>
+                                </div>
+                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                    <Form.Item
+                                        name="no_of_transactions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Enter your Transaction Credits!",
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            placeholder="No Of Transaction Credits"
+                                            className="customAddFormInputText"
+                                            disabled={
+                                                isTransactionCreditsUnlimited
+                                            }
+                                        />
+                                    </Form.Item>
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                                     <div
                                         className={
-                                            styles.featureCheckBoxWrapper
+                                            styles.featureCheckBoxLabelWrapper
                                         }
                                     >
-                                        {featureList.map(
-                                            (task: any, index: any) => (
-                                                <div key={index}>
-                                                    <Switch
-                                                        size="small"
-                                                        className="smallCheckBox"
-                                                        checked={
-                                                            featureState[
-                                                                task.feature
-                                                            ] ??
-                                                            task.defaultState
-                                                        }
-                                                        onChange={() =>
-                                                            handleFeatureToggle(
-                                                                task.feature
-                                                            )
-                                                        }
-                                                    />
-                                                    <label
-                                                        className={
-                                                            styles.featureCheckBoxLabel
-                                                        }
-                                                    >
-                                                        {
-                                                            task.feature
-                                                                .replace(
-                                                                    /_/g,
-                                                                    " "
-                                                                ) // Replace underscores with spaces
-                                                                .replace(
-                                                                    /-/g,
-                                                                    " "
-                                                                ) // Replace hyphens with spaces
-                                                        }
-                                                    </label>
-                                                </div>
-                                            )
-                                        )}
+                                        <label
+                                            className={
+                                                styles.featureCheckBoxLabel
+                                            }
+                                        >
+                                            Not Applicable
+                                        </label>
+                                        <Switch
+                                            checked={
+                                                isTransactionCreditsUnlimited
+                                            }
+                                            size="small"
+                                            onChange={
+                                                handleIsTransactionCreditsUnlimitedChange
+                                            }
+                                            className="smallCheckBox"
+                                        ></Switch>
+                                        <label
+                                            className={
+                                                styles.featureCheckBoxLabel
+                                            }
+                                        >
+                                            Unlimited
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         )}
+                        {/* {hide when role is ca admin} */}
+
+                        {subscriptionCategory === "associate_partner" ||
+                            (subscriptionCategory === "business_enterprise" && (
+                                <div className="formFieldRowWrapper">
+                                    <div className="col-auto formLabelWrapper">
+                                        <label className="form-label">
+                                            Modules
+                                        </label>
+                                    </div>
+                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                        <div
+                                            className={
+                                                styles.featureCheckBoxWrapper
+                                            }
+                                        >
+                                            {featureList.map(
+                                                (task: any, index: any) => (
+                                                    <div key={index}>
+                                                        <Switch
+                                                            size="small"
+                                                            className="smallCheckBox"
+                                                            checked={
+                                                                featureState[
+                                                                    task.feature
+                                                                ] ??
+                                                                task.defaultState
+                                                            }
+                                                            onChange={() =>
+                                                                handleFeatureToggle(
+                                                                    task.feature
+                                                                )
+                                                            }
+                                                        />
+                                                        <label
+                                                            className={
+                                                                styles.featureCheckBoxLabel
+                                                            }
+                                                        >
+                                                            {
+                                                                task.feature
+                                                                    .replace(
+                                                                        /_/g,
+                                                                        " "
+                                                                    ) // Replace underscores with spaces
+                                                                    .replace(
+                                                                        /-/g,
+                                                                        " "
+                                                                    ) // Replace hyphens with spaces
+                                                            }
+                                                        </label>
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
 
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">

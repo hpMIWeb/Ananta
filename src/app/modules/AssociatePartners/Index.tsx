@@ -55,7 +55,7 @@ const AssociatePartners = () => {
         dispatch(
             createAssociatePartnerReducersApi({
                 payload: { status: !!e ? "Active" : "Inactive" },
-                subscriptionId: id,
+                associatePartnerId: id,
             })
         );
     };

@@ -6,16 +6,14 @@ import Cookies from "js-cookie";
 
 interface Payload {
     payload: any;
-    subscriptionId: string;
+    associatePartnerId: string;
 }
 
 export const createAssociatePartnerReducersApi = createAsyncThunk(
     "createAssociatePartnerReducers",
-    async ({ payload, subscriptionId }: Payload) => {
-        console.log(payload);
-        console.log("subscriptionId", subscriptionId);
+    async ({ payload, associatePartnerId }: Payload) => {
         const jwtToken = Cookies.get("jwt_token");
-        const response = !subscriptionId
+        const response = !associatePartnerId
             ? await axios.post(
                   `${apiEndpoint}admin/associated-partner-signup`,
                   payload,
@@ -25,11 +23,15 @@ export const createAssociatePartnerReducersApi = createAsyncThunk(
                       },
                   }
               )
-            : await axios.put(`${apiEndpoint}admin/update-profile`, payload, {
-                  headers: {
-                      Authorization: `Bearer ${jwtToken}`,
-                  },
-              });
+            : await axios.put(
+                  `${apiEndpoint}admin/update-profile/${associatePartnerId}`,
+                  payload,
+                  {
+                      headers: {
+                          Authorization: `Bearer ${jwtToken}`,
+                      },
+                  }
+              );
         return response.data;
     }
 );
@@ -76,7 +78,11 @@ const createAssociatePartnerReducersSlice = createSlice({
                     state.loading = false;
                     state.success = true;
                     state.data = action.payload;
-                    toast.success("Associate Partner Created Successfully");
+                    toast.success(
+                        action.meta.arg.associatePartnerId === ""
+                            ? "Associate Partner Created Successfully."
+                            : "Associate Partner Updated Successfully."
+                    );
                 }
             )
             .addCase(

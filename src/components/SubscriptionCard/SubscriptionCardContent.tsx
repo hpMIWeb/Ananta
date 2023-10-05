@@ -85,6 +85,7 @@ const SubscriptionCardContent = ({
                                 <Switch
                                     size="small"
                                     className="smallCheckBox"
+                                    defaultChecked={isActive}
                                     onChange={onChangeActive}
                                 />
                                 <label className={styles.cardSwitchLabel}>

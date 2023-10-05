@@ -104,7 +104,7 @@ const AddEmployee = () => {
             dispatch(
                 createEmployeeReducersApi({
                     payload: payload,
-                    subscriptionId: "",
+                    employeeId: "",
                 })
             );
         } else {

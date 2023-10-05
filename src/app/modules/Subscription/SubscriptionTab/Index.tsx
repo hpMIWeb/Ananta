@@ -11,7 +11,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NoDataAvailable from "../../../../components/NoDataAvailable/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
-import { getFilteredValue } from "../../../../utils/helpers";
+import {
+    displayNumberInCurrencyFormate,
+    getFilteredValue,
+} from "../../../../utils/helpers";
 import {
     createSubscriptionsReducersApi,
     resetStateCreateSubscriptions,
@@ -109,7 +112,7 @@ const SubscriptionTab = () => {
         );
 
         // Conditionally render the content based on roleType
-        if (roleType === "1") {
+        if (roleType === "superadmin") {
             //super admin code
             return [
                 {
@@ -131,7 +134,8 @@ const SubscriptionTab = () => {
                                 Price
                             </p>
                             <p className="mb-0 fs--1 semiBold">
-                                Rs. {cardInfo.price}
+                                Rs.{" "}
+                                {displayNumberInCurrencyFormate(cardInfo.price)}
                             </p>
                         </>
                     ),
@@ -206,7 +210,7 @@ const SubscriptionTab = () => {
                                 </li>
                                 <li>
                                     Client Vendors Users -{" "}
-                                    {cardInfo.no_of_client_login}
+                                    {cardInfo.client_vendor}
                                 </li>
                             </ul>
                         </>
@@ -263,7 +267,7 @@ const SubscriptionTab = () => {
                                 Price
                             </p>
                             <p className="mb-0 fs--1 semiBold">
-                                Rs. {cardInfo.price}
+                                {displayNumberInCurrencyFormate(cardInfo.price)}
                             </p>
                         </>
                     ),
@@ -301,7 +305,9 @@ const SubscriptionTab = () => {
                             <p className="mb-0 fs--1 description-label">
                                 Branches
                             </p>
-                            <p className="semiBold">2</p>
+                            <p className="semiBold">
+                                {cardInfo.branches ? cardInfo.branches : 0}
+                            </p>
                         </>
                     ),
                 },
@@ -312,7 +318,11 @@ const SubscriptionTab = () => {
                             <p className="mb-0 fs--1 description-label">
                                 Turnover Limit
                             </p>
-                            <p className="semiBold">Rs 150000/-</p>
+                            <p className="semiBold">
+                                {displayNumberInCurrencyFormate(
+                                    cardInfo.turnover
+                                )}
+                            </p>
                         </>
                     ),
                 },
@@ -336,15 +346,49 @@ const SubscriptionTab = () => {
                             </p>
                             <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
                                 <li>
-                                    Sale & Purchase- {cardInfo.no_of_client}
+                                    Sale & Purchase-{" "}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.sales_and_purchase
+                                        ? cardInfo.transactions
+                                              .sales_and_purchase
+                                        : 0}
                                 </li>
                                 <li>
                                     Credit & Debit Notes -{" "}
-                                    {cardInfo.no_of_employee}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.credit_and_debit_notes
+                                        ? cardInfo.transactions
+                                              .credit_and_debit_notes
+                                        : 0}
                                 </li>
                                 <li>
-                                    Client Vendors Users -{" "}
-                                    {cardInfo.no_of_client_login}
+                                    Receipt & Payments -{" "}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.recipt_and_payments
+                                        ? cardInfo.transactions
+                                              .recipt_and_payments
+                                        : 0}
+                                </li>
+                                <li>
+                                    Contras -{" "}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.contras
+                                        ? cardInfo.transactions.contras
+                                        : 0}
+                                </li>{" "}
+                                <li>
+                                    Journals -{" "}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.journals
+                                        ? cardInfo.transactions.journals
+                                        : 0}
+                                </li>
+                                <li>
+                                    Stock Journals -{" "}
+                                    {cardInfo.transactions &&
+                                    cardInfo.transactions.stock_journals
+                                        ? cardInfo.transactions.stock_journals
+                                        : 0}
                                 </li>
                             </ul>
                         </>
@@ -378,10 +422,17 @@ const SubscriptionTab = () => {
                                 <li>
                                     Client Office Users -{" "}
                                     {cardInfo.no_of_employee}
+                                    {cardInfo.no_of_employee &&
+                                    cardInfo.no_of_users.no_of_employee
+                                        ? cardInfo.no_of_users.no_of_employee
+                                        : 0}
                                 </li>
                                 <li>
-                                    Client Vendors Users -{" "}
-                                    {cardInfo.no_of_client_login}
+                                    Client Vendors Users -
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.client_vendor
+                                        ? cardInfo.no_of_users.client_vendor
+                                        : 0}
                                 </li>
                             </ul>
                         </>

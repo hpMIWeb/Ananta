@@ -67,7 +67,12 @@ const createAddonsReducersReducersSlice = createSlice({
                     state.loading = false;
                     state.success = true;
                     state.data = action.payload;
-                    toast.success("Addons Created Successfully");
+
+                    toast.success(
+                        action.meta.arg.addonsId === ""
+                            ? "Addons Created Successfully."
+                            : "Addons Updated Successfully."
+                    );
                 }
             )
             .addCase(

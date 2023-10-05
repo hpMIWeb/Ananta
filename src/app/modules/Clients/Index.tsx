@@ -37,8 +37,8 @@ const Clients = () => {
     const onChangeActiveClick = (e: any, id: any) => {
         dispatch(
             createClientReducersApi({
-                payload: { status: !!e ? "Active" : "Inactive" },
-                subscriptionId: id,
+                payload: { status: !!e ? true : false },
+                clientId: id,
             })
         );
     };
@@ -203,6 +203,7 @@ const Clients = () => {
                             planName={card.firmName}
                             cardDesc={cardDesc}
                             isProfileViewAction
+                            isActive={card.status}
                             onChangeActiveClick={onChangeActiveClick}
                         />
                     ))}

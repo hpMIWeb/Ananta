@@ -120,3 +120,16 @@ export const filterObjectByKey = (object, keysArray) => {
 export const amountDigitFixed = (amount, fixedValue = 2) => {
     return amount.toFixed(fixedValue);
 };
+
+export const displayNumberInCurrencyFormate = (
+    amount,
+    country = "en-IN",
+    currencyType = "INR"
+) => {
+    return amount
+        ? new Intl.NumberFormat(country, {
+              style: "currency",
+              currency: currencyType,
+          }).format(amount)
+        : " 0";
+};

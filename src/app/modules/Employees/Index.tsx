@@ -45,7 +45,7 @@ const Employees = () => {
         dispatch(
             createEmployeeReducersApi({
                 payload: { status: !!e ? "Active" : "Inactive" },
-                subscriptionId: id,
+                employeeId: id,
             })
         );
     };
