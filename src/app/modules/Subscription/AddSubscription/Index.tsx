@@ -62,6 +62,8 @@ const AddSubscription = () => {
     };
 
     const { subscriptionId } = useParams();
+    console.log("subscriptionId", subscriptionId);
+    const [isEditMode, setIsEditMode] = useState(subscriptionId ? true : false);
     const [form] = Form.useForm();
     const { data: subscriptionCardList, loading: subscriptionCardListLoading } =
         useSelector((state: any) => state.getSubscriptionsListApi);
@@ -220,6 +222,7 @@ const AddSubscription = () => {
                             status: "Active",
                             display_on_portal: true,
                             category: subscriptionCategory,
+                            transaction: "applicable",
                         }}
                         onFinish={onFinish}
                         autoComplete="off"
@@ -249,6 +252,7 @@ const AddSubscription = () => {
                                         onChange={(value) =>
                                             setSubscriptionCategory(value)
                                         }
+                                        disabled={isEditMode}
                                     />
                                 </Form.Item>
                             </div>
@@ -616,7 +620,7 @@ const AddSubscription = () => {
                                                         label: "Applicable",
                                                     },
                                                 ]}
-                                                defaultValue={"applicable"}
+                                                disabled={isEditMode}
                                             />
                                         </Form.Item>
                                     </div>
