@@ -10,10 +10,12 @@ import { createAddonsReducersReducersApi } from "../../../../redux/createAddonsR
 import { getAddonsReducersListApi } from "../../../../redux/getAddonsReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { useAppDispatch } from "../../../states/store";
+import Cookies from "js-cookie";
 
 const NewAddOns = () => {
     const [selectedAddonType, setSelectedAddonType] = useState("Storage Space");
     const { addonsId } = useParams();
+    const roleType = Cookies.get("roleTypeName");
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
     const [form] = Form.useForm();
@@ -26,6 +28,102 @@ const NewAddOns = () => {
             dispatch(getAddonsReducersListApi());
         }
     }, [addonsCardList]);
+
+    const superAdminAddonType = [
+        {
+            value: "storage_space",
+            label: "Storage Space",
+        },
+        {
+            value: "No. Of Clients",
+            label: "No. Of Clients",
+        },
+        {
+            value: "No. Of Employees",
+            label: "No. Of Employees",
+        },
+        {
+            value: "No. Of Client Login",
+            label: "No. Of Client Login",
+        },
+        {
+            value: "No. Of Transactions",
+            label: "No. Of Transactions",
+        },
+        {
+            value: "Features List",
+            label: "Features List",
+        },
+    ];
+    const caAdminAddonType = [
+        {
+            value: "storage_space",
+            label: "Storage Space",
+        },
+        {
+            value: "client",
+            label: "Clients",
+        },
+        {
+            value: "office_users",
+            label: "Office Users",
+        },
+        {
+            value: "client_users",
+            label: "Client Users",
+        },
+        {
+            value: "vendor_users",
+            label: "Vendor Users",
+        },
+        {
+            value: "transactional_credit",
+            label: "Transactional Credit",
+        },
+        {
+            value: "branches",
+            label: "Branches",
+        },
+        {
+            value: "feature",
+            label: "Feature",
+        },
+        {
+            value: "turnover",
+            label: "Turnover",
+        },
+        {
+            value: "sales_and_purchase",
+            label: "Sales And Purchase",
+        },
+        {
+            value: "credit_and_debit_notes",
+            label: "Credit And Debit notes",
+        },
+        {
+            value: "recipt_and_payments",
+            label: "Receipt and payments",
+        },
+        {
+            value: "contras",
+            label: "Contras",
+        },
+        {
+            value: "journals",
+            label: "Journals",
+        },
+        {
+            value: "stock_journals",
+            label: "Stock Journals",
+        },
+        {
+            value: "transactional_all",
+            label: "Transactional All",
+        },
+    ];
+
+    const addonTypeOption =
+        roleType === "superadmin" ? superAdminAddonType : caAdminAddonType;
 
     const onFinish = (e: any) => {
         console.log(e);
@@ -134,32 +232,7 @@ const NewAddOns = () => {
                                 >
                                     <Select
                                         style={{ height: 33 }}
-                                        options={[
-                                            {
-                                                value: "Storage Space",
-                                                label: "Storage Space",
-                                            },
-                                            {
-                                                value: "No. Of Clients",
-                                                label: "No. Of Clients",
-                                            },
-                                            {
-                                                value: "No. Of Employees",
-                                                label: "No. Of Employees",
-                                            },
-                                            {
-                                                value: "No. Of Client Login",
-                                                label: "No. Of Client Login",
-                                            },
-                                            {
-                                                value: "No. Of Transactions",
-                                                label: "No. Of Transactions",
-                                            },
-                                            {
-                                                value: "Features List",
-                                                label: "Features List",
-                                            },
-                                        ]}
+                                        options={addonTypeOption}
                                         onChange={(value) =>
                                             setSelectedAddonType(value)
                                         }
