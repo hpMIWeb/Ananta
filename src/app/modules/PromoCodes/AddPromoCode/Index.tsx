@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../../states/store";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { deletePromoCodeReducersApi } from "../../../../redux/deletePromoCodeReducers";
 
 const AddPromoCode = () => {
     const { promocodeId } = useParams();
@@ -29,6 +30,8 @@ const AddPromoCode = () => {
     const { loading, success } = useSelector(
         (state: any) => state.createPromoCode
     );
+    const { loading: deletePromoCodeLoading, success: deletePromoCodeSuccess } =
+        useSelector((state: any) => state.deletePromoCode);
     const [selectedCouponType, setSelectedCouponType] = useState("Percentage");
 
     useEffect(() => {
@@ -80,13 +83,21 @@ const AddPromoCode = () => {
     }, [getPromocodeList, promocodeId, form]);
 
     useEffect(() => {
-        if (success) {
+        console.log("deletePromoCodeSuccess", deletePromoCodeSuccess);
+        if (success || deletePromoCodeSuccess) {
             navigation("/promocodes");
         }
-    }, [success]);
+    }, [success, deletePromoCodeSuccess]);
 
     const onCancelClick = () => {
         navigation("/promocodes");
+    };
+    const onDeleteClick = () => {
+        dispatch(
+            deletePromoCodeReducersApi({
+                promoCodeId: promocodeId,
+            })
+        );
     };
     return (
         <div
@@ -595,6 +606,7 @@ const AddPromoCode = () => {
                             <Form.Item>
                                 {promocodeId && (
                                     <Button
+                                        onClick={onDeleteClick}
                                         className={styles.deleteBtn}
                                         type="primary"
                                         danger

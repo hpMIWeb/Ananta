@@ -13,7 +13,7 @@ export const deletePromoCodeReducersApi = createAsyncThunk(
     async ({ promoCodeId }: Payload) => {
         const jwtToken = Cookies.get("jwt_token");
         const response = await axios.delete(
-            `${apiEndpoint}promocode/delete-promocode?${promoCodeId}`,
+            `${apiEndpoint}promocode/delete-promocode?promoId=${promoCodeId}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,

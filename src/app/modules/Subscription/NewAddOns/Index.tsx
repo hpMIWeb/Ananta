@@ -23,7 +23,8 @@ const NewAddOns = () => {
     const { data: addonsCardList, loading: addonsCardListLoading } =
         useSelector((state: any) => state.getAddonsList);
     const { loading, success } = useSelector((state: any) => state.createAddon);
-
+    const { loading: deleteAddonLoading, success: deleteAddonCodeSuccess } =
+        useSelector((state: any) => state.deleteAddon);
     useEffect(() => {
         if (!addonsCardList.length) {
             dispatch(getAddonsReducersListApi());
@@ -146,10 +147,11 @@ const NewAddOns = () => {
     }, [addonsCardList, addonsId, form]);
 
     useEffect(() => {
-        if (success) {
+        console.log("deleteAddonCodeSuccess", deleteAddonCodeSuccess);
+        if (success || deleteAddonCodeSuccess) {
             navigation("/subscription");
         }
-    }, [success]);
+    }, [success, deleteAddonCodeSuccess]);
 
     const handleSwitchChange = (value: any) => {
         form.setFieldsValue({ display_on_portal: value });

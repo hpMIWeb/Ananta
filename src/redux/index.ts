@@ -22,6 +22,7 @@ import getAssociatePartnerReducers from "./getAssociatePartnerReducers";
 import getLineOfBusinessReducers from "./getLineOfBusinessReducers";
 import getIndustryTypeReducers from "./getIndustryTypeReducers";
 import deleteAddonReducers from "./deleteAddonReducers";
+import deletePromoCodeReducers from "./deletePromoCodeReducers";
 
 export const store = configureStore({
     reducer: {
@@ -47,5 +48,6 @@ export const store = configureStore({
         getLineOfBusiness: getLineOfBusinessReducers,
         getIndustryType: getIndustryTypeReducers,
         deleteAddon: deleteAddonReducers,
+        deletePromoCode: deletePromoCodeReducers,
     },
 });
