@@ -304,7 +304,10 @@ const LayoutComponent = ({
                         theme={themeProp}
                     />
                 </Header>
-
+                <div className={classNames(styles.footerWrapper)}>
+                    <Icon width={13.33} height={13.33} name="home" />{" "}
+                    {"Home > Billing"}
+                </div>
                 <Content style={{ margin: 0 }}>
                     <div
                         // style={{

@@ -12,12 +12,12 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
         { type: "default", index: 0, name: "index0" },
     ]);
     const onFinish = (value: any) => {
-        // const filteredValue = filterObjectByKey(
-        //     value.ownerDetails,
-        //     ownerInfoData.map((a) => a.name)
-        // );
+        const filteredValue = filterObjectByKey(
+            value.ownerDetails,
+            ownerInfoData.map((a) => a.name)
+        );
 
-        // setFormValue({ ownerDetails: Object.values(filteredValue) });
+        setFormValue({ ownerDetails: Object.values(filteredValue) });
         onChange(4);
     };
 
