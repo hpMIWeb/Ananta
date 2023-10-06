@@ -202,15 +202,26 @@ const SubscriptionTab = () => {
                             </p>
                             <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
                                 <li>
-                                    CA Office Users - {cardInfo.no_of_client}
+                                    CA Office Users -{" "}
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.office_users
+                                        ? cardInfo.no_of_users.office_users
+                                        : 0}
                                 </li>
                                 <li>
                                     Client Office Users -{" "}
-                                    {cardInfo.no_of_employee}
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.client_office_users
+                                        ? cardInfo.no_of_users
+                                              .client_office_users
+                                        : 0}
                                 </li>
                                 <li>
                                     Client Vendors Users -{" "}
-                                    {cardInfo.client_vendor}
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.client_vendor
+                                        ? cardInfo.no_of_users.client_vendor
+                                        : 0}
                                 </li>
                             </ul>
                         </>
@@ -364,9 +375,9 @@ const SubscriptionTab = () => {
                                 <li>
                                     Receipt & Payments -{" "}
                                     {cardInfo.transactions &&
-                                    cardInfo.transactions.recipt_and_payments
+                                    cardInfo.transactions.receipt_and_payments
                                         ? cardInfo.transactions
-                                              .recipt_and_payments
+                                              .receipt_and_payments
                                         : 0}
                                 </li>
                                 <li>
@@ -417,18 +428,22 @@ const SubscriptionTab = () => {
                             </p>
                             <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
                                 <li>
-                                    CA Office Users - {cardInfo.no_of_client}
-                                </li>
-                                <li>
-                                    Client Office Users -{" "}
-                                    {cardInfo.no_of_employee}
-                                    {cardInfo.no_of_employee &&
-                                    cardInfo.no_of_users.no_of_employee
-                                        ? cardInfo.no_of_users.no_of_employee
+                                    CA Office Users -{" "}
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.office_users
+                                        ? cardInfo.no_of_users.office_users
                                         : 0}
                                 </li>
                                 <li>
-                                    Client Vendors Users -
+                                    Client Office Users -{" "}
+                                    {cardInfo.no_of_users &&
+                                    cardInfo.no_of_users.client_office_users
+                                        ? cardInfo.no_of_users
+                                              .client_office_users
+                                        : 0}
+                                </li>
+                                <li>
+                                    Client Vendors Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.client_vendor
                                         ? cardInfo.no_of_users.client_vendor

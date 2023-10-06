@@ -21,7 +21,7 @@ const AddOnTypeContent = ({ selectedAddonType }: any) => {
             label: "Credit & Debit notes",
         },
         {
-            value: "recipt_and_payments",
+            value: "receipt_and_payments",
             label: "Receipt & payments",
         },
         {

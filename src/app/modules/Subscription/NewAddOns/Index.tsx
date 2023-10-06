@@ -101,7 +101,7 @@ const NewAddOns = () => {
             label: "Credit And Debit notes",
         },
         {
-            value: "recipt_and_payments",
+            value: "receipt_and_payments",
             label: "Receipt and payments",
         },
         {

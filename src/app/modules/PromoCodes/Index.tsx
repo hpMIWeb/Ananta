@@ -19,10 +19,11 @@ import {
 import { getFilteredValue } from "../../../utils/helpers";
 import PromocodeHistoryModal from "../../../components/SubscriptionCard/PromocodeHistoryModal";
 import moment from "moment";
+import { useAppDispatch } from "../../states/store";
 
 const PromoCodes = () => {
     const navigation = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { loading, data: promoCodeList } = useSelector(
         (state: any) => state.getPromocodeList
     );
@@ -170,12 +171,12 @@ const PromoCodes = () => {
 
     const onChangeActiveClick = (e: any, id: string) => {
         //TODO:: need to solve
-        // dispatch(
-        //   createPromoCodeApi({
-        //     payload: { status: !!e ? "Active" : "Inactive", promoId: id },
-        //     promoId: id,
-        //   })
-        // );
+        dispatch(
+            createPromoCodeApi({
+                payload: { status: !!e ? "Active" : "Inactive", promoId: id },
+                promoId: id,
+            })
+        );
     };
 
     useEffect(() => {

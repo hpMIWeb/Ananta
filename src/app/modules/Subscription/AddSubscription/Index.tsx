@@ -62,7 +62,6 @@ const AddSubscription = () => {
     };
 
     const { subscriptionId } = useParams();
-    console.log("subscriptionId", subscriptionId);
     const [isEditMode, setIsEditMode] = useState(subscriptionId ? true : false);
     const [form] = Form.useForm();
     const { data: subscriptionCardList, loading: subscriptionCardListLoading } =
@@ -104,16 +103,17 @@ const AddSubscription = () => {
         const payload = {
             ...e,
             no_of_users: {
-                employee_ca: e.employee_ca,
-                employee_client: e.employee_client,
+                office_users: e.office_users,
+                client_office_users: e.client_office_users,
                 client_vendor: e.client_vendor,
             },
             features: formValues?.features,
+            transaction_credits: e.transaction_credits,
             subscribers_count: 0,
             transactions: {
                 sales_and_purchase: e.sales_and_purchase,
                 credit_and_debit_notes: e.credit_and_debit_notes,
-                recipt_and_payments: e.receipt_and_payments,
+                receipt_and_payments: e.receipt_and_payments,
                 contras: e.contras,
                 journals: e.journals,
                 stock_journals: e.stock_journals,
@@ -149,11 +149,23 @@ const AddSubscription = () => {
                 (s: any) => s._id === subscriptionId
             );
             setFeatureState(currentCardDetail.features);
+            setSubscriptionCategory(currentCardDetail.category);
+
             form.setFieldsValue({
                 ...currentCardDetail,
-                employee_ca: currentCardDetail.no_of_users.employee_ca,
-                employee_client: currentCardDetail.no_of_users.employee_client,
+                office_users: currentCardDetail.no_of_users.office_users,
+                client_office_users:
+                    currentCardDetail.no_of_users.client_office_users,
                 client_vendor: currentCardDetail.no_of_users.client_vendor,
+                sales_and_purchase:
+                    currentCardDetail.transactions.sales_and_purchase,
+                credit_and_debit_notes:
+                    currentCardDetail.transactions.credit_and_debit_notes,
+                receipt_and_payments:
+                    currentCardDetail.transactions.receipt_and_payments,
+                contras: currentCardDetail.transactions.contras,
+                journals: currentCardDetail.transactions.journals,
+                stock_journals: currentCardDetail.transactions.stock_journals,
             });
         }
     }, [subscriptionCardList, subscriptionId, form]);
@@ -462,7 +474,7 @@ const AddSubscription = () => {
                             </div>
                             <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                                 <Form.Item
-                                    name="employee_ca"
+                                    name="office_users"
                                     rules={[
                                         {
                                             required: true,
@@ -494,7 +506,7 @@ const AddSubscription = () => {
                                     </div>
                                     <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                                         <Form.Item
-                                            name="employee_client"
+                                            name="client_office_users"
                                             rules={[
                                                 {
                                                     required: true,
@@ -754,7 +766,7 @@ const AddSubscription = () => {
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
                                     <Form.Item
-                                        name="no_of_transactions"
+                                        name="transaction_credits"
                                         rules={[
                                             {
                                                 required: true,
