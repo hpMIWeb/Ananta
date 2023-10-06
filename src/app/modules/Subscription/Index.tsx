@@ -9,7 +9,7 @@ import { getSubscriptionsListApi } from "../../../redux/getSubscriptionsReducers
 import { resetStateCreateSubscriptions } from "../../../redux/createSubscriptionsReducers";
 import { getAddonsReducersListApi } from "../../../redux/getAddonsReducers";
 import { resetStateCreateAddons } from "../../../redux/createAddonsReducers";
-import { resetStateDeleteSubscriptions } from "../../../redux/deleteSubscriptionsReducers";
+import { resetStateDeleteSubscriptions } from "../../../redux/deleteAddonReducers";
 import { useAppDispatch } from "../../states/store";
 import Button from "../../../components/Button/Index";
 import Icon from "../../../components/Icon/Index";

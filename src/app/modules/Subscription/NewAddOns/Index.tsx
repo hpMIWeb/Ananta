@@ -11,6 +11,7 @@ import { getAddonsReducersListApi } from "../../../../redux/getAddonsReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { useAppDispatch } from "../../../states/store";
 import Cookies from "js-cookie";
+import { deleteAddonReducersAi } from "../../../../redux/deleteAddonReducers";
 
 const NewAddOns = () => {
     const [selectedAddonType, setSelectedAddonType] = useState("Storage Space");
@@ -155,6 +156,14 @@ const NewAddOns = () => {
     };
     const onCancelClick = () => {
         navigation("/subscription");
+    };
+
+    const onDeleteClick = () => {
+        dispatch(
+            deleteAddonReducersAi({
+                addonId: addonsId,
+            })
+        );
     };
 
     const display_on_portal = Form.useWatch("display_on_portal", form);
@@ -409,6 +418,7 @@ const NewAddOns = () => {
                                 <Form.Item>
                                     {addonsId && (
                                         <Button
+                                            onClick={onDeleteClick}
                                             className={styles.deleteBtn}
                                             type="primary"
                                             danger

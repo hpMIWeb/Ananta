@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import loginReducers from "./loginReducers";
 import getSubscriptionsListSlice from "./getSubscriptionsReducers";
 import createSubscriptionsReducersSlice from "./createSubscriptionsReducers";
-import deleteSubscriptionsReducersSlice from "./deleteSubscriptionsReducers";
+import deleteSubscriptionsReducersSlice from "./deleteAddonReducers";
 import getAddonsReducersListSlice from "./getAddonsReducers";
 import createAddonsReducersReducersSlice from "./createAddonsReducers";
 import getPromocodeReducersListSlice from "./getPromocodeReducers";
@@ -21,6 +21,7 @@ import getAssociatePaetnerReducers from "./getAssociatePartnerReducers";
 import getAssociatePartnerReducers from "./getAssociatePartnerReducers";
 import getLineOfBusinessReducers from "./getLineOfBusinessReducers";
 import getIndustryTypeReducers from "./getIndustryTypeReducers";
+import deleteAddonReducers from "./deleteAddonReducers";
 
 export const store = configureStore({
     reducer: {
@@ -45,5 +46,6 @@ export const store = configureStore({
         getAssociatePartner: getAssociatePartnerReducers,
         getLineOfBusiness: getLineOfBusinessReducers,
         getIndustryType: getIndustryTypeReducers,
+        deleteAddon: deleteAddonReducers,
     },
 });
