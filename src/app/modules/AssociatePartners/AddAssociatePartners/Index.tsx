@@ -186,6 +186,41 @@ const AddAssociatePartners = () => {
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
                             <label className="form-label">
+                                Partners Category
+                                <sup className="text-danger fs--1">*</sup>
+                            </label>
+                            <Form.Item
+                                name="partnerCategory"
+                                className="customAddClientSelectOptions"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please Select Category!",
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    options={[
+                                        {
+                                            value: "sales_partner",
+                                            label: "Sales Partner",
+                                        },
+                                        {
+                                            value: "service_partner",
+                                            label: "Service Partner",
+                                        },
+                                    ]}
+                                    placeholder="Select Type"
+                                    onChange={(value: any) =>
+                                        setPartnerType(value)
+                                    }
+                                />
+                            </Form.Item>
+                        </div>
+                    </div>{" "}
+                    <div className={classNames("col-12 col-md-4 col-lg-4")}>
+                        <div className="mb-3">
+                            <label className="form-label">
                                 Partners Type
                                 <sup className="text-danger fs--1">*</sup>
                             </label>

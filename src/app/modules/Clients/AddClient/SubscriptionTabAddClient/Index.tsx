@@ -821,11 +821,20 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                         style={{
                             marginBottom: "16px",
                             borderRadius: "10px",
-                            padding: "16px",
+                            padding: "0",
                             textAlign: "center",
+                            border: "1px solid #c7bdbd",
                         }}
                     >
-                        <p style={{ margin: "16px 0" }}>{coupon.name}</p>
+                        <p
+                            style={{
+                                margin: "16px 0",
+                                fontWeight: 600,
+                                fontSize: "16px",
+                            }}
+                        >
+                            {coupon.name}
+                        </p>
                         <Button
                             type="primary"
                             style={{ width: "100%" }}

@@ -16,10 +16,12 @@ import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLo
 import { getFilteredValue } from "../../../utils/helpers";
 import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
+import Cookies from "js-cookie";
 
 const AssociatePartners = () => {
     const navigation = useNavigate();
     const dispatch = useAppDispatch();
+    const roleType = Cookies.get("roleTypeName");
     const getAssociatePartnerList = useSelector(
         (state: any) => state.getAssociatePartner.data
     );
@@ -31,7 +33,7 @@ const AssociatePartners = () => {
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
         []
     );
-    const [addonOption, setAddonOption] = useState([
+    const superAdminAddonOption = [
         { value: "ca", label: "CA" },
         {
             value: "accountant",
@@ -45,7 +47,15 @@ const AssociatePartners = () => {
             value: "business_enterprise",
             label: "Business Enterprise",
         },
-    ]);
+    ];
+
+    const caAdminAddonOption = [
+        { value: "sales_partner", label: "Sales Partner" },
+        { value: "service_partner", label: "Service Partner" },
+    ];
+
+    const addonOption =
+        roleType === "superadmin" ? superAdminAddonOption : caAdminAddonOption;
 
     const handleNewAssociatePartnerClick = () => {
         navigation("/associatePartners/create");
@@ -67,40 +77,86 @@ const AssociatePartners = () => {
     const cardDesc = (cardInfo: any) => {
         console.log("cardInfo");
 
-        return [
-            {
-                iconName: "client",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Clients</p>
-                        <p className="semiBold">
-                            0/{cardInfo.assignClients.length}
-                        </p>
-                    </>
-                ),
-            },
-            {
-                iconName: "employee",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">
-                            Employees
-                        </p>
-                        <p className="semiBold">9</p>
-                    </>
-                ),
-            },
+        if (roleType === "superadmin") {
+            return [
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Clients
+                            </p>
+                            <p className="semiBold">
+                                0/{cardInfo.assignClients.length}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "employee",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Employees
+                            </p>
+                            <p className="semiBold">9</p>
+                        </>
+                    ),
+                },
 
-            {
-                iconName: "sale",
-                descComponent: (
-                    <>
-                        <p className="mb-0 fs--1 description-label">Sales</p>
-                        <p className="semiBold">2 / 4 GB</p>
-                    </>
-                ),
-            },
-        ];
+                {
+                    iconName: "sale",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Sales
+                            </p>
+                            <p className="semiBold">2 / 4 GB</p>
+                        </>
+                    ),
+                },
+            ];
+        } else {
+            return [
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Category
+                            </p>
+                            <p className="semiBold">
+                                0/{cardInfo.assignClients.length}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "client",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Clients
+                            </p>
+                            <p className="semiBold">
+                                0/{cardInfo.assignClients.length}
+                            </p>
+                        </>
+                    ),
+                },
+                {
+                    iconName: "employee",
+                    descComponent: (
+                        <>
+                            <p className="mb-0 fs--1 description-label">
+                                Employees
+                            </p>
+                            <p className="semiBold">9</p>
+                        </>
+                    ),
+                },
+            ];
+        }
     };
 
     const clientSortLabel = {

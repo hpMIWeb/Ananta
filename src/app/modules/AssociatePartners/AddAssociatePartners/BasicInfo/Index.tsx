@@ -388,76 +388,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                                 "row",
                                 styles.formFieldWrapper
                             )}
-                        >
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-4 col-lg-4",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div>
-                                    <label className="form-label">
-                                        Email
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="email"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your Email!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Email"
-                                            type="email"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-4 col-lg-4",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div>
-                                    <label className="form-label">
-                                        Mobile
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="mobile"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your Mobile!",
-                                            },
-                                        ]}
-                                    >
-                                        <PhoneInput
-                                            containerClass="phoneNumberContainerClassInput"
-                                            country="in"
-                                            placeholder="Mobile"
-                                            onChange={(data: any) => {
-                                                const { hasError } = data;
-                                                form.setFieldsValue({
-                                                    mobile_hasError: hasError,
-                                                });
-                                            }}
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                        </div>
+                        ></div>
                         <div className="row"></div>
                     </div>
                     <div className="col-12 col-md-3 col-lg-3 text-center">
