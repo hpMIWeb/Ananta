@@ -11,7 +11,7 @@ import { getAddonsReducersListApi } from "../../../../redux/getAddonsReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { useAppDispatch } from "../../../states/store";
 import Cookies from "js-cookie";
-import { deleteAddonReducersAi } from "../../../../redux/deleteAddonReducers";
+import { deleteAddonReducersApi } from "../../../../redux/deleteAddonReducers";
 
 const NewAddOns = () => {
     const [selectedAddonType, setSelectedAddonType] = useState("Storage Space");
@@ -160,7 +160,7 @@ const NewAddOns = () => {
 
     const onDeleteClick = () => {
         dispatch(
-            deleteAddonReducersAi({
+            deleteAddonReducersApi({
                 addonId: addonsId,
             })
         );

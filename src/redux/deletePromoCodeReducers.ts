@@ -5,15 +5,15 @@ import { apiEndpoint, getAuthToken } from "../utils/helpers";
 import Cookies from "js-cookie";
 
 interface Payload {
-    addonId: string | undefined;
+    promoCodeId: string | undefined;
 }
 
-export const deleteAddonReducersApi = createAsyncThunk(
-    "deleteAddonReducers",
-    async ({ addonId }: Payload) => {
+export const deletePromoCodeReducersApi = createAsyncThunk(
+    "deletePromoCodeReducers",
+    async ({ promoCodeId }: Payload) => {
         const jwtToken = Cookies.get("jwt_token");
         const response = await axios.delete(
-            `${apiEndpoint}add-on/delete-add-on/id=${addonId}`,
+            `${apiEndpoint}promocode/delete-promocode?${promoCodeId}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
@@ -24,8 +24,8 @@ export const deleteAddonReducersApi = createAsyncThunk(
     }
 );
 
-const deleteAddonReducersSlice = createSlice({
-    name: "deleteAddonReducersApi",
+const deletePromoCodeReducersSlice = createSlice({
+    name: "deletePromoCodeReducersApi",
     initialState: {
         data: {},
         loading: false,
@@ -42,25 +42,30 @@ const deleteAddonReducersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(deleteAddonReducersApi.pending, (state) => {
+            .addCase(deletePromoCodeReducersApi.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(deleteAddonReducersApi.fulfilled, (state, action) => {
+            .addCase(deletePromoCodeReducersApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-                toast.success("Addon Deleted Successfully");
+                toast.success("PromoCode Deleted Successfully");
             })
-            .addCase(deleteAddonReducersApi.rejected, (state: any, action) => {
-                state.loading = false;
-                state.success = false;
-                state.error = action.error.message;
-                toast.error("An error occurred during Deleting Subscription."); // Display error toast
-            });
+            .addCase(
+                deletePromoCodeReducersApi.rejected,
+                (state: any, action) => {
+                    state.loading = false;
+                    state.success = false;
+                    state.error = action.error.message;
+                    toast.error(
+                        "An error occurred during Deleting Subscription."
+                    ); // Display error toast
+                }
+            );
     },
 });
 
 export const { resetStateDeleteSubscriptions } =
-    deleteAddonReducersSlice.actions;
+    deletePromoCodeReducersSlice.actions;
 
-export default deleteAddonReducersSlice.reducer;
+export default deletePromoCodeReducersSlice.reducer;
