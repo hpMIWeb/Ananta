@@ -10,12 +10,14 @@ import Button from "../../../../../components/Button/Index";
 import uploadLogo from "../../../../../assets/images/upload_logo.png";
 import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
     const [countriesListData, setCountriesListData] = useState<any>([]);
     const [statesListData, setStatesListData] = useState<any>([]);
     const [citiesListData, setCitiesListData] = useState<any>([]);
     const [form] = Form.useForm();
+    const roleType = Cookies.get("roleTypeName");
     const fetchCountries = async () => {
         try {
             const response = await fetch(
@@ -305,6 +307,81 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                             )}
                         </div>
                         <div className="row"></div>
+                        <div
+                            className={classNames(
+                                "row",
+                                styles.formFieldWrapper
+                            )}
+                        >
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4",
+                                    styles.fieldPadding8
+                                )}
+                            >
+                                <div>
+                                    <label className="form-label">
+                                        Email
+                                        <sup className="text-danger fs--1">
+                                            *
+                                        </sup>
+                                    </label>
+                                    <Form.Item
+                                        name="email"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Enter your Email!",
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            placeholder="Email"
+                                            type="email"
+                                            className="customAddFormInputText"
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4",
+                                    styles.fieldPadding8
+                                )}
+                            >
+                                <div>
+                                    <label className="form-label">
+                                        Mobile
+                                        <sup className="text-danger fs--1">
+                                            *
+                                        </sup>
+                                    </label>
+                                    <Form.Item
+                                        name="mobile"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Enter your Mobile!",
+                                            },
+                                        ]}
+                                    >
+                                        <PhoneInput
+                                            containerClass="phoneNumberContainerClassInput"
+                                            country="in"
+                                            placeholder="Mobile"
+                                            onChange={(data: any) => {
+                                                const { hasError } = data;
+                                                form.setFieldsValue({
+                                                    mobile_hasError: hasError,
+                                                });
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
 
                         <div
                             className={classNames(
@@ -578,7 +655,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                     >
                         <div>
                             <label className="form-label">
-                                Referred BY
+                                Referred By
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item name=" referredBy">

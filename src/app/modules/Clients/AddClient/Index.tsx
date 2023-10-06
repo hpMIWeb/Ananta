@@ -19,6 +19,8 @@ import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../../redux/createClientReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
+import { getLineOfBusinessReducersApi } from "../../../../redux/getLineOfBusinessReducers";
+import { getIndustryTypeListReducersApi } from "../../../../redux/getIndustryTypeReducers";
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 import Cookies from "js-cookie";
@@ -77,6 +79,8 @@ const AddClient = () => {
         }
         // @ts-ignore
         dispatch(getSubscriptionsListApi());
+        dispatch(getLineOfBusinessReducersApi());
+        dispatch(getIndustryTypeListReducersApi());
     }, []);
 
     const setFormValue = (formValue: any) => {

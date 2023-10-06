@@ -12,6 +12,8 @@ import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Icon from "../../../../../components/Icon/Index";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 const BasicInfo = ({
     onChange,
@@ -20,6 +22,11 @@ const BasicInfo = ({
     handleCancelClick,
 }: any) => {
     const [countriesListData, setCountriesListData] = useState<any>([]);
+    const lineOfBusinessList =
+        useSelector((state: any) => state.getLineOfBusiness.data) || [];
+    const industryTypeList =
+        useSelector((state: any) => state.getIndustryType.data) || [];
+    const roleType = Cookies.get("roleTypeName");
     const [statesListData, setStatesListData] = useState<any>([]);
     const [citiesListData, setCitiesListData] = useState<any>([]);
     const [form] = Form.useForm();
@@ -335,7 +342,6 @@ const BasicInfo = ({
                             )}
                         </div>
                         <div className="row"></div>
-
                         <div
                             className={classNames(
                                 "row",
@@ -410,7 +416,64 @@ const BasicInfo = ({
                                     </Form.Item>
                                 </div>
                             </div>
-                        </div>
+                        </div>{" "}
+                        {roleType !== "superadmin" && (
+                            <div
+                                className={classNames(
+                                    "row",
+                                    styles.formFieldWrapper
+                                )}
+                            >
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-4 col-lg-4",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div>
+                                        <label className="form-label">
+                                            Industry Type
+                                        </label>
+                                        <Form.Item name="industryType">
+                                            <Select
+                                                showSearch
+                                                placeholder="Select Industry Type"
+                                                options={industryTypeList.map(
+                                                    (industryType: any) => ({
+                                                        value: industryType._id,
+                                                        label: industryType.name,
+                                                    })
+                                                )}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-4 col-lg-4",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div>
+                                        <label className="form-label">
+                                            Line Of Business
+                                        </label>
+                                        <Form.Item name="lineOfBusiness">
+                                            <Select
+                                                showSearch
+                                                placeholder="Select Industry Type"
+                                                options={lineOfBusinessList.map(
+                                                    (lineOfBusiness: any) => ({
+                                                        value: lineOfBusiness._id,
+                                                        label: lineOfBusiness.name,
+                                                    })
+                                                )}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div className="row"></div>
                     </div>
                     <div className="col-12 col-md-3 col-lg-3 text-center">
