@@ -157,15 +157,25 @@ const AddSubscription = () => {
                 client_office_users:
                     currentCardDetail.no_of_users.client_office_users,
                 client_vendor: currentCardDetail.no_of_users.client_vendor,
-                sales_and_purchase:
-                    currentCardDetail.transactions.sales_and_purchase,
-                credit_and_debit_notes:
-                    currentCardDetail.transactions.credit_and_debit_notes,
-                receipt_and_payments:
-                    currentCardDetail.transactions.receipt_and_payments,
-                contras: currentCardDetail.transactions.contras,
-                journals: currentCardDetail.transactions.journals,
-                stock_journals: currentCardDetail.transactions.stock_journals,
+
+                sales_and_purchase: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.sales_and_purchase
+                    : "",
+                credit_and_debit_notes: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.credit_and_debit_notes
+                    : "",
+                receipt_and_payments: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.receipt_and_payments
+                    : "",
+                contras: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.contras
+                    : "",
+                journals: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.journals
+                    : "",
+                stock_journals: currentCardDetail.transactions
+                    ? currentCardDetail.transactions.stock_journals
+                    : "",
             });
         }
     }, [subscriptionCardList, subscriptionId, form]);
