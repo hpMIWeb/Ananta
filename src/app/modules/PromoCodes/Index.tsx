@@ -55,7 +55,7 @@ const PromoCodes = () => {
         params.userEmail = userInfo?.email;
         params.orderPrice = 1200;
         // @ts-ignore
-        dispatch(getPromocodeReducersListApi(params));
+        dispatch(getPromocodeReducersListApi());
         dispatch(resetStateCreatePromocode());
     }, [userInfo]);
 

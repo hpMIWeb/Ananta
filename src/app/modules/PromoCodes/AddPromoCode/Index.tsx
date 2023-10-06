@@ -33,17 +33,9 @@ const AddPromoCode = () => {
 
     useEffect(() => {
         //const params = {};
-        const params = {
-            userCategory: "",
-            orderPrice: 0,
-            userEmail: "",
-        };
-        params.userCategory = "ca";
-        params.userEmail = "ABC@yopmail.com";
-        params.orderPrice = 1200;
+
         if (!getPromocodeListSuccess) {
-            // @ts-ignore
-            dispatch(getPromocodeReducersListApi(params));
+            dispatch(getPromocodeReducersListApi());
         }
     }, []);
 
@@ -77,10 +69,12 @@ const AddPromoCode = () => {
             const currentCardDetail = getPromocodeList.find(
                 (s: any) => s._id === promocodeId
             );
+            setCouponType(currentCardDetail.type);
             form.setFieldsValue({
                 ...currentCardDetail,
                 endDateTime: moment(currentCardDetail?.endDateTime),
                 startDateTime: moment(currentCardDetail?.startDateTime),
+                maxDiscount: currentCardDetail.maxDiscount,
             });
         }
     }, [getPromocodeList, promocodeId, form]);
