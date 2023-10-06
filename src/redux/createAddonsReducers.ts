@@ -22,7 +22,7 @@ const initialState: State = {
     error: null,
 };
 
-export const createAddonsReducersReducersApi = createAsyncThunk(
+export const createAddonsReducersApi = createAsyncThunk(
     "createAddonsReducers",
     async ({ payload, addonsId }: Payload) => {
         const jwtToken = Cookies.get("jwt_token");
@@ -46,7 +46,7 @@ export const createAddonsReducersReducersApi = createAsyncThunk(
 );
 
 const createAddonsReducersReducersSlice = createSlice({
-    name: "createAddonsReducersReducersApi",
+    name: "createAddonsReducersApi",
     initialState,
     reducers: {
         resetStateCreateAddons: (state) => {
@@ -58,32 +58,26 @@ const createAddonsReducersReducersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(createAddonsReducersReducersApi.pending, (state) => {
+            .addCase(createAddonsReducersApi.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(
-                createAddonsReducersReducersApi.fulfilled,
-                (state, action) => {
-                    state.loading = false;
-                    state.success = true;
-                    state.data = action.payload;
+            .addCase(createAddonsReducersApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.data = action.payload;
 
-                    toast.success(
-                        action.meta.arg.addonsId === ""
-                            ? "Addons Created Successfully."
-                            : "Addons Updated Successfully."
-                    );
-                }
-            )
-            .addCase(
-                createAddonsReducersReducersApi.rejected,
-                (state: any, action) => {
-                    state.loading = false;
-                    state.success = false;
-                    state.error = action.error.message;
-                    toast.error("An error occurred during Creating Addons."); // Display error toast
-                }
-            );
+                toast.success(
+                    action.meta.arg.addonsId === ""
+                        ? "Addons Created Successfully."
+                        : "Addons Updated Successfully."
+                );
+            })
+            .addCase(createAddonsReducersApi.rejected, (state: any, action) => {
+                state.loading = false;
+                state.success = false;
+                state.error = action.error.message;
+                toast.error("An error occurred during Creating Addons."); // Display error toast
+            });
     },
 });
 

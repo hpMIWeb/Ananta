@@ -3,7 +3,7 @@ import SubscriptionCardContent from "../../../../components/SubscriptionCard/Sub
 import styles from "./addOnsAccordianContent.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    createAddonsReducersReducersApi,
+    createAddonsReducersApi,
     resetStateCreateAddons,
 } from "../../../../redux/createAddonsReducers";
 import { useEffect, useState } from "react";
@@ -105,7 +105,7 @@ const AddOnsAccordianContent = ({
     const onChangeActiveClick = (e: any, id: any) => {
         //TODO:: check response message
         dispatch(
-            createAddonsReducersReducersApi({
+            createAddonsReducersApi({
                 payload: { status: !!e ? "Active" : "Inactive" },
                 addonsId: id,
             })

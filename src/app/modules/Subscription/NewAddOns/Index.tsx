@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AddOnTypeContent from "./AddOnTypeContent";
 import { useDispatch, useSelector } from "react-redux";
-import { createAddonsReducersReducersApi } from "../../../../redux/createAddonsReducers";
+import { createAddonsReducersApi } from "../../../../redux/createAddonsReducers";
 import { getAddonsReducersListApi } from "../../../../redux/getAddonsReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { useAppDispatch } from "../../../states/store";
@@ -129,7 +129,7 @@ const NewAddOns = () => {
     const onFinish = (e: any) => {
         console.log(e);
         dispatch(
-            createAddonsReducersReducersApi({
+            createAddonsReducersApi({
                 payload: { ...e, subscribers_count: 0 },
                 addonsId: addonsId,
             })
