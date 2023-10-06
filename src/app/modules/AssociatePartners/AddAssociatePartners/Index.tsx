@@ -32,6 +32,8 @@ const AddAssociatePartners = () => {
         (state: any) => state.getClients.loading
     );
     const [partnerType, setPartnerType] = useState("ca");
+    const [partnerTypeLabel, setPartnerTypeLabel] = useState("Partners ");
+
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const { loading, success } = useSelector(
         (state: any) => state.createClient
@@ -211,9 +213,17 @@ const AddAssociatePartners = () => {
                                         },
                                     ]}
                                     placeholder="Select Type"
-                                    onChange={(value: any) =>
-                                        setPartnerType(value)
-                                    }
+                                    onChange={(value: any) => {
+                                        if (value === "sales_partner") {
+                                            setPartnerTypeLabel(
+                                                "Sales Partner"
+                                            );
+                                        } else {
+                                            setPartnerTypeLabel(
+                                                "Service Partner"
+                                            );
+                                        }
+                                    }}
                                 />
                             </Form.Item>
                         </div>
@@ -221,7 +231,7 @@ const AddAssociatePartners = () => {
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
                             <label className="form-label">
-                                Partners Type
+                                {partnerTypeLabel} Type
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
