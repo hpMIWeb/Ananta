@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { getUserInfoReducersApi } from "../redux/getUserInfoReducers";
 import Employees from "./modules/Employees/Index";
 import AddEmployee from "./modules/Employees/AddEmployee/Index";
+import ResetPassword from "./modules/ResetPassword/Index";
 
 //master code
 
@@ -79,6 +80,10 @@ const App = () => {
                         }
                     >
                         <Route path="login" element={<Login />} />
+                        <Route
+                            path="reset-password"
+                            element={<ResetPassword />}
+                        />
                         <Route
                             index
                             element={<PrivateRoute component={Home} />}
@@ -203,7 +208,7 @@ const App = () => {
                         <Route
                             path="logout"
                             element={<PrivateRoute component={Logout} />}
-                        />
+                        />{" "}
                         <Route path="*" element={<NoMatch />} />
                     </Route>
                 </Routes>

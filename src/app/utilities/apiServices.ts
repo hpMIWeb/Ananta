@@ -62,6 +62,19 @@ export default {
                 },
             ],
         }),
+    resetPassword: (passwordData: any) =>
+        instance({
+            method: "POST",
+            url: "admin/set-password?email=" + passwordData.email,
+            data: passwordData,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+
     /*
   getAllTask: (queryString: string) =>
     instance({
