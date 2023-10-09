@@ -122,7 +122,6 @@ const AddOnsAccordianContent = ({
         subscriptionHistory: any,
         subscriptionId: string
     ) => {
-        console.log(subscriptionHistory, subscriptionId);
         setSelectedSubscriptionHistory(subscriptionHistory);
         setSelectedSubscriptionId(subscriptionId);
         setModalOpen(true);

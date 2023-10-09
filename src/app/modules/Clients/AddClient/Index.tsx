@@ -107,18 +107,17 @@ const AddClient = () => {
     }, [success]);
 
     const operations = (
-        <Button
-            onClick={handleCancelClick}
-            className={classNames("greyBtn", styles.cancelAddClientBtn)}
-        >
-            <Icon
-                className={styles.cancelBtnIcon}
-                name="cross"
-                height={18}
-                width={18}
-            />
-            Cancel
-        </Button>
+        <div className={classNames("ms-auto z-index-1")}>
+            <Button
+                onClick={handleCancelClick}
+                className={classNames("greyBtn", styles.cancelAddClientBtn)}
+                style={{
+                    minWidth: 104,
+                }}
+            >
+                Cancel
+            </Button>
+        </div>
     );
 
     const onChange = (key: number, formValue: any) => {
@@ -224,37 +223,39 @@ const AddClient = () => {
                     "card-header d-flex",
                     styles.promoCodeCardHeaderBox
                 )}
-                style={{ minHeight: 90 }}
+                style={{ minHeight: 60 }}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.promocodeHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.addPromoCodeLabel
                             )}
                         >
-                            Add Client
+                            Add New Client
                         </h5>
                     </div>
-                    <div className="ms-auto z-index-1">
+                    <div className={classNames("ms-auto z-index-1")}>
                         <Button
-                            onClick={handleBulkClick}
-                            className={styles.newPromoBtn}
+                            onClick={handleCancelClick}
+                            className={classNames(
+                                "greyBtn",
+                                styles.cancelAddClientBtn
+                            )}
+                            style={{
+                                minWidth: 104,
+                            }}
                         >
-                            Add In Bulk
+                            Cancel
                         </Button>
                     </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.addPromoCodeImg
-                    )}
-                ></div>
             </div>
             <div className={styles.addClientDetailBox}>
                 {getClientsListLoading && clientId && (
@@ -263,7 +264,12 @@ const AddClient = () => {
                 <div className="row">
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
-                            <label className="form-label">
+                            <label
+                                className={classNames(
+                                    "form-label",
+                                    styles.rowTitle
+                                )}
+                            >
                                 Client Type
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
@@ -291,7 +297,7 @@ const AddClient = () => {
 
                 {!(getClientsListLoading && clientId) && (
                     <Tabs
-                        tabBarExtraContent={operations}
+                        //tabBarExtraContent={operations}
                         className="subscriptionTabs"
                         defaultActiveKey="1"
                         activeKey={activeTab}

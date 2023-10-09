@@ -1,8 +1,7 @@
 import { Button, Form, Input, Select, Switch } from "antd";
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./newAddOns.module.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AddOnTypeContent from "./AddOnTypeContent";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,16 +14,19 @@ import { deleteAddonReducersApi } from "../../../../redux/deleteAddonReducers";
 
 const NewAddOns = () => {
     const [selectedAddonType, setSelectedAddonType] = useState("Storage Space");
-    const { addonsId } = useParams();
     const roleType = Cookies.get("roleTypeName");
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
+    const { state } = useLocation();
     const [form] = Form.useForm();
+
+    const [addonsId, setAddonsId] = useState<string>("");
     const { data: addonsCardList, loading: addonsCardListLoading } =
         useSelector((state: any) => state.getAddonsList);
     const { loading, success } = useSelector((state: any) => state.createAddon);
     const { loading: deleteAddonLoading, success: deleteAddonCodeSuccess } =
         useSelector((state: any) => state.deleteAddon);
+
     useEffect(() => {
         if (!addonsCardList.length) {
             dispatch(getAddonsReducersListApi());
@@ -128,7 +130,6 @@ const NewAddOns = () => {
         roleType === "superadmin" ? superAdminAddonType : caAdminAddonType;
 
     const onFinish = (e: any) => {
-        console.log(e);
         dispatch(
             createAddonsReducersApi({
                 payload: { ...e, subscribers_count: 0 },
@@ -147,17 +148,20 @@ const NewAddOns = () => {
     }, [addonsCardList, addonsId, form]);
 
     useEffect(() => {
-        console.log("deleteAddonCodeSuccess", deleteAddonCodeSuccess);
         if (success || deleteAddonCodeSuccess) {
-            navigation("/subscription");
+            navigation("/addons");
         }
     }, [success, deleteAddonCodeSuccess]);
+
+    useEffect(() => {
+        if (state) setAddonsId(state.id);
+    }, []);
 
     const handleSwitchChange = (value: any) => {
         form.setFieldsValue({ display_on_portal: value });
     };
     const onCancelClick = () => {
-        navigation("/subscription");
+        navigation("/addons");
     };
 
     const onDeleteClick = () => {
@@ -181,29 +185,36 @@ const NewAddOns = () => {
                     "card-header d-flex",
                     styles.subscriptionCardHeaderBox
                 )}
-                style={{ minHeight: 90 }}
+                style={{ minHeight: 60 }}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.addOnsHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.addSubscriptionLabel
                             )}
                         >
-                            {!addonsId ? "Add Addons" : "Edit Addons"}
+                            {!addonsId ? "Create New AddOn" : "Edit AddOn"}
                         </h5>
                     </div>
+                    <div className={classNames("ms-auto z-index-1")}>
+                        <Button
+                            onClick={onCancelClick}
+                            style={{
+                                minWidth: 104,
+                            }}
+                            className="greyBtn"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.addSubscriptionImg
-                    )}
-                ></div>
             </div>
             <div className={styles.customAddFormWrapper}>
                 {addonsCardListLoading && addonsId && (
@@ -418,16 +429,6 @@ const NewAddOns = () => {
                         <div className="row">
                             <div className="col-12 my-2 text-end">
                                 <Form.Item>
-                                    {addonsId && (
-                                        <Button
-                                            onClick={onDeleteClick}
-                                            className={styles.deleteBtn}
-                                            type="primary"
-                                            danger
-                                        >
-                                            Delete
-                                        </Button>
-                                    )}
                                     <Button
                                         onClick={onCancelClick}
                                         style={{
@@ -438,6 +439,16 @@ const NewAddOns = () => {
                                     >
                                         Cancel
                                     </Button>
+                                    {addonsId && (
+                                        <Button
+                                            onClick={onDeleteClick}
+                                            className={styles.deleteBtn}
+                                            type="primary"
+                                            danger
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
                                     <Button
                                         loading={loading}
                                         type="primary"

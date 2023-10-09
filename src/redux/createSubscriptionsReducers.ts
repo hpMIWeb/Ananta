@@ -63,7 +63,13 @@ const createSubscriptionsReducersSlice = createSlice({
                     state.loading = false;
                     state.success = true;
                     state.data = action.payload;
-                    toast.success("Subscription Created Successfully");
+                    const strMessage = `Subscription ${
+                        action.meta.arg.subscriptionId &&
+                        action.meta.arg.subscriptionId !== ""
+                            ? "Updated"
+                            : "Created"
+                    } Successfully`;
+                    toast.success(strMessage);
                 }
             )
             .addCase(

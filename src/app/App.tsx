@@ -6,11 +6,12 @@ import NoMatch from "./modules/NoMatch/Index";
 import Login from "./modules/Login/Index";
 import PrivateRoute from "../components/PrivateRoute/Index";
 import Subscription from "./modules/Subscription/Index";
+import AddOns from "./modules/AddOns/Index";
 import useLocalStorage from "use-local-storage";
 import "../styles/index.scss";
 import "./App.scoped.css";
 import AddSubscription from "./modules/Subscription/AddSubscription/Index";
-import NewAddOns from "./modules/Subscription/NewAddOns/Index";
+import NewAddOns from "./modules/AddOns/NewAddOns/Index";
 import PromoCodes from "./modules/PromoCodes/Index";
 import AddPromoCode from "./modules/PromoCodes/AddPromoCode/Index";
 import Clients from "./modules/Clients/Index";
@@ -93,17 +94,21 @@ const App = () => {
                             }
                         />
                         <Route
-                            path="subscription/edit-subscription/:subscriptionId"
+                            path="subscription/edit-subscription"
                             element={
                                 <PrivateRoute component={AddSubscription} />
                             }
+                        />
+                        <Route
+                            path="addons"
+                            element={<PrivateRoute component={AddOns} />}
                         />
                         <Route
                             path="addons/create"
                             element={<PrivateRoute component={NewAddOns} />}
                         />
                         <Route
-                            path="addons/edit/:addonsId"
+                            path="addons/edit"
                             element={<PrivateRoute component={NewAddOns} />}
                         />
                         <Route
@@ -115,7 +120,7 @@ const App = () => {
                             element={<PrivateRoute component={AddPromoCode} />}
                         />
                         <Route
-                            path="promocodes/edit/:promocodeId"
+                            path="promocodes/edit"
                             element={<PrivateRoute component={AddPromoCode} />}
                         />
                         <Route

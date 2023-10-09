@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -10,6 +10,7 @@ import Icon from "../../../components/Icon/Index";
 import HeaderBox from "../Header/Index";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import { DatabaseOutlined } from "@ant-design/icons";
+import { capitalize } from "../../utilities/utility";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -31,12 +32,6 @@ function getItem(
 
 const items: MenuItem[] = [
     getItem("Home", "1", <Icon name="home" width={16} />),
-    getItem(
-        "Subscription",
-        "2",
-        <Icon name="submission" width={17.5} height={14} />
-    ),
-    getItem("PromoCode", "3", <Icon name="promo" width={15.75} height={14} />),
     getItem(
         "Clients",
         "4",
@@ -152,6 +147,38 @@ const items: MenuItem[] = [
             ),
         ]
     ),
+    getItem(
+        "Billing",
+        "25",
+        <Icon name="management" width={17.5} height={14} />,
+        [
+            getItem(
+                "Subscriptions",
+                "2",
+                <Icon name="submission" width={17.5} height={14} />
+            ),
+            getItem(
+                "AddOns",
+                "34",
+                <Icon name="submission" width={17.5} height={14} />
+            ),
+            getItem(
+                "PromoCodes",
+                "3",
+                <Icon name="promo" width={17.5} height={14} />
+            ),
+            getItem(
+                "Invoicing",
+                "32",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+            getItem(
+                "Settings",
+                "33",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+        ]
+    ),
 ];
 
 const LayoutComponent = ({
@@ -161,30 +188,135 @@ const LayoutComponent = ({
     switchTheme: () => void;
     theme: string;
 }) => {
+    // const initialBreadCrumbs = {
+    //     href: "/",
+    //     title: <Icon width={16} height={16} name="home" />,
+    // };
+    // const initialBreadCrumbs = (
+    //     <>
+    //         <Breadcrumb.Item>
+    //             <a
+    //                 onClick={() => {
+    //                     navigate("/");
+    //                 }}
+    //             >
+    //                 <Icon width={16} height={16} name="home" />
+    //             </a>
+    //         </Breadcrumb.Item>
+    //     </>
+    // );
+
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer },
     } = theme.useToken();
     const location = useLocation();
+    const [breadcrumbs, setBreadcrumbs] = useState<any>([]);
+
+    const sanitisePathName = (pathName: string) => {
+        const billingsNavs = ["subscription", "promocodes", "addons"];
+        const clientNavs = ["caclient"];
+        const employeeNavs = ["employee"];
+        const associatePartnerNavs = ["associatePartners"];
+
+        const billingItems = billingsNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
+
+        const clientItems = clientNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
+
+        const employeeItems = employeeNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
+
+        const associatePartnerItems = associatePartnerNavs.filter(
+            (item: string) => {
+                return pathName.includes(item);
+            }
+        );
+
+        // Append `prefix` in breadcrumbs
+        if (billingItems.length > 0) {
+            return ["Billing", ...pathName.split("/")];
+        } else if (clientItems.length > 0) {
+            return ["Clients", ...pathName.split("/")];
+        } else if (employeeItems.length > 0) {
+            return ["Employees", ...pathName.split("/")];
+        } else if (associatePartnerItems.length > 0) {
+            return ["Associated Partners", ...pathName.split("/")];
+        }
+        return [];
+    };
+
+    useEffect(() => {
+        if (location && location.pathname) {
+            const paths = sanitisePathName(location.pathname);
+            const pathData = paths
+                .filter((item: string) => {
+                    return item !== "";
+                })
+                .map((pathItem: string, index: number) => {
+                    return getBreadCrumbs("/" + pathItem, pathItem, index);
+                });
+            setBreadcrumbs(pathData);
+        }
+    }, [location]);
 
     if (HIDE_LAYOUT_ROUTES.includes(location.pathname)) {
         //To hide navbar, header and footer
         return <Outlet />;
     }
 
+    // Rename `breadcrumbs` name
+    const breadcrumbEnums = {
+        "add-subscription": "Create New",
+        "edit-subscription": "Edit",
+        "add-employee": "Create New",
+        caclient: "Dashboard",
+        employee: "Dashboard",
+        create: "Create New",
+        promocodes: "Promo Code",
+        associatePartners: "Dashboard",
+    };
+
+    const getBreadCrumbs = (strHref: string, title: string, index: number) => {
+        let str = title as keyof typeof breadcrumbEnums;
+        let titleStr = breadcrumbEnums[str];
+        return (
+            <>
+                <Breadcrumb.Item
+                    onClick={() => {
+                        if (index === 0) {
+                            return null;
+                        } else {
+                            navigate(strHref);
+                        }
+                    }}
+                >
+                    {titleStr ? breadcrumbEnums[str] : capitalize(str)}
+                </Breadcrumb.Item>
+            </>
+        );
+    };
+
     const onMenuClick: MenuClickEventHandler = (event) => {
         switch (event.key) {
             case "1":
                 navigate("/");
                 return;
-            case "2":
+            case "2": {
                 navigate("/subscription");
+                return;
+            }
+            case "34":
+                navigate("/addons");
                 return;
             case "3":
                 navigate("/promocodes");
                 return;
-
             case "5":
                 navigate("/employee");
                 return;
@@ -240,7 +372,6 @@ const LayoutComponent = ({
             case "24":
                 navigate("/default-line-of-business");
                 return;
-
             case "25":
                 navigate("/caclient");
                 return;
@@ -304,17 +435,22 @@ const LayoutComponent = ({
                         theme={themeProp}
                     />
                 </Header>
-                <div className={classNames(styles.footerWrapper)}>
-                    <Icon width={13.33} height={13.33} name="home" />{" "}
-                    {"Home > Billing"}
+                <div className={classNames(styles.navigationWrapper)}>
+                    <div style={{ float: "left", marginRight: "10px" }}>
+                        <a
+                            onClick={() => {
+                                navigate("/");
+                            }}
+                        >
+                            <Icon width={16} height={16} name="home" />
+                        </a>
+                    </div>
+                    <div style={{ float: "left" }}>
+                        <Breadcrumb separator=">">{breadcrumbs}</Breadcrumb>
+                    </div>
                 </div>
                 <Content style={{ margin: 0 }}>
-                    <div
-                        // style={{
-                        //   minHeight: 360,
-                        // }}
-                        className={styles.outletWrapper}
-                    >
+                    <div className={styles.outletWrapper}>
                         <Outlet />
                     </div>
                 </Content>

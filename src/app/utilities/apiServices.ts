@@ -39,30 +39,30 @@ const token = Cookies.get("jwt_token"); // getLocalStorage("authtoken");
 const apiURL = "https://api.staging.nccountant.com/api/v1/";
 
 const instance = axios.create({
-  baseURL: apiURL,
-  headers: {
-    "content-type": "application/json;charset=utf-8",
-    Authorization: `Bearer ${token}`,
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH",
-  },
+    baseURL: apiURL,
+    headers: {
+        "content-type": "application/json;charset=utf-8",
+        Authorization: `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH",
+    },
 });
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  login: (loginDetail: ILogin) =>
-    instance({
-      method: "POST",
-      url: "admin/login",
-      data: loginDetail,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  /*
+    login: (loginDetail: ILogin) =>
+        instance({
+            method: "POST",
+            url: "admin/login",
+            data: loginDetail,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    /*
   getAllTask: (queryString: string) =>
     instance({
       method: "GET",
@@ -519,574 +519,580 @@ export default {
 
     */
 
-  getDepartment: () =>
-    instance({
-      method: "GET",
-      url: "department/get-department/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDepartment: (department: AddDepartment) =>
-    instance({
-      method: "POST",
-      url: "department/create-department/",
-      data: department,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDepartment: (departmentId: string) =>
-    instance({
-      method: "DELETE",
-      url: "department/delete-department/id=" + departmentId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDepartment: (department: AddDepartment, departmentId: string) =>
-    instance({
-      method: "PUT",
-      url: "department/update-department/id=" + departmentId,
-      data: department,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDepartment: () =>
+        instance({
+            method: "GET",
+            url: "department/get-department/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDepartment: (department: AddDepartment) =>
+        instance({
+            method: "POST",
+            url: "department/create-department/",
+            data: department,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDepartment: (departmentId: string) =>
+        instance({
+            method: "DELETE",
+            url: "department/delete-department/id=" + departmentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDepartment: (department: AddDepartment, departmentId: string) =>
+        instance({
+            method: "PUT",
+            url: "department/update-department/id=" + departmentId,
+            data: department,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDesignation: () =>
-    instance({
-      method: "GET",
-      url: "designation/get-designation/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDesignation: (designation: AddDesignation) =>
-    instance({
-      method: "POST",
-      url: "designation/create-designation/",
-      data: designation,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDesignation: (designationId: string) =>
-    instance({
-      method: "DELETE",
-      url: "designation/delete-designation/id=" + designationId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDesignation: (designation: AddDesignation, designationId: string) =>
-    instance({
-      method: "PUT",
-      url: "designation/update-designation/id=" + designationId,
-      data: designation,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDesignation: () =>
+        instance({
+            method: "GET",
+            url: "designation/get-designation/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDesignation: (designation: AddDesignation) =>
+        instance({
+            method: "POST",
+            url: "designation/create-designation/",
+            data: designation,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDesignation: (designationId: string) =>
+        instance({
+            method: "DELETE",
+            url: "designation/delete-designation/id=" + designationId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDesignation: (designation: AddDesignation, designationId: string) =>
+        instance({
+            method: "PUT",
+            url: "designation/update-designation/id=" + designationId,
+            data: designation,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getRoleType: () =>
-    instance({
-      method: "GET",
-      url: "role-type/get-role-type/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  getRole: () =>
-    instance({
-      method: "GET",
-      url: "role/get-all-role/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createRole: (role: AddRole) =>
-    instance({
-      method: "POST",
-      url: "role/create",
-      data: role,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteRole: (roleId: string) =>
-    instance({
-      method: "DELETE",
-      url: "role/id=" + roleId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateRole: (role: AddRole, roleId: string) =>
-    instance({
-      method: "PUT",
-      url: "role/id=" + roleId,
-      data: role,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getRoleType: () =>
+        instance({
+            method: "GET",
+            url: "role-type/get-role-type/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    getRole: () =>
+        instance({
+            method: "GET",
+            url: "role/get-all-role/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createRole: (role: AddRole) =>
+        instance({
+            method: "POST",
+            url: "role/create",
+            data: role,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteRole: (roleId: string) =>
+        instance({
+            method: "DELETE",
+            url: "role/id=" + roleId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateRole: (role: AddRole, roleId: string) =>
+        instance({
+            method: "PUT",
+            url: "role/id=" + roleId,
+            data: role,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getTeam: () =>
-    instance({
-      method: "GET",
-      url: "team/get-team",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  getUserList: () =>
-    instance({
-      method: "GET",
-      url: "admin/get-all-users",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createTeam: (team: AddTeam) =>
-    instance({
-      method: "POST",
-      url: "team/create-team",
-      data: team,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteTeam: (teamId: string) =>
-    instance({
-      method: "DELETE",
-      url: "team/delete-team/id=" + teamId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateTeam: (team: AddTeam, teamId: string) =>
-    instance({
-      method: "PUT",
-      url: "team/update-team/id=" + teamId,
-      data: team,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getTeam: () =>
+        instance({
+            method: "GET",
+            url: "team/get-team",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    getUserList: () =>
+        instance({
+            method: "GET",
+            url: "admin/get-all-users",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createTeam: (team: AddTeam) =>
+        instance({
+            method: "POST",
+            url: "team/create-team",
+            data: team,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteTeam: (teamId: string) =>
+        instance({
+            method: "DELETE",
+            url: "team/delete-team/id=" + teamId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateTeam: (team: AddTeam, teamId: string) =>
+        instance({
+            method: "PUT",
+            url: "team/update-team/id=" + teamId,
+            data: team,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getChecklist: () =>
-    instance({
-      method: "GET",
-      url: "checklist/get-checklist",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteChecklist: (checklistId: string) =>
-    instance({
-      method: "DELETE",
-      url: "checklist/delete-checklist/" + checklistId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createChecklist: (checklist: AddCheckList) =>
-    instance({
-      method: "POST",
-      url: "checklist/create-checklist",
-      data: checklist,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateChecklist: (checklist: AddCheckList, checklistId: string) =>
-    instance({
-      method: "PUT",
-      url: "checklist/update-checklist/" + checklistId,
-      data: checklist,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getChecklist: () =>
+        instance({
+            method: "GET",
+            url: "checklist/get-checklist",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteChecklist: (checklistId: string) =>
+        instance({
+            method: "DELETE",
+            url: "checklist/delete-checklist/" + checklistId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createChecklist: (checklist: AddCheckList) =>
+        instance({
+            method: "POST",
+            url: "checklist/create-checklist",
+            data: checklist,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateChecklist: (checklist: AddCheckList, checklistId: string) =>
+        instance({
+            method: "PUT",
+            url: "checklist/update-checklist/" + checklistId,
+            data: checklist,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDefaultDepartment: () =>
-    instance({
-      method: "GET",
-      url: "defaultDepartment/get-department/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultDepartment: (defaultDepartment: AddDefaultDepartment) =>
-    instance({
-      method: "POST",
-      url: "defaultDepartment/create-department/",
-      data: defaultDepartment,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultDepartment: (defaultDepartmentId: string) =>
-    instance({
-      method: "DELETE",
-      url: "defaultDepartment/delete-department/id=" + defaultDepartmentId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultDepartment: (
-    defaultDepartment: AddDefaultDepartment,
-    defaultDepartmentId: string
-  ) =>
-    instance({
-      method: "PUT",
-      url: "defaultDepartment/update-department/id=" + defaultDepartmentId,
-      data: defaultDepartment,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDefaultDepartment: () =>
+        instance({
+            method: "GET",
+            url: "defaultDepartment/get-department/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultDepartment: (defaultDepartment: AddDefaultDepartment) =>
+        instance({
+            method: "POST",
+            url: "defaultDepartment/create-department/",
+            data: defaultDepartment,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultDepartment: (defaultDepartmentId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "defaultDepartment/delete-department/id=" + defaultDepartmentId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultDepartment: (
+        defaultDepartment: AddDefaultDepartment,
+        defaultDepartmentId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url:
+                "defaultDepartment/update-department/id=" + defaultDepartmentId,
+            data: defaultDepartment,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDefaultDesignation: () =>
-    instance({
-      method: "GET",
-      url: "defaultDesignation/get-designation/",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultDesignation: (defaultDesignation: AddDefaultDesignation) =>
-    instance({
-      method: "POST",
-      url: "defaultDesignation/create-designation/",
-      data: defaultDesignation,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultDesignation: (defaultDesignationId: string) =>
-    instance({
-      method: "DELETE",
-      url: "defaultDesignation/delete-designation/id=" + defaultDesignationId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultDesignation: (
-    defaultDesignation: AddDefaultDesignation,
-    defaultDesignationId: string
-  ) =>
-    instance({
-      method: "PUT",
-      url: "defaultDesignation/update-designation/id=" + defaultDesignationId,
-      data: defaultDesignation,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDefaultDesignation: () =>
+        instance({
+            method: "GET",
+            url: "defaultDesignation/get-designation/",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultDesignation: (defaultDesignation: AddDefaultDesignation) =>
+        instance({
+            method: "POST",
+            url: "defaultDesignation/create-designation/",
+            data: defaultDesignation,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultDesignation: (defaultDesignationId: string) =>
+        instance({
+            method: "DELETE",
+            url:
+                "defaultDesignation/delete-designation/id=" +
+                defaultDesignationId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultDesignation: (
+        defaultDesignation: AddDefaultDesignation,
+        defaultDesignationId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url:
+                "defaultDesignation/update-designation/id=" +
+                defaultDesignationId,
+            data: defaultDesignation,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDefaultRole: () =>
-    instance({
-      method: "GET",
-      url: "defaultRole/get-all-role",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultRole: (defaultRole: AddDefaultRole) =>
-    instance({
-      method: "POST",
-      url: "defaultRole/create",
-      data: defaultRole,
-      transformResponse: [
-        function (data) {
-          console.log(defaultRole);
+    getDefaultRole: () =>
+        instance({
+            method: "GET",
+            url: "defaultRole/get-all-role",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultRole: (defaultRole: AddDefaultRole) =>
+        instance({
+            method: "POST",
+            url: "defaultRole/create",
+            data: defaultRole,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultRole: (defaultRoleId: string) =>
+        instance({
+            method: "DELETE",
+            url: "defaultRole/id=" + defaultRoleId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultRole: (defaultRole: AddDefaultRole, defaultRoleId: string) =>
+        instance({
+            method: "PUT",
+            url: "defaultRole/id=" + defaultRoleId,
+            data: defaultRole,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultRole: (defaultRoleId: string) =>
-    instance({
-      method: "DELETE",
-      url: "defaultRole/id=" + defaultRoleId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultRole: (defaultRole: AddDefaultRole, defaultRoleId: string) =>
-    instance({
-      method: "PUT",
-      url: "defaultRole/id=" + defaultRoleId,
-      data: defaultRole,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDefaultChecklist: () =>
+        instance({
+            method: "GET",
+            url: "defaultChecklist/get-checklist",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultChecklist: (defaultChecklistId: string) =>
+        instance({
+            method: "DELETE",
+            url: "defaultChecklist/delete-checklist/" + defaultChecklistId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultChecklist: (defaultChecklist: AddDefaultCheckList) =>
+        instance({
+            method: "POST",
+            url: "defaultChecklist/create-checklist",
+            data: defaultChecklist,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultChecklist: (
+        defaultChecklist: AddDefaultCheckList,
+        defaultChecklistId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url: "defaultChecklist/update-checklist/" + defaultChecklistId,
+            data: defaultChecklist,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDefaultChecklist: () =>
-    instance({
-      method: "GET",
-      url: "defaultChecklist/get-checklist",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultChecklist: (defaultChecklistId: string) =>
-    instance({
-      method: "DELETE",
-      url: "defaultChecklist/delete-checklist/" + defaultChecklistId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultChecklist: (defaultChecklist: AddDefaultCheckList) =>
-    instance({
-      method: "POST",
-      url: "defaultChecklist/create-checklist",
-      data: defaultChecklist,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultChecklist: (
-    defaultChecklist: AddDefaultCheckList,
-    defaultChecklistId: string
-  ) =>
-    instance({
-      method: "PUT",
-      url: "defaultChecklist/update-checklist/" + defaultChecklistId,
-      data: defaultChecklist,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDefaultIndustryType: () =>
+        instance({
+            method: "GET",
+            url: "industryType/get",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultIndustryType: (industryType: AddDefaultIndustryType) =>
+        instance({
+            method: "POST",
+            url: "industryType/create",
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createMultipleDefaultIndustryType: (
+        industryType: AddDefaultIndustryType[]
+    ) =>
+        instance({
+            method: "POST",
+            url: "industryType/multiple-create",
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultIndustryType: (industryTypeId: string) =>
+        instance({
+            method: "DELETE",
+            url: "industryType/delete/" + industryTypeId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultIndustryType: (
+        industryType: AddDefaultIndustryType,
+        industryTypeId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url: "industryType/update/" + industryTypeId,
+            data: industryType,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 
-  getDefaultIndustryType: () =>
-    instance({
-      method: "GET",
-      url: "industryType/get",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultIndustryType: (industryType: AddDefaultIndustryType) =>
-    instance({
-      method: "POST",
-      url: "industryType/create",
-      data: industryType,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createMultipleDefaultIndustryType: (industryType: AddDefaultIndustryType[]) =>
-    instance({
-      method: "POST",
-      url: "industryType/multiple-create",
-      data: industryType,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultIndustryType: (industryTypeId: string) =>
-    instance({
-      method: "DELETE",
-      url: "industryType/delete/" + industryTypeId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultIndustryType: (
-    industryType: AddDefaultIndustryType,
-    industryTypeId: string
-  ) =>
-    instance({
-      method: "PUT",
-      url: "industryType/update/" + industryTypeId,
-      data: industryType,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
-
-  getDefaultLineOfBusiness: () =>
-    instance({
-      method: "GET",
-      url: "lineOfBusiness/get",
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createDefaultLineOfBusiness: (lineOfBusiness: AddDefaultLineOfBusiness) =>
-    instance({
-      method: "POST",
-      url: "lineOfBusiness/create",
-      data: lineOfBusiness,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  createMultipleDefaultLineOfBusiness: (
-    lineOfBusiness: AddDefaultLineOfBusiness[]
-  ) =>
-    instance({
-      method: "POST",
-      url: "lineOfBusiness/multiple-create",
-      data: lineOfBusiness,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  deleteDefaultLineOfBusiness: (lineOfBusinessId: string) =>
-    instance({
-      method: "DELETE",
-      url: "lineOfBusiness/delete/" + lineOfBusinessId,
-      transformResponse: [
-        function (data) {
-          const json = JSON.parse(data);
-          return json.payload;
-        },
-      ],
-    }),
-  updateDefaultLineOfBusiness: (
-    lineOfBusiness: AddDefaultLineOfBusiness,
-    lineOfBusinessId: string
-  ) =>
-    instance({
-      method: "PUT",
-      url: "lineOfBusiness/update/" + lineOfBusinessId,
-      data: lineOfBusiness,
-      transformResponse: [
-        function (data) {
-          return data;
-        },
-      ],
-    }),
+    getDefaultLineOfBusiness: () =>
+        instance({
+            method: "GET",
+            url: "lineOfBusiness/get",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createDefaultLineOfBusiness: (lineOfBusiness: AddDefaultLineOfBusiness) =>
+        instance({
+            method: "POST",
+            url: "lineOfBusiness/create",
+            data: lineOfBusiness,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    createMultipleDefaultLineOfBusiness: (
+        lineOfBusiness: AddDefaultLineOfBusiness[]
+    ) =>
+        instance({
+            method: "POST",
+            url: "lineOfBusiness/multiple-create",
+            data: lineOfBusiness,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    deleteDefaultLineOfBusiness: (lineOfBusinessId: string) =>
+        instance({
+            method: "DELETE",
+            url: "lineOfBusiness/delete/" + lineOfBusinessId,
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
+    updateDefaultLineOfBusiness: (
+        lineOfBusiness: AddDefaultLineOfBusiness,
+        lineOfBusinessId: string
+    ) =>
+        instance({
+            method: "PUT",
+            url: "lineOfBusiness/update/" + lineOfBusinessId,
+            data: lineOfBusiness,
+            transformResponse: [
+                function (data) {
+                    return data;
+                },
+            ],
+        }),
 };

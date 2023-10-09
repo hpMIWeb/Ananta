@@ -28,7 +28,6 @@ const PromoCodes = () => {
         (state: any) => state.getPromocodeList
     );
     const userInfo = useSelector((state: any) => state.userInfo.data);
-    console.log(`userInfo`, userInfo);
     const createPromoCodeSuccess = useSelector(
         (state: any) => state.createPromoCode.success
     );
@@ -64,7 +63,7 @@ const PromoCodes = () => {
     };
 
     const handleEditBtnClick = (id: string) => {
-        navigation(`/promocodes/edit/${id}`);
+        navigation(`/promocodes/edit`, { state: { id: id } });
     };
 
     const cardDesc = (cardDetails: any) => {
@@ -78,6 +77,8 @@ const PromoCodes = () => {
             codeLife,
             maxDiscount,
             orderValue,
+            isCodeLifeUnlimited,
+            isUserPerUserUnlimited,
         } = cardDetails;
 
         return [
@@ -127,9 +128,9 @@ const PromoCodes = () => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">
-                            Maximum Order Value
+                            Minimum Order Value
                         </p>
-                        <p className="semiBold">{maxDiscount}</p>
+                        <p className="semiBold">{orderValue}</p>
                     </>
                 ),
             },
@@ -151,7 +152,9 @@ const PromoCodes = () => {
                         <p className="mb-0 fs--1 description-label">
                             Use per user
                         </p>
-                        <p className="semiBold">{codeLife}</p>
+                        <p className="semiBold">
+                            {isCodeLifeUnlimited ? "Unlimited" : codeLife}
+                        </p>
                     </>
                 ),
             },
@@ -162,7 +165,9 @@ const PromoCodes = () => {
                         <p className="mb-0 fs--1 description-label">
                             Time Utilized
                         </p>
-                        <p className="semiBold">{timesUsed}</p>
+                        <p className="semiBold">
+                            {isUserPerUserUnlimited ? "Unlimited" : timesUsed}
+                        </p>
                     </>
                 ),
             },
@@ -195,7 +200,6 @@ const PromoCodes = () => {
         subscriptionHistory: any,
         subscriptionId: string
     ) => {
-        console.log(subscriptionHistory, subscriptionId);
         setSelectedSubscriptionHistory(subscriptionHistory);
         setSelectedSubscriptionId(subscriptionId);
         setModalOpen(true);
@@ -209,36 +213,32 @@ const PromoCodes = () => {
                     styles.promoCodesPageHeader
                 )}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.promocodeHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.promoCodesLabel
                             )}
                         >
-                            Promo Code
+                            Promo Codes
                         </h5>
                     </div>
                     <div className={classNames("ms-auto z-index-1")}>
                         <Button
                             onClick={handleNewPromoClick}
                             className={styles.newPromoBtn}
+                            type="primary"
                         >
-                            <Icon width={12.25} height={14} name="plus" />
-                            New
+                            Add New
                         </Button>
                     </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.promoCodesImg
-                    )}
-                ></div>
             </div>
             <div className={styles.promoCodesBottomWrapper}>
                 <div style={{ marginBottom: 24 }}>

@@ -1,7 +1,8 @@
-.historyTableWrapper{
+.historyTableWrapper {
     overflow-x: auto;
     border: 1px solid var(--falcon-border-color) !important;
+    background-color: var(--white);
 }
-.historyTableContainer{
+.historyTableContainer {
     width: max-content;
 }

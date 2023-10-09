@@ -3,7 +3,7 @@ import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./addPromoCode.module.scss";
 import Switch from "../../../../components/Switch/Index";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPromocodeReducersListApi } from "../../../../redux/getPromocodeReducers";
 import { createPromoCodeApi } from "../../../../redux/createPromoCodeReducers";
@@ -16,9 +16,11 @@ import "react-quill/dist/quill.snow.css";
 import { deletePromoCodeReducersApi } from "../../../../redux/deletePromoCodeReducers";
 
 const AddPromoCode = () => {
-    const { promocodeId } = useParams();
+    //const { promocodeId } = useParams();
+    const [promocodeId, setPromocodeId] = useState<string>("");
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
+    const { state } = useLocation();
     const [form] = Form.useForm();
     const [couponType, setCouponType] = useState("Percentage");
     const getPromocodeListSuccess = useSelector(
@@ -33,9 +35,11 @@ const AddPromoCode = () => {
     const { loading: deletePromoCodeLoading, success: deletePromoCodeSuccess } =
         useSelector((state: any) => state.deletePromoCode);
     const [selectedCouponType, setSelectedCouponType] = useState("Percentage");
+    const [selectPromoCode, setSelectedPromoCode] = useState<any>();
 
     useEffect(() => {
         //const params = {};
+        if (state) setPromocodeId(state.id);
 
         if (!getPromocodeListSuccess) {
             dispatch(getPromocodeReducersListApi());
@@ -72,6 +76,7 @@ const AddPromoCode = () => {
             const currentCardDetail = getPromocodeList.find(
                 (s: any) => s._id === promocodeId
             );
+            setSelectedPromoCode(currentCardDetail);
             setCouponType(currentCardDetail.type);
             form.setFieldsValue({
                 ...currentCardDetail,
@@ -83,7 +88,6 @@ const AddPromoCode = () => {
     }, [getPromocodeList, promocodeId, form]);
 
     useEffect(() => {
-        console.log("deletePromoCodeSuccess", deletePromoCodeSuccess);
         if (success || deletePromoCodeSuccess) {
             navigation("/promocodes");
         }
@@ -108,31 +112,41 @@ const AddPromoCode = () => {
                     "card-header d-flex",
                     styles.promoCodeCardHeaderBox
                 )}
-                style={{ minHeight: 90 }}
+                style={{ minHeight: 60 }}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.promocodeHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.addPromoCodeLabel
                             )}
                         >
                             {!promocodeId
-                                ? "Add Promo Code"
-                                : "Edit Promo Code"}
+                                ? "Create New Promo Code"
+                                : "Edit " +
+                                  (selectPromoCode != null
+                                      ? selectPromoCode.name
+                                      : "")}
                         </h5>
                     </div>
+                    <div className={classNames("ms-auto z-index-1")}>
+                        <Button
+                            onClick={onCancelClick}
+                            style={{
+                                minWidth: 104,
+                            }}
+                            className="greyBtn"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.addPromoCodeImg
-                    )}
-                ></div>
             </div>
             <div className={styles.addPromoCodeFormWrapper}>
                 <Form
@@ -235,7 +249,6 @@ const AddPromoCode = () => {
                     <div className="formFieldRowWrapper formAddPromoWrapper">
                         <div className="col-auto formLabelWrapper">
                             <label className="form-label">
-                                {" "}
                                 {couponType === "Percentage"
                                     ? "Discount Percentage"
                                     : "Discount Price"}
@@ -604,6 +617,16 @@ const AddPromoCode = () => {
                     <div className="row">
                         <div className="col-12 my-2 text-end">
                             <Form.Item>
+                                <Button
+                                    onClick={onCancelClick}
+                                    style={{
+                                        minWidth: 104,
+                                        marginRight: 12,
+                                    }}
+                                    className="greyBtn"
+                                >
+                                    Cancel
+                                </Button>
                                 {promocodeId && (
                                     <Button
                                         onClick={onDeleteClick}
@@ -615,23 +638,11 @@ const AddPromoCode = () => {
                                     </Button>
                                 )}
                                 <Button
-                                    onClick={onCancelClick}
-                                    style={{
-                                        minWidth: 104,
-                                        marginRight: 12,
-                                    }}
-                                    className="greyBtn"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
                                     loading={loading}
                                     type="primary"
                                     htmlType="submit"
                                 >
-                                    {!promocodeId
-                                        ? "Add Promo Code"
-                                        : "Edit Promo Code"}
+                                    {!promocodeId ? "Add Promo Code" : "Update"}
                                 </Button>
                             </Form.Item>
                         </div>

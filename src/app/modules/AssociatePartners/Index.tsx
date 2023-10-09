@@ -75,8 +75,6 @@ const AssociatePartners = () => {
     }, []);
 
     const cardDesc = (cardInfo: any) => {
-        console.log("cardInfo");
-
         if (roleType === "superadmin") {
             return [
                 {
@@ -168,19 +166,24 @@ const AssociatePartners = () => {
     };
 
     return (
-        <div className={styles.promoCodesPageWrapper}>
+        <div className={styles.associatePartnerPageWrapper}>
             <div
                 className={classNames(
                     "card-header d-flex",
-                    styles.promoCodesPageHeader
+                    styles.associatePartnerPageHeader
                 )}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.associatePartnerTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
-                                styles.promoCodesLabel
+                                "my-2 position-relative z-index-1",
+                                styles.associatePartnerLabel
                             )}
                         >
                             Associate Partners
@@ -190,23 +193,14 @@ const AssociatePartners = () => {
                         <Button
                             onClick={handleNewAssociatePartnerClick}
                             className={styles.newPromoBtn}
+                            type="primary"
                         >
-                            <Icon width={12.25} height={14} name="plus" />
-                            New
+                            Add New
                         </Button>
                     </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.promoCodesImg
-                    )}
-                ></div>
             </div>
-            <div className={styles.promoCodesBottomWrapper}>
+            <div className={styles.associatePartnerBottomWrapper}>
                 <div style={{ marginBottom: 24 }}>
                     <SearchFilterBar
                         searchValue={searchValue}

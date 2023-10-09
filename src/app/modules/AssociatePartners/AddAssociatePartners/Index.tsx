@@ -1,9 +1,7 @@
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./addAssociatePartner.module.scss";
 import Tabs from "../../../../components/Tabs/Index";
 import Button from "../../../../components/Button/Index";
-import Icon from "../../../../components/Icon/Index";
 import { useEffect, useState } from "react";
 import OwnerInfo from "./OwnerInfo/Index";
 import { useNavigate, useParams } from "react-router-dom";
@@ -69,21 +67,6 @@ const AddAssociatePartners = () => {
             navigation("/associatePartners");
         }
     }, [success]);
-
-    const operations = (
-        <Button
-            onClick={handleCancelClick}
-            className={classNames("greyBtn", styles.cancelAddClientBtn)}
-        >
-            <Icon
-                className={styles.cancelBtnIcon}
-                name="cross"
-                height={18}
-                width={18}
-            />
-            Cancel
-        </Button>
-    );
 
     const onChange = (key: number, formValue: any) => {
         if (key === 5) {
@@ -156,29 +139,36 @@ const AddAssociatePartners = () => {
                     "card-header d-flex",
                     styles.promoCodeCardHeaderBox
                 )}
-                style={{ minHeight: 90 }}
+                style={{ minHeight: 60 }}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.promocodeHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.addPromoCodeLabel
                             )}
                         >
                             Add New Associate Partner
                         </h5>
                     </div>
+                    <div className={classNames("ms-auto z-index-1")}>
+                        <Button
+                            onClick={handleCancelClick}
+                            style={{
+                                minWidth: 104,
+                            }}
+                            className="greyBtn"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.addPromoCodeImg
-                    )}
-                ></div>
             </div>
             <div className={styles.addClientDetailBox}>
                 {getClientsListLoading && clientId && (
@@ -187,7 +177,12 @@ const AddAssociatePartners = () => {
                 <div className="row">
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
-                            <label className="form-label">
+                            <label
+                                className={classNames(
+                                    "form-label",
+                                    styles.rowTitle
+                                )}
+                            >
                                 Partners Category
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
@@ -230,7 +225,12 @@ const AddAssociatePartners = () => {
                     </div>{" "}
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
-                            <label className="form-label">
+                            <label
+                                className={classNames(
+                                    "form-label",
+                                    styles.rowTitle
+                                )}
+                            >
                                 {partnerTypeLabel} Type
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
@@ -269,10 +269,9 @@ const AddAssociatePartners = () => {
                         </div>
                     </div>
                 </div>
-
                 {!(getClientsListLoading && clientId) && (
                     <Tabs
-                        tabBarExtraContent={operations}
+                        // tabBarExtraContent={operations}
                         className="subscriptionTabs"
                         defaultActiveKey="1"
                         activeKey={activeTab}

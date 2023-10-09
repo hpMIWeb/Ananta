@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NoDataAvailable from "../../../../components/NoDataAvailable/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
+import { capitalize } from "../../../utilities/utility";
 import {
     displayNumberInCurrencyFormate,
     getFilteredValue,
@@ -21,7 +22,6 @@ import {
 } from "../../../../redux/createSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
 import Cookies from "js-cookie";
-import { capitalize } from "../../../utilities/utility";
 
 const SubscriptionTab = () => {
     const navigation = useNavigate();
@@ -81,11 +81,26 @@ const SubscriptionTab = () => {
         setModalOpen(true);
     };
 
+    const featureList: any = [
+        { label: "Task Manager", value: "TaskManager" },
+        { label: "File Manager", value: "FileManager" },
+        { label: "E-Commerce", value: "E_Commerce" },
+        {
+            label: "Template customization for import",
+            value: "Tamplate_Customization_for_import",
+        },
+        {
+            label: "Live Reports Client Mobile App",
+            value: "Live_reports_on_client_mobile_app",
+        },
+        { label: "Client Login Mobile App", value: "Client_login_mobile_app" },
+    ];
+
     const generateFeatureLists = (features: any) => {
-        const featureLists = [];
+        const featureItems = [];
 
         for (let i = 0; i < features.length; i += 3) {
-            const featureList = (
+            const featureListUI = (
                 <ul
                     key={i}
                     style={{ display: "inline-block" }}
@@ -99,17 +114,25 @@ const SubscriptionTab = () => {
                 </ul>
             );
 
-            featureLists.push(featureList);
+            featureItems.push(featureListUI);
         }
 
-        return featureLists;
+        return featureItems;
     };
 
     const cardDescContent = (cardInfo: any) => {
         const { features } = cardInfo;
-        const keysWithTrueValue = Object.keys(features).filter(
-            (key) => features[key] === true
-        );
+        const keysWithTrueValue = Object.keys(features)
+            .filter((key) => features[key] === true)
+            .map((featureItem: any) => {
+                if (featureItem) {
+                    const matchedItem = featureList.find((item: any) => {
+                        return item.value === featureItem;
+                    });
+                    return matchedItem ? matchedItem.label : featureItem;
+                }
+                return featureItem;
+            });
 
         // Conditionally render the content based on roleType
         if (roleType === "superadmin") {
@@ -467,7 +490,7 @@ const SubscriptionTab = () => {
     };
 
     const handleEditBtnClick = (id: string) => {
-        navigation(`/subscription/edit-subscription/${id}`);
+        navigation(`/subscription/edit-subscription`, { state: { id: id } });
     };
 
     useEffect(() => {

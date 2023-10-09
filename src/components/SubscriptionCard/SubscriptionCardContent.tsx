@@ -11,7 +11,7 @@ const SubscriptionCardContent = ({
     cardDesc,
     cardDetails,
     isActive,
-    planName = "Gold Plan 1",
+    planName = "",
     titleDesc,
     column,
     planNameLabel,

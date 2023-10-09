@@ -63,7 +63,6 @@ const SubscriptionAddonsCard = memo(
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
-            console.log("selectedAddonData", selectedAddonData);
             //  setSelectedAddonPrice(selectedAddonData.price);
             setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
@@ -83,7 +82,6 @@ const SubscriptionAddonsCard = memo(
             );
             const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
             setSelectedAddonPrice(addonPrice * selectNumber);
-            console.log(selectedAddonData);
             currentAddon.addonsPrice = addonPrice * selectNumber;
             const total = subscriptionAddons.reduce(
                 (acc: any, addon: any) => acc + addon.addonsPrice,
@@ -105,7 +103,6 @@ const SubscriptionAddonsCard = memo(
                     value: a._id,
                     label: a.add_on_title,
                 }));
-            console.log(addOnList);
             setAddOnListOpts(addOnList);
         }, [addOnType]);
 

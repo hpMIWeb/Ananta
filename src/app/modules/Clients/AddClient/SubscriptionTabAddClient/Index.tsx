@@ -55,7 +55,6 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     };
     useEffect(() => {
         // @ts-ignore
-        console.log("totalAddonAmount", totalAddonAmount);
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
     }, []);
@@ -270,7 +269,6 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         //     // );
         //     console.log(addOnTotalPrice);
         // }
-        console.log(totalAddonAmount);
     };
 
     const onFinish = (values: any) => {

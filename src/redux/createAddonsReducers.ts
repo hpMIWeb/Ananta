@@ -65,12 +65,12 @@ const createAddonsReducersReducersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-
-                toast.success(
-                    action.meta.arg.addonsId === ""
-                        ? "Addons Created Successfully."
-                        : "Addons Updated Successfully."
-                );
+                const strMessage = `AddOns ${
+                    action.meta.arg.addonsId && action.meta.arg.addonsId !== ""
+                        ? "Updated"
+                        : "Created"
+                } Successfully`;
+                toast.success(strMessage);
             })
             .addCase(createAddonsReducersApi.rejected, (state: any, action) => {
                 state.loading = false;

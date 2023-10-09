@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../../../../components/Button/Index";
 import styles from "./subscriptionAddOns.module.scss";
-import AddOnsAccordianContent from "../AddOnsAccordianContent/Index";
+import AddOnsAccordianContent from "../../Subscription/AddOnsAccordianContent/Index";
 import Icon from "../../../../components/Icon/Index";
 import { useNavigate } from "react-router-dom";
 import SearchFilterBar from "../../../../components/SearchFilterBar/Index";
@@ -23,10 +23,8 @@ const SubscriptionAddOns = () => {
     );
     const navigation = useNavigate();
 
-   
-
     const handleEditBtnClick = (id: string) => {
-        navigation(`/addons/edit/${id}`);
+        navigation(`/addons/edit`, { state: { id: id } });
     };
 
     return (

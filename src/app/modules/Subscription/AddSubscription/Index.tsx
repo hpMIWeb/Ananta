@@ -1,10 +1,9 @@
 import { Button, Form, Input, Select } from "antd";
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./addSubscription.module.scss";
 import Switch from "../../../../components/Switch/Index";
 import Icon from "../../../../components/Icon/Index";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createSubscriptionsReducersApi } from "../../../../redux/createSubscriptionsReducers";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -13,12 +12,29 @@ import FormContentSkeletonLoader from "../../../../components/FormContentSkeleto
 import { deleteSubscriptionsReducersApi } from "../../../../redux/deleteSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
 import Cookies from "js-cookie";
+import { featureList } from "../../../utilities/utility";
 
 const AddSubscription = () => {
+    // const featureList: any = [
+    //     { label: "Task Manager", value: "TaskManager" },
+    //     { label: "File Manager", value: "FileManager" },
+    //     { label: "E-Commerce", value: "E_Commerce" },
+    //     {
+    //         label: "Template customization for import",
+    //         value: "Tamplate_Customization_for_import",
+    //     },
+    //     {
+    //         label: "Live Reports Client Mobile App",
+    //         value: "Live_reports_on_client_mobile_app",
+    //     },
+    //     { label: "Client Login Mobile App", value: "Client_login_mobile_app" },
+    // ];
+
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
+    const { state } = useLocation();
     const roleType = Cookies.get("roleTypeName");
-    const [featureState, setFeatureState] = useState<any>();
+    const [featureState, setFeatureState] = useState<any>(featureList[0]);
     const [isSpaceUnlimited, setIsSpaceUnlimited] = useState<boolean>(false);
     const [isTransactionCreditsUnlimited, setIsTransactionCreditsUnlimited] =
         useState<boolean>(false);
@@ -61,7 +77,8 @@ const AddSubscription = () => {
         setIsClientUnlimited(value);
     };
 
-    const { subscriptionId } = useParams();
+    // const { subscriptionId } = useParams();
+    const [subscriptionId, setSubscriptionId] = useState<string>("");
     const [isEditMode, setIsEditMode] = useState(subscriptionId ? true : false);
     const [form] = Form.useForm();
     const { data: subscriptionCardList, loading: subscriptionCardListLoading } =
@@ -77,18 +94,16 @@ const AddSubscription = () => {
     const handleFeatureToggle = (feature: any) => {
         setFeatureState((prevState: any) => ({
             ...prevState,
-            [feature]: !prevState[feature],
+            [feature.value]: !prevState[feature.value],
         }));
     };
-
-    const featureList: any = [];
 
     const formValues = {
         // TODO: need to check why no append
         features: Object.fromEntries(
             featureList.map((task: any) => [
-                task.feature.replace(/\s+/g, "_"),
-                featureState[task.feature] || false,
+                task.value.replace(/\s+/g, "_"),
+                featureState[task.value] || false,
             ])
         ),
     };
@@ -98,6 +113,10 @@ const AddSubscription = () => {
             dispatch(getSubscriptionsListApi());
         }
     }, [subscriptionCardList]);
+
+    useEffect(() => {
+        if (state) setSubscriptionId(state.id);
+    }, []);
 
     const onFinish = (e: any) => {
         const payload = {
@@ -204,13 +223,18 @@ const AddSubscription = () => {
                     "card-header d-flex",
                     styles.subscriptionCardHeaderBox
                 )}
-                style={{ minHeight: 90 }}
+                style={{ minHeight: 60 }}
             >
-                <div className="d-flex align-items-center w-100">
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.subscriptionHeaderTitle
+                    )}
+                >
                     <div className="me-auto">
                         <h5
                             className={classNames(
-                                "my-2 text-white position-relative z-index-1",
+                                "my-2 position-relative z-index-1",
                                 styles.addSubscriptionLabel
                             )}
                         >
@@ -219,16 +243,18 @@ const AddSubscription = () => {
                                 : "Edit Subscription"}
                         </h5>
                     </div>
+                    <div className={classNames("ms-auto z-index-1")}>
+                        <Button
+                            onClick={onCancelClick}
+                            style={{
+                                minWidth: 104,
+                            }}
+                            className="greyBtn"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
                 </div>
-                <div
-                    style={{
-                        backgroundImage: `url(${addSubImg})`,
-                    }}
-                    className={classNames(
-                        "rounded-3 rounded-bottom-0",
-                        styles.addSubscriptionImg
-                    )}
-                ></div>
             </div>
             <div className={styles.customAddFormWrapper}>
                 {subscriptionCardListLoading && subscriptionId && (
@@ -851,14 +877,16 @@ const AddSubscription = () => {
                                                             size="small"
                                                             className="smallCheckBox"
                                                             checked={
-                                                                featureState[
-                                                                    task.feature
-                                                                ] ??
-                                                                task.defaultState
+                                                                featureState
+                                                                    ? featureState[
+                                                                          task
+                                                                              .value
+                                                                      ]
+                                                                    : task.defaultState
                                                             }
                                                             onChange={() =>
                                                                 handleFeatureToggle(
-                                                                    task.feature
+                                                                    task
                                                                 )
                                                             }
                                                         />
@@ -867,17 +895,7 @@ const AddSubscription = () => {
                                                                 styles.featureCheckBoxLabel
                                                             }
                                                         >
-                                                            {
-                                                                task.feature
-                                                                    .replace(
-                                                                        /_/g,
-                                                                        " "
-                                                                    ) // Replace underscores with spaces
-                                                                    .replace(
-                                                                        /-/g,
-                                                                        " "
-                                                                    ) // Replace hyphens with spaces
-                                                            }
+                                                            {task.label}
                                                         </label>
                                                     </div>
                                                 )
@@ -1028,6 +1046,16 @@ const AddSubscription = () => {
                         <div className="row">
                             <div className="col-12 my-2 text-end">
                                 <Form.Item>
+                                    <Button
+                                        onClick={onCancelClick}
+                                        style={{
+                                            minWidth: 104,
+                                            marginRight: 12,
+                                        }}
+                                        className="greyBtn"
+                                    >
+                                        Cancel
+                                    </Button>
                                     {subscriptionId && (
                                         <Button
                                             onClick={onDeleteClick}
@@ -1039,16 +1067,6 @@ const AddSubscription = () => {
                                             Delete
                                         </Button>
                                     )}
-                                    <Button
-                                        onClick={onCancelClick}
-                                        style={{
-                                            minWidth: 104,
-                                            marginRight: 12,
-                                        }}
-                                        className="greyBtn"
-                                    >
-                                        Cancel
-                                    </Button>
                                     <Button
                                         loading={loading}
                                         type="primary"

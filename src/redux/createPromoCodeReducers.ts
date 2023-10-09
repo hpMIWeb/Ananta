@@ -61,11 +61,12 @@ const createPromoCodeReducersSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.data = action.payload;
-                toast.success(
-                    action.meta.arg.promoId === ""
-                        ? "Promo code Created Successfully."
-                        : "Promo code Updated Successfully."
-                );
+                const strMessage = `Promo code ${
+                    action.meta.arg.promoId && action.meta.arg.promoId !== ""
+                        ? "Updated"
+                        : "Created"
+                } Successfully`;
+                toast.success(strMessage);
             })
             .addCase(createPromoCodeApi.rejected, (state, action) => {
                 state.loading = false;

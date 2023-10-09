@@ -1,16 +1,12 @@
 @import "../../../../styles/variables.scss";
-
-.addPromoCodeCardWrapper {
-    // border: 0px solid var(--falcon-card-border-color) !important;
-    // border-radius: 10px !important;
-
+.addSubscriptionCardWrapper {
     box-shadow: var(--falcon-box-shadow);
     margin-bottom: 1rem !important;
     display: flex;
     flex-direction: column;
     border: none !important;
 
-    .addPromoCodeLabel {
+    .addSubscriptionLabel {
         z-index: 1;
         font-size: 1.4rem;
         font-weight: 600;
@@ -18,7 +14,7 @@
         font-family: $btn-font-family;
         color: #2c7be5;
     }
-    .promoCodeCardHeaderBox {
+    .subscriptionCardHeaderBox {
         padding: 0 20px 0 20px;
         min-height: 60px;
         position: sticky !important;
@@ -27,15 +23,16 @@
         background-color: var(--white);
         border: none;
     }
-    .promocodeHeaderTitle {
-        border-bottom: 1px solid #d8e2eb;
-    }
-    .formAddPromoWrapper {
-        column-gap: 10px;
-    }
-    .addPromoCodeFormWrapper {
+    .customAddFormWrapper {
         padding: 20px;
         background-color: var(--white);
+    }
+    .addOnsHeaderTitle {
+        border-bottom: 1px solid #d8e2eb;
+    }
+    .formLabelWrapper {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
     }
     .formInputWrapper {
         padding-left: 8px !important;
