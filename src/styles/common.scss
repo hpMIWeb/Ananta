@@ -181,6 +181,17 @@
         }
     }
 }
+.customTable {
+    color: var(--falcon-input-color);
+    background-color: var(--falcon-input-bg);
+    background-clip: padding-box;
+    border: 1px solid var(--falcon-input-border-color);
+    border-radius: 0.25rem;
+    &::placeholder {
+        color: var(--falcon-input-color);
+        font-family: $btn-font-family;
+    }
+}
 .padding8 {
     padding-left: 8px !important;
     padding-right: 8px !important;

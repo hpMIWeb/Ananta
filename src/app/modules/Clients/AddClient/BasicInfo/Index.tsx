@@ -434,7 +434,10 @@ const BasicInfo = ({
                                         <label className="form-label">
                                             Industry Type
                                         </label>
-                                        <Form.Item name="industryType">
+                                        <Form.Item
+                                            name="industryType"
+                                            className="customAddFormSelectOptions"
+                                        >
                                             <Select
                                                 showSearch
                                                 placeholder="Select Industry Type"
@@ -458,7 +461,10 @@ const BasicInfo = ({
                                         <label className="form-label">
                                             Line Of Business
                                         </label>
-                                        <Form.Item name="lineOfBusiness">
+                                        <Form.Item
+                                            name="lineOfBusiness"
+                                            className="customAddFormSelectOptions"
+                                        >
                                             <Select
                                                 showSearch
                                                 placeholder="Select Industry Type"
@@ -618,7 +624,10 @@ const BasicInfo = ({
                     >
                         <div>
                             <label className="form-label">City</label>
-                            <Form.Item name="city">
+                            <Form.Item
+                                name="city"
+                                className="customAddFormSelectOptions"
+                            >
                                 <Select
                                     placeholder="Select City"
                                     showSearch

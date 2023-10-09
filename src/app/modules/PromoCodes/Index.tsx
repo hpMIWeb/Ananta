@@ -96,7 +96,9 @@ const PromoCodes = () => {
                     <>
                         <p className="mb-0 fs--1 description-label">Start</p>
                         <p className="semiBold">
-                            {moment(startDateTime).format("DD-MM-YYYY h:mm a")}
+                            {moment(startDateTime).format(
+                                "YYYY-MM-DD hh:mm:ss"
+                            )}
                         </p>
                     </>
                 ),
@@ -107,7 +109,9 @@ const PromoCodes = () => {
                     <>
                         <p className="mb-0 fs--1 description-label">End</p>
                         <p className="semiBold">
-                            {moment(endDateTime).format("DD-MM-YYYY h:mm a")}
+                            {moment(startDateTime).format(
+                                "YYYY-MM-DD hh:mm:ss"
+                            )}
                         </p>
                     </>
                 ),
@@ -141,7 +145,8 @@ const PromoCodes = () => {
                         <p className="mb-0 fs--1 description-label">
                             Use of code
                         </p>
-                        <p className="semiBold">{userPerUser}</p>
+
+                        {isUserPerUserUnlimited ? "Unlimited" : userPerUser}
                     </>
                 ),
             },

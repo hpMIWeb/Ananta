@@ -36,6 +36,11 @@ const AddPromoCode = () => {
         useSelector((state: any) => state.deletePromoCode);
     const [selectedCouponType, setSelectedCouponType] = useState("Percentage");
     const [selectPromoCode, setSelectedPromoCode] = useState<any>();
+    const [isLifeOfCodeUnlimited, setIsLifeOfCodeUnlimited] =
+        useState<boolean>(false);
+    const [isUsePerUserUnlimited, setIsUsePerUserUnlimited] =
+        useState<boolean>(false);
+    const [isDisplayOnPortal, setIsDisplayOnPortal] = useState<boolean>(false);
 
     useEffect(() => {
         //const params = {};
@@ -46,12 +51,29 @@ const AddPromoCode = () => {
         }
     }, []);
 
+    const handleIsLifeOfCodeUnlimitedChange = (value: boolean) => {
+        setIsLifeOfCodeUnlimited(value);
+    };
+    const handleIsUsePerUserUnlimitedChange = (value: boolean) => {
+        setIsUsePerUserUnlimited(value);
+    };
+    const handleDisplayOnPortalChange = (value: boolean) => {
+        setIsDisplayOnPortal(value);
+    };
+
     const onFinish = (e: any) => {
         // @ts-ignore
         //TODO:: need to solve
         dispatch(
             createPromoCodeApi({
-                payload: { ...e, subscribers_count: 0, promoId: promocodeId },
+                payload: {
+                    ...e,
+                    isCodeLifeUnlimited: isLifeOfCodeUnlimited,
+                    isUserPerUserUnlimited: isUsePerUserUnlimited,
+                    display_on_portal: isUsePerUserUnlimited,
+                    subscribers_count: 0,
+                    promoId: promocodeId,
+                },
                 promoId: promocodeId,
             })
         );
@@ -481,9 +503,10 @@ const AddPromoCode = () => {
                                     Not Applicable
                                 </label>
                                 <Switch
-                                    defaultChecked
                                     size="small"
                                     className="smallCheckBox"
+                                    checked={isLifeOfCodeUnlimited}
+                                    onChange={handleIsLifeOfCodeUnlimitedChange}
                                 ></Switch>
                                 <label className={styles.featureCheckBoxLabel}>
                                     Unlimited
@@ -522,6 +545,8 @@ const AddPromoCode = () => {
                                     defaultChecked
                                     size="small"
                                     className="smallCheckBox"
+                                    checked={isUsePerUserUnlimited}
+                                    onChange={handleIsUsePerUserUnlimitedChange}
                                 ></Switch>
                                 <label className={styles.featureCheckBoxLabel}>
                                     Unlimited
@@ -601,8 +626,9 @@ const AddPromoCode = () => {
                                 >
                                     <Switch
                                         size="small"
-                                        defaultValue={true}
                                         className="smallCheckBox"
+                                        checked={isDisplayOnPortal}
+                                        onChange={handleDisplayOnPortalChange}
                                     ></Switch>
                                     <label
                                         className={styles.featureCheckBoxLabel}

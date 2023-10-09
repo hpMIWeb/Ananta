@@ -72,6 +72,7 @@ const PromocodeHistoryModal = ({
             open={modalOpen}
             onOk={() => setModalOpen(false)}
             onCancel={() => setModalOpen(false)}
+            className="customAddFormSelectOptions"
         >
             <div className={styles.historyTableWrapper}>
                 <div>
