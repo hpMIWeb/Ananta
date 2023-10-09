@@ -205,7 +205,8 @@ const PromoCodes = () => {
     const promoFilteredValue = getFilteredValue(
         displayedPaginationItems,
         searchValue,
-        sortState
+        sortState,
+        ""
     );
 
     const handleSubscriptionHistoryModalClick = (

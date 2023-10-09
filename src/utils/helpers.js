@@ -84,11 +84,34 @@ const customSort = (a, b, sortState) => {
     return 0; // Default to no sorting
 };
 
-export const getFilteredValue = (data, searchValue, sortState, addOnValue) => {
+export const getFilteredValue = (
+    data,
+    searchValue,
+    sortState,
+    addOnValue,
+    filterFrom = ""
+) => {
     const searchedValues = data.filter((card) => {
-        return Object.values(card).some((value) =>
-            compareIgnoreCaseWithTypo(String(value), searchValue?.toLowerCase())
-        );
+        if (filterFrom != "") {
+            return data.filter((item) => {
+                return item.filterFrom
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase());
+            });
+            // return Object.values(card).some((value) =>
+            //     // compareIgnoreCaseWithTypo(
+            //     //     String(value),
+            //     //     searchValue?.toLowerCase()
+            //     // )
+            // );
+        } else {
+            return Object.values(card).some((value) =>
+                compareIgnoreCaseWithTypo(
+                    String(value),
+                    searchValue?.toLowerCase()
+                )
+            );
+        }
     });
 
     const sortedValues = searchedValues.sort((a, b) =>
