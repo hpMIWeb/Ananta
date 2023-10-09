@@ -52,6 +52,31 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
                 requiredMark={false}
                 className="customAddForm"
             >
+                <Form.List name="ownerDetails">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {ownerInfoData.map((field, index) => (
+                                <div
+                                    style={{ marginTop: 2 }}
+                                    key={index}
+                                    className="row"
+                                >
+                                    {/* {form.type === "new" && (
+                    <hr className={styles.ownerInfoCardLine} />
+                  )} */}
+                                    <OwnerInfoCardBox
+                                        index={index}
+                                        field={field}
+                                        remove={remove}
+                                        //  canDelete={form.type === "new"}
+                                        onDeleteCardClick={onDeleteCardClick}
+                                        clientType={clientType}
+                                    />
+                                </div>
+                            ))}
+                        </>
+                    )}
+                </Form.List>
                 <div className="row">
                     <div className={styles.formFooterAction}>
                         <CardBottomAction
