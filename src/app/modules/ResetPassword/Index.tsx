@@ -81,6 +81,22 @@ const ResetPassword = ({}) => {
                                         message:
                                             "Please Enter your confirm password!",
                                     },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (
+                                                !value ||
+                                                getFieldValue("password") ===
+                                                    value
+                                            ) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(
+                                                new Error(
+                                                    "The two passwords do not match."
+                                                )
+                                            );
+                                        },
+                                    }),
                                 ]}
                                 style={{ margin: 0 }}
                             >
