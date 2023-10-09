@@ -66,6 +66,13 @@ const PromoCodes = () => {
         navigation(`/promocodes/edit`, { state: { id: id } });
     };
 
+    // const clientSortLabel = {
+    //     Latest: { asc: "Ascending", desc: "Descending" },
+    //     Name: { asc: "Ascending", desc: "Descending" },
+    //     Price: { asc: "Ascending", desc: "Descending" },
+    //     Subscriber: { asc: "Ascending", desc: "Descending" },
+    // };
+
     const cardDesc = (cardDetails: any) => {
         const {
             description,
@@ -252,6 +259,9 @@ const PromoCodes = () => {
                         setSearchValue={setSearchValue}
                         sortState={sortState}
                         setSortState={setSortState}
+                        setSortStateHandler={(options: any) => {
+                            setSortState(options);
+                        }}
                     />
                 </div>
                 {loading && <CardContentSkeletonLoader />}
