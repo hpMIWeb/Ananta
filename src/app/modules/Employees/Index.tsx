@@ -41,10 +41,9 @@ const Employees = () => {
     }, []);
 
     const onChangeActiveClick = (e: any, id: any) => {
-        console.log("EMomklfnvl");
         dispatch(
             createEmployeeReducersApi({
-                payload: { status: !!e ? "Active" : "Inactive" },
+                payload: { status: !!e ? true : false },
                 employeeId: id,
             })
         );
@@ -239,6 +238,7 @@ const Employees = () => {
                             cardDesc={cardDesc}
                             isProfileViewAction
                             onChangeActiveClick={onChangeActiveClick}
+                            isActive={card.status}
                         />
                     ))}
 
