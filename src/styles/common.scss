@@ -255,3 +255,11 @@
 .ant-breadcrumb-separator {
     color: var(--falcon-input-color) !important;
 }
+
+.ant-modal-content {
+    background-color: var(--falcon-input-bg) !important;
+
+    .ant-modal-title {
+        text-align: center;
+    }
+}

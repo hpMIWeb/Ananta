@@ -1,0 +1,46 @@
+.Et1 {
+    margin-left: 85%;
+    margin-top: 8px;
+}
+.ant-select-selector {
+    border-radius: 0px !important;
+}
+
+.summery {
+    padding: 10px;
+    background: #d8e2ef;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.employeeSummaryData {
+    color: black;
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 0;
+    margin-bottom: 0em;
+    text-align: center;
+}
+
+.employeeLi {
+    list-style-type: none;
+}
+.employeeSummaryLable {
+    // color: rgb(9 17 23 / 54%);
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 0em;
+    text-align: center;
+}
+
+.summaryCol {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.divider {
+    min-height: 50px;
+    max-height: 50px;
+    width: 1rem;
+}

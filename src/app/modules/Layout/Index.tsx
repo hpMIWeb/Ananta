@@ -179,6 +179,38 @@ const items: MenuItem[] = [
             ),
         ]
     ),
+    getItem(
+        "Task Master",
+        "34",
+        <Icon name="management" width={17.5} height={14} />,
+        [
+            getItem(
+                "Task",
+                "35",
+                <Icon name="submission" width={17.5} height={14} />
+            ),
+            getItem(
+                "Compliance",
+                "36",
+                <Icon name="submission" width={17.5} height={14} />
+            ),
+            getItem(
+                "Timesheet",
+                "37",
+                <Icon name="promo" width={17.5} height={14} />
+            ),
+            getItem(
+                "Approval",
+                "38",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+            getItem(
+                "Settings",
+                "39",
+                <Icon name="management" width={17.5} height={14} />
+            ),
+        ]
+    ),
 ];
 
 const LayoutComponent = ({
@@ -235,6 +267,14 @@ const LayoutComponent = ({
             "default-industry-type",
             "default-line-of-business",
         ];
+        const taskMasterNavs = [
+            "task",
+            "compliance",
+            "timesheet",
+            "approval",
+            "setting",
+            "default-line-of-business",
+        ];
 
         const billingItems = billingsNavs.filter((item: string) => {
             return pathName.includes(item);
@@ -261,6 +301,9 @@ const LayoutComponent = ({
         const defaultItems = defaultNavs.filter((item: string) => {
             return pathName.includes(item);
         });
+        const taskMasterItem = taskMasterNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
 
         // Append `prefix` in breadcrumbs
         if (billingItems.length > 0) {
@@ -275,6 +318,8 @@ const LayoutComponent = ({
             return ["Default", ...pathName.split("/")];
         } else if (masterItems.length > 0) {
             return ["Master", ...pathName.split("/")];
+        } else if (taskMasterItem.length > 0) {
+            return ["Task Manager", ...pathName.split("/")];
         }
         return [];
     };
@@ -320,6 +365,11 @@ const LayoutComponent = ({
         "default-checklist": "Default Checklist",
         "default-industry-type": "Default Industry Type",
         "default-line-of-business": "Default line of Business",
+        task: "Task List",
+        "add-task": "Add Task",
+        "add-multi-task": "Add Multi Task",
+        compliance: "Compliance List",
+        "add-compliance": "Add Compliance",
     };
 
     const getBreadCrumbs = (strHref: string, title: string, index: number) => {
@@ -432,6 +482,21 @@ const LayoutComponent = ({
                 return;
             case "31":
                 navigate("/associatePartners");
+                return;
+            case "35":
+                navigate("/task");
+                return;
+            case "36":
+                navigate("/compliance");
+                return;
+            case "37":
+                navigate("/timesheet");
+                return;
+            case "38":
+                navigate("/approval");
+                return;
+            case "39":
+                navigate("/setting");
                 return;
         }
     };

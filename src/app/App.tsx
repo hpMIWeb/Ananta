@@ -42,6 +42,16 @@ import DefaultIndustryType from "./modules/default-master/DefaultIndustryType/De
 import DefaultLineOfBusiness from "./modules/default-master/DefaultLineOfBusiness/DefaultLineOfBusiness";
 import AssociatePartners from "./modules/AssociatePartners/Index";
 import AddAssociatePartners from "./modules/AssociatePartners/AddAssociatePartners/Index";
+import TaskList from "./modules/task/TaskList";
+import AddTask from "./modules/task/AddTask";
+import AddMultipleTask from "./modules/task/AddMultipleTask";
+import ComplianceList from "./modules/compliance/ComplianceList";
+import AddCompliance from "./modules/compliance/AddCompliance";
+import Approval from "./modules/aproval/Aproval";
+import TimeSheet from "./modules/timesheet/TimeSheet";
+import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
+import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
+import Setting from "./modules/Setting/Setting";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -208,7 +218,30 @@ const App = () => {
                         <Route
                             path="logout"
                             element={<PrivateRoute component={Logout} />}
-                        />{" "}
+                        />
+                        {/* Task Master link */}
+                        <Route index path="task" element={<TaskList />} />
+                        <Route path="add-task" element={<AddTask />} />
+                        <Route
+                            path="add-multi-task"
+                            element={<AddMultipleTask />}
+                        />
+                        <Route path="compliance" element={<ComplianceList />} />
+                        <Route
+                            path="add-compliance"
+                            element={<AddCompliance />}
+                        />
+                        <Route path="approval" element={<Approval />} />
+                        <Route path="timesheet" element={<TimeSheet />} />
+                        <Route
+                            path="emp-time-sheet"
+                            element={<EmpTimeSheet />}
+                        />
+                        <Route
+                            path="client-time-sheet"
+                            element={<ClientTimeSheet />}
+                        />
+                        <Route path="Setting" element={<Setting />} />
                         <Route path="*" element={<NoMatch />} />
                     </Route>
                 </Routes>
