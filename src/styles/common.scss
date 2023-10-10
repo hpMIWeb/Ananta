@@ -116,6 +116,9 @@
             font-weight: 400;
             color: var(--falcon-input-color);
         }
+        .ant-modal-title {
+            text-align: center;
+        }
     }
     .customAddClientSelectOptions {
         .ant-select-selection-item {
@@ -251,12 +254,4 @@
 
 .ant-breadcrumb-separator {
     color: var(--falcon-input-color) !important;
-}
-
-.ant-modal-content {
-    background-color: var(--falcon-input-bg) !important;
-
-    .ant-modal-title {
-        text-align: center;
-    }
 }

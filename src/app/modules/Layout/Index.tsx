@@ -219,6 +219,22 @@ const LayoutComponent = ({
         const clientNavs = ["caclient"];
         const employeeNavs = ["employee"];
         const associatePartnerNavs = ["associatePartners"];
+        const mastersNavs = [
+            "department",
+            "designation",
+            "role",
+            "team",
+            "checklist",
+        ];
+        const defaultNavs = [
+            "default-department",
+            "default-designation",
+            "default-role",
+            "default-team",
+            "default-checklist",
+            "default-industry-type",
+            "default-line-of-business",
+        ];
 
         const billingItems = billingsNavs.filter((item: string) => {
             return pathName.includes(item);
@@ -238,6 +254,14 @@ const LayoutComponent = ({
             }
         );
 
+        const masterItems = mastersNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
+
+        const defaultItems = defaultNavs.filter((item: string) => {
+            return pathName.includes(item);
+        });
+
         // Append `prefix` in breadcrumbs
         if (billingItems.length > 0) {
             return ["Billing", ...pathName.split("/")];
@@ -247,6 +271,10 @@ const LayoutComponent = ({
             return ["Employees", ...pathName.split("/")];
         } else if (associatePartnerItems.length > 0) {
             return ["Associated Partners", ...pathName.split("/")];
+        } else if (defaultItems.length > 0) {
+            return ["Default", ...pathName.split("/")];
+        } else if (masterItems.length > 0) {
+            return ["Master", ...pathName.split("/")];
         }
         return [];
     };
@@ -280,6 +308,18 @@ const LayoutComponent = ({
         create: "Create New",
         promocodes: "Promo Code",
         associatePartners: "Dashboard",
+        department: "Department",
+        designation: "Designation",
+        role: "Role",
+        team: "Team",
+        checklist: "Checklist",
+        "default-department": "Default Department",
+        "default-designation": "Default Designation",
+        "default-role": "Default Role",
+        "default-team": "Default Team",
+        "default-checklist": "Default Checklist",
+        "default-industry-type": "Default Industry Type",
+        "default-line-of-business": "Default line of Business",
     };
 
     const getBreadCrumbs = (strHref: string, title: string, index: number) => {
