@@ -82,7 +82,7 @@ const AddEmployee = () => {
 
     const onChange = (key: any, formInfo: any) => {
         console.log("key", key);
-        if (key === 5) {
+        if (key === 6) {
             const payload = { ...employeeDetails, ...formInfo };
             console.log("payload", payload);
 
