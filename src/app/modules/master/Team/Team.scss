@@ -1,30 +1,42 @@
-.t1{
-    display: flex;
+.At2 {
+    margin-right: 0%;
+    padding: 0px 29px;
+    font-size: larger;
 }
-.t2{
-    margin-right: 0px;
+/* In your CSS/SCSS file or inline style */
+.center-align-cell {
+    text-align: center;
 }
-.t3{
-    width: 200px;
+
+#departmentTable {
+    border-spacing: 0 4px;
 }
-.t4{
-    text-align: start;
-    font-weight: 600;
-    font-size: medium;
+
+table {
+    border-spacing: 0 4px;
 }
-.t5{
-    width: 25px;
-    height: 25px;
+#departmentTable td {
+    cursor: pointer;
+    color: #5e6e84 !important;
+    margin: 0;
+    --falcon-gutter-x: 0.5rem;
+    list-style-type: none;
+    position: relative;
+    font-size: 15px;
+    text-align: left;
+    border-radius: 0 !important;
+
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 1px 3px;
+    background: transparent;
 }
-.t6{ 
-    font-size: small;
-    font-weight: 500;
-    margin-bottom: 0%;
+
+.center-align-cell {
+    text-align: center !important;
 }
-.t7{
-        margin-bottom: 4%;
-        width: 250px;
-}
-.t8{
-    margin-top: 0%;
+
+.description {
+    margin-left: 15px;
 }
