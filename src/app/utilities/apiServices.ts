@@ -63,9 +63,12 @@ export default {
         }),
     resetPassword: (passwordData: any) =>
         instance({
-            method: "POST",
+            method: "PUT",
             url: "admin/set-password?email=" + passwordData.email,
-            data: passwordData,
+            data: {
+                password: passwordData.password,
+                newPassword: passwordData.password,
+            },
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
