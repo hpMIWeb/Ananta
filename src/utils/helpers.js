@@ -33,6 +33,12 @@ const compareIgnoreCaseWithTypo = (str1, str2) => {
         }
     }
 
+    console.log(
+        "search - ",
+        matrix[normalizedStr1.length][normalizedStr2.length],
+        tolerance
+    );
+
     return matrix[normalizedStr1.length][normalizedStr2.length] <= tolerance;
 };
 
@@ -105,14 +111,24 @@ export const getFilteredValue = (
             //     // )
             // );
         } else {
-            return Object.values(card).some((value) =>
-                compareIgnoreCaseWithTypo(
-                    String(value),
-                    searchValue?.toLowerCase()
-                )
+            // re-write search logic - it will check all the values with `searchvalue`
+            return Object.values(card).some(
+                (value) =>
+                    value
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(searchValue?.toLowerCase()) !== -1
             );
+            // return Object.values(card).some((value) =>
+            //     compareIgnoreCaseWithTypo(
+            //         String(value),
+            //         searchValue?.toLowerCase()
+            //     )
+            // );
         }
     });
+
+    console.log(searchedValues, searchValue);
 
     const sortedValues = searchedValues.sort((a, b) =>
         customSort(a, b, sortState)
