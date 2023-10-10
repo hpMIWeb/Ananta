@@ -19,9 +19,10 @@ const ResetPassword = ({}) => {
         setLoading(true); // Set loading state to true
         api.resetPassword(credentials)
             .then((resp: any) => {
-                navigate("login");
+                navigate("/login");
             })
             .finally(() => {
+                navigate("/login");
                 setLoading(false); // Reset loading state
             });
     };
