@@ -35,13 +35,17 @@ import {
 } from "./interfaces/ITimesheet";
 import { PlusOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import api from "../../utilities/apiServices";
-import { workAreaOpts, clientOpts } from "../../utilities/utility";
+import { workAreaOpts } from "../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import "./TimeSheet.scss";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/en"; // Import the locale if needed
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { useAppDispatch } from "../../states/store";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 
 const { Title } = Typography;
 const pageSize = 20;
@@ -49,6 +53,7 @@ dayjs.extend(utc);
 
 const TimeSheet = () => {
     const [current, setCurrent] = useState(1);
+    const dispatch = useAppDispatch();
     const dateFormat = "YYYY-MM-DD";
     const [filterDate, setFilterDate] = useState(dayjs().format(dateFormat));
     const [timesheetData, setTimesheetData] = useState<ITimesheet[]>([]);
@@ -56,12 +61,16 @@ const TimeSheet = () => {
     const [selectedTableRow, setSelectedTableRow] = useState<ITimesheet>(
         {} as ITimesheet
     );
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+
     const [newRowCount, setNewRowCount] = useState<number>(1);
 
     //Time sheet List
 
     useEffect(() => {
         getTimeSheetData();
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
     }, []);
 
     const getTimeSheetData = () => {
@@ -434,7 +443,10 @@ const TimeSheet = () => {
                                 allowClear
                                 showSearch
                                 placeholder="Client"
-                                options={clientOpts}
+                                options={clientList.map((client: any) => ({
+                                    label: client?.firmName,
+                                    value: client?._id,
+                                }))}
                                 defaultValue={client}
                                 className="w100"
                                 onChange={(value, event) => {
@@ -463,7 +475,10 @@ const TimeSheet = () => {
                             allowClear
                             showSearch
                             placeholder="Client"
-                            options={clientOpts}
+                            options={clientList.map((client: any) => ({
+                                label: client?.firmName,
+                                value: client?._id,
+                            }))}
                             defaultValue={client}
                             className="w100"
                             onChange={(value, event) => {

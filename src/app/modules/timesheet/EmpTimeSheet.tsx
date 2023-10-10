@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     DatePicker,
     Select,
@@ -20,12 +20,7 @@ import {
 } from "@ant-design/icons";
 import "./EmpTimeSheet.scss";
 import { Link } from "react-router-dom";
-import {
-    workAreaOpts,
-    clientOpts,
-    employeeOpts,
-    calculateTimeDifference,
-} from "../../utilities/utility";
+import { workAreaOpts, calculateTimeDifference } from "../../utilities/utility";
 import {
     EmployeeReport,
     EmployeeReportSummary,
@@ -34,16 +29,28 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../states/store";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 
 const { Title } = Typography;
 const pageSize = 20;
 
 const EmpTimeSheet = () => {
     const [current, setCurrent] = useState(1);
+    const dispatch = useAppDispatch();
     const [activeTab, setActiveTab] = useState<string>("2");
     const [employeeReport, setEmployeeReport] = useState<EmployeeReport[]>([]);
     const [employeeReportSummary, setEmployeeReportSummary] =
         useState<EmployeeReportSummary>(new EmployeeReportSummary());
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getClients.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
 
     const columns = [
         {
@@ -316,7 +323,10 @@ const EmpTimeSheet = () => {
                             allowClear
                             showSearch
                             placeholder="Employee"
-                            options={employeeOpts}
+                            options={employeeList.map((employee: any) => ({
+                                label: employee?.firstName,
+                                value: employee?._id,
+                            }))}
                             className="w100 border-bottom"
                             bordered={false}
                             onChange={(value, event) => {
@@ -329,7 +339,10 @@ const EmpTimeSheet = () => {
                             allowClear
                             showSearch
                             placeholder="clientName"
-                            options={clientOpts}
+                            options={clientList.map((client: any) => ({
+                                label: client?.firmName,
+                                value: client?._id,
+                            }))}
                             className="w100 border-bottom"
                             bordered={false}
                             onChange={(value, event) => {

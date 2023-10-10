@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     DatePicker,
     Select,
@@ -32,15 +32,28 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import { ClientReport, ClientReportSummary } from "./interfaces/IClientReport";
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import { useAppDispatch } from "../../states/store";
 const { Title } = Typography;
 const pageSize = 20;
 
 const ClientTimeSheet = () => {
     const [current, setCurrent] = useState(1);
+    const dispatch = useAppDispatch();
     const [activeTab, setActiveTab] = useState<string>("2");
     const [clientReport, setClientReport] = useState<[]>([]);
     const [clientReportSummary, setClientReportSummary] =
         useState<ClientReportSummary>(new ClientReportSummary());
+
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getClients.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
 
     const columns = [
         {
@@ -304,7 +317,10 @@ const ClientTimeSheet = () => {
                             allowClear
                             showSearch
                             placeholder="clientName*"
-                            options={clientOpts}
+                            options={clientList.map((client: any) => ({
+                                label: client?.firmName,
+                                value: client?._id,
+                            }))}
                             className="w100 border-bottom"
                             bordered={false}
                             onChange={(value, event) => {
@@ -318,7 +334,10 @@ const ClientTimeSheet = () => {
                             allowClear
                             showSearch
                             placeholder="Employee"
-                            options={employeeOpts}
+                            options={employeeList.map((employee: any) => ({
+                                label: employee?.firstName,
+                                value: employee?._id,
+                            }))}
                             className="w100 border-bottom"
                             bordered={false}
                             onChange={(value, event) => {
