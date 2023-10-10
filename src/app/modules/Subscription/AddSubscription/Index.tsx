@@ -128,6 +128,11 @@ const AddSubscription = () => {
             },
             features: formValues?.features,
             transaction_credits: e.transaction_credits,
+            is_space_unlimited: isSpaceUnlimited,
+            is_branch_unlimited: isBranchUnlimited,
+            is_no_of_client_unlimited: isClientUnlimited,
+            is_transaction_credits_unlimited: isTransactionCreditsUnlimited,
+            is_turnover_unlimited: isTurnoverUnlimited,
             subscribers_count: 0,
             transactions: {
                 sales_and_purchase: e.sales_and_purchase,

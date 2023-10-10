@@ -122,6 +122,7 @@ const SubscriptionTab = () => {
 
     const cardDescContent = (cardInfo: any) => {
         const { features } = cardInfo;
+        console.log(cardInfo.is_space_unlimited);
         const keysWithTrueValue = Object.keys(features)
             .filter((key) => features[key] === true)
             .map((featureItem: any) => {
@@ -195,7 +196,9 @@ const SubscriptionTab = () => {
                                 Storage
                             </p>
                             <p className="semiBold">
-                                {cardInfo.storage_space} GB
+                                {cardInfo.is_space_unlimited
+                                    ? "Unlimited"
+                                    : cardInfo.storage_space + "GB"}
                             </p>
                         </>
                     ),
