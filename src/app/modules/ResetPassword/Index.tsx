@@ -10,10 +10,11 @@ const ResetPassword = ({}) => {
     const [loading, setLoading] = useState(false);
 
     const onFinish = (e: any) => {
-        const { email, password } = e;
+        const { email, password, newPassword } = e;
         const credentials = {
             email,
             password,
+            newPassword,
         };
         setLoading(true); // Set loading state to true
         api.resetPassword(credentials)
@@ -74,7 +75,7 @@ const ResetPassword = ({}) => {
                         </div>
                         <div className={styles.loginFormPasswordWrapper}>
                             <Form.Item
-                                name="cpassword"
+                                name="newPassword"
                                 rules={[
                                     {
                                         required: true,
