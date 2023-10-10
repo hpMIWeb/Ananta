@@ -76,7 +76,11 @@ const PromocodeHistoryModal = ({
         >
             <div className={styles.historyTableWrapper}>
                 <div>
-                    <Table columns={columns} data={subscriptionHistoryData} />
+                    <Table
+                        columns={columns}
+                        data={subscriptionHistoryData}
+                        pagination={false}
+                    />
                 </div>
             </div>
         </Modal>

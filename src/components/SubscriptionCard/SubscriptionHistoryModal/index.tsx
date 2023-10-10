@@ -222,7 +222,11 @@ const SubscriptionHistoryModal = ({
         >
             <div className={styles.historyTableWrapper}>
                 <div className={styles.historyTableContainer}>
-                    <Table columns={columns} data={subscriptionHistoryData} />
+                    <Table
+                        columns={columns}
+                        data={subscriptionHistoryData}
+                        pagination={false}
+                    />
                 </div>
             </div>
         </Modal>
