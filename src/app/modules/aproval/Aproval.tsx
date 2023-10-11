@@ -5,7 +5,6 @@ import {
     Tabs,
     TabsProps,
     Typography,
-    Input,
     Button,
     Modal,
     Row,
@@ -17,17 +16,15 @@ import {
     Popconfirm,
 } from "antd";
 import "./Aproval.scss";
-import {
-    employeeOpts,
-    leaveTypeOpts,
-    departmentOpts,
-} from "../../utilities/utility";
+import styles from "./approval.module.scss";
+import { leaveTypeOpts } from "../../utilities/utility";
 import TextArea from "antd/es/input/TextArea";
 import { AddLeave, Leave, LeaveDates, LeaveDate } from "./interfaces/IApproval";
 import dayjs from "dayjs";
 import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import classNames from "classnames";
 const { Title } = Typography;
 const pageSize = 25;
 
@@ -47,43 +44,52 @@ const Approval = () => {
             title: "Employee Name",
             dataIndex: "employee_name",
             key: "employee_name",
-            ellipsis: true,
+            // ellipsis: true,
             width: "15%", // Use percentage instead of fixed width
+
             sorter: (a: any, b: any) =>
                 a.employee_name.localeCompare(b.employee_name),
-            render: (employee_name: string) => employee_name,
+            render: (employee_name: string) => (
+                <span className="actionColumn p-2">{employee_name}</span>
+            ),
         },
         {
             title: "Department",
             dataIndex: "department",
             key: "department",
-            width: "10%",
+            width: "20%",
+
             sorter: (a: any, b: any) =>
                 a.department.localeCompare(b.department),
-            render: (department: string) => department,
+            render: (department: string) => (
+                <span className="actionColumn p-2">{department}</span>
+            ),
         },
         {
             title: "Leave Date",
             dataIndex: "leave_date",
             key: "leave_date",
-            width: "25%",
+            width: "22%",
             sorter: (a: any, b: any) =>
                 a.leave_date.start_date - b.leave_date.start_date,
-            render: (leave_date: LeaveDates) =>
-                dayjs(leave_date.start_date).format("YYYY-MM-DD") +
-                " To " +
-                dayjs(leave_date.end_date).format("YYYY-MM-DD"),
+            render: (leave_date: LeaveDates) => (
+                <span className="actionColumn p-2">
+                    {dayjs(leave_date.start_date).format("YYYY-MM-DD") +
+                        " To " +
+                        dayjs(leave_date.end_date).format("YYYY-MM-DD")}
+                </span>
+            ),
         },
 
         {
             title: "Reason",
             dataIndex: "leave_reason",
             key: "leave_reason",
-            width: "35%",
+            width: "33%",
             sorter: (a: any, b: any) =>
                 a.leave_reason.localeCompare(b.leave_reason),
             render: (leave_reason: string) => (
-                <div className="scrollbar-td">{leave_reason}</div>
+                <div className="scrollbar-td actionColumn">{leave_reason}</div>
             ),
         },
         {
@@ -91,6 +97,7 @@ const Approval = () => {
             dataIndex: "status",
             key: "status",
             width: "10%",
+            className: "center-align-cell",
             render: (leave_status: string, record: AddLeave) => {
                 if (record.leave_status === "pending") {
                     return (
@@ -292,46 +299,68 @@ const Approval = () => {
         form.resetFields();
         setIsModalOpen(false);
     };
-
+    const operations = <Button>Extra Action</Button>;
     /*Modal action end */
     return (
         <>
-            <div>
-                <Title level={5}>Approvals</Title>
-            </div>
             <ToastContainer autoClose={25000} />
             <div
-                className="task-list-header"
-                style={{ borderBottom: "2px solid #d8e2ef" }}
+                className={classNames(
+                    "card mb-3",
+                    styles.addPromoCodeCardWrapper
+                )}
             >
-                <div>
+                <div
+                    className={classNames(
+                        "card-header d-flex",
+                        styles.promoCodeCardHeaderBox
+                    )}
+                    style={{ minHeight: 60 }}
+                >
+                    <div
+                        className={classNames(
+                            "d-flex align-items-center w-100",
+                            styles.promocodeHeaderTitle
+                        )}
+                    >
+                        <div className="me-auto">
+                            <h5
+                                className={classNames(
+                                    "my-2 position-relative z-index-1",
+                                    styles.addPromoCodeLabel
+                                )}
+                            >
+                                Approval
+                            </h5>
+                        </div>
+                        <div className={classNames("ms-auto z-index-1")}></div>
+                    </div>
+                </div>
+                <div className={styles.addClientDetailBox}>
                     <Tabs
                         defaultActiveKey="1"
                         items={tabContent}
                         onChange={onTabChange}
-                        style={{ width: "200%", margin: "0px 20px" }}
+                        tabBarExtraContent={
+                            <Button type="primary" onClick={showModal}>
+                                Apply
+                            </Button>
+                        }
                     />
+                    <div>
+                        <Table
+                            id="approvalTable"
+                            columns={columns}
+                            size="small"
+                            dataSource={getData(current, pageSize)}
+                            onChange={onChange}
+                            style={{ width: "100%" }}
+                            className="r4 table-striped-rows"
+                        />
+                    </div>
                 </div>
             </div>
-            <div>
-                <div className="At1" style={{ float: "right" }}>
-                    <Button type="primary" className="At2" onClick={showModal}>
-                        Apply
-                    </Button>
-                </div>
 
-                <div>
-                    <Table
-                        id=""
-                        columns={columns}
-                        size="small"
-                        dataSource={getData(current, pageSize)}
-                        onChange={onChange}
-                        style={{ width: "100%" }}
-                        className="table-striped-rows"
-                    />
-                </div>
-            </div>
             <Modal
                 title="Apply Leave"
                 open={isModalOpen}
