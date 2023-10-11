@@ -10,7 +10,6 @@ import {
     Row,
     Select,
     Table,
-    Typography,
 } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import "./Checklist.scss";
@@ -30,16 +29,12 @@ import { Department as IDepartment } from "../Department/interfaces/IDeparment";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 import DeletePopupConfirm from "../../../../components/DeletePopupConfirm/DeletePopupConfirm";
-import Icon from "../../../../components/Icon/Index";
 import SearchFilterBar from "../../../../components/SearchFilterBar/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
 
-const pageSize = 25;
-const { Title } = Typography;
-
 const Checklist = () => {
+    const pageSize = 25;
     const [current, setCurrent] = useState(1);
     const [checklistList, setChecklistList] = useState<ICheckList[]>([]);
     const [addChecklist, setAddCheckList] = useState<IAddCheckList>(
@@ -337,9 +332,17 @@ const Checklist = () => {
 
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.title
-                    .toLowerCase()
-                    .includes(searchQuery.toLowerCase());
+                return Object.values(item).some((value) => {
+                    if (value) {
+                        return (
+                            value
+                                .toString()
+                                .toLowerCase()
+                                .indexOf(searchQuery?.toLowerCase()) !== -1
+                        );
+                    }
+                    return value;
+                });
             });
         }
 
@@ -447,9 +450,8 @@ const Checklist = () => {
     };
 
     // Search input change handler
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
     };
 
     const inputChangeHandler = (event: any, nameItem: string = "") => {
@@ -549,8 +551,8 @@ const Checklist = () => {
                 <div className={styles.departmentBottomWrapper}>
                     <div style={{ marginBottom: 24 }}>
                         <SearchFilterBar
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
+                            searchValue={searchQuery}
+                            setSearchValue={handleSearch}
                             sortState={sortState}
                             setSortState={setSortState}
                             setSortStateHandler={(options: any) => {
