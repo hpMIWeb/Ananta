@@ -5,16 +5,13 @@ import {
     Form,
     Input,
     Modal,
-    Popconfirm,
     Row,
     Select,
     Table,
-    Tooltip,
     Typography,
 } from "antd";
 import { SearchOutlined, TeamOutlined } from "@ant-design/icons";
 import styles from "./team.module.scss";
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 
 import "./Team.scss";
@@ -25,16 +22,13 @@ import { capitalize, employeeOpts } from "../../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
-import Icon from "../../../../components/Icon/Index";
 import Button from "../../../../components/Button/Index";
 import DeletePopupConfirm from "../../../../components/DeletePopupConfirm/DeletePopupConfirm";
 import SearchFilterBar from "../../../../components/SearchFilterBar/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
-const pageSize = 25;
-const { Title } = Typography;
 
 const Team = () => {
+    const pageSize = 25;
     const [current, setCurrent] = useState(1);
     const [teamList, setTeamList] = useState<ITeam[]>([]);
     //const [addTeam, setAddTeam] = useState<IAddTeam>({} as IAddTeam);
@@ -344,9 +338,8 @@ const Team = () => {
     };
 
     // Search input change handler
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
     };
 
     function onChange(sorter: any) {
@@ -359,9 +352,18 @@ const Team = () => {
 
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.name
-                    .toLowerCase()
-                    .includes(searchQuery.toLowerCase());
+                return Object.values(item).some((value) => {
+                    if (value)
+                        return (
+                            value
+                                .toString()
+                                .toLowerCase()
+                                .indexOf(searchQuery?.toLowerCase()) !== -1
+                        );
+                    else {
+                        return value;
+                    }
+                });
             });
         }
 
@@ -452,8 +454,8 @@ const Team = () => {
                 <div className={styles.departmentBottomWrapper}>
                     <div style={{ marginBottom: 24 }}>
                         <SearchFilterBar
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
+                            searchValue={searchQuery}
+                            setSearchValue={handleSearch}
                             sortState={sortState}
                             setSortState={setSortState}
                             setSortStateHandler={(options: any) => {

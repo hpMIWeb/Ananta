@@ -3,8 +3,6 @@ import { Button, Col, Divider, Row, Table, Typography } from "antd";
 import styles from "./role.module.scss";
 import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
-
-import { SearchOutlined } from "@ant-design/icons";
 import "./Role.scss";
 import { AddRole as IAddRole, Role as IRole } from "./interfaces/IRole";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,20 +11,15 @@ import api from "../../../utilities/apiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 import DeletePopupConfirm from "../../../../components/DeletePopupConfirm/DeletePopupConfirm";
-import Input from "../../../../components/Input/Index";
-import Icon from "../../../../components/Icon/Index";
 import SearchFilterBar from "../../../../components/SearchFilterBar/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
-const { Title } = Typography;
-const pageSize = 25;
 
 const Role = () => {
+    const pageSize = 25;
     const [current, setCurrent] = useState(1);
     const [roleList, setRoleList] = useState<IRole[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [searchValue, setSearchValue] = useState<string>("");
     const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
@@ -129,9 +122,8 @@ const Role = () => {
     };
 
     // Search input change handler
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
     };
 
     const getData = (current: number, pageSize: number) => {
@@ -139,9 +131,13 @@ const Role = () => {
         let retVal = roleList;
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.roleName
-                    .toLowerCase()
-                    .includes(searchQuery.toLowerCase());
+                return Object.values(item).some(
+                    (value) =>
+                        value
+                            .toString()
+                            .toLowerCase()
+                            .indexOf(searchQuery?.toLowerCase()) !== -1
+                );
             });
         }
 
@@ -240,8 +236,8 @@ const Role = () => {
                 <div className={styles.departmentBottomWrapper}>
                     <div style={{ marginBottom: 24 }}>
                         <SearchFilterBar
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
+                            searchValue={searchQuery}
+                            setSearchValue={handleSearch}
                             sortState={sortState}
                             setSortState={setSortState}
                             setSortStateHandler={(options: any) => {
