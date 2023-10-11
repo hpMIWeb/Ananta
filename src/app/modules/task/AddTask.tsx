@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
     Form,
-    Input,
     Typography,
     DatePicker,
     Select,
@@ -14,6 +13,7 @@ import {
 } from "antd";
 import Button from "../../../components/Button/Index";
 import SubTask from "./SubTask";
+import styles from "./AddTask.module.scss";
 import {
     priorityOpts,
     chargesOpts,
@@ -41,6 +41,8 @@ import { useAppDispatch } from "../../states/store";
 import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
+import Input from "../../../components/Input/Index";
 const { Title } = Typography;
 
 const AddTask = () => {
@@ -257,13 +259,6 @@ const AddTask = () => {
               });
     };
 
-    const handleInputKeyDown = () => {
-        if (selectModeRef.current) {
-            // selectModeRef.current.blur();
-            console.log(selectModeRef.current);
-        }
-    };
-
     const resetFormValues = () => {
         const fields = form.getFieldsValue();
         Object.keys(fields).forEach((field) => {
@@ -280,429 +275,576 @@ const AddTask = () => {
     // render
     return (
         <>
-            <div className="add-task-header">
-                <ToastContainer autoClose={25000} />
-                <div>
-                    <Title level={5}>Add Task</Title>
-                </div>
-                <div className="add-task-cancel">
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<CloseOutlined />}
-                        onClick={cancelNewTaskHandler}
+            <ToastContainer autoClose={25000} />
+            <div
+                className={classNames(
+                    "card mb-3",
+                    styles.addPromoCodeCardWrapper
+                )}
+            >
+                <div
+                    className={classNames(
+                        "card-header d-flex",
+                        styles.promoCodeCardHeaderBox
+                    )}
+                    style={{ minHeight: 60 }}
+                >
+                    <div
+                        className={classNames(
+                            "d-flex align-items-center w-100",
+                            styles.promocodeHeaderTitle
+                        )}
                     >
-                        Cancel
-                    </Button>
+                        <div className="me-auto">
+                            <h5
+                                className={classNames(
+                                    "my-2 position-relative z-index-1",
+                                    styles.addPromoCodeLabel
+                                )}
+                            >
+                                Add New Task
+                            </h5>
+                        </div>
+                        <div className={classNames("ms-auto z-index-1")}>
+                            <Button
+                                onClick={cancelNewTaskHandler}
+                                className={classNames(
+                                    "greyBtn",
+                                    styles.cancelAddClientBtn
+                                )}
+                                style={{
+                                    minWidth: 104,
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.addClientDetailBox}>
+                    <Form
+                        name="basic"
+                        initialValues={{
+                            start_date: dayjs(),
+                        }}
+                        autoComplete="off"
+                        requiredMark={false}
+                        className="customAddForm"
+                        form={form}
+                        id="addTaskFrm"
+                    >
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <Form.Item
+                                        name="start_date"
+                                        className="customAddClientSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select start date.",
+                                            },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    const dueDateValue =
+                                                        getFieldValue(
+                                                            "due_date"
+                                                        );
+                                                    if (
+                                                        !value ||
+                                                        !dueDateValue ||
+                                                        dayjs(value).isBefore(
+                                                            dueDateValue
+                                                        )
+                                                    ) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(
+                                                        new Error(
+                                                            "Start date should be before the due date."
+                                                        )
+                                                    );
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <DatePicker
+                                            placeholder="Start Date"
+                                            name="start_date"
+                                            className="customFormDatePicker"
+                                            format={dateFormat}
+                                            onChange={(date, dateString) => {
+                                                inputChangeHandler(
+                                                    dateString,
+                                                    "start_date"
+                                                );
+                                            }}
+                                            onPanelChange={() => {}}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <Form.Item
+                                        name="due_date"
+                                        className="customAddClientSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select due date.",
+                                            },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    const startDate =
+                                                        getFieldValue(
+                                                            "start_date"
+                                                        );
+                                                    if (
+                                                        !value ||
+                                                        !startDate ||
+                                                        !dayjs(value).isBefore(
+                                                            startDate
+                                                        )
+                                                    ) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(
+                                                        new Error(
+                                                            "Due date should be on or after the start date."
+                                                        )
+                                                    );
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <DatePicker
+                                            placeholder="Due Date"
+                                            name="due_date"
+                                            onChange={(date, dateString) => {
+                                                inputChangeHandler(
+                                                    dateString,
+                                                    "due_date"
+                                                );
+                                            }}
+                                            className="customFormDatePicker"
+                                            format={dateFormat}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <Form.Item
+                                        className="customAddClientSelectOptions"
+                                        name="mode"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select task mode.",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            ref={selectModeRef}
+                                            allowClear
+                                            placeholder={
+                                                <span>Select Mode</span>
+                                            }
+                                            options={modeOptions}
+                                            value={addTask.mode}
+                                            showSearch={true}
+                                            onChange={(value, event) => {
+                                                inputChangeHandler(event);
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-6 col-lg-6"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <Form.Item
+                                        name="title"
+                                        className="customAddClientSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter title.",
+                                                validateTrigger: ["onSubmit"],
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            name="title"
+                                            placeholder={"Task"}
+                                            className="customAddFormInputText"
+                                            value={addTask.title}
+                                            onChange={(event: any) => {
+                                                inputChangeHandler(event);
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-6 col-lg-6"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <Form.Item
+                                        className="customAddClientSelectOptions"
+                                        name="workArea"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please select work area.",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                            placeholder={
+                                                <span>Select Work Area</span>
+                                            }
+                                            options={workAreaOpts}
+                                            value={addTask.workArea}
+                                            showSearch={true}
+                                            onChange={(value, event) => {
+                                                inputChangeHandler(event);
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="remarks"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please entre remark.",
+                                        },
+                                    ]}
+                                >
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={addTask.remarks}
+                                        placeholder="Remark"
+                                        onChange={(event) => {
+                                            inputChangeHandler(
+                                                event,
+                                                "remarks"
+                                            );
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="budget_time"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Please select budget time.",
+                                        },
+                                        {
+                                            pattern:
+                                                /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                            message:
+                                                "Please enter a valid time in the format HH:mm.",
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (value !== "00:00") {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Budget Time cannot be set to 00:00."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Budget Time"
+                                        name="budget_time"
+                                        onInput={(event: any) => {
+                                            const inputElement =
+                                                event.target as HTMLInputElement;
+                                            let input = inputElement.value;
+                                            input = input.replace(
+                                                /[^0-9]/g,
+                                                ""
+                                            ); // Remove non-numeric characters
+
+                                            if (input.length >= 3) {
+                                                input =
+                                                    input.slice(0, 2) +
+                                                    ":" +
+                                                    input.slice(2);
+                                            }
+
+                                            inputElement.value = input;
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="customAddFormInputText"
+                                        maxLength={5}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="priority"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select priority.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        placeholder="Priority"
+                                        options={priorityOpts}
+                                        value={addTask.priority}
+                                        showSearch={true}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="billable"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select billable.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        placeholder="Billable"
+                                        value={addTask.billable}
+                                        options={chargesOpts}
+                                        showSearch={true}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                    ></Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row add-form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="client"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select client.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        showSearch
+                                        placeholder="Client"
+                                        value={addTask.client}
+                                        options={clientList.map(
+                                            (client: any) => ({
+                                                label: client?.firmName,
+                                                value: client?._id,
+                                            })
+                                        )}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 8 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="assigned_to"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select assignee.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        showSearch
+                                        placeholder="Assign Person"
+                                        value={addTask.assigned_to}
+                                        options={employeeList.map(
+                                            (employee: any) => ({
+                                                label: employee?.firstName,
+                                                value: employee?._id,
+                                            })
+                                        )}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(
+                                                event,
+                                                "assigned_to"
+                                            );
+                                        }}
+                                        mode="multiple"
+                                        className="w100"
+                                    ></Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 4 }}
+                            >
+                                <Upload
+                                    showUploadList={{ showPreviewIcon: true }}
+                                >
+                                    <Button type="primary">Attach Files</Button>
+                                </Upload>
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 20 }}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="datapath"
+                                    rules={[
+                                        {
+                                            required: false,
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Data Path"
+                                        name="datapath"
+                                        defaultValue={addTask.datapath}
+                                        onChange={(event: any) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="customAddFormInputText"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Divider />
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Col>
+                                <Title level={5}>Sub Task</Title>
+                            </Col>
+                            <Col>
+                                <Switch
+                                    checked={showSubTask}
+                                    onChange={onSwitchSubTask}
+                                ></Switch>
+                            </Col>
+                        </Row>
+
+                        <Row
+                            gutter={[8, 8]}
+                            className={
+                                "form-row " + (!showSubTask ? "hide" : "")
+                            }
+                        >
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <SubTask
+                                    subComponentsHandler={updateSubComponents}
+                                />
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                className="w100"
+                                onClick={handleAddTask}
+                            >
+                                Add Task
+                            </Button>
+                        </Row>
+                    </Form>
                 </div>
             </div>
-            <Form
-                form={form}
-                initialValues={{
-                    start_date: dayjs(),
-                }}
-                id="addTaskFrm"
-            >
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="start_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select start date.",
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const dueDateValue =
-                                            getFieldValue("due_date");
-                                        if (
-                                            !value ||
-                                            !dueDateValue ||
-                                            dayjs(value).isBefore(dueDateValue)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Start date should be before the due date."
-                                            )
-                                        );
-                                    },
-                                }),
-                            ]}
-                        >
-                            <DatePicker
-                                placeholder="Start Date"
-                                name="start_date"
-                                format={dateFormat}
-                                className="w100"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "start_date"
-                                    );
-                                }}
-                                onPanelChange={() => {}}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="due_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select due date.",
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const startDate =
-                                            getFieldValue("start_date");
-                                        if (
-                                            !value ||
-                                            !startDate ||
-                                            !dayjs(value).isBefore(startDate)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Due date should be on or after the start date."
-                                            )
-                                        );
-                                    },
-                                }),
-                            ]}
-                        >
-                            <DatePicker
-                                placeholder="Due Date"
-                                name="due_date"
-                                //  value={addTask.due_date}
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(dateString, "due_date");
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="mode"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select task mode.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                ref={selectModeRef}
-                                allowClear
-                                placeholder="Select Task Mode"
-                                options={modeOptions}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                value={addTask.mode}
-                                showSearch={true}
-                                onInputKeyDown={(event) => {
-                                    if (event.keyCode === 9) {
-                                        handleInputKeyDown();
-                                    }
-                                }}
-                                // onBlur={(event) => {
-                                //     console.log("onBlur", event.target);
-                                // }}
-                                className="w100"
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
-                        <Form.Item
-                            name="title"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter title.",
-                                    validateTrigger: ["onSubmit"],
-                                },
-                            ]}
-                        >
-                            <Input
-                                placeholder="Task"
-                                name="title"
-                                value={addTask.title}
-                                onChange={(event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="workArea"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select work area.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Select Work Area"
-                                options={workAreaOpts}
-                                value={addTask.workArea}
-                                className="w100"
-                                showSearch={true}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <Form.Item
-                            name="remarks"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please entre remark.",
-                                },
-                            ]}
-                        >
-                            <ReactQuill
-                                theme="snow"
-                                value={addTask.remarks}
-                                placeholder="Remark"
-                                onChange={(event) => {
-                                    inputChangeHandler(event, "remarks");
-                                }}
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="budget_time"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select budget time.",
-                                },
-                                {
-                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
-                                    message:
-                                        "Please enter a valid time in the format HH:mm.",
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (value !== "00:00") {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Budget Time cannot be set to 00:00."
-                                            )
-                                        );
-                                    },
-                                }),
-                            ]}
-                        >
-                            <Input
-                                placeholder="Budget Time"
-                                name="budget_time"
-                                onInput={(event) => {
-                                    const inputElement =
-                                        event.target as HTMLInputElement;
-                                    let input = inputElement.value;
-                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-
-                                    if (input.length >= 3) {
-                                        input =
-                                            input.slice(0, 2) +
-                                            ":" +
-                                            input.slice(2);
-                                    }
-
-                                    inputElement.value = input;
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                                maxLength={5}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="priority"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select priority.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Priority"
-                                options={priorityOpts}
-                                value={addTask.priority}
-                                showSearch={true}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="billable"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select billable.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Billable"
-                                value={addTask.billable}
-                                options={chargesOpts}
-                                showSearch={true}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row add-form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="client"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select client.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                showSearch
-                                placeholder="Client"
-                                value={addTask.client}
-                                options={clientList.map((client: any) => ({
-                                    label: client?.firmName,
-                                    value: client?._id,
-                                }))}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="assigned_to"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select assignee.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                showSearch
-                                placeholder="Assign Person"
-                                value={addTask.assigned_to}
-                                options={employeeList.map((employee: any) => ({
-                                    label: employee?.firstName,
-                                    value: employee?._id,
-                                }))}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event, "assigned_to");
-                                }}
-                                mode="multiple"
-                                className="w100"
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }}>
-                        <Upload showUploadList={{ showPreviewIcon: true }}>
-                            <Button type="primary">Attach Files</Button>
-                        </Upload>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 20 }}>
-                        <Form.Item
-                            name="datapath"
-                            rules={[
-                                {
-                                    required: false,
-                                },
-                            ]}
-                        >
-                            <Input
-                                placeholder="Data Path"
-                                name="datapath"
-                                defaultValue={addTask.datapath}
-                                onChange={(event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Divider />
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col>
-                        <Title level={5}>Sub Task</Title>
-                    </Col>
-                    <Col>
-                        <Switch
-                            checked={showSubTask}
-                            onChange={onSwitchSubTask}
-                        ></Switch>
-                    </Col>
-                </Row>
-
-                <Row
-                    gutter={[8, 8]}
-                    className={"form-row " + (!showSubTask ? "hide" : "")}
-                >
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <SubTask subComponentsHandler={updateSubComponents} />
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Button
-                        htmlType="submit"
-                        type="primary"
-                        className="w100"
-                        onClick={handleAddTask}
-                    >
-                        Add Task
-                    </Button>
-                </Row>
-            </Form>
         </>
     );
 };

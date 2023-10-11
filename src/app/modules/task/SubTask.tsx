@@ -129,6 +129,7 @@ const SubTask = (props: any) => {
                                         ]}
                                     >
                                         <Input
+                                            className="customAddFormInputText"
                                             placeholder="Sub Task"
                                             name="title"
                                             onChange={(event) => {
@@ -198,7 +199,7 @@ const SubTask = (props: any) => {
                                                     subTaskItem
                                                 );
                                             }}
-                                            className="w100"
+                                            className="customAddFormInputText"
                                             maxLength={5}
                                         />
                                     </Form.Item>
@@ -386,6 +387,7 @@ const SubTask = (props: any) => {
                                     md={{ span: 20 }}
                                 >
                                     <Input
+                                        className="customAddFormInputText"
                                         placeholder="Data Path"
                                         name="dataPath"
                                         onChange={(event) => {
@@ -394,7 +396,6 @@ const SubTask = (props: any) => {
                                                 subTaskItem
                                             );
                                         }}
-                                        className="w100"
                                     />
                                 </Col>
                             </Row>

@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, TabsProps, Tooltip } from "antd";
-import {
-    Button,
-    Space,
-    Tabs,
-    Typography,
-    Table,
-    Tag,
-    Row,
-    Col,
-    Input,
-} from "antd";
+import { Space, Tabs, Typography, Table, Tag, Row, Col, Input } from "antd";
 import {
     AddTask,
     AddTask as IAddTask,
     SubTask as ISubTask,
 } from "./interfaces/ITask";
 import dayjs from "dayjs";
-import "./TaskList.scss";
+import styles from "./TaskList.module.scss";
 import { useNavigate } from "react-router-dom";
 import TaskViewEdit from "./TaskViewEdit";
 import api from "../../utilities/apiServices";
@@ -30,6 +20,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Fillter from "../fillter/Fillter";
 import { SearchOutlined, UserOutlined, FilterTwoTone } from "@ant-design/icons";
+import classNames from "classnames";
+import Button from "../../../components/Button/Index";
 const { Title } = Typography;
 const pageSize = 20;
 
@@ -666,69 +658,102 @@ const TaskList = () => {
     };
 
     return (
-        <>
-            <div>
-                <Title level={5}>Tasks</Title>
-            </div>
-
+        <div className={styles.taskPageWrapper}>
             <div
-                className="task-list-header"
-                style={{ borderBottom: "2px solid #d8e2ef" }}
+                className={classNames(
+                    "card-header d-flex",
+                    styles.taskPageHeader
+                )}
             >
-                <div>
-                    <Tabs
-                        defaultActiveKey="1"
-                        items={tabContent}
-                        onChange={onTabChange}
-                        style={{ width: "100%" }}
-                    ></Tabs>
-                </div>
-                <div className="task-list-add">
-                    <div>
-                        <Space>
-                            <Button
-                                type="primary"
-                                onClick={addNewMultiTaskHandler}
-                            >
-                                Add Multiple Task
-                            </Button>
-                            <Button type="primary" onClick={addNewTaskHandler}>
-                                Add New Task
-                            </Button>
-                        </Space>
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.taskHeaderTitle
+                    )}
+                >
+                    <div className="me-auto">
+                        <h5
+                            className={classNames(
+                                "my-2 position-relative z-index-1",
+                                styles.taskLabel
+                            )}
+                        >
+                            Task
+                        </h5>
                     </div>
                 </div>
             </div>
-            <div>
-                <div
-                    style={{
-                        width: "65%",
-                        float: "left",
-                        display: fullScreenMode ? "none" : "block",
-                        marginRight: "15px",
-                    }}
-                >
-                    {getContentRender()}
+            <div className={styles.taskBottomWrapper}>
+                <div className="task-list-header">
+                    <div>
+                        <Tabs
+                            defaultActiveKey="1"
+                            items={tabContent}
+                            onChange={onTabChange}
+                            style={{ width: "100%" }}
+                            tabBarExtraContent={
+                                <>
+                                    <Button
+                                        onClick={addNewMultiTaskHandler}
+                                        className={styles.newTaskBtn}
+                                        type="primary"
+                                        style={{
+                                            float: "left",
+                                            marginRight: "10px",
+                                        }}
+                                    >
+                                        Add Multiple Task
+                                    </Button>
+                                    <Button
+                                        onClick={addNewTaskHandler}
+                                        className={styles.newTaskBtn}
+                                        type="primary"
+                                        style={{ float: "left" }}
+                                    >
+                                        Add New Task
+                                    </Button>
+                                </>
+                            }
+                        ></Tabs>
+                    </div>
+                    <div
+                        className={classNames(
+                            "ms-auto z-index-1",
+                            styles.taskListAdd
+                        )}
+                    ></div>
                 </div>
-                {tableRowSelected &&
-                    Object.keys(tableRowSelected).length > 0 && (
-                        <div
-                            style={{
-                                float: "right",
-                                width: fullScreenMode ? "100%" : "33%",
-                            }}
-                        >
-                            <TaskViewEdit
-                                handleScreenMode={screenModeToggle}
-                                fullScreenMode={fullScreenMode}
-                                tableRowSelected={tableRowSelected}
-                                isEdit={false}
-                                handleListUpdate={handleListUpdate}
-                            />
-                        </div>
-                    )}
+                <div>
+                    <div
+                        style={{
+                            width: "65%",
+                            float: "left",
+                            display: fullScreenMode ? "none" : "block",
+                            marginRight: "15px",
+                        }}
+                    >
+                        {getContentRender()}
+                    </div>
+                    {tableRowSelected &&
+                        Object.keys(tableRowSelected).length > 0 && (
+                            <div
+                                style={{
+                                    float: "right",
+                                    width: fullScreenMode ? "100%" : "33%",
+                                }}
+                            >
+                                <TaskViewEdit
+                                    handleScreenMode={screenModeToggle}
+                                    fullScreenMode={fullScreenMode}
+                                    tableRowSelected={tableRowSelected}
+                                    isEdit={false}
+                                    handleListUpdate={handleListUpdate}
+                                />
+                            </div>
+                        )}
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 
