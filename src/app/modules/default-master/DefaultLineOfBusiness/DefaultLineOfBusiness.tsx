@@ -159,9 +159,8 @@ const DefaultLineOfBusiness = () => {
     };
 
     // Search input change handler
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
     };
 
     const getData = (current: number, pageSize: number) => {
@@ -359,8 +358,8 @@ const DefaultLineOfBusiness = () => {
                 <div className={styles.departmentBottomWrapper}>
                     <div style={{ marginBottom: 24 }}>
                         <SearchFilterBar
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
+                            searchValue={searchQuery}
+                            setSearchValue={handleSearch}
                             sortState={sortState}
                             setSortState={setSortState}
                             setSortStateHandler={(options: any) => {
