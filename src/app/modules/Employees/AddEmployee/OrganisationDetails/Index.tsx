@@ -6,6 +6,7 @@ import { useState } from "react";
 import classNames from "classnames";
 import Input from "../../../../../components/Input/Index";
 import Select from "../../../../../components/Select/Index";
+import { filterObjectByKey } from "../../../../../utils/helpers";
 
 const initialBranchInfoData = [{ type: "default", index: 0 }];
 
@@ -21,9 +22,28 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
         useSelector((state: any) => state.getDepartments.data) || [];
     const [branchInfoData, setBranchInfoData] = useState<any>([]);
     const [branchChecked, setBranchChecked] = useState(false);
+    const [ownerInfoData, setOwnerInfoData] = useState([
+        { type: "default", index: 0 },
+    ]);
+
     const onFinish = (value: any) => {
-        setEmployeeInfo(value);
-        onChange(3);
+        const organizationDetails = {
+            ...value,
+        };
+        const filteredValue = filterObjectByKey(
+            value,
+            ownerInfoData.map((a: any) => a.name)
+        );
+
+        console.log("organizationDetails", organizationDetails);
+        console.log(value);
+        setEmployeeInfo({
+            organizationDetails: [organizationDetails],
+        });
+        // onChange(3);
+        onChange(3, {
+            organizationDetails: [organizationDetails],
+        });
     };
 
     const addMoreOwnerCard = () => {
@@ -388,8 +408,8 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                         <Select
                                             placeholder="Select Type"
                                             options={[
-                                                { value: "Yes", label: "Yes" },
-                                                { value: "No", label: "No" },
+                                                { value: true, label: "Yes" },
+                                                { value: false, label: "No" },
                                             ]}
                                         />
                                     </Form.Item>

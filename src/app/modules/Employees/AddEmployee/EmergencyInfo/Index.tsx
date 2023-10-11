@@ -12,36 +12,30 @@ const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
     ]);
 
     const onFinish = (value: any) => {
-        // const mobilePhoneNumber = value.mobile.phoneNumber;
-        // const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
-        // const combinedMobile = `${
-        //     value.mobile.validData.countryCode || "+91"
-        // }${formattedMobilePhoneNumber}`;
-
-        // const alternateMobilePhoneNumber = value.alternateMobile.phoneNumber;
-        // const combinedAlternateMobile = alternateMobilePhoneNumber
-        //     ? `${
-        //           value.alternateMobile.countryCode || "+91"
-        //       }${alternateMobilePhoneNumber}`
-        //     : null;
         const emergencyDetails = {
             ...value,
             mobile: value.mobile?.replace(/-/g, ""),
             alternateMobile: value.alternateMobile?.replace(/-/g, ""),
         };
+
         const filteredValue = filterObjectByKey(
-            value.ownerDetails,
+            value,
             ownerInfoData.map((a: any) => a.name)
         );
 
+        //setEmployeeInfo({ emergencyDetails: Object.values(emergencyDetails) });
         setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
-        onChange(6, { emergencyDetails });
+        onChange(6, { emergencyDetails: Object.values(filteredValue) });
     };
 
     const addMoreOwnerCard = () => {
         setOwnerInfoData((prev) => [
             ...prev,
-            { type: "new", index: ownerInfoData.length },
+            {
+                type: "new",
+                index: ownerInfoData.length,
+                name: `index${ownerInfoData.length}`,
+            },
         ]);
     };
 
