@@ -44,7 +44,8 @@ const Approval = () => {
             title: "Employee Name",
             dataIndex: "employee_name",
             key: "employee_name",
-            // ellipsis: true,
+            className: "center-align-cell",
+            ellipsis: true,
             width: "15%", // Use percentage instead of fixed width
 
             sorter: (a: any, b: any) =>
@@ -58,7 +59,7 @@ const Approval = () => {
             dataIndex: "department",
             key: "department",
             width: "20%",
-
+            className: "center-align-cell",
             sorter: (a: any, b: any) =>
                 a.department.localeCompare(b.department),
             render: (department: string) => (
@@ -70,6 +71,7 @@ const Approval = () => {
             dataIndex: "leave_date",
             key: "leave_date",
             width: "22%",
+            className: "center-align-cell",
             sorter: (a: any, b: any) =>
                 a.leave_date.start_date - b.leave_date.start_date,
             render: (leave_date: LeaveDates) => (
