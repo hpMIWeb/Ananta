@@ -52,6 +52,8 @@ import api from "../../utilities/apiServices";
 import SubTaskViewEdit from "./SubTaskViewEdit";
 import "./TaskViewEdit.scss";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
+import { useAppDispatch } from "../../states/store";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 dayjs.extend(customParseFormat);
@@ -61,6 +63,7 @@ const TaskViewEdit = (props: any) => {
     const [updateTask, setUpdateTask] = useState<AddTask>(
         props.tableRowSelected
     );
+    const dispatch = useAppDispatch();
 
     const [taskComments, setTaskComments] = useState<Comment>(
         props.tableRowSelected.comments
@@ -76,6 +79,9 @@ const TaskViewEdit = (props: any) => {
             props.handleScreenMode();
         }
     };
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
 
     useEffect(() => {
         setUpdateTask(props.tableRowSelected);
@@ -618,7 +624,12 @@ const TaskViewEdit = (props: any) => {
                                     allowClear
                                     showSearch
                                     placeholder="Assign Person"
-                                    options={assigneeOpts}
+                                    options={employeeList.map(
+                                        (employee: any) => ({
+                                            label: employee?.firstName,
+                                            value: employee?._id,
+                                        })
+                                    )}
                                     defaultValue={updateTask.assigned_to}
                                     className="w100"
                                     onChange={(value, event) => {

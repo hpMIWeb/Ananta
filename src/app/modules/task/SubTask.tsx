@@ -11,26 +11,31 @@ import {
     TimePicker,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-    assigneeOpts,
-    clientOpts,
-    priorityOpts,
-    workAreaOpts,
-} from "../../utilities/utility";
+import { priorityOpts, workAreaOpts } from "../../utilities/utility";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubTask as ISubTask } from "./interfaces/ITask";
 import "./subTask.scss";
+import { useAppDispatch } from "../../states/store";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { useSelector } from "react-redux";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 
 const SubTask = (props: any) => {
     const subTaskObj = { _id: "1", status: "Pending" } as ISubTask;
     const [subTasks, setSubTasks] = useState<ISubTask[]>([subTaskObj]);
-
+    const dispatch = useAppDispatch();
     const addNewTask = () => {
         subTaskObj._id = (subTasks.length + 1).toString();
         setSubTasks([...subTasks, subTaskObj]);
     };
-
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
     const removeTask = (item: ISubTask) => {
         const index = subTasks.indexOf(item);
         if (index > -1) {
@@ -277,7 +282,12 @@ const SubTask = (props: any) => {
                                             allowClear
                                             showSearch
                                             placeholder="Client"
-                                            options={clientOpts}
+                                            options={clientList.map(
+                                                (client: any) => ({
+                                                    label: client?.firmName,
+                                                    value: client?._id,
+                                                })
+                                            )}
                                             onChange={(value, event) => {
                                                 inputChangeHandler(
                                                     event,
@@ -307,7 +317,12 @@ const SubTask = (props: any) => {
                                             allowClear
                                             showSearch
                                             placeholder="Assign Person"
-                                            options={assigneeOpts}
+                                            options={employeeList.map(
+                                                (employee: any) => ({
+                                                    label: employee?.firstName,
+                                                    value: employee?._id,
+                                                })
+                                            )}
                                             onChange={(value, event) => {
                                                 inputChangeHandler(
                                                     event,

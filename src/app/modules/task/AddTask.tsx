@@ -18,7 +18,6 @@ import {
     priorityOpts,
     chargesOpts,
     assigneeOpts,
-    clientOpts,
     modeOptions,
     workAreaOpts,
 } from "../../utilities/utility";
@@ -38,35 +37,26 @@ import api from "../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddTask.scss";
+import { useAppDispatch } from "../../states/store";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 const AddTask = () => {
+    const dispatch = useAppDispatch();
     const dateFormat = "YYYY-MM-DD";
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
     const initialValuesRef = useRef(new Task());
     const [form] = Form.useForm();
-    const allowedKeyCodes = [
-        8, // Backspace
-        9, // Tab
-        35, // End
-        36, // Home
-        37, // Left arrow
-        39, // Right arrow
-        46, // Delete
-        48, // 0
-        49, // 1
-        50, // 2
-        51, // 3
-        52, // 4
-        53, // 5
-        54, // 6
-        55, // 7
-        56, // 8
-        57, // 9
-        186, // ;
-        190, // .
-    ];
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
 
     // local states
     const [showSubTask, setShowSubTask] = useState<boolean>(false);
@@ -613,7 +603,10 @@ const AddTask = () => {
                                 showSearch
                                 placeholder="Client"
                                 value={addTask.client}
-                                options={clientOpts}
+                                options={clientList.map((client: any) => ({
+                                    label: client?.firmName,
+                                    value: client?._id,
+                                }))}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event);
                                 }}
@@ -636,7 +629,10 @@ const AddTask = () => {
                                 showSearch
                                 placeholder="Assign Person"
                                 value={addTask.assigned_to}
-                                options={assigneeOpts}
+                                options={employeeList.map((employee: any) => ({
+                                    label: employee?.firstName,
+                                    value: employee?._id,
+                                }))}
                                 onChange={(value, event) => {
                                     inputChangeHandler(event, "assigned_to");
                                 }}
