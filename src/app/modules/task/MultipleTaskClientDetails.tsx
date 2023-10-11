@@ -3,7 +3,6 @@ import { Select, TimePicker, Table, Form, Popconfirm, Input } from "antd";
 import {
     priorityOpts,
     assigneeOpts,
-    clientOpts,
     formatTime,
     OperationType,
 } from "../../utilities/utility";
@@ -21,6 +20,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
+import { useAppDispatch } from "../../states/store";
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 const MultipleTaskClientDetails = (props: any) => {
     const newClientItem = {
         _id: "1",
@@ -39,7 +42,15 @@ const MultipleTaskClientDetails = (props: any) => {
     const [clients, setClients] = useState<IAddClientDetails[]>(props.data);
     const [selectedTableRow, setSelectedTableRow] = useState(newClientItem);
     const [isEdit, setIsEdit] = useState<boolean>(props.isEdit);
+    const dispatch = useAppDispatch();
 
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
     // Custom Validation for Client row
     const customValidationRule = (
         rule: any,
@@ -108,7 +119,10 @@ const MultipleTaskClientDetails = (props: any) => {
                         allowClear
                         showSearch
                         placeholder="Client"
-                        options={clientOpts}
+                        options={clientList.map((client: any) => ({
+                            label: client?.firmName,
+                            value: client?._id,
+                        }))}
                         className="w100"
                         onChange={(value, event) => {
                             inputChangeHandler(event, "client_name");
@@ -155,7 +169,10 @@ const MultipleTaskClientDetails = (props: any) => {
                         showSearch
                         mode="multiple"
                         placeholder="Assign Person"
-                        options={assigneeOpts}
+                        options={employeeList.map((employee: any) => ({
+                            label: employee?.firstName,
+                            value: employee?._id,
+                        }))}
                         className="w100"
                         onChange={(value, event) => {
                             inputChangeHandler(event, "assigned_to");
