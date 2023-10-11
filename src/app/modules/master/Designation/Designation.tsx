@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-    Divider,
-    Popconfirm,
-    Form,
-    Table,
-    Typography,
-    Row,
-    Col,
-    Modal,
-} from "antd";
+import { Divider, Popconfirm, Form, Table, Row, Col, Modal } from "antd";
 import styles from "./designation.module.scss";
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import api from "../../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,24 +9,20 @@ import {
     AddDesignation as IAddDesignation,
 } from "./interfaces/IDesignation";
 import Button from "../../../../components/Button/Index";
-import Icon from "../../../../components/Icon/Index";
 import { Department as IDepartment } from "../Department/interfaces/IDeparment";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../../../modules/LoadingSpinner"; // Update the path accordingly
 import DeletePopupConfirm from "../../../../components/DeletePopupConfirm/DeletePopupConfirm";
 import "./Designation.scss";
 import Input from "../../../../components/Input/Index";
 import Select from "../../../../components/Select/Index";
-import { SearchOutlined } from "@ant-design/icons";
 import SearchFilterBar from "../../../../components/SearchFilterBar/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
 
-const { Title } = Typography;
-const pageSize = 25;
-
 const Designation = () => {
+    const pageSize = 25;
+    const [form] = Form.useForm();
     const [current, setCurrent] = useState(1);
     const [designationList, setDesignationList] = useState<IDesignation[]>([]);
     const [departmentList, setDepartmentList] = useState<IDepartment[]>([]);
@@ -47,33 +33,18 @@ const Designation = () => {
         useState<IDesignation>({} as IDesignation);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
-    const [form] = Form.useForm();
-
     const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
     const [selectedDesignationEmployees, setSelectedDepartmentEmployees] =
         useState<IDesignation[]>([]);
     const [loading, setLoading] = useState(true);
-
-    const [searchValue, setSearchValue] = useState("");
     const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
-    const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
-        []
-    );
-
-    const staticEmployees = [
-        { EmployeeName: "Employee 1", EmployeeId: "1" },
-        { EmployeeName: "Employee 2", EmployeeId: "2" },
-        { EmployeeName: "Employee 3", EmployeeId: "3" },
-        { EmployeeName: "Employee 4", EmployeeId: "4" },
-        { EmployeeName: "Employee 5", EmployeeId: "5" },
-    ];
 
     const columns = [
         {
             title: "Sr.No",
             dataIndex: "srNo",
             key: "srNo",
-            width: "5%",
+            width: "8%",
             sorter: (a: any, b: any) => a.srNo - b.srNo,
             className: "center-align-cell",
         },
@@ -96,7 +67,7 @@ const Designation = () => {
             title: "Employee",
             dataIndex: "employeeCount",
             key: "employeeCount",
-            width: "5%",
+            width: "12%",
             className: "center-align-cell",
             sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
             render: (employeeCount: any, record: IDesignation) => (
@@ -136,36 +107,6 @@ const Designation = () => {
                         button-label="Delete  Designation"
                     />
                 </span>
-            ),
-        },
-    ];
-
-    const employeeColumns = [
-        {
-            title: "Employee Name",
-            dataIndex: "EmployeeName",
-            key: "EmployeeName",
-            width: "90%",
-        },
-        {
-            title: "Action",
-            dataIndex: "",
-            key: "action",
-            width: "10%",
-            render: (employee: any) => (
-                <Popconfirm
-                    title="Sure to remove?"
-                    onConfirm={() =>
-                        removeEmployeeFromDepartment(employee.EmployeeId)
-                    }
-                >
-                    <FontAwesomeIcon
-                        icon={faTrash}
-                        className="btn-at"
-                        title="Delete Designation"
-                        style={{ color: "#fa5c7c" }}
-                    />
-                </Popconfirm>
             ),
         },
     ];
@@ -234,24 +175,23 @@ const Designation = () => {
     };
 
     // Search input change handler
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
     };
 
     const getData = (current: number, pageSize: number) => {
         const startIndex = (current - 1) * pageSize;
         let retVal = designationList;
-        const slicedData = designationList.slice(
-            startIndex,
-            startIndex + pageSize
-        );
 
         if (searchQuery.trim() !== "") {
             retVal = retVal.filter((item) => {
-                return item.name
-                    .toLowerCase()
-                    .includes(searchQuery.toLowerCase());
+                return Object.values(item).some(
+                    (value) =>
+                        value
+                            .toString()
+                            .toLowerCase()
+                            .indexOf(searchQuery?.toLowerCase()) !== -1
+                );
             });
         }
 
@@ -264,10 +204,6 @@ const Designation = () => {
             };
         });
     };
-
-    function onChange(sorter: any) {
-        console.log(sorter);
-    }
 
     /*Modal action start*/
 
@@ -365,21 +301,6 @@ const Designation = () => {
         setIsEmployeeModalOpen(true);
     };
 
-    const closeEmployeeModal = () => {
-        setSelectedDepartmentEmployees([]);
-        setIsEmployeeModalOpen(false);
-    };
-
-    const removeEmployeeFromDepartment = (employeeId: string) => {
-        // Call your API to remove the employee from the designation
-        //TODO:: After successful removal, update the selectedDesignationEmployees state
-        const updatedEmployees = selectedDesignationEmployees.filter(
-            (employee: any) => employee.EmployeeId !== employeeId
-        );
-        setSelectedDepartmentEmployees(updatedEmployees);
-        // You can also update the Employees property of the designation in the designationList state
-    };
-
     /*Modal action end */
     return (
         <>
@@ -425,8 +346,8 @@ const Designation = () => {
                 <div className={styles.departmentBottomWrapper}>
                     <div style={{ marginBottom: 24 }}>
                         <SearchFilterBar
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
+                            searchValue={searchQuery}
+                            setSearchValue={handleSearch}
                             sortState={sortState}
                             setSortState={setSortState}
                             setSortStateHandler={(options: any) => {
