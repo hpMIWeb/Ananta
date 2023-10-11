@@ -287,8 +287,7 @@ const Setting = () => {
                         defaultActiveKey="1"
                         items={tabContent}
                         onChange={onTabChange}
-                        style={{ width: "200%", margin: "0px 20px" }}
-                        size={"large"}
+                        // size={"small"}
                     />
                 </div>
             </div>
