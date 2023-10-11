@@ -589,8 +589,7 @@ const DefaultChecklist = () => {
                                 }}
                                 className={styles.newPromoBtn}
                             >
-                                <Icon width={12.25} height={14} name="plus" />
-                                New
+                                Add New
                             </Button>
                         </div>
                     </div>
