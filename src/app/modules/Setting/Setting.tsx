@@ -12,6 +12,7 @@ import {
     Row,
 } from "antd";
 import "./Setting.scss";
+import styles from "./setting.module.scss";
 import { AddSetting, Task, Compliance, Settings } from "./interfaces/Isetting";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import api from "../../utilities/apiServices";
@@ -22,6 +23,7 @@ import {
     complianceSettingFields,
     taskSettingTemplates,
 } from "../../utilities/utility";
+import classNames from "classnames";
 
 const { Title } = Typography;
 
@@ -246,13 +248,41 @@ const Setting = () => {
     ];
 
     return (
-        <div className="main">
-            <div>
-                <div>
-                    <Title level={5}>Settings</Title>
+        <>
+            <ToastContainer autoClose={25000} />
+            <div
+                className={classNames(
+                    "card mb-3",
+                    styles.addPromoCodeCardWrapper
+                )}
+            >
+                <div
+                    className={classNames(
+                        "card-header d-flex",
+                        styles.promoCodeCardHeaderBox
+                    )}
+                    style={{ minHeight: 60 }}
+                >
+                    <div
+                        className={classNames(
+                            "d-flex align-items-center w-100",
+                            styles.promocodeHeaderTitle
+                        )}
+                    >
+                        <div className="me-auto">
+                            <h5
+                                className={classNames(
+                                    "my-2 position-relative z-index-1",
+                                    styles.addPromoCodeLabel
+                                )}
+                            >
+                                Settings
+                            </h5>
+                        </div>
+                        <div className={classNames("ms-auto z-index-1")}></div>
+                    </div>
                 </div>
-                <ToastContainer autoClose={25000} />
-                <div className="header">
+                <div className={styles.addClientDetailBox}>
                     <Tabs
                         defaultActiveKey="1"
                         items={tabContent}
@@ -262,7 +292,7 @@ const Setting = () => {
                     />
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
