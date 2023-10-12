@@ -1,10 +1,6 @@
 import styles from "./revenueProgram.module.scss";
 import { Form } from "antd";
 
-import OwnerInfoCardBox from "../OwnerInfoCardBox/Index";
-import { useState } from "react";
-
-import { filterObjectByKey } from "../../../../../utils/helpers";
 import Button from "../../../../../components/Button/Index";
 
 const RevenueProgram = ({ onChange, setFormValue, clientType }: any) => {
