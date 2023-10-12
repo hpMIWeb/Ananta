@@ -62,14 +62,6 @@ const Department = () => {
 
     const [loading, setLoading] = useState(true);
 
-    const staticEmployees = [
-        { EmployeeName: "Employee 1", EmployeeId: "1" },
-        { EmployeeName: "Employee 2", EmployeeId: "2" },
-        { EmployeeName: "Employee 3", EmployeeId: "3" },
-        { EmployeeName: "Employee 4", EmployeeId: "4" },
-        { EmployeeName: "Employee 5", EmployeeId: "5" },
-    ];
-
     const columns = [
         {
             title: "Sr.No",
@@ -99,7 +91,7 @@ const Department = () => {
             width: "12%",
             className: "center-align-cell",
             sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
-            render: (employeeCount: any, record: IDepartment) => (
+            render: (employeeCount: any, record: any) => (
                 <span
                     className="actionColumn"
                     onClick={() => showEmployeeModal(record)}
@@ -142,9 +134,14 @@ const Department = () => {
     const employeeColumns = [
         {
             title: "Employee Name",
-            dataIndex: "EmployeeName",
-            key: "EmployeeName",
+            dataIndex: "",
+            key: "",
             width: "90%",
+            render: (employee: any) => (
+                <span>
+                    {employee.firstName} {employee.lastName}
+                </span>
+            ),
         },
         {
             title: "Action",
@@ -154,9 +151,7 @@ const Department = () => {
             render: (employee: any) => (
                 <Popconfirm
                     title="Sure to remove?"
-                    onConfirm={() =>
-                        removeEmployeeFromDepartment(employee.EmployeeId)
-                    }
+                    onConfirm={() => removeEmployeeFromDepartment(employee._id)}
                 >
                     <FontAwesomeIcon
                         icon={faTrash}
@@ -223,6 +218,11 @@ const Department = () => {
 
     // Search input change handler
     const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
+    };
+
+    // Search input change handler
+    const handleEmaployeeSearch = (searchValue: string) => {
         setSearchQuery(searchValue);
     };
 
@@ -347,8 +347,8 @@ const Department = () => {
         setIsModalOpen(false);
     };
 
-    const showEmployeeModal = (department: IDepartment) => {
-        setSelectedDepartmentEmployees(department.employees); // Assuming "Employees" is the property containing the list of employees for a department
+    const showEmployeeModal = (data: IDepartment) => {
+        setSelectedDepartmentEmployees(data.employees); // Assuming "Employees" is the property containing the list of employees for a department
         setIsEmployeeModalOpen(true);
     };
 
@@ -538,7 +538,7 @@ const Department = () => {
                                             placeholder="Search..."
                                             className="search-box"
                                             bordered={false}
-                                            //  onChange={handleSearch}
+                                            onChange={handleSearch}
                                             prefix={<SearchOutlined />}
                                         />
                                     </Col>
@@ -547,7 +547,7 @@ const Department = () => {
                         </Row>
 
                         <Table
-                            dataSource={staticEmployees}
+                            dataSource={selectedDepartmentEmployees}
                             columns={employeeColumns}
                             pagination={false}
                         />
