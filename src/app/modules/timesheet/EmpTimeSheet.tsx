@@ -18,6 +18,7 @@ import {
     ShareAltOutlined,
     PrinterTwoTone,
 } from "@ant-design/icons";
+import styles from "./TimeSheet.module.scss";
 import "./EmpTimeSheet.scss";
 import { Link } from "react-router-dom";
 import { workAreaOpts, calculateTimeDifference } from "../../utilities/utility";
@@ -33,6 +34,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../states/store";
 import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import classNames from "classnames";
 
 const { Title } = Typography;
 const pageSize = 20;
@@ -259,7 +261,13 @@ const EmpTimeSheet = () => {
         {
             key: "1",
             label: (
-                <Link to="/timesheet" style={{ color: "black" }}>
+                <Link
+                    to="/timesheet"
+                    style={{
+                        textDecoration: "none",
+                        color: "rgba(0, 0, 0, 0.88)",
+                    }}
+                >
                     My Timesheet
                 </Link>
             ),
@@ -267,7 +275,7 @@ const EmpTimeSheet = () => {
         {
             key: "2",
             label: (
-                <Link to="/emp-time-sheet" style={{ color: "black" }}>
+                <Link to="/emp-time-sheet" style={{ textDecoration: "none" }}>
                     Employee Timesheet Report
                 </Link>
             ),
@@ -275,7 +283,13 @@ const EmpTimeSheet = () => {
         {
             key: "3",
             label: (
-                <Link to="/client-time-sheet" style={{ color: "black" }}>
+                <Link
+                    to="/client-time-sheet"
+                    style={{
+                        textDecoration: "none",
+                        color: "rgba(0, 0, 0, 0.88)",
+                    }}
+                >
                     Client Timesheet Report
                 </Link>
             ),
@@ -283,179 +297,228 @@ const EmpTimeSheet = () => {
     ];
 
     return (
-        <>
-            <div>
-                <Title level={5}>TimeSheet</Title>
-            </div>
-
+        <div className={styles.timeSheetPageWrapper}>
             <div
-                className="task-list-header"
-                style={{ borderBottom: "2px solid #d8e2ef" }}
+                className={classNames(
+                    "card-header d-flex",
+                    styles.timeSheetPageHeader
+                )}
             >
-                <div>
-                    <ToastContainer />
-                    <Tabs
-                        defaultActiveKey="2"
-                        items={tabContent}
-                        onChange={onTabChange}
-                        style={{ width: "100%" }}
-                    />
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.timeSheetHeaderTitle
+                    )}
+                >
+                    <div className="me-auto">
+                        <h5
+                            className={classNames(
+                                "my-2 position-relative z-index-1",
+                                styles.timeSheetLabel
+                            )}
+                        >
+                            Time Sheet
+                        </h5>
+                    </div>
                 </div>
             </div>
-            <div>
-                <div className="Et1">
-                    <span>
-                        <FilePdfTwoTone className="Et2" onClick={downloadPDF} />
-                        <FileExcelTwoTone
-                            className="Et2"
-                            onClick={downloadExcel}
+            <div className={styles.timeSheetBottomWrapper}>
+                <div className="task-list-header">
+                    <div>
+                        <ToastContainer />
+                        <Tabs
+                            defaultActiveKey="2"
+                            items={tabContent}
+                            onChange={onTabChange}
+                            style={{ width: "100%" }}
                         />
-                        <ShareAltOutlined
-                            className="Et2"
-                            onClick={downloadExcel}
-                        />
-                        <PrinterTwoTone className="Et2" onClick={printData} />
-                    </span>
+                    </div>
                 </div>
-                <Row gutter={[8, 8]} className={"mt-10 form-row"}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Employee"
-                            options={employeeList.map((employee: any) => ({
-                                label: employee?.firstName,
-                                value: employee?._id,
-                            }))}
-                            className="w100 border-bottom"
-                            bordered={false}
-                            onChange={(value, event) => {
-                                getEmployeeReport(event, "employeeName");
-                            }}
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="clientName"
-                            options={clientList.map((client: any) => ({
-                                label: client?.firmName,
-                                value: client?._id,
-                            }))}
-                            className="w100 border-bottom"
-                            bordered={false}
-                            onChange={(value, event) => {
-                                getEmployeeReport(event, "clientName");
-                            }}
-                        />
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
-                        <Select
-                            allowClear
-                            showSearch
-                            placeholder="Work Area"
-                            options={workAreaOpts}
-                            className="w100 border-bottom"
-                            bordered={false}
-                            onChange={(value, event) => {
-                                getEmployeeReport(event, "workArea");
-                            }}
-                        />
-                    </Col>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 6 }}
-                        className="border-bottom"
-                    >
-                        <DatePicker
-                            placeholder="Date"
-                            className="w100 border-bottom"
-                            bordered={false}
-                            name="name"
-                            onChange={(value, event) => {
-                                getEmployeeReport(event, "date");
-                            }}
-                            style={{ borderBottom: "1px solid" }}
-                        />
-                    </Col>
-                </Row>
-
-                <div className="summery">
-                    <ul className="summery1">
-                        <li className="w100  employeeLi">
-                            <div className="employeeSummaryLable">
-                                <img
-                                    src={
-                                        "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
-                                    }
-                                    alt="Assignee"
-                                    className="assigneeImage"
+                <div>
+                    <div className="Et1">
+                        <span>
+                            <FilePdfTwoTone
+                                className="Et2"
+                                onClick={downloadPDF}
+                            />
+                            <FileExcelTwoTone
+                                className="Et2"
+                                onClick={downloadExcel}
+                            />
+                            <ShareAltOutlined
+                                className="Et2"
+                                onClick={downloadExcel}
+                            />
+                            <PrinterTwoTone
+                                className="Et2"
+                                onClick={printData}
+                            />
+                        </span>
+                    </div>
+                    <div>
+                        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 6 }}
+                            >
+                                <Select
+                                    allowClear
+                                    showSearch
+                                    placeholder="Employee"
+                                    options={employeeList.map(
+                                        (employee: any) => ({
+                                            label: employee?.firstName,
+                                            value: employee?._id,
+                                        })
+                                    )}
+                                    className="w100 border-bottom"
+                                    bordered={false}
+                                    onChange={(value, event) => {
+                                        getEmployeeReport(
+                                            event,
+                                            "employeeName"
+                                        );
+                                    }}
                                 />
-                            </div>
-                            <p className="employeeSummaryData w100">Pinank</p>
-                        </li>
-                        <Divider type="vertical" className="divider" />
-                        <li className="w100 employeeLi">
-                            <p className="employeeSummaryData w100">
-                                {employeeReportSummary.taskCount}
-                            </p>
-                            <p className="employeeSummaryLable w100">
-                                Time Period
-                            </p>
-                        </li>
-                        <Divider type="vertical" className="divider" />
-                        <li className="w100 employeeLi">
-                            <p className="employeeSummaryData">
-                                {employeeReportSummary.taskCount}
-                            </p>
-                            <p className="employeeSummaryLable">Total Task</p>
-                        </li>
-                        <Divider type="vertical" className="divider" />
-                        <li className="w100 employeeLi">
-                            <p className="employeeSummaryData">
-                                {employeeReportSummary.totalBudgetTime}
-                            </p>
-                            <p className="employeeSummaryLable">
-                                Total Budget Time
-                            </p>
-                        </li>
-                        <Divider type="vertical" className="divider" />
-                        <li className="w100 employeeLi">
-                            <p className="employeeSummaryData">
-                                {employeeReportSummary.totalActualTime}
-                            </p>
-                            <p className="employeeSummaryLable">
-                                Total Actual Time
-                            </p>
-                        </li>
-                        <Divider type="vertical" className="divider" />
-                        <li className="w100 employeeLi">
-                            <p className="employeeSummaryData">
-                                {calculateTimeDifference(
-                                    employeeReportSummary.totalBudgetTime,
-                                    employeeReportSummary.totalActualTime
-                                )}
-                            </p>
-                            <p className="employeeSummaryLable">
-                                Total Difference
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <Table
-                        columns={columns}
-                        dataSource={getData(current, pageSize)}
-                        pagination={{ defaultCurrent: 1, total: 2 }}
-                        onChange={onChange}
-                        className="table-striped-rows"
-                        bordered
-                    />
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 6 }}
+                            >
+                                <Select
+                                    allowClear
+                                    showSearch
+                                    placeholder="clientName"
+                                    options={clientList.map((client: any) => ({
+                                        label: client?.firmName,
+                                        value: client?._id,
+                                    }))}
+                                    className="w100 border-bottom"
+                                    bordered={false}
+                                    onChange={(value, event) => {
+                                        getEmployeeReport(event, "clientName");
+                                    }}
+                                />
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 6 }}
+                            >
+                                <Select
+                                    allowClear
+                                    showSearch
+                                    placeholder="Work Area"
+                                    options={workAreaOpts}
+                                    className="w100 border-bottom"
+                                    bordered={false}
+                                    onChange={(value, event) => {
+                                        getEmployeeReport(event, "workArea");
+                                    }}
+                                />
+                            </Col>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 6 }}
+                                className="border-bottom"
+                            >
+                                <DatePicker
+                                    placeholder="Date"
+                                    className="w100 border-bottom"
+                                    bordered={false}
+                                    name="name"
+                                    onChange={(value, event) => {
+                                        getEmployeeReport(event, "date");
+                                    }}
+                                    style={{ borderBottom: "1px solid" }}
+                                />
+                            </Col>
+                        </Row>
+                    </div>
+                    <div className="summery">
+                        <ul className="summery1">
+                            <li className="w100  employeeLi">
+                                <div className="employeeSummaryLable">
+                                    <img
+                                        src={
+                                            "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+                                        }
+                                        alt="Assignee"
+                                        className="assigneeImage"
+                                        height={"200px"}
+                                        width={"200px"}
+                                    />
+                                </div>
+                                <p className="employeeSummaryData w100">
+                                    Pinank
+                                </p>
+                            </li>
+                            <Divider type="vertical" className="divider" />
+                            <li className="w100 employeeLi">
+                                <p className="employeeSummaryData w100">
+                                    {employeeReportSummary.taskCount}
+                                </p>
+                                <p className="employeeSummaryLable w100">
+                                    Time Period
+                                </p>
+                            </li>
+                            <Divider type="vertical" className="divider" />
+                            <li className="w100 employeeLi">
+                                <p className="employeeSummaryData">
+                                    {employeeReportSummary.taskCount}
+                                </p>
+                                <p className="employeeSummaryLable">
+                                    Total Task
+                                </p>
+                            </li>
+                            <Divider type="vertical" className="divider" />
+                            <li className="w100 employeeLi">
+                                <p className="employeeSummaryData">
+                                    {employeeReportSummary.totalBudgetTime}
+                                </p>
+                                <p className="employeeSummaryLable">
+                                    Total Budget Time
+                                </p>
+                            </li>
+                            <Divider type="vertical" className="divider" />
+                            <li className="w100 employeeLi">
+                                <p className="employeeSummaryData">
+                                    {employeeReportSummary.totalActualTime}
+                                </p>
+                                <p className="employeeSummaryLable">
+                                    Total Actual Time
+                                </p>
+                            </li>
+                            <Divider type="vertical" className="divider" />
+                            <li className="w100 employeeLi">
+                                <p className="employeeSummaryData">
+                                    {calculateTimeDifference(
+                                        employeeReportSummary.totalBudgetTime,
+                                        employeeReportSummary.totalActualTime
+                                    )}
+                                </p>
+                                <p className="employeeSummaryLable">
+                                    Total Difference
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <Table
+                            columns={columns}
+                            dataSource={getData(current, pageSize)}
+                            pagination={{ defaultCurrent: 1, total: 2 }}
+                            onChange={onChange}
+                            className="table-striped-rows"
+                            bordered
+                        />
+                    </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

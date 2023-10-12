@@ -271,6 +271,8 @@ const LayoutComponent = ({
             "task",
             "compliance",
             "timesheet",
+            "emp-time-sheet",
+            "client-time-sheet",
             "approval",
             "setting",
             "default-line-of-business",
@@ -370,6 +372,8 @@ const LayoutComponent = ({
         "add-multi-task": "Add Multi Task",
         compliance: "Compliance List",
         "add-compliance": "Add Compliance",
+        "emp-time-sheet": "Employee TimeSheet",
+        "client-time-sheet": "Client TimeSheet",
     };
 
     const getBreadCrumbs = (strHref: string, title: string, index: number) => {

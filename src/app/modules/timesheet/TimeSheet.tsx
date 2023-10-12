@@ -25,6 +25,7 @@ import {
     Popconfirm,
 } from "antd";
 import type { TabsProps } from "antd";
+import styles from "./TimeSheet.module.scss";
 import "./TimeSheet.scss";
 import { Link } from "react-router-dom";
 
@@ -39,13 +40,13 @@ import { workAreaOpts } from "../../utilities/utility";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
-import "./TimeSheet.scss";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/en"; // Import the locale if needed
 import { useSelector } from "react-redux";
 import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 import { useAppDispatch } from "../../states/store";
 import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import classNames from "classnames";
 
 const { Title } = Typography;
 const pageSize = 20;
@@ -1135,7 +1136,7 @@ const TimeSheet = () => {
         {
             key: "1",
             label: (
-                <Link to="/timesheet" style={{ color: "black" }}>
+                <Link to="/timesheet" style={{ textDecoration: "none" }}>
                     My Timesheet
                 </Link>
             ),
@@ -1143,7 +1144,13 @@ const TimeSheet = () => {
         {
             key: "2",
             label: (
-                <Link to="/emp-time-sheet" style={{ color: "black" }}>
+                <Link
+                    to="/emp-time-sheet"
+                    style={{
+                        textDecoration: "none",
+                        color: "rgba(0, 0, 0, 0.88)",
+                    }}
+                >
                     Employee Timesheet Report
                 </Link>
             ),
@@ -1151,7 +1158,13 @@ const TimeSheet = () => {
         {
             key: "3",
             label: (
-                <Link to="/client-time-sheet" style={{ color: "black" }}>
+                <Link
+                    to="/client-time-sheet"
+                    style={{
+                        textDecoration: "none",
+                        color: "rgba(0, 0, 0, 0.88)",
+                    }}
+                >
                     Client Timesheet Report
                 </Link>
             ),
@@ -1159,58 +1172,43 @@ const TimeSheet = () => {
     ];
 
     return (
-        <>
-            <div>
-                <Title level={5}>Timesheet</Title>
-            </div>
-
+        <div className={styles.timeSheetPageWrapper}>
             <div
-                className="task-list-header"
-                style={{ borderBottom: "2px solid #d8e2ef" }}
+                className={classNames(
+                    "card-header d-flex",
+                    styles.timeSheetPageHeader
+                )}
             >
-                <ToastContainer />
-                <div>
-                    <Tabs
-                        defaultActiveKey="1"
-                        items={tabContent}
-                        onChange={onTabChange}
-                        style={{ width: "100%" }}
-                    />
+                <div
+                    className={classNames(
+                        "d-flex align-items-center w-100",
+                        styles.timeSheetHeaderTitle
+                    )}
+                >
+                    <div className="me-auto">
+                        <h5
+                            className={classNames(
+                                "my-2 position-relative z-index-1",
+                                styles.timeSheetLabel
+                            )}
+                        >
+                            Time Sheet
+                        </h5>
+                    </div>
                 </div>
             </div>
-            <Row
-                gutter={[8, 8]}
-                className="form-row"
-                style={{ marginTop: "10px" }}
-            >
-                <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 21 }}
-                ></Col>
-                <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 3 }}
-                    className="border-bottom"
-                >
-                    <DatePicker
-                        placeholder="Date"
-                        name="date"
-                        className="w100"
-                        style={{ float: "right" }}
-                        defaultValue={dayjs()}
-                        format={dateFormat}
-                        bordered={false}
-                        onChange={(date, dateString) => {
-                            dateFilter(dateString);
-                        }}
-                    />
-                </Col>
-            </Row>
-
-            <div>
-                <Form>
+            <div className={styles.timeSheetBottomWrapper}>
+                <div className="task-list-header">
+                    <div>
+                        <Tabs
+                            defaultActiveKey="1"
+                            items={tabContent}
+                            onChange={onTabChange}
+                            style={{ width: "100%" }}
+                        />
+                    </div>
+                </div>
+                <div>
                     <Row
                         gutter={[8, 8]}
                         className="form-row"
@@ -1219,42 +1217,75 @@ const TimeSheet = () => {
                         <Col
                             xs={{ span: 24 }}
                             sm={{ span: 24 }}
-                            md={{ span: 24 }}
+                            md={{ span: 21 }}
+                        ></Col>
+                        <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 3 }}
+                            className="border-bottom"
                         >
-                            <div className="client-details">
-                                <Table
-                                    id="time-sheet-table"
-                                    columns={columns}
-                                    dataSource={timesheetAction}
-                                    rowKey="_id"
-                                    onRow={(record, rowIndex) => {
-                                        return {
-                                            onClick: (event) => {
-                                                setSelectedTableRow(record);
-                                            },
-                                        };
-                                    }}
-                                    className="table-striped-rows center-align-header time-sheet-table"
-                                    bordered
-                                />
-                            </div>
+                            <DatePicker
+                                placeholder="Date"
+                                name="date"
+                                className="w100"
+                                style={{ float: "right" }}
+                                defaultValue={dayjs()}
+                                format={dateFormat}
+                                bordered={false}
+                                onChange={(date, dateString) => {
+                                    dateFilter(dateString);
+                                }}
+                            />
                         </Col>
                     </Row>
-
-                    <Row gutter={[8, 8]} className="form-row">
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            icon={<PlusOutlined />}
-                            onClick={saveTimeSheetHandler}
-                            style={{ marginTop: "10px", marginBottom: "10px" }}
+                </div>
+                <div>
+                    <Form>
+                        <Row
+                            gutter={[8, 8]}
+                            className="form-row"
+                            style={{ marginTop: "10px" }}
                         >
-                            Save
-                        </Button>
-                    </Row>
-                </Form>
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                            >
+                                <div>
+                                    <Table
+                                        id="time-sheet-table"
+                                        columns={columns}
+                                        dataSource={timesheetAction}
+                                        rowKey="_id"
+                                        onRow={(record, rowIndex) => {
+                                            return {
+                                                onClick: (event) => {
+                                                    setSelectedTableRow(record);
+                                                },
+                                            };
+                                        }}
+                                        className="table-striped-rows center-align-header time-sheet-table"
+                                        bordered
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row gutter={[8, 8]} className="form-row">
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                onClick={saveTimeSheetHandler}
+                                className={styles.newTaskBtn}
+                            >
+                                Save
+                            </Button>
+                        </Row>
+                    </Form>
+                </div>
             </div>
-        </>
+            <ToastContainer />
+        </div>
     );
 };
 export default TimeSheet;
