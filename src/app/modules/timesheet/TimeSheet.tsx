@@ -65,6 +65,7 @@ const TimeSheet = () => {
     const clientList = useSelector((state: any) => state.getClients.data) || [];
 
     const [newRowCount, setNewRowCount] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
 
     //Time sheet List
 
@@ -920,6 +921,7 @@ const TimeSheet = () => {
 
     // save time sheet data
     const saveTimeSheetHandler = () => {
+        setLoading(true);
         const selectedDate = dayjs(filterDate).format(dateFormat);
         // Read all existing timesheet from `localStorage`
         const newTimesheets = timesheetAction.filter((entry) => {
@@ -980,17 +982,20 @@ const TimeSheet = () => {
         try {
             api.createMultipleTimesheet(timesheetPayload)
                 .then((resp) => {
+                    setLoading(false);
                     toast.success("Timesheet entries successfully saved.", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                     getTimeSheetData();
                 })
                 .catch((error) => {
+                    setLoading(false);
                     toast.error("Technical error while Timesheet entries.", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                 });
         } catch (ex) {
+            setLoading(false);
             toast.error("Technical error while Timesheet entries.", {
                 position: toast.POSITION.TOP_RIGHT,
             });
@@ -1277,6 +1282,7 @@ const TimeSheet = () => {
                                 htmlType="submit"
                                 onClick={saveTimeSheetHandler}
                                 className={styles.newTaskBtn}
+                                loading={loading}
                             >
                                 Save
                             </Button>
