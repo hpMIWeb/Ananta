@@ -11,12 +11,7 @@ import {
     TimePicker,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-    assigneeOpts,
-    clientOpts,
-    priorityOpts,
-    workAreaOpts,
-} from "../../utilities/utility";
+import { priorityOpts, workAreaOpts } from "../../utilities/utility";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { SubTask as ISubTask } from "./interfaces/ITask";

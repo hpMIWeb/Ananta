@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Select, TimePicker, Table, Form, Popconfirm, Input } from "antd";
 import {
     priorityOpts,
-    assigneeOpts,
     formatTime,
     OperationType,
 } from "../../utilities/utility";
