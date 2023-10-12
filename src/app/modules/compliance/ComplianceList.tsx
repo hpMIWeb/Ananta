@@ -14,6 +14,7 @@ import {
 } from "antd";
 import { Compliance as ICompliance } from "./interfaces/ICompliance";
 import dayjs from "dayjs";
+import styles from "./ComplianceList.module.scss";
 import "./ComplianceList.scss";
 import { useNavigate } from "react-router-dom";
 import ComplianceViewEdit from "./ComplianceViewEdit";
@@ -36,6 +37,7 @@ import {
 import Fillter from "../fillter/Fillter";
 import ComplianceFilter from "../fillter/ComplianceFilter";
 import { SearchOutlined, UserOutlined, FilterTwoTone } from "@ant-design/icons";
+import classNames from "classnames";
 const { Title } = Typography;
 const pageSize = 50;
 
@@ -1065,64 +1067,85 @@ const ComplianceList = () => {
 
     return (
         <>
-            <div>
-                <Title level={5}>Compliance</Title>
-            </div>
-
-            <div
-                className="task-list-header"
-                style={{ borderBottom: "2px solid #d8e2ef" }}
-            >
-                <div>
-                    <Tabs
-                        defaultActiveKey="1"
-                        items={tabContent}
-                        onChange={onTabChange}
-                        style={{ width: "100%" }}
-                    ></Tabs>
-                </div>
-                <div className="compliance-list-add">
-                    <div>
-                        <Space>
-                            <Button
-                                type="primary"
-                                onClick={addNewComplianceHandler}
+            <div className={styles.taskPageWrapper}>
+                <div
+                    className={classNames(
+                        "card-header d-flex",
+                        styles.taskPageHeader
+                    )}
+                >
+                    <div
+                        className={classNames(
+                            "d-flex align-items-center w-100",
+                            styles.taskHeaderTitle
+                        )}
+                    >
+                        <div className="me-auto">
+                            <h5
+                                className={classNames(
+                                    "my-2 position-relative z-index-1",
+                                    styles.taskLabel
+                                )}
                             >
-                                Add New Compliance
-                            </Button>
-                        </Space>
+                                Compliance
+                            </h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div
-                    style={{
-                        width: reportTab ? "100%" : "65%",
-                        float: "left",
-                        display: fullScreenMode ? "none" : "block",
-                        marginRight: "15px",
-                    }}
-                >
-                    {getContentRender()}
-                </div>
-                {tableRowSelected &&
-                    Object.keys(tableRowSelected).length > 0 && (
+                <div className={styles.taskBottomWrapper}>
+                    <div
+                        className="task-list-header"
+                        style={{ borderBottom: "2px solid #d8e2ef" }}
+                    >
+                        <div>
+                            <Tabs
+                                defaultActiveKey="1"
+                                items={tabContent}
+                                onChange={onTabChange}
+                                tabBarExtraContent={
+                                    <>
+                                        <Button
+                                            type="primary"
+                                            onClick={addNewComplianceHandler}
+                                        >
+                                            Add New Compliance
+                                        </Button>
+                                    </>
+                                }
+                            ></Tabs>
+                        </div>
+                    </div>
+                    <div>
                         <div
                             style={{
-                                float: "right",
-                                width: fullScreenMode ? "100%" : "33%",
-                                display: reportTab ? "none" : "",
+                                width: reportTab ? "100%" : "65%",
+                                float: "left",
+                                display: fullScreenMode ? "none" : "block",
+                                marginRight: "15px",
                             }}
                         >
-                            <ComplianceViewEdit
-                                handleScreenMode={screenModeToggle}
-                                fullScreenMode={fullScreenMode}
-                                tableRowSelected={tableRowSelected}
-                                isEdit={false}
-                                handleListUpdate={handleListUpdate}
-                            />
+                            {getContentRender()}
                         </div>
-                    )}
+                        {tableRowSelected &&
+                            Object.keys(tableRowSelected).length > 0 && (
+                                <div
+                                    style={{
+                                        float: "right",
+                                        width: fullScreenMode ? "100%" : "33%",
+                                        display: reportTab ? "none" : "",
+                                    }}
+                                >
+                                    <ComplianceViewEdit
+                                        handleScreenMode={screenModeToggle}
+                                        fullScreenMode={fullScreenMode}
+                                        tableRowSelected={tableRowSelected}
+                                        isEdit={false}
+                                        handleListUpdate={handleListUpdate}
+                                    />
+                                </div>
+                            )}
+                    </div>
+                </div>
             </div>
         </>
     );
