@@ -48,7 +48,7 @@ const EmpTimeSheet = () => {
         useState<EmployeeReportSummary>(new EmployeeReportSummary());
     const clientList = useSelector((state: any) => state.getClients.data) || [];
     const employeeList =
-        useSelector((state: any) => state.getClients.data) || [];
+        useSelector((state: any) => state.getEmployees.data) || [];
     useEffect(() => {
         dispatch(getClientsReducersApi());
         dispatch(getEmployeesReducersApi());
@@ -372,7 +372,7 @@ const EmpTimeSheet = () => {
                                             value: employee?._id,
                                         })
                                     )}
-                                    className="w100 border-bottom"
+                                    className="border-bottom"
                                     bordered={false}
                                     onChange={(value, event) => {
                                         getEmployeeReport(

@@ -51,7 +51,7 @@ const ClientTimeSheet = () => {
 
     const clientList = useSelector((state: any) => state.getClients.data) || [];
     const employeeList =
-        useSelector((state: any) => state.getClients.data) || [];
+        useSelector((state: any) => state.getEmployees.data) || [];
     useEffect(() => {
         dispatch(getClientsReducersApi());
         dispatch(getEmployeesReducersApi());
