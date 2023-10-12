@@ -15,6 +15,7 @@ import FormContentSkeletonLoader from "../../../../components/FormContentSkeleto
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
+import RevenueProgram from "./RevenueProgram/Index";
 
 const AddAssociatePartners = () => {
     const [activeTab, setActiveTab] = useState(1);
@@ -110,7 +111,7 @@ const AddAssociatePartners = () => {
             key: 3,
             label: `Revenue Program`,
             children: (
-                <OwnerInfo
+                <RevenueProgram
                     onChange={onChange}
                     setFormValue={setFormValue}
                     partnerType={partnerType}
