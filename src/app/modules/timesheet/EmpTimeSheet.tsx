@@ -356,7 +356,7 @@ const EmpTimeSheet = () => {
                         </span>
                     </div>
                     <div>
-                        <Row gutter={[8, 8]} className={"mt-10 form-row"}>
+                        <Row gutter={[8, 8]} className={"mt-2 mb-2"}>
                             <Col
                                 xs={{ span: 24 }}
                                 sm={{ span: 24 }}
@@ -372,7 +372,7 @@ const EmpTimeSheet = () => {
                                             value: employee?._id,
                                         })
                                     )}
-                                    className="border-bottom"
+                                    className="border-bottom w100 customAddClientSelectOptions"
                                     bordered={false}
                                     onChange={(value, event) => {
                                         getEmployeeReport(
@@ -433,7 +433,7 @@ const EmpTimeSheet = () => {
                                     onChange={(value, event) => {
                                         getEmployeeReport(event, "date");
                                     }}
-                                    style={{ borderBottom: "1px solid" }}
+                                    //  style={{ borderBottom: "1px solid" }}
                                 />
                             </Col>
                         </Row>
