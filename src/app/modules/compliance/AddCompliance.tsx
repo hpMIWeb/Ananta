@@ -9,10 +9,7 @@ import {
     Switch,
     Row,
     Col,
-    TimePicker,
-    Upload,
     Divider,
-    Table,
 } from "antd";
 
 import {
@@ -23,6 +20,7 @@ import {
 } from "../../utilities/utility";
 import dayjs from "dayjs";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import styles from "./AddCompliance.module.scss";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -41,10 +39,16 @@ import "./AddCompliance.scss";
 import ComplianceDetails from "./ComplianceDetails";
 import { nanoid } from "@reduxjs/toolkit";
 import AddSubCompliance from "./AddSubCompliance";
+import { useAppDispatch } from "../../states/store";
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import classNames from "classnames";
 
 const { Title } = Typography;
 const AddCompliance = () => {
     const dateFormat = "YYYY-MM-DD";
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const selectModeRef = useRef(null);
     const [form] = Form.useForm();
@@ -70,6 +74,14 @@ const AddCompliance = () => {
 
     const [subCompliance, setSubCompliance] =
         useState<IInsertSubCompliance[]>();
+
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
 
     // Handllers
     const onSwitchSubCompliance = () => {
@@ -283,401 +295,518 @@ const AddCompliance = () => {
 
     return (
         <>
-            <div className="add-compliance-header">
-                <ToastContainer />
-                <div>
-                    <Title level={5}>Add Compliance</Title>
-                </div>
-                <div className="add-compliance-cancel">
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<CloseOutlined />}
-                        onClick={cancelNewComplianceHandler}
+            {" "}
+            <ToastContainer autoClose={25000} />
+            <div
+                className={classNames(
+                    "card mb-3",
+                    styles.addPromoCodeCardWrapper
+                )}
+            >
+                <div
+                    className={classNames(
+                        "card-header d-flex",
+                        styles.promoCodeCardHeaderBox
+                    )}
+                    style={{ minHeight: 60 }}
+                >
+                    <div
+                        className={classNames(
+                            "d-flex align-items-center w-100",
+                            styles.promocodeHeaderTitle
+                        )}
                     >
-                        Cancel
-                    </Button>
+                        <div className="me-auto">
+                            <h5
+                                className={classNames(
+                                    "my-2 position-relative z-index-1",
+                                    styles.addPromoCodeLabel
+                                )}
+                            >
+                                Add Compliance
+                            </h5>
+                        </div>
+                        <div className={classNames("ms-auto z-index-1")}>
+                            <Button
+                                type="primary"
+                                className={classNames(
+                                    "greyBtn",
+                                    styles.cancelAddClientBtn
+                                )}
+                                style={{
+                                    minWidth: 104,
+                                }}
+                                onClick={cancelNewComplianceHandler}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.addClientDetailBox}>
+                    <Form
+                        form={form}
+                        initialValues={{
+                            start_date: dayjs(),
+                        }}
+                        id="addTaskFrm"
+                        name="basic"
+                        autoComplete="off"
+                        requiredMark={false}
+                        className="customAddForm"
+                    >
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    name="start_date"
+                                    className="customAddClientSelectOptions"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Please select start date.",
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                const dueDateValue =
+                                                    getFieldValue("due_date");
+                                                if (
+                                                    !value ||
+                                                    !dueDateValue ||
+                                                    dayjs(value).isBefore(
+                                                        dueDateValue
+                                                    )
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Start date should be before the due date."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <DatePicker
+                                        placeholder="Start Date"
+                                        name="start_date"
+                                        format={dateFormat}
+                                        className="customFormDatePicker"
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "start_date"
+                                            );
+                                        }}
+                                        onPanelChange={() => {}}
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    name="due_date"
+                                    className="customAddClientSelectOptions"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select due date.",
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                const startDate =
+                                                    getFieldValue("start_date");
+                                                if (
+                                                    !value ||
+                                                    !startDate ||
+                                                    !dayjs(value).isBefore(
+                                                        startDate
+                                                    )
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Due date should be on or after the start date."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                const startDate =
+                                                    getFieldValue("start_date");
+                                                if (
+                                                    !value ||
+                                                    !startDate ||
+                                                    !dayjs(value).isBefore(
+                                                        startDate
+                                                    )
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Due date should be on or after the start date."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                const startDate =
+                                                    getFieldValue("start_date");
+                                                if (
+                                                    !value ||
+                                                    !startDate ||
+                                                    !dayjs(value).isBefore(
+                                                        startDate
+                                                    )
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Due date should be on or after the start date."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                const startDate =
+                                                    getFieldValue("start_date");
+                                                if (
+                                                    !value ||
+                                                    !startDate ||
+                                                    !dayjs(value).isBefore(
+                                                        startDate
+                                                    )
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Due date should be on or after the start date."
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <DatePicker
+                                        placeholder="Due Date"
+                                        name="due_date"
+                                        onChange={(date, dateString) => {
+                                            inputChangeHandler(
+                                                dateString,
+                                                "due_date"
+                                            );
+                                        }}
+                                        className="customFormDatePicker"
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="mode"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Please select compliance mode.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        ref={selectModeRef}
+                                        allowClear
+                                        placeholder="Select Compliance Mode"
+                                        options={modeOptions}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        value={addCompliance.mode}
+                                        showSearch={true}
+                                        className="w100"
+                                    ></Select>
+                                </Form.Item>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-8 col-lg-8"
+                                )}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="title"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter title.",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Compliance Name"
+                                        name="title"
+                                        value={addCompliance.title}
+                                        onChange={(event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="customAddFormInputText"
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    className="customAddClientSelectOptions"
+                                    name="workArea"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select work area.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        placeholder="Select Work Area"
+                                        options={workAreaOpts}
+                                        value={addCompliance.workArea}
+                                        className="w100"
+                                        showSearch={true}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                    ></Select>
+                                </Form.Item>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-12 col-lg-12"
+                                )}
+                            >
+                                <Form.Item
+                                    name="remak"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please entre remark.",
+                                        },
+                                    ]}
+                                >
+                                    <ReactQuill
+                                        id={"compliance_" + nanoid()}
+                                        theme="snow"
+                                        value={addCompliance.remark}
+                                        placeholder="Compliance Remark"
+                                        onChange={(event) => {
+                                            inputChangeHandler(event, "remark");
+                                        }}
+                                    />
+                                </Form.Item>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    name="budget_time"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Please enter budget time.",
+                                        },
+                                        {
+                                            pattern:
+                                                /^(?:[01]\d|2[0-3]):[0-5]\d$/,
+                                            message:
+                                                "Please enter a valid time in the format HH:mm.",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Budget Time"
+                                        name="budget_time"
+                                        onChange={(event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        onInput={(event) => {
+                                            const inputElement =
+                                                event.target as HTMLInputElement;
+                                            let input = inputElement.value;
+                                            input = input.replace(
+                                                /[^0-9]/g,
+                                                ""
+                                            ); // Remove non-numeric characters
+
+                                            if (input.length >= 3) {
+                                                input =
+                                                    input.slice(0, 2) +
+                                                    ":" +
+                                                    input.slice(2);
+                                            }
+
+                                            inputElement.value = input;
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                        maxLength={5}
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    name="priority"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select priority.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        placeholder="Priority"
+                                        options={priorityOpts}
+                                        value={addCompliance.priority}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                        showSearch={true}
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Form.Item
+                                    name="billable"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please select billable.",
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        placeholder="Billable"
+                                        value={addCompliance.billable}
+                                        options={chargesOpts}
+                                        onChange={(value, event) => {
+                                            inputChangeHandler(event);
+                                        }}
+                                        className="w100"
+                                        showSearch={true}
+                                    ></Select>
+                                </Form.Item>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-12 col-lg-12"
+                                )}
+                            >
+                                <ComplianceDetails
+                                    updateClients={complianceDetailsHandler}
+                                    isAllowAdd={true}
+                                    parentTitle="compliance"
+                                    parentId={-1}
+                                    scroll={{ x: 1000 }}
+                                    data={[]}
+                                    isEdit={true}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <Divider />
+                        </div>
+                        <div className="row">
+                            <Col>
+                                <Title level={5}>Sub Compliance</Title>
+                            </Col>
+                            <Col>
+                                <Switch
+                                    onChange={onSwitchSubCompliance}
+                                ></Switch>
+                            </Col>
+                        </div>
+                        {showSubCompliance && (
+                            <Row
+                                gutter={[8, 8]}
+                                className={
+                                    "form-row " +
+                                    (!showSubCompliance ? "hide" : "")
+                                }
+                            >
+                                <Col
+                                    xs={{ span: 24 }}
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                >
+                                    <AddSubCompliance
+                                        subComponentsHandler={
+                                            updateSubComponents
+                                        }
+                                    />
+                                </Col>
+                            </Row>
+                        )}
+                        <div className="row mt-3">
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    className="w100"
+                                    onClick={handleAddCompliance}
+                                >
+                                    Add Compliance
+                                </Button>
+                            </div>
+                        </div>
+                    </Form>
                 </div>
             </div>
-            <Form
-                form={form}
-                initialValues={{
-                    start_date: dayjs(),
-                }}
-                id="addTaskFrm"
-            >
-                <Row gutter={[8, 8]} className="form-row row-custom">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="start_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select start date.",
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const dueDateValue =
-                                            getFieldValue("due_date");
-                                        if (
-                                            !value ||
-                                            !dueDateValue ||
-                                            dayjs(value).isBefore(dueDateValue)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Start date should be before the due date."
-                                            )
-                                        );
-                                    },
-                                }),
-                            ]}
-                        >
-                            <DatePicker
-                                placeholder="Start Date"
-                                name="start_date"
-                                format={dateFormat}
-                                className="w100"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(
-                                        dateString,
-                                        "start_date"
-                                    );
-                                }}
-                                onPanelChange={() => {}}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="due_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select due date.",
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const startDate =
-                                            getFieldValue("start_date");
-                                        if (
-                                            !value ||
-                                            !startDate ||
-                                            !dayjs(value).isBefore(startDate)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Due date should be on or after the start date."
-                                            )
-                                        );
-                                    },
-                                }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const startDate =
-                                            getFieldValue("start_date");
-                                        if (
-                                            !value ||
-                                            !startDate ||
-                                            !dayjs(value).isBefore(startDate)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Due date should be on or after the start date."
-                                            )
-                                        );
-                                    },
-                                }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const startDate =
-                                            getFieldValue("start_date");
-                                        if (
-                                            !value ||
-                                            !startDate ||
-                                            !dayjs(value).isBefore(startDate)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Due date should be on or after the start date."
-                                            )
-                                        );
-                                    },
-                                }),
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        const startDate =
-                                            getFieldValue("start_date");
-                                        if (
-                                            !value ||
-                                            !startDate ||
-                                            !dayjs(value).isBefore(startDate)
-                                        ) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(
-                                            new Error(
-                                                "Due date should be on or after the start date."
-                                            )
-                                        );
-                                    },
-                                }),
-                            ]}
-                        >
-                            <DatePicker
-                                placeholder="Due Date"
-                                name="due_date"
-                                onChange={(date, dateString) => {
-                                    inputChangeHandler(dateString, "due_date");
-                                }}
-                                className="w100"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="mode"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select compliance mode.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                ref={selectModeRef}
-                                allowClear
-                                placeholder="Select Compliance Mode"
-                                options={modeOptions}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                value={addCompliance.mode}
-                                showSearch={true}
-                                className="w100"
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row row-custom">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }}>
-                        <Form.Item
-                            name="title"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter title.",
-                                },
-                            ]}
-                        >
-                            <Input
-                                placeholder="Compliance Name"
-                                name="title"
-                                value={addCompliance.title}
-                                onChange={(event) => {
-                                    inputChangeHandler(event);
-                                }}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="workArea"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select work area.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Select Work Area"
-                                options={workAreaOpts}
-                                value={addCompliance.workArea}
-                                className="w100"
-                                showSearch={true}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row row-custom">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <Form.Item
-                            name="remak"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please entre remark.",
-                                },
-                            ]}
-                        >
-                            <ReactQuill
-                                id={"compliance_" + nanoid()}
-                                theme="snow"
-                                value={addCompliance.remark}
-                                placeholder="Compliance Remark"
-                                onChange={(event) => {
-                                    inputChangeHandler(event, "remark");
-                                }}
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row row-custom">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="budget_time"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter budget time.",
-                                },
-                                {
-                                    pattern: /^(?:[01]\d|2[0-3]):[0-5]\d$/,
-                                    message:
-                                        "Please enter a valid time in the format HH:mm.",
-                                },
-                            ]}
-                        >
-                            <Input
-                                placeholder="Budget Time"
-                                name="budget_time"
-                                onChange={(event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                onInput={(event) => {
-                                    const inputElement =
-                                        event.target as HTMLInputElement;
-                                    let input = inputElement.value;
-                                    input = input.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-
-                                    if (input.length >= 3) {
-                                        input =
-                                            input.slice(0, 2) +
-                                            ":" +
-                                            input.slice(2);
-                                    }
-
-                                    inputElement.value = input;
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                                maxLength={5}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="priority"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select priority.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Priority"
-                                options={priorityOpts}
-                                value={addCompliance.priority}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                                showSearch={true}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }}>
-                        <Form.Item
-                            name="billable"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select billable.",
-                                },
-                            ]}
-                        >
-                            <Select
-                                allowClear
-                                placeholder="Billable"
-                                value={addCompliance.billable}
-                                options={chargesOpts}
-                                onChange={(value, event) => {
-                                    inputChangeHandler(event);
-                                }}
-                                className="w100"
-                                showSearch={true}
-                            ></Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row row-custom">
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
-                        <ComplianceDetails
-                            updateClients={complianceDetailsHandler}
-                            isAllowAdd={true}
-                            parentTitle="compliance"
-                            parentId={-1}
-                            scroll={{ x: 1000 }}
-                            data={[]}
-                            isEdit={true}
-                        />
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Divider />
-                </Row>
-                <Row gutter={[8, 8]} className="form-row">
-                    <Col>
-                        <Title level={5}>Sub Compliance</Title>
-                    </Col>
-                    <Col>
-                        <Switch onChange={onSwitchSubCompliance}></Switch>
-                    </Col>
-                </Row>
-                {showSubCompliance && (
-                    <Row
-                        gutter={[8, 8]}
-                        className={
-                            "form-row " + (!showSubCompliance ? "hide" : "")
-                        }
-                    >
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 24 }}
-                        >
-                            <AddSubCompliance
-                                subComponentsHandler={updateSubComponents}
-                            />
-                        </Col>
-                    </Row>
-                )}
-                <Row gutter={[8, 8]} className="form-row">
-                    <Button
-                        htmlType="submit"
-                        type="primary"
-                        className="w100"
-                        onClick={handleAddCompliance}
-                    >
-                        Add Compliance
-                    </Button>
-                </Row>
-            </Form>
         </>
     );
 };

@@ -23,6 +23,10 @@ import Stopwatch from "../../../components/Stockwatch/Stopwatch";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { nanoid } from "@reduxjs/toolkit";
+import { useAppDispatch } from "../../states/store";
+import { useSelector } from "react-redux";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 dayjs.extend(customParseFormat);
 
 const AddSubCompliance = (props: any) => {
@@ -32,6 +36,7 @@ const AddSubCompliance = (props: any) => {
             status: "pending",
         } as ISubCompliance,
     ]);
+    const dispatch = useAppDispatch();
     const [complianceDetails, setComplianceDetails] = useState<
         IClientDetails[]
     >([]);
