@@ -64,7 +64,7 @@ const AssociatePartners = () => {
     const onChangeActiveClick = (e: any, id: any) => {
         dispatch(
             createAssociatePartnerReducersApi({
-                payload: { status: !!e ? "Active" : "Inactive" },
+                payload: { status: !!e ? true : false },
                 associatePartnerId: id,
             })
         );
@@ -234,6 +234,7 @@ const AssociatePartners = () => {
                             cardDesc={cardDesc}
                             isProfileViewAction
                             onChangeActiveClick={onChangeActiveClick}
+                            isActive={card.status}
                         />
                     ))}
 
