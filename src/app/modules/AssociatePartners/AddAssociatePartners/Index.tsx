@@ -16,6 +16,8 @@ import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReduc
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 import RevenueProgram from "./RevenueProgram/Index";
+import SubscriptionTabAddClient from "./SubscriptionTabAddClient/Index";
+import PaymentTabAddClient from "./PaymentTabAddClient/Index";
 
 const AddAssociatePartners = () => {
     const [activeTab, setActiveTab] = useState(1);
@@ -32,11 +34,31 @@ const AddAssociatePartners = () => {
     );
     const [partnerType, setPartnerType] = useState("ca");
     const [partnerTypeLabel, setPartnerTypeLabel] = useState("Partners ");
+    const [partnerCategory, setPartnerCategory] = useState("");
 
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const { loading, success } = useSelector(
         (state: any) => state.createClient
     );
+    const partnerTypeOption = [
+        { value: "ca", label: "CA" },
+        {
+            value: "accountant",
+            label: "Accountant",
+        },
+        {
+            value: "tax_consultant",
+            label: "Tax Consultant",
+        },
+        {
+            value: "business_enterprise",
+            label: "Business Enterprise",
+        },
+        {
+            value: "other",
+            label: "Other",
+        },
+    ];
 
     useEffect(() => {
         //TODO:: Need to convert in GET API
@@ -109,25 +131,43 @@ const AddAssociatePartners = () => {
         },
         {
             key: 3,
-            label: `Revenue Program`,
-            children: (
-                <RevenueProgram
-                    onChange={onChange}
-                    setFormValue={setFormValue}
-                    partnerType={partnerType}
-                />
-            ),
+            label:
+                partnerTypeLabel === "Sales Partner"
+                    ? `Revenue Program`
+                    : `Billing`,
+            children:
+                partnerTypeLabel === "Sales Partner" ? (
+                    <RevenueProgram
+                        onChange={onChange}
+                        setFormValue={setFormValue}
+                        partnerType={partnerType}
+                    />
+                ) : (
+                    <SubscriptionTabAddClient
+                        onChange={onChange}
+                        setFormValue={setFormValue}
+                    />
+                ),
         },
         {
             key: 4,
-            label: `Bank Details`,
-            children: (
-                <BankDetails
-                    onChange={onChange}
-                    setFormValue={setFormValue}
-                    partnerType={partnerType}
-                />
-            ),
+            label:
+                partnerTypeLabel === "Sales Partner"
+                    ? `Bank Details`
+                    : `Payment`,
+            children:
+                partnerTypeLabel === "Sales Partner" ? (
+                    <BankDetails
+                        onChange={onChange}
+                        setFormValue={setFormValue}
+                        partnerType={partnerType}
+                    />
+                ) : (
+                    <PaymentTabAddClient
+                        onChange={onChange}
+                        setFormValue={setFormValue}
+                    />
+                ),
         },
     ];
 
@@ -210,6 +250,7 @@ const AddAssociatePartners = () => {
                                     ]}
                                     placeholder="Select Type"
                                     onChange={(value: any) => {
+                                        setPartnerCategory(value);
                                         if (value === "sales_partner") {
                                             setPartnerTypeLabel(
                                                 "Sales Partner"
@@ -223,7 +264,7 @@ const AddAssociatePartners = () => {
                                 />
                             </Form.Item>
                         </div>
-                    </div>{" "}
+                    </div>
                     <div className={classNames("col-12 col-md-4 col-lg-4")}>
                         <div className="mb-3">
                             <label
@@ -246,21 +287,12 @@ const AddAssociatePartners = () => {
                                 ]}
                             >
                                 <Select
-                                    options={[
-                                        { value: "ca", label: "CA" },
-                                        {
-                                            value: "accountant",
-                                            label: "Accountant",
-                                        },
-                                        {
-                                            value: "tax_consultant",
-                                            label: "Tax Consultant",
-                                        },
-                                        {
-                                            value: "business_enterprise",
-                                            label: "Business Enterprise",
-                                        },
-                                    ]}
+                                    options={partnerTypeOption.map(
+                                        (partnerType: any) => ({
+                                            label: partnerType?.label,
+                                            value: partnerType?._id,
+                                        })
+                                    )}
                                     placeholder="Select Type"
                                     onChange={(value: any) =>
                                         setPartnerType(value)
