@@ -1,16 +1,20 @@
 import { DatePicker, Row, Col, Select, Button } from "antd";
 import {
-    clientOpts,
     assigneeOpts,
     statusList,
     priorityOpts,
 } from "../../utilities/utility";
 import "../fillter/Fillter.scss";
 import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../states/store";
+import { useSelector } from "react-redux";
+import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 
 let parameters: string[] = [];
 
 const Fillter = (prop: any) => {
+    const dispatch = useAppDispatch();
     // State variables for each dropdown filter
     const [clientValue, setClientValue] = useState<any>(null);
     const [assignedByValue, setAssignedByValue] = useState<any>(null);
@@ -19,6 +23,13 @@ const Fillter = (prop: any) => {
     const [statusValue, setStatusValue] = useState<any>(null);
     const [priorityValue, setPriorityValue] = useState<any>(null);
 
+    const clientList = useSelector((state: any) => state.getClients.data) || [];
+    const employeeList =
+        useSelector((state: any) => state.getEmployees.data) || [];
+    useEffect(() => {
+        dispatch(getClientsReducersApi());
+        dispatch(getEmployeesReducersApi());
+    }, []);
     // Function to clear all filter values
     const clearAllFilters = () => {
         setClientValue(null);
@@ -93,7 +104,10 @@ const Fillter = (prop: any) => {
                         allowClear
                         showSearch
                         placeholder="Client"
-                        options={clientOpts}
+                        options={clientList.map((client: any) => ({
+                            label: client?.firmName,
+                            value: client?._id,
+                        }))}
                         value={clientValue}
                         className="w100 border-bottom"
                         bordered={false}
@@ -108,7 +122,10 @@ const Fillter = (prop: any) => {
                         allowClear
                         showSearch
                         placeholder="Assign By"
-                        options={assigneeOpts}
+                        options={employeeList.map((employee: any) => ({
+                            label: employee?.firstName,
+                            value: employee?._id,
+                        }))}
                         value={assignedByValue}
                         className="w100 border-bottom"
                         bordered={false}
@@ -123,7 +140,10 @@ const Fillter = (prop: any) => {
                         allowClear
                         showSearch
                         placeholder="Assign To"
-                        options={assigneeOpts}
+                        options={employeeList.map((employee: any) => ({
+                            label: employee?.firstName,
+                            value: employee?._id,
+                        }))}
                         value={assignedToValue}
                         className="w100 border-bottom"
                         bordered={false}
