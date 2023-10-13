@@ -680,7 +680,7 @@ const BasicInfo = ({
                     >
                         <div>
                             <label className="form-label">
-                                Referred BY
+                                Referred By
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item name=" referredBy">
