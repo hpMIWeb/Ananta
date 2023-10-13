@@ -80,12 +80,14 @@ const BasicInfo = ({
 
     const getPostalCodeData = async (changedValues: any) => {
         try {
+            console.log(changedValues.pinCode);
             const response = await axios.get(
                 `https://api.postalpincode.in/pincode/${changedValues?.pinCode}`
             );
             const { Country, State, District } =
                 response?.data[0]?.PostOffice[0];
 
+            console.log(Country);
             // Set the retrieved values in the form fields
             form.setFieldsValue({
                 country: Country,
@@ -108,6 +110,7 @@ const BasicInfo = ({
             ).geonameId;
             fetchCities(selectedStateId);
         }
+        console.log("changedValues", changedValues);
         if ("pinCode" in changedValues && changedValues.pinCode.length === 6) {
             getPostalCodeData(changedValues);
         }
@@ -127,6 +130,7 @@ const BasicInfo = ({
     return (
         <div>
             <Form
+                form={form}
                 name="basic"
                 initialValues={{ remember: true, firmType: "Partnership" }}
                 onFinish={onFinish}

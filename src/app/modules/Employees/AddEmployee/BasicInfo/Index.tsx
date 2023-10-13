@@ -43,6 +43,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                 response?.data[0]?.PostOffice[0];
 
             // Set the retrieved values in the form fields
+            console.log("Country", Country);
             form.setFieldsValue({
                 country: Country,
                 state: State,

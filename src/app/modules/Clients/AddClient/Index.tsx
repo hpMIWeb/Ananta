@@ -39,7 +39,7 @@ const AddClient = () => {
     const getClientsListLoading = useSelector(
         (state: any) => state.getClients.loading
     );
-    const [clientType, setClientType] = useState("ca");
+    const [clientType, setClientType] = useState("");
     const getClientsList = useSelector((state: any) => state.getClients.data);
     const { loading, success } = useSelector(
         (state: any) => state.createClient
@@ -294,8 +294,7 @@ const AddClient = () => {
                         </div>
                     </div>
                 </div>
-
-                {!(getClientsListLoading && clientId) && (
+                {clientType !== "" && (
                     <Tabs
                         //tabBarExtraContent={operations}
                         className="subscriptionTabs"
