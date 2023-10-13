@@ -11,6 +11,7 @@ import uploadLogo from "../../../../../assets/images/upload_logo.png";
 import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
     const [countriesListData, setCountriesListData] = useState<any>([]);
@@ -66,6 +67,26 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
         }
     };
 
+    const getPostalCodeData = async (changedValues: any) => {
+        try {
+            console.log(changedValues.pinCode);
+            const response = await axios.get(
+                `https://api.postalpincode.in/pincode/${changedValues?.pinCode}`
+            );
+            const { Country, State, District } =
+                response?.data[0]?.PostOffice[0];
+
+            console.log(Country);
+            // Set the retrieved values in the form fields
+            form.setFieldsValue({
+                country: Country,
+                state: State,
+                city: District,
+            });
+        } catch (error) {
+            console.error("Error fetching location data:", error);
+        }
+    };
     const handleFormValuesChange = (changedValues: any, allValues: any) => {
         if ("country" in changedValues) {
             const selectedCountryId = countriesListData.find(
@@ -77,6 +98,10 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                 (c: any) => c.name === changedValues["state"]
             ).geonameId;
             fetchCities(selectedStateId);
+        }
+        console.log("changedValues", changedValues);
+        if ("pinCode" in changedValues && changedValues.pinCode.length === 6) {
+            getPostalCodeData(changedValues);
         }
     };
 
@@ -92,6 +117,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
     return (
         <div>
             <Form
+                form={form}
                 name="basic"
                 initialValues={{ remember: true, firmType: "Partnership" }}
                 onFinish={onFinish}
