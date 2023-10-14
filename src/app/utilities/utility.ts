@@ -348,3 +348,14 @@ export const featureList: any = [
     },
     { label: "Client Login Mobile App", value: "Client_login_mobile_app" },
 ];
+
+export const getCurrentItemNumber = (
+    indexNumber: number,
+    currentPage: number,
+    pageSize: number
+) => {
+    // Calculate item number into pagination
+    // (currentPage - 1) * pageSize + itemNumber
+    console.log("pageSize - ", pageSize);
+    return (currentPage - 1) * pageSize + indexNumber;
+};

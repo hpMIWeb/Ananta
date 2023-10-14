@@ -17,6 +17,7 @@ import { getFilteredValue } from "../../../utils/helpers";
 import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 import Cookies from "js-cookie";
+import { getCurrentItemNumber } from "../../utilities/utility";
 
 const AssociatePartners = () => {
     const navigation = useNavigate();
@@ -33,6 +34,8 @@ const AssociatePartners = () => {
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
         []
     );
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+    const [currentPageSize, setCurrentPageSize] = useState<number>(5);
     const superAdminAddonOption = [
         { value: "ca", label: "CA" },
         {
@@ -73,6 +76,11 @@ const AssociatePartners = () => {
         // @ts-ignore
         dispatch(getAssociatePartnerReducersApi());
     }, []);
+
+    const setPageChange = (pageNumber: number, pageSize: number) => {
+        setCurrentPageNumber(pageNumber);
+        setCurrentPageSize(pageSize);
+    };
 
     const cardDesc = (cardInfo: any) => {
         if (roleType === "superadmin") {
@@ -222,7 +230,11 @@ const AssociatePartners = () => {
                         sortState
                     ).map((card: any, index: number) => (
                         <SubscriptionCard
-                            displayIndex={index + 1}
+                            displayIndex={getCurrentItemNumber(
+                                index + 1,
+                                currentPageNumber,
+                                currentPageSize
+                            )}
                             key={card._id}
                             id={card._id}
                             planNameLabelBlue
@@ -245,6 +257,7 @@ const AssociatePartners = () => {
                 <Pagination
                     data={getAssociatePartnerList}
                     setPaginationDisplayedItems={setPaginationDisplayedItems}
+                    setPageNumber={setPageChange}
                 />
             </div>
         </div>

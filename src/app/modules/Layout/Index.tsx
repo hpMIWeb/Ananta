@@ -542,17 +542,18 @@ const LayoutComponent = ({
                         setCollapsed={setCollapsed}
                         switchTheme={switchTheme}
                         theme={themeProp}
-                    />
+                    ></HeaderBox>
                 </Header>
                 <div className={classNames(styles.navigationWrapper)}>
                     <div style={{ float: "left", marginRight: "10px" }}>
-                        <a
+                        <Icon
+                            width={16}
+                            height={16}
+                            name="home"
                             onClick={() => {
                                 navigate("/");
                             }}
-                        >
-                            <Icon width={16} height={16} name="home" />
-                        </a>
+                        />
                     </div>
                     <div style={{ float: "left" }}>
                         <Breadcrumb separator=">">{breadcrumbs}</Breadcrumb>

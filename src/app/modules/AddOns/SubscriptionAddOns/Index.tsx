@@ -11,6 +11,7 @@ import NoDataAvailable from "../../../../components/NoDataAvailable/Index";
 import { useSelector } from "react-redux";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../../utils/helpers";
+import { getCurrentItemNumber } from "../../../utilities/utility";
 
 const SubscriptionAddOns = () => {
     const { loading, data: addonsListCardList } = useSelector(
@@ -21,10 +22,17 @@ const SubscriptionAddOns = () => {
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
         []
     );
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+    const [currentPageSize, setCurrentPageSize] = useState<number>(5);
     const navigation = useNavigate();
 
     const handleEditBtnClick = (id: string) => {
         navigation(`/addons/edit`, { state: { id: id } });
+    };
+
+    const setPageChange = (pageNumber: number, pageSize: number) => {
+        setCurrentPageNumber(pageNumber);
+        setCurrentPageSize(pageSize);
     };
 
     return (
@@ -63,7 +71,11 @@ const SubscriptionAddOns = () => {
                         sortState
                     ).map((addOns: any, index: number) => (
                         <AddOnsAccordianContent
-                            displayIndex={index + 1}
+                            displayIndex={getCurrentItemNumber(
+                                index + 1,
+                                currentPageNumber,
+                                currentPageSize
+                            )}
                             key={addOns._id}
                             addOnsDetail={addOns}
                             handleEditBtnClick={handleEditBtnClick}
@@ -76,6 +88,7 @@ const SubscriptionAddOns = () => {
             <Pagination
                 data={addonsListCardList}
                 setPaginationDisplayedItems={setPaginationDisplayedItems}
+                setPageNumber={setPageChange}
             />
         </div>
     );

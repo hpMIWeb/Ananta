@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NoDataAvailable from "../../../../components/NoDataAvailable/Index";
 import CardContentSkeletonLoader from "../../../../components/CardContentSkeletonLoader/Index";
-import { capitalize } from "../../../utilities/utility";
+import { capitalize, getCurrentItemNumber } from "../../../utilities/utility";
 import {
     displayNumberInCurrencyFormate,
     getFilteredValue,
@@ -42,6 +42,8 @@ const SubscriptionTab = () => {
     const [selectedSubscriptionHistory, setSelectedSubscriptionHistory] =
         useState();
     const [selectedSubscriptionId, setSelectedSubscriptionId] = useState("");
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+    const [currentPageSize, setCurrentPageSize] = useState<number>(5);
     const [superAdminAddon, setSuperAdminAddonOption] = useState([
         {
             value: "All Subscription",
@@ -502,6 +504,11 @@ const SubscriptionTab = () => {
         }
     }, [editSubscriptionsSuccess]);
 
+    const setPageChange = (pageNumber: number, pageSize: number) => {
+        setCurrentPageNumber(pageNumber);
+        setCurrentPageSize(pageSize);
+    };
+
     return (
         <div>
             <SearchFilterBar
@@ -522,7 +529,11 @@ const SubscriptionTab = () => {
                     sortState
                 ).map((card: any, index: number) => (
                     <SubscriptionCard
-                        displayIndex={index + 1}
+                        displayIndex={getCurrentItemNumber(
+                            index + 1,
+                            currentPageNumber,
+                            currentPageSize
+                        )}
                         key={card._id}
                         id={card._id}
                         cardDesc={cardDescContent}
@@ -544,6 +555,7 @@ const SubscriptionTab = () => {
             <Pagination
                 data={subscriptionCardList}
                 setPaginationDisplayedItems={setPaginationDisplayedItems}
+                setPageNumber={setPageChange}
             />
             <SubscriptionHistoryModal
                 modalOpen={modalOpen}

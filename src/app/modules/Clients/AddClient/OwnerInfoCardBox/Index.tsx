@@ -281,6 +281,7 @@ const OwnerInfoCardBox = ({
                                 /> */}
                                 <PhoneInput
                                     //  id={`mobile-${field.key}`}
+                                    countryCodeEditable={false}
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
@@ -317,6 +318,7 @@ const OwnerInfoCardBox = ({
                                 /> */}
                                 <PhoneInput
                                     //id={`altMobile-${field.key}`}
+                                    countryCodeEditable={false}
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder={

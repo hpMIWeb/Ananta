@@ -20,6 +20,7 @@ import { getFilteredValue } from "../../../utils/helpers";
 import PromocodeHistoryModal from "../../../components/SubscriptionCard/PromocodeHistoryModal";
 import moment from "moment";
 import { useAppDispatch } from "../../states/store";
+import { getCurrentItemNumber } from "../../utilities/utility";
 
 const PromoCodes = () => {
     const navigation = useNavigate();
@@ -41,6 +42,8 @@ const PromoCodes = () => {
     const [selectedSubscriptionHistory, setSelectedSubscriptionHistory] =
         useState();
     const [selectedSubscriptionId, setSelectedSubscriptionId] = useState("");
+    const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+    const [currentPageSize, setCurrentPageSize] = useState<number>(5);
 
     useEffect(() => {
         if (!userInfo?.email) return;
@@ -218,6 +221,11 @@ const PromoCodes = () => {
         setModalOpen(true);
     };
 
+    const setPageChange = (pageNumber: number, pageSize: number) => {
+        setCurrentPageNumber(pageNumber);
+        setCurrentPageSize(pageSize);
+    };
+
     return (
         <div className={styles.promoCodesPageWrapper}>
             <div
@@ -269,7 +277,11 @@ const PromoCodes = () => {
                 {!loading &&
                     promoFilteredValue.map((promo: any, index: number) => (
                         <SubscriptionCard
-                            displayIndex={index + 1}
+                            displayIndex={getCurrentItemNumber(
+                                index + 1,
+                                currentPageNumber,
+                                currentPageSize
+                            )}
                             key={promo._id}
                             id={promo._id}
                             planName={promo.name}
@@ -290,6 +302,7 @@ const PromoCodes = () => {
                 <Pagination
                     data={promoCodeList}
                     setPaginationDisplayedItems={setPaginationDisplayedItems}
+                    setPageNumber={setPageChange}
                 />
                 <PromocodeHistoryModal
                     modalOpen={modalOpen}

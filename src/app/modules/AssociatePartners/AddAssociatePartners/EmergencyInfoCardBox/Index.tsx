@@ -113,6 +113,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
+                                    countryCodeEditable={false}
                                     onChange={(data: any) => {
                                         const { hasError } = data;
                                         form.setFieldsValue({
@@ -167,6 +168,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 <PhoneInput
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
+                                    countryCodeEditable={false}
                                     placeholder="Alt Mobile"
                                     onChange={(data: any) => {
                                         const {

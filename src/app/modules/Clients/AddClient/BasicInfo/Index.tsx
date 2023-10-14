@@ -247,7 +247,7 @@ const BasicInfo = ({
                             >
                                 <div>
                                     <label className="form-label">
-                                        Firm Pan
+                                        Firm PAN
                                         <sup className="text-danger fs--1">
                                             *
                                         </sup>
@@ -409,6 +409,7 @@ const BasicInfo = ({
                                         <PhoneInput
                                             containerClass="phoneNumberContainerClassInput"
                                             country="in"
+                                            countryCodeEditable={false}
                                             placeholder="Mobile"
                                             onChange={(data: any) => {
                                                 const { hasError } = data;
