@@ -36,7 +36,6 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
     };
 
     useEffect(() => {
-        console.log("getClients", getClients); // Log the initial data
         setClientList(getClients);
     }, []);
 
@@ -131,7 +130,9 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                                 type="primary"
                                 onClick={handleAssignClientModalClick}
                             >
-                                Assign
+                                {selectedClients.length === 0
+                                    ? "Assign"
+                                    : "Edit"}
                             </Button>
                         </div>
                     </div>
@@ -147,13 +148,27 @@ const AssignClient = ({ onChange, setEmployeeInfo }: any) => {
                 >
                     <div className="d-flex">
                         <div className="me-auto">
-                            {`Selected Client List`}
-                            {selectedClients.map(
-                                (client: any, index: number) => (
-                                    <div key={index}>
-                                        {`${index + 1}: ${client.name}`}
-                                    </div>
+                            <label className="custom-label">
+                                Selected Client List
+                            </label>
+                            {selectedClients.length > 0 ? (
+                                selectedClients.map(
+                                    (client: any, index: number) => (
+                                        <div
+                                            className="custom-label"
+                                            key={index}
+                                        >
+                                            {index + 1} {client.name}
+                                        </div>
+                                    )
                                 )
+                            ) : (
+                                <div
+                                    className="custom-label"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    No clients assigned yet
+                                </div>
                             )}
                         </div>
                     </div>

@@ -216,102 +216,115 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                             </div>
                             <div
                                 className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
+                                    "row",
+                                    styles.formFieldWrapper
                                 )}
                             >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Aadhar
-                                    </label>
-                                    <Form.Item
-                                        name="aadhar"
-                                        className="customAddFormSelectOptions"
-                                        rules={[
-                                            {
-                                                len: 12,
-                                                message:
-                                                    "Aadhar number should be exactly 12 digits!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            style={{ width: "100%" }}
-                                            className="customInputNumber"
-                                            placeholder="Aadhar Number"
-                                        />
-                                    </Form.Item>
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Aadhar
+                                        </label>
+                                        <Form.Item
+                                            name="aadhar"
+                                            className="customAddFormSelectOptions"
+                                            rules={[
+                                                {
+                                                    len: 12,
+                                                    message:
+                                                        "Aadhar number should be exactly 12 digits!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                style={{ width: "100%" }}
+                                                className="customInputNumber"
+                                                placeholder="Aadhar Number"
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            PAN Number
+                                            <sup className="text-danger fs--1">
+                                                *
+                                            </sup>
+                                        </label>
+                                        <Form.Item
+                                            name="pan"
+                                            className="customAddFormSelectOptions"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please Enter your PAN Number!",
+                                                },
+                                                {
+                                                    pattern:
+                                                        /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+                                                    message:
+                                                        "Invalid PAN Number! Format: ABCDE1234F",
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                placeholder="PAN Number"
+                                                className="customAddFormInputText"
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div>
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Date of Joining
+                                        </label>
+                                        <Form.Item
+                                            name="dateOfJoining"
+                                            className="customAddFormSelectOptions"
+                                        >
+                                            <DatePicker
+                                                placeholder="Date of Joining"
+                                                className="customFormDatePicker"
+                                                format="DD/MM/YYYY"
+                                            />
+                                        </Form.Item>
+                                    </div>
                                 </div>
                             </div>
                             <div
                                 className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
+                                    "row",
+                                    styles.formFieldWrapper
                                 )}
                             >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        PAN Number
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="pan"
-                                        className="customAddFormSelectOptions"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your PAN Number!",
-                                            },
-                                            {
-                                                pattern:
-                                                    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-                                                message:
-                                                    "Invalid PAN Number! Format: ABCDE1234F",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="PAN Number"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Date of Joining
-                                    </label>
-                                    <Form.Item
-                                        name="dateOfJoining"
-                                        className="customAddFormSelectOptions"
-                                    >
-                                        <DatePicker
-                                            placeholder="Date of Joining"
-                                            className="customFormDatePicker"
-                                            format="DD/MM/YYYY"
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div
+                                {/* <div
                                 className={classNames(
                                     "col-12 col-md-3 col-lg-3",
                                     styles.fieldPadding8
@@ -335,118 +348,115 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                         />
                                     </Form.Item>
                                 </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Working Time (From)
-                                    </label>
-                                    <Form.Item
-                                        name="workingTimeFrom"
-                                        className="customAddFormSelectOptions"
-                                    >
-                                        <TimePicker
-                                            placeholder="From"
-                                            className="customFormDatePicker"
-                                            use12Hours
-                                            format="h:mm a"
-                                        />
-                                    </Form.Item>
+                            </div> */}
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Working Time (From)
+                                        </label>
+                                        <Form.Item
+                                            name="workingTimeFrom"
+                                            className="customAddFormSelectOptions"
+                                        >
+                                            <TimePicker
+                                                placeholder="From"
+                                                className="customFormDatePicker"
+                                                use12Hours
+                                                format="h:mm a"
+                                            />
+                                        </Form.Item>
+                                    </div>
                                 </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Working Time (To)
-                                    </label>
-                                    <Form.Item
-                                        name="workingTimeTo"
-                                        className="customAddFormSelectOptions"
-                                    >
-                                        <TimePicker
-                                            placeholder="To"
-                                            className="customFormDatePicker"
-                                            format="h:mm a"
-                                            use12Hours
-                                        />
-                                    </Form.Item>
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Working Time (To)
+                                        </label>
+                                        <Form.Item
+                                            name="workingTimeTo"
+                                            className="customAddFormSelectOptions"
+                                        >
+                                            <TimePicker
+                                                placeholder="To"
+                                                className="customFormDatePicker"
+                                                format="h:mm a"
+                                                use12Hours
+                                            />
+                                        </Form.Item>
+                                    </div>
                                 </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Allow Login?
-                                    </label>
-                                    <Form.Item
-                                        name="allowLogin"
-                                        className="customAddFormSelectOptions"
-                                    >
-                                        <Select
-                                            placeholder="Select Type"
-                                            options={[
-                                                { value: true, label: "Yes" },
-                                                { value: false, label: "No" },
-                                            ]}
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div
-                                className={classNames(
-                                    "col-12 col-md-3 col-lg-3",
-                                    styles.fieldPadding8
-                                )}
-                            >
-                                <div className="mb-3">
-                                    <label
-                                        style={{ marginBottom: 7 }}
-                                        className="custom-label"
-                                    >
-                                        Reference
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="referance"
-                                        className="customAddFormSelectOptions"
-                                        rules={[
-                                            {
-                                                pattern: /^[a-zA-Z0-9]*$/,
-                                                message:
-                                                    "Only alphanumeric characters are allowed.",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Reference"
-                                            className="customAddFormInputText"
-                                        />
-                                    </Form.Item>
+                                {/* <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Allow Login?
+                                        </label>
+                                        <Form.Item
+                                            name="allowLogin"
+                                            className="customAddFormSelectOptions"
+                                        >
+                                            <Select
+                                                placeholder="Select Type"
+                                                options={[
+                                                    {
+                                                        value: true,
+                                                        label: "Yes",
+                                                    },
+                                                    {
+                                                        value: false,
+                                                        label: "No",
+                                                    },
+                                                ]}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                </div> */}
+                                <div
+                                    className={classNames(
+                                        "col-12 col-md-3 col-lg-3",
+                                        styles.fieldPadding8
+                                    )}
+                                >
+                                    <div className="mb-3">
+                                        <label
+                                            style={{ marginBottom: 7 }}
+                                            className="custom-label"
+                                        >
+                                            Reference
+                                        </label>
+                                        <Form.Item
+                                            name="referance"
+                                            className="customAddFormSelectOptions"
+                                        >
+                                            <Input
+                                                placeholder="Reference"
+                                                className="customAddFormInputText"
+                                            />
+                                        </Form.Item>
+                                    </div>
                                 </div>
                             </div>
                         </div>

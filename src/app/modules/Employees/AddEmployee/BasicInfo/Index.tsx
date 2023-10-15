@@ -18,6 +18,14 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
     const [statesListData, setStatesListData] = useState<any>([]);
     const [citiesListData, setCitiesListData] = useState<any>([]);
 
+    function generateUniqueEmployeeID() {
+        // You can use a timestamp or a random number to create a unique ID
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000);
+        return `E-${random}`;
+    }
+    const [employeeId, setEmployeeId] = useState(generateUniqueEmployeeID());
+
     const fetchCountries = async () => {
         try {
             const response = await fetch(
@@ -135,7 +143,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
             <Form
                 form={form}
                 name="basic"
-                initialValues={{ remember: true }}
+                initialValues={{ remember: true, employeeId: employeeId }}
                 onFinish={onFinish}
                 onValuesChange={handleFormValuesChange}
                 autoComplete="off"
@@ -160,24 +168,10 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                     <Form.Item
                                         name="employeeId"
                                         className="customAddEmployeeSelectOptions"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter Employee Id!",
-                                            },
-                                            {
-                                                pattern: /^[a-zA-Z0-9]+$/,
-                                                message:
-                                                    "Only alphanumeric characters are allowed.",
-                                            },
-                                        ]}
                                     >
-                                        <InputNumber
-                                            style={{ width: "100%" }}
+                                        <Input
                                             className="customInputNumber"
                                             placeholder="Employee Id"
-                                            min={0}
                                         />
                                     </Form.Item>
                                 </div>
@@ -436,6 +430,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                             placeholder="Mobile"
                                             containerClass="phoneNumberContainerClassInput"
                                             country="in"
+                                            countryCodeEditable={false}
                                             onChange={(data: any) => {
                                                 const { hasError } = data;
                                                 form.setFieldsValue({
@@ -462,6 +457,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                             placeholder="Mobile"
                                             containerClass="phoneNumberContainerClassInput"
                                             country="in"
+                                            countryCodeEditable={false}
                                             onChange={(data: any) => {
                                                 const { hasError } = data;
                                                 form.setFieldsValue({
