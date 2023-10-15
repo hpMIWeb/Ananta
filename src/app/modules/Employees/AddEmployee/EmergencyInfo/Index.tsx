@@ -7,7 +7,7 @@ import { filterObjectByKey } from "../../../../../utils/helpers";
 
 const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
     const [form] = Form.useForm();
-    const [ownerInfoData, setOwnerInfoData] = useState([
+    const [emergencyInfoData, setEmergencyInfoData] = useState([
         { type: "default", index: 0 },
     ]);
 
@@ -17,33 +17,33 @@ const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
             mobile: value.mobile?.replace(/-/g, ""),
             alternateMobile: value.alternateMobile?.replace(/-/g, ""),
         };
-
+        console.log("emergencyDetails", emergencyDetails);
         const filteredValue = filterObjectByKey(
-            value,
-            ownerInfoData.map((a: any) => a.name)
+            value.emergencyDetails,
+            emergencyInfoData.map((a: any) => a.name)
         );
 
-        //setEmployeeInfo({ emergencyDetails: Object.values(emergencyDetails) });
-        setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
-        onChange(6, { emergencyDetails: Object.values(filteredValue) });
+        console.log("filteredValue", filteredValue);
+        setEmployeeInfo({ emergencyDetails: Object.values(emergencyDetails) });
+        onChange(6, { emergencyDetails: Object.values(emergencyDetails) });
     };
 
     const addMoreOwnerCard = () => {
-        setOwnerInfoData((prev) => [
+        setEmergencyInfoData((prev) => [
             ...prev,
             {
                 type: "new",
-                index: ownerInfoData.length,
-                name: `index${ownerInfoData.length}`,
+                index: emergencyInfoData.length,
+                name: `index${emergencyInfoData.length}`,
             },
         ]);
     };
 
     const onDeleteCardClick = (cardIndex: any) => {
-        const newOwnerInfoData = ownerInfoData.filter(
+        const newOwnerInfoData = emergencyInfoData.filter(
             (a) => a.index !== cardIndex
         );
-        setOwnerInfoData(newOwnerInfoData);
+        setEmergencyInfoData(newOwnerInfoData);
     };
     return (
         <div>
@@ -55,12 +55,31 @@ const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
                 requiredMark={false}
                 className="customAddForm"
             >
-                <div style={{ marginTop: 2 }} className="row">
-                    <EmergencyInfoCardBox
-                        form={form}
-                        onDeleteCardClick={onDeleteCardClick}
-                    />
-                </div>
+                <Form.List name="ownerDetails">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {emergencyInfoData.map((field, index) => (
+                                <div
+                                    style={{ marginTop: 2 }}
+                                    key={index}
+                                    className="row"
+                                >
+                                    <EmergencyInfoCardBox
+                                        form={form}
+                                        index={index}
+                                        displayNumber={index++}
+                                        field={field}
+                                        remove={remove}
+                                        canDelete={field.type === "new"}
+                                        onDeleteCardClick={onDeleteCardClick}
+                                    />
+                                    <hr className={styles.ownerInfoCardLine} />
+                                </div>
+                            ))}
+                        </>
+                    )}
+                </Form.List>
+
                 <div className="row">
                     <div className={styles.formFooterAction}>
                         <CardBottomAction
