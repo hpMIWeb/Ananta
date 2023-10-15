@@ -24,6 +24,7 @@ import { getUserInfoReducersApi } from "../redux/getUserInfoReducers";
 import Employees from "./modules/Employees/Index";
 import AddEmployee from "./modules/Employees/AddEmployee/Index";
 import ResetPassword from "./modules/ResetPassword/Index";
+import EmployeeView from "./modules/Employees/EmployeeView";
 
 //master code
 
@@ -165,6 +166,10 @@ const App = () => {
                         <Route
                             path="employee/edit-employee/:employeeId"
                             element={<PrivateRoute component={AddEmployee} />}
+                        />{" "}
+                        <Route
+                            path="employee/view-employee"
+                            element={<PrivateRoute component={EmployeeView} />}
                         />
                         <Route
                             path="associatePartners"

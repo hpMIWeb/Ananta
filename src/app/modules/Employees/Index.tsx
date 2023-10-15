@@ -38,6 +38,11 @@ const Employees = () => {
         navigation("/employee/add-employee");
     };
 
+    const handleViewBtnClick = (id: string) => {
+        console.log(id);
+        navigation(`employee/view-employee/`, { state: { id: id } });
+    };
+
     useEffect(() => {
         // @ts-ignore
         dispatch(getEmployeesReducersApi());
@@ -251,6 +256,7 @@ const Employees = () => {
                             isProfileViewAction
                             onChangeActiveClick={onChangeActiveClick}
                             isActive={card.status}
+                            handleViewBtnClick={handleViewBtnClick}
                         />
                     ))}
 
