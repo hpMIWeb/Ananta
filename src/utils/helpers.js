@@ -128,7 +128,7 @@ export const getFilteredValue = (
         }
     });
 
-    console.log(searchedValues, searchValue);
+    
 
     const sortedValues = searchedValues.sort((a, b) =>
         customSort(a, b, sortState)

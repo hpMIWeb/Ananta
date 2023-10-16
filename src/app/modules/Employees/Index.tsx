@@ -57,6 +57,8 @@ const Employees = () => {
         );
     };
     const cardDesc = (cardData: any) => {
+        console.log(cardData);
+        
         return [
             {
                 iconName: "client",
@@ -65,7 +67,8 @@ const Employees = () => {
                         <p className="mb-0 fs--1 description-label">
                             Department
                         </p>
-                        <p className="semiBold"></p>
+                        <p className="semiBold"> {cardData.organizationDetails[0]?.department?.name || 'Department Not Available'}</p>
+                        
                     </>
                 ),
             },
@@ -76,7 +79,7 @@ const Employees = () => {
                         <p className="mb-0 fs--1 description-label">
                             Designation
                         </p>
-                        <p className="semiBold">Accountant</p>
+                        <p className="semiBold"> {cardData.organizationDetails[0]?.designation?.name || 'Designation Not Available'}</p>    
                     </>
                 ),
             },
@@ -98,7 +101,7 @@ const Employees = () => {
                                 <p className="mb-0 fs--1 description-label">
                                     Role
                                 </p>
-                                <p className="semiBold">Role Name</p>
+                                <p className="semiBold"> {cardData.organizationDetails[0]?.role?.roleName || 'Role Not Available'}</p>
                             </div>
                         )}
                     </>
@@ -111,7 +114,7 @@ const Employees = () => {
                         <p className="mb-0 fs--1 description-label">
                             Client Assign
                         </p>
-                        <p className="semiBold">5</p>
+                        <p className="semiBold">{cardData.assignClients.length}</p>
                     </>
                 ),
             },

@@ -16,8 +16,6 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
     const getDesignationList =
         useSelector((state: any) => state.getDesignation.data) || [];
 
-    const getRoleTypesList =
-        useSelector((state: any) => state.getRoleType.data) || [];
     const getDepartmentsList =
         useSelector((state: any) => state.getDepartments.data) || [];
     const [branchInfoData, setBranchInfoData] = useState<any>([]);
@@ -27,20 +25,13 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
     ]);
 
     const onFinish = (value: any) => {
-        const organizationDetails = {
+     const organizationDetails = {
             ...value,
         };
-        const filteredValue = filterObjectByKey(
-            value,
-            ownerInfoData.map((a: any) => a.name)
-        );
-
-        console.log("organizationDetails", organizationDetails);
-        console.log(value);
+      
         setEmployeeInfo({
             organizationDetails: [organizationDetails],
         });
-        // onChange(3);
         onChange(3, {
             organizationDetails: [organizationDetails],
         });
@@ -245,7 +236,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                         >
                                             <Input
                                                 style={{ width: "100%" }}
-                                                className="customInputNumber"
+                                                className="customAddFormInputText"
                                                 placeholder="Aadhar Number"
                                             />
                                         </Form.Item>

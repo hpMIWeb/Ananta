@@ -356,6 +356,6 @@ export const getCurrentItemNumber = (
 ) => {
     // Calculate item number into pagination
     // (currentPage - 1) * pageSize + itemNumber
-    console.log("pageSize - ", pageSize);
+    
     return (currentPage - 1) * pageSize + indexNumber;
 };
