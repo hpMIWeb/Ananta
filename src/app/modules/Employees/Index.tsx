@@ -40,7 +40,7 @@ const Employees = () => {
 
     const handleViewBtnClick = (id: string) => {
         console.log(id);
-        navigation(`employee/view-employee/`, { state: { id: id } });
+        navigation(`view-employee/`, { state: { id: id } });
     };
 
     useEffect(() => {

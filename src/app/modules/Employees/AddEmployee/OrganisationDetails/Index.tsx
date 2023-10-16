@@ -87,7 +87,6 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                 styles.formFieldWrapper
                             )}
                         >
-                            {" "}
                             <div
                                 className={classNames(
                                     "col-12 col-md-3 col-lg-3",
@@ -263,7 +262,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                             style={{ marginBottom: 7 }}
                                             className="custom-label"
                                         >
-                                            PAN Number
+                                            PAN
                                             <sup className="text-danger fs--1">
                                                 *
                                             </sup>
@@ -360,7 +359,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                             style={{ marginBottom: 7 }}
                                             className="custom-label"
                                         >
-                                            Working Time (From)
+                                            Working Time / From
                                         </label>
                                         <Form.Item
                                             name="workingTimeFrom"
@@ -386,7 +385,7 @@ const OrganisationDetails = ({ onChange, setEmployeeInfo }: any) => {
                                             style={{ marginBottom: 7 }}
                                             className="custom-label"
                                         >
-                                            Working Time (To)
+                                            Working Time / To
                                         </label>
                                         <Form.Item
                                             name="workingTimeTo"

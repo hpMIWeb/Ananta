@@ -160,7 +160,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                             >
                                 <div className="mb-3">
                                     <label className="form-label">
-                                        Employee Id
+                                        Employee ID
                                         <sup className="text-danger fs--1">
                                             *
                                         </sup>
@@ -168,6 +168,13 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                                     <Form.Item
                                         name="employeeId"
                                         className="customAddEmployeeSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Enter your First Name!",
+                                            }
+                                        ]}
                                     >
                                         <Input
                                             className="customInputNumber"
@@ -450,7 +457,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
                             >
                                 <div>
                                     <label className="form-label">
-                                        Alt Mobile
+                                    Alternative Mobile
                                     </label>
                                     <Form.Item name="alternateMobile">
                                         <PhoneInput

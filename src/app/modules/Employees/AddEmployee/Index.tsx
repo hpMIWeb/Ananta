@@ -26,6 +26,13 @@ import { useAppDispatch } from "../../../states/store";
 
 const AddEmployee = () => {
     const [activeTab, setActiveTab] = useState(1);
+    const [disableTabArray,setDisableTabArray] =useState({
+        1: false,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+      }) ;
     const [employeeDetails, setEmployeeDetails] = useState({});
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
@@ -93,6 +100,11 @@ const AddEmployee = () => {
                 })
             );
         } else {
+         
+            setDisableTabArray((prevDisableTabArray) => ({
+                ...prevDisableTabArray,
+                [key]: false,
+              }));
             setActiveTab(key);
         }
     };
@@ -101,6 +113,7 @@ const AddEmployee = () => {
         {
             key: 1,
             label: `Basic Info`,
+            disabled: disableTabArray[1],
             children: (
                 <BasicInfo
                     onChange={onChange}
@@ -110,7 +123,8 @@ const AddEmployee = () => {
         },
         {
             key: 2,
-            label: `Organization Details`,
+            label: `Organisation Details`,
+            disabled: disableTabArray[2],
             children: (
                 <OrganisationDetails
                     onChange={onChange}
@@ -121,6 +135,7 @@ const AddEmployee = () => {
         {
             key: 3,
             label: `Assign Clients`,
+            disabled: disableTabArray[3],
             children: (
                 <AssignClient
                     onChange={onChange}
@@ -131,6 +146,7 @@ const AddEmployee = () => {
         {
             key: 4,
             label: `Bank Details`,
+            disabled: disableTabArray[4],
             children: (
                 <BankDetails
                     onChange={onChange}
@@ -141,6 +157,7 @@ const AddEmployee = () => {
         {
             key: 5,
             label: `Emergency Details`,
+            disabled: disableTabArray[5],
             children: (
                 <OwnerInfo
                     onChange={onChange}

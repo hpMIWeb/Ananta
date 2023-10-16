@@ -55,10 +55,7 @@ const SubscriptionCardContent = ({
                                 )}
                             >
                                 <span
-                                    style={
-                                        planNameLabelBlue
-                                            ? { color: "#e52c82" }
-                                            : {}
+                                    style={ { color: "#2c7be5",cursor:"pointer" }
                                     }
                                     onClick={viewBtnClick}
                                 >
