@@ -8,24 +8,16 @@ import { filterObjectByKey } from "../../../../../utils/helpers";
 const EmergencyInfo = ({ onChange, setEmployeeInfo, loading }: any) => {
     const [form] = Form.useForm();
     const [emergencyInfoData, setEmergencyInfoData] = useState([
-        { type: "default", index: 0 },
+        { type: "default", index: 0, name: "index0" },
     ]);
 
     const onFinish = (value: any) => {
-        const emergencyDetails = {
-            ...value,
-            mobile: value.mobile?.replace(/-/g, ""),
-            alternateMobile: value.alternateMobile?.replace(/-/g, ""),
-        };
-        console.log("emergencyDetails", emergencyDetails);
         const filteredValue = filterObjectByKey(
-            value.emergencyDetails,
-            emergencyInfoData.map((a: any) => a.name)
+            value.ownerDetails,
+            emergencyInfoData.map((a:any) => a.name)
         );
-
-        console.log("filteredValue", filteredValue);
-        setEmployeeInfo({ emergencyDetails: Object.values(emergencyDetails) });
-        onChange(6, { emergencyDetails: Object.values(emergencyDetails) });
+        setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
+        onChange(6, { emergencyDetails: Object.values(filteredValue) });
     };
 
     const addMoreOwnerCard = () => {
