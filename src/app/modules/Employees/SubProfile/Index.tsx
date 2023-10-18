@@ -92,8 +92,6 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
     );
   };
   const cardDesc = (cardData: any) => {
-    console.log("subProfile", cardData);
-
     return [
       {
         iconName: "client",
@@ -189,18 +187,45 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   };
 
   const onFinish = (value: any) => {
-    console.log("value", value);
-    const newSubProfile = [...subProfileList, value];
-    //  onChange(2);
-    setSubProfileList(newSubProfile);
+    // setLoading(true);
+    console.log(selectedEmployeeData?._id);
 
+    // Map the existing subProfileList to the new format
+    const newSubProfile = subProfileList.map(transformOldDataToNewFormat);
+
+    // Add the 'value' object to the newSubProfile array
+    newSubProfile.push(value);
+
+    // console.log("newSubProfile", newSubProfile);
     dispatch(
       createEmployeeReducersApi({
         payload: { subProfile: newSubProfile },
-        employeeId: selectedEmployeeData._id,
+        employeeId: selectedEmployeeData?._id,
       })
     );
+    // setLoading(false);
   };
+
+  function transformOldDataToNewFormat(oldData: any) {
+    console.log("oldData", oldData);
+    const newFormat = {
+      subProfileId: oldData.subProfileId,
+      firstName: oldData.firstName,
+      middleName: oldData.middleName,
+      lastName: oldData.lastName,
+      gender: oldData.gender, // You can set the gender as needed
+      dateOfBirth: oldData.dateOfBirth,
+      bloodGroup: oldData.bloodGroup,
+      email: oldData.email,
+      mobile: oldData.mobile,
+      department: oldData.department?._id,
+      team: oldData.team,
+      designation: oldData.designation?._id,
+      role: oldData.role?._id,
+    };
+
+    return newFormat;
+  }
 
   return (
     <div className={styles.promoCodesPageWrapper}>

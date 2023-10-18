@@ -6,7 +6,7 @@ import Button from "../../../../components/Button/Index";
 import Icon from "../../../../components/Icon/Index";
 import { useEffect, useState } from "react";
 import OwnerInfo from "./EmergencyInfo/Index";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BasicInfo from "./BasicInfo/Index";
 import BankDetails from "./BankDetails/Index";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +24,7 @@ import { getDepartmentsReducersApi } from "../../../../redux/getDepartmentsReduc
 import { getDesignationReducersApi } from "../../../../redux/getDesignationReducers";
 import { useAppDispatch } from "../../../states/store";
 
-const AddEmployee = () => {
+const AddEmployee = ({ emppdata }: any) => {
   const [activeTab, setActiveTab] = useState(1);
   const [disableTabArray, setDisableTabArray] = useState({
     1: false,
@@ -34,10 +34,9 @@ const AddEmployee = () => {
     5: true,
   });
   const [employeeDetails, setEmployeeDetails] = useState({});
-  const [selectedEmployeeData, setSelectedEmployeeData] = useState<any>({});
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
-  const { state } = useLocation();
+  const { clientId } = useParams();
   const [form] = Form.useForm();
   const getEmployeesListSuccess = useSelector(
     (state: any) => state.getEmployees.success
@@ -50,10 +49,6 @@ const AddEmployee = () => {
   const { loading, success } = useSelector(
     (state: any) => state.createEmployee
   );
-  const [employeeId, setEmployeeId] = useState<string>("");
-  useEffect(() => {
-    if (state) setEmployeeId(state.id);
-  }, []);
 
   useEffect(() => {
     dispatch(getRolesReducersApi());
@@ -74,6 +69,15 @@ const AddEmployee = () => {
   const setEmployeeInfo = (value: any) => {
     setEmployeeDetails((prev) => ({ ...prev, ...value }));
   };
+
+  useEffect(() => {
+    if (getEmployeesList.length && clientId) {
+      const currentCardDetail = getEmployeesList.find(
+        (s: any) => s._id === clientId
+      );
+      form.setFieldsValue(currentCardDetail);
+    }
+  }, [getEmployeesList, clientId, form]);
 
   useEffect(() => {
     if (success) {
@@ -108,11 +112,7 @@ const AddEmployee = () => {
       label: `Basic Info`,
       disabled: disableTabArray[1],
       children: (
-        <BasicInfo
-          onChange={onChange}
-          setEmployeeInfo={setEmployeeInfo}
-          employeeId={employeeId}
-        />
+        <BasicInfo onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
       ),
     },
     {
@@ -123,7 +123,6 @@ const AddEmployee = () => {
         <OrganisationDetails
           onChange={onChange}
           setEmployeeInfo={setEmployeeInfo}
-          employeeId={employeeId}
         />
       ),
     },
@@ -132,11 +131,7 @@ const AddEmployee = () => {
       label: `Assign Clients`,
       disabled: disableTabArray[3],
       children: (
-        <AssignClient
-          onChange={onChange}
-          setEmployeeInfo={setEmployeeInfo}
-          employeeId={employeeId}
-        />
+        <AssignClient onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
       ),
     },
     {
@@ -144,11 +139,7 @@ const AddEmployee = () => {
       label: `Bank Details`,
       disabled: disableTabArray[4],
       children: (
-        <BankDetails
-          onChange={onChange}
-          setEmployeeInfo={setEmployeeInfo}
-          employeeId={employeeId}
-        />
+        <BankDetails onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
       ),
     },
     {
@@ -157,7 +148,6 @@ const AddEmployee = () => {
       disabled: disableTabArray[5],
       children: (
         <OwnerInfo
-          employeeId={employeeId}
           onChange={onChange}
           loading={loading}
           setEmployeeInfo={setEmployeeInfo}
@@ -205,8 +195,8 @@ const AddEmployee = () => {
         </div>
       </div>
       <div className={styles.addEmployeeDetailBox}>
-        {getEmployeesListLoading && employeeId && <FormContentSkeletonLoader />}
-        {!(getEmployeesListLoading && employeeId) && (
+        {getEmployeesListLoading && clientId && <FormContentSkeletonLoader />}
+        {!(getEmployeesListLoading && clientId) && (
           <Tabs
             className="subscriptionTabs"
             defaultActiveKey="1"

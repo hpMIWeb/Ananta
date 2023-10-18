@@ -20,10 +20,7 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
   const [statesListData, setStatesListData] = useState<any>([]);
   const [citiesListData, setCitiesListData] = useState<any>([]);
   const [employeeId, setEmployeeId] = useState<string>("");
-  useEffect(() => {
-    console.log(state.id);
-    if (state) setEmployeeId(state.id);
-  }, []);
+
   function generateUniqueEmployeeID() {
     // You can use a timestamp or a random number to create a unique ID
     const timestamp = Date.now();
