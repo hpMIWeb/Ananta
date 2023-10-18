@@ -113,7 +113,12 @@ const EmployeeView = () => {
     {
       key: 5,
       label: `Profile`,
-      children: <AddEmployee />,
+      children: (
+        <AddEmployee
+          selectedEmployeeID={employeeId}
+          selectedEmployeeData={selectedEmployeeData}
+        />
+      ),
     },
     {
       key: 6,

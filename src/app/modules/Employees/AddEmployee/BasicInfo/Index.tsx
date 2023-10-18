@@ -12,14 +12,26 @@ import uploadLogo from "../../../../../assets/images/upload_logo.png";
 import Upload from "../../../../../components/Upload/Index";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { useAppDispatch } from "../../../../states/store";
+import { getEmployeesReducersApi } from "../../../../../redux/getEmployeesReducers";
+import { useSelector } from "react-redux";
 
-const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
+const BasicInfo = ({
+  onChange,
+  setEmployeeInfo,
+  selectedEmployeeID,
+  selectedEmployeeData,
+}: any) => {
   const [form] = Form.useForm();
   const { state } = useLocation();
+  const dispatch = useAppDispatch();
   const [countriesListData, setCountriesListData] = useState<any>([]);
   const [statesListData, setStatesListData] = useState<any>([]);
   const [citiesListData, setCitiesListData] = useState<any>([]);
   const [employeeId, setEmployeeId] = useState<string>("");
+  // const selectedEmployeeData = useSelector(
+  //   (state: any) => state.getEmployees.data
+  // );
 
   function generateUniqueEmployeeID() {
     // You can use a timestamp or a random number to create a unique ID
@@ -98,6 +110,32 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
     }
   };
 
+  useEffect(() => {
+    console.log("selectedEmployeeData", selectedEmployeeData);
+    if (selectedEmployeeData) {
+      form.setFieldsValue({
+        employeeId: selectedEmployeeData.employeeId,
+        firstName: selectedEmployeeData.firstName,
+        middleName: selectedEmployeeData.middleName,
+        lastName: selectedEmployeeData.lastName,
+        gender: selectedEmployeeData.gender,
+        bloodGroup: selectedEmployeeData.bloodGroup,
+        email: selectedEmployeeData.email,
+        mobile: selectedEmployeeData.mobile,
+        //alternateMobile: selectedEmployeeData?.alternateMobile,
+        address: selectedEmployeeData.address,
+        pinCode: selectedEmployeeData.pinCode,
+        country: selectedEmployeeData.country,
+        state: selectedEmployeeData.state,
+        city: selectedEmployeeData.city,
+      });
+    }
+
+    // if (selectedEmployeeID) {
+    //   dispatch(getEmployeesReducersApi());
+    //   form.setFieldsValue({ employeeId: selectedEmployeeData.employeeId });
+    // }
+  }, []);
   const handleFormValuesChange = (changedValues: any, allValues: any) => {
     if ("country" in changedValues) {
       const selectedCountryId = countriesListData.find(
@@ -120,18 +158,6 @@ const BasicInfo = ({ onChange, setEmployeeInfo }: any) => {
   }, []);
 
   const onFinish = (value: any) => {
-    // const mobilePhoneNumber = value.mobile;
-    // const formattedMobilePhoneNumber = mobilePhoneNumber.replace("-", "");
-    // // const combinedMobile = `${
-    // //     value.mobile.validData.countryCode || "+91"
-    // // }${formattedMobilePhoneNumber}`;
-
-    // const alternateMobilePhoneNumber = value.alternateMobile;
-    // const combinedAlternateMobile = alternateMobilePhoneNumber;
-    // //     ? `${
-    // //           value.alternateMobile.countryCode || "+91"
-    // //       }${alternateMobilePhoneNumber}`
-    // //     : null;
     setEmployeeInfo({
       ...value,
       employeeId: `${value.employeeUniqId}`,

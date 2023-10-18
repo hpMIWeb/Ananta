@@ -24,7 +24,7 @@ import { getDepartmentsReducersApi } from "../../../../redux/getDepartmentsReduc
 import { getDesignationReducersApi } from "../../../../redux/getDesignationReducers";
 import { useAppDispatch } from "../../../states/store";
 
-const AddEmployee = ({ emppdata }: any) => {
+const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
   const [activeTab, setActiveTab] = useState(1);
   const [disableTabArray, setDisableTabArray] = useState({
     1: false,
@@ -51,6 +51,7 @@ const AddEmployee = ({ emppdata }: any) => {
   );
 
   useEffect(() => {
+    console.log("selectedEmployeeID", selectedEmployeeID);
     dispatch(getRolesReducersApi());
     dispatch(getRoleTypeReducersApi());
     dispatch(getDepartmentsReducersApi());
@@ -94,7 +95,7 @@ const AddEmployee = ({ emppdata }: any) => {
       dispatch(
         createEmployeeReducersApi({
           payload: payload,
-          employeeId: "",
+          employeeId: selectedEmployeeID,
         })
       );
     } else {
@@ -112,7 +113,12 @@ const AddEmployee = ({ emppdata }: any) => {
       label: `Basic Info`,
       disabled: disableTabArray[1],
       children: (
-        <BasicInfo onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
+        <BasicInfo
+          onChange={onChange}
+          setEmployeeInfo={setEmployeeInfo}
+          selectedEmployeeID={selectedEmployeeID}
+          selectedEmployeeData={selectedEmployeeData}
+        />
       ),
     },
     {
@@ -123,6 +129,8 @@ const AddEmployee = ({ emppdata }: any) => {
         <OrganisationDetails
           onChange={onChange}
           setEmployeeInfo={setEmployeeInfo}
+          selectedEmployeeID={selectedEmployeeID}
+          selectedEmployeeData={selectedEmployeeData}
         />
       ),
     },
@@ -131,7 +139,12 @@ const AddEmployee = ({ emppdata }: any) => {
       label: `Assign Clients`,
       disabled: disableTabArray[3],
       children: (
-        <AssignClient onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
+        <AssignClient
+          onChange={onChange}
+          setEmployeeInfo={setEmployeeInfo}
+          selectedEmployeeID={selectedEmployeeID}
+          selectedEmployeeData={selectedEmployeeData}
+        />
       ),
     },
     {
@@ -139,7 +152,12 @@ const AddEmployee = ({ emppdata }: any) => {
       label: `Bank Details`,
       disabled: disableTabArray[4],
       children: (
-        <BankDetails onChange={onChange} setEmployeeInfo={setEmployeeInfo} />
+        <BankDetails
+          onChange={onChange}
+          setEmployeeInfo={setEmployeeInfo}
+          selectedEmployeeID={selectedEmployeeID}
+          selectedEmployeeData={selectedEmployeeData}
+        />
       ),
     },
     {
@@ -151,6 +169,8 @@ const AddEmployee = ({ emppdata }: any) => {
           onChange={onChange}
           loading={loading}
           setEmployeeInfo={setEmployeeInfo}
+          selectedEmployeeID={selectedEmployeeID}
+          selectedEmployeeData={selectedEmployeeData}
         />
       ),
     },
@@ -158,42 +178,45 @@ const AddEmployee = ({ emppdata }: any) => {
 
   return (
     <div className={classNames("card mb-3", styles.addPromoCodeCardWrapper)}>
-      <div
-        className={classNames(
-          "card-header d-flex",
-          styles.promoCodeCardHeaderBox
-        )}
-        style={{ minHeight: 60 }}
-      >
+      {!selectedEmployeeData ? (
         <div
           className={classNames(
-            "d-flex align-items-center w-100",
-            styles.promocodeHeaderTitle
+            "card-header d-flex",
+            styles.promoCodeCardHeaderBox
           )}
+          style={{ minHeight: 60 }}
         >
-          <div className="me-auto">
-            <h5
-              className={classNames(
-                "my-2 position-relative z-index-1",
-                styles.addPromoCodeLabel
-              )}
-            >
-              Add Employee
-            </h5>
-          </div>
-          <div className={classNames("ms-auto z-index-1")}>
-            <Button
-              onClick={handleCancelClick}
-              style={{
-                minWidth: 104,
-              }}
-              className="greyBtn"
-            >
-              Cancel
-            </Button>
+          <div
+            className={classNames(
+              "d-flex align-items-center w-100",
+              styles.promocodeHeaderTitle
+            )}
+          >
+            <div className="me-auto">
+              <h5
+                className={classNames(
+                  "my-2 position-relative z-index-1",
+                  styles.addPromoCodeLabel
+                )}
+              >
+                Add Employee
+              </h5>
+            </div>
+            <div className={classNames("ms-auto z-index-1")}>
+              <Button
+                onClick={handleCancelClick}
+                style={{
+                  minWidth: 104,
+                }}
+                className="greyBtn"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
+
       <div className={styles.addEmployeeDetailBox}>
         {getEmployeesListLoading && clientId && <FormContentSkeletonLoader />}
         {!(getEmployeesListLoading && clientId) && (
