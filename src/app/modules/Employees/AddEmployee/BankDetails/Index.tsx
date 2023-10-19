@@ -62,7 +62,10 @@ const BankDetails = ({
     }
   };
   const onFinish = (value: any) => {
-    setEmployeeInfo({ clientBankDetails: value });
+    console.log("employeeBankDetails", value);
+    setEmployeeInfo({ employeeBankDetails: value });
+
+    // return false;
     console.log(value);
     onChange(5);
   };

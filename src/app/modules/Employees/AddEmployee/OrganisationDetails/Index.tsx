@@ -43,10 +43,6 @@ const OrganisationDetails = ({
   };
 
   useEffect(() => {
-    console.log(
-      "selectedEmployeeData",
-      selectedEmployeeData.organizationDetails
-    );
     if (selectedEmployeeData) {
       // Assuming 'form' is the form object, and it provides a method to set field values
       const organizationDetails = selectedEmployeeData.organizationDetails;

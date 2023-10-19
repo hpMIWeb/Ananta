@@ -160,7 +160,7 @@ const BasicInfo = ({
   const onFinish = (value: any) => {
     setEmployeeInfo({
       ...value,
-      employeeId: `${value.employeeUniqId}`,
+      employeeId: `${value.employeeId}`,
       mobile: value.mobile,
       alternateMobile: value.alternateMobile,
     });
