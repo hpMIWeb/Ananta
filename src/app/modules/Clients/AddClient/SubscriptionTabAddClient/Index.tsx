@@ -21,8 +21,14 @@ import { JSX } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../states/store";
 import { Option } from "antd/es/mentions";
 import { toast } from "react-toastify";
+import { ClientType, RoleTypes } from "../../../../../utils/constant";
+import Cookies from "js-cookie";
 
-const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
+const SubscriptionTabAddClient = ({
+    onChange,
+    setFormValue,
+    clientType,
+}: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
         (state: any) => state.getSubscriptionsListApi.data
@@ -43,6 +49,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
     const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
     const [couponDiscount, setCouponDiscount] = useState<number>(0);
+    const roleType = Cookies.get("roleTypeName");
 
     // Search input change handler
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,15 +237,26 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     );
 
     const taxableValue =
-        selectedSubscriptionPlan.price - adminDiscount - couponDiscount;
+        selectedSubscriptionPlan.price +
+        totalAddonAmount -
+        adminDiscount -
+        couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
-    const invoiceAmount = taxableValue + gstAmount + parseFloat(roundOff);
+    const invoiceAmount =
+        taxableValue +
+        gstAmount +
+        (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
     const handleRemoveAddon = (index: any) => {
         const updatedAddons = subscriptionAddons.filter(
             (_: any, i: any) => i !== index
         );
         setSubscriptionAddons(updatedAddons);
+
+        // Reset total addon amount in case of no addons
+        if (updatedAddons.length === 0) {
+            setTotalAddonAmount(0);
+        }
     };
 
     const handleAddonChange = (
@@ -365,51 +383,53 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                             styles.subscriptionFormWrapper
                         )}
                     >
-                        <div className="row g-3">
-                            <div
-                                className={classNames(
-                                    "col-6",
-                                    styles.subscriptionFormColumn
-                                )}
-                            >
-                                <div className="mb-2">
-                                    <label
-                                        className={classNames(
-                                            "form-label",
-                                            styles.subscriptionFormLabel
-                                        )}
-                                    >
-                                        Billing Method
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="billingType"
-                                        className="customAddClientSelectOptions"
-                                    >
-                                        <Select
-                                            options={[
-                                                {
-                                                    value: "subscription",
-                                                    label: "Subscription",
-                                                },
-                                                {
-                                                    value: "invoicing",
-                                                    label: "Invoicing",
-                                                },
-                                                {
-                                                    value: "pay_per_use",
-                                                    label: "Pay Per Use",
-                                                },
-                                            ]}
-                                            showSearch
-                                            placeholder="Select Billing Type"
-                                        />
-                                    </Form.Item>
+                        {roleType === RoleTypes.CAAdmin && (
+                            <div className="row g-3">
+                                <div
+                                    className={classNames(
+                                        "col-6",
+                                        styles.subscriptionFormColumn
+                                    )}
+                                >
+                                    <div className="mb-2">
+                                        <label
+                                            className={classNames(
+                                                "form-label",
+                                                styles.subscriptionFormLabel
+                                            )}
+                                        >
+                                            Billing Method
+                                            <sup className="text-danger fs--1">
+                                                *
+                                            </sup>
+                                        </label>
+                                        <Form.Item
+                                            name="billingType"
+                                            className="customAddClientSelectOptions"
+                                        >
+                                            <Select
+                                                options={[
+                                                    {
+                                                        value: "subscription",
+                                                        label: "Subscription",
+                                                    },
+                                                    {
+                                                        value: "invoicing",
+                                                        label: "Invoicing",
+                                                    },
+                                                    {
+                                                        value: "pay_per_use",
+                                                        label: "Pay Per Use",
+                                                    },
+                                                ]}
+                                                showSearch
+                                                placeholder="Select Billing Type"
+                                            />
+                                        </Form.Item>
+                                    </div>
                                 </div>
                             </div>
-                        </div>{" "}
+                        )}
                         <div className="row g-3">
                             <div
                                 className={classNames(
@@ -495,7 +515,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                             width={14.25}
                                             height={16}
                                         />
-                                        Add
+                                        Add AddOns
                                     </Button>
                                 </div>
                             </div>
@@ -509,10 +529,10 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                         styles.subscriptionLineLeft
                                     )}
                                 >
-                                    <div className="d-flex align-items-center mb-3">
+                                    <div className="d-flex mb-3">
                                         <label
-                                            className="form-label form-label text-nowrap mt-1 me-2"
-                                            style={{ minWidth: 85, top: 0 }}
+                                            className="form-label form-label text-nowrap mt-2 me-2"
+                                            style={{ minWidth: 85 }}
                                         >
                                             Start Date
                                             <sup className="text-danger fs--1">
@@ -553,8 +573,11 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                 styles.subscriptionPrice
                                             )}
                                         >
-                                            {monthAdded &&
-                                                monthAdded.format("YYYY-MM-DD")}
+                                            {monthAdded
+                                                ? monthAdded.format(
+                                                      "DD/MM/YYYY"
+                                                  )
+                                                : "--"}
                                         </p>
                                     </div>
                                 </div>
@@ -590,13 +613,13 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                     </div>
 
                                     <div className="row rowPadding">
-                                        <div className="col">
-                                            <p
+                                        <div className="col right-align-cell">
+                                            <a
                                                 className="text-end mb-1 promocode-link"
                                                 onClick={showDrawer}
                                             >
                                                 Apply Promo Code
-                                            </p>
+                                            </a>
                                         </div>
                                         <div className="col-auto">
                                             <div style={{ width: 100 }}>
@@ -665,7 +688,8 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                     className="text-end mb-1"
                                                     id="total"
                                                 >
-                                                    Rs. {gstAmount.toFixed(2)}/-
+                                                    Rs. {Math.round(gstAmount)}
+                                                    /-
                                                 </p>
                                             </div>
                                         </div>
@@ -686,6 +710,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                     <Input
                                                         defaultValue={0}
                                                         className="customAddFormInputText text-end"
+                                                        maxLength={6}
                                                     />
                                                 </Form.Item>
                                             </div>
@@ -708,7 +733,8 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                                                     id="total"
                                                 >
                                                     Rs.{" "}
-                                                    {invoiceAmount.toFixed(2)}/-
+                                                    {Math.round(invoiceAmount)}
+                                                    /-
                                                 </p>
                                             </div>
                                         </div>

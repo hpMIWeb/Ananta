@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Icon from "../../../../../components/Icon/Index";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
 import { useDispatch, useSelector } from "react-redux";
+import Input from "../../../../../components/Input/Index";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -37,6 +38,7 @@ const SubscriptionAddonsCard = memo(
         // };
 
         const handleQtyChange = (value: any) => {
+            if (isNaN(value)) return false;
             setSelectNumber(value);
             handleAddonChange(
                 cardIndex,
@@ -75,8 +77,12 @@ const SubscriptionAddonsCard = memo(
             );
         };
 
-        useEffect(() => {
-            // Recalculate the total price when either quantity or addon value changes
+        const handleAddOnRemove = (index: Number) => {
+            calculateTotal();
+            handleRemoveAddon(cardIndex);
+        };
+
+        const calculateTotal = () => {
             const selectedAddonData = addonsCardList.find(
                 (a: any) => a._id === currentAddon.addOnPlans
             );
@@ -88,6 +94,11 @@ const SubscriptionAddonsCard = memo(
                 0
             );
             setTotalAddonAmount(total);
+        };
+
+        useEffect(() => {
+            calculateTotal();
+            // Recalculate the total price when either quantity or addon value changes
         }, [currentAddon.addOnPlans, selectNumber, subscriptionAddons]);
 
         // const getAddOnsListOptions = getAddOnsList().map((a: any) => ({
@@ -114,10 +125,55 @@ const SubscriptionAddonsCard = memo(
             setSelectNumber((prev) => prev - 1);
         };
 
+        useEffect(() => {
+            console.log("selectAddonDetails", selectAddonDetails);
+        }, [selectAddonDetails]);
+
+        const generateAddonDetails = () => {
+            const priceSuffix = "/-";
+            const pricePrefix = " Rs ";
+
+            let addonStr =
+                selectAddonDetails.add_on_title +
+                " " +
+                selectAddonDetails.add_on_type +
+                " @ " +
+                pricePrefix +
+                selectAddonDetails.price +
+                priceSuffix;
+
+            let dayStr = "";
+
+            switch (selectAddonDetails.time_period_type) {
+                case "DAY": {
+                    dayStr =
+                        selectAddonDetails.time_period > 1 ? "Days" : "Day";
+                    break;
+                }
+                case "MONTH": {
+                    dayStr =
+                        selectAddonDetails.time_period > 1 ? "Months" : "Month";
+                    break;
+                }
+                default: {
+                    dayStr = selectAddonDetails.time_period_type;
+                    break;
+                }
+            }
+
+            const durationStr =
+                ", For " + selectAddonDetails.time_period + " " + dayStr;
+
+            const priceStr =
+                ", " + pricePrefix + selectedAddonsPrice + priceSuffix;
+
+            return addonStr.concat(durationStr).concat(priceStr);
+        };
+
         return (
             <div className="row g-3 js-addons-row">
                 <div className="col">
-                    <label className="form-label mb-1">Addon Plans</label>
+                    <label className="form-label mb-1">AddOn Plans</label>
                     <div className={classNames("row g-3")}>
                         <div className="col-6">
                             <Form.Item
@@ -180,18 +236,11 @@ const SubscriptionAddonsCard = memo(
                                 ]}
                             >
                                 <Select
-                                    options={
-                                        // getAddOnsListOptions &&
-                                        // getAddOnsListOptions.length > 0
-                                        //     ? getAddOnsListOptions
-                                        //     : []
-                                        addOnListOpts
-                                    }
-                                    // showSearch
+                                    options={addOnListOpts}
                                     onChange={(e: any) =>
                                         handleAddonPlanChange(e)
                                     }
-                                    placeholder="Select Addons"
+                                    placeholder="Select AddOn"
                                 />
                             </Form.Item>
                         </div>
@@ -207,12 +256,13 @@ const SubscriptionAddonsCard = memo(
                                 >
                                     Qty
                                 </label>
-                                <Form.Item
-                                    //name="addOnQuantity" //TODO: Need to think on this - how to update the field on final submit button
-                                    initialValue={selectNumber}
-                                >
-                                    <InputNumber
-                                        style={{ width: 110 }}
+                                <Form.Item initialValue={selectNumber}>
+                                    <Input
+                                        style={{
+                                            width: 110,
+                                            marginTop: "2px",
+                                            border: "none",
+                                        }}
                                         onKeyPress={(event: any) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
@@ -242,7 +292,6 @@ const SubscriptionAddonsCard = memo(
                                         value={selectNumber}
                                         onChange={(e: any) => {
                                             handleQtyChange(e);
-                                            // setSelectNumber(e);
                                         }}
                                         min={0}
                                         max={100}
@@ -258,7 +307,9 @@ const SubscriptionAddonsCard = memo(
                                         styles.deleteCardBtn
                                     )}
                                     type="primary"
-                                    onClick={() => handleRemoveAddon(cardIndex)}
+                                    onClick={() => {
+                                        handleAddOnRemove(cardIndex);
+                                    }}
                                     danger
                                 >
                                     <Icon
@@ -270,17 +321,11 @@ const SubscriptionAddonsCard = memo(
                             </div>
                         </div>
                     </div>
-                    <div className="row g-0">
-                        <p className="semiBold" style={{ color: "#20c997" }}>
-                            {selectAddonDetails.add_on_title}
-                            {" @ RS "}
-                            {selectAddonDetails.price} /-{"   , For "}
-                            {selectAddonDetails.time_period}{" "}
-                            {selectAddonDetails.time_period_type}
-                        </p>
-                    </div>
                 </div>
-                <div className="col-auto align-self-center">
+                <div
+                    className="col-auto align-self-center"
+                    style={{ maxWidth: "150px", width: "100px" }}
+                >
                     <p
                         className={classNames(
                             "text-end mb-2",
@@ -290,6 +335,17 @@ const SubscriptionAddonsCard = memo(
                         Rs. {selectedAddonsPrice.toFixed(2)}/-
                     </p>
                 </div>
+                {selectAddonDetails.add_on_title &&
+                    selectAddonDetails.price && (
+                        <div
+                            className={classNames(
+                                "row g-0",
+                                styles.addonDetails
+                            )}
+                        >
+                            <p className="semiBold">{generateAddonDetails()}</p>
+                        </div>
+                    )}
             </div>
         );
     }

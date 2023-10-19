@@ -21,9 +21,11 @@ import FormContentSkeletonLoader from "../../../../components/FormContentSkeleto
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { getLineOfBusinessReducersApi } from "../../../../redux/getLineOfBusinessReducers";
 import { getIndustryTypeListReducersApi } from "../../../../redux/getIndustryTypeReducers";
+import { getPromocodeReducersListApi } from "../../../../redux/getPromocodeReducers";
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 import Cookies from "js-cookie";
+import { adminClientTypeOption } from "../../../../utils/constant";
 
 const AddClient = () => {
     const [activeTab, setActiveTab] = useState(1);
@@ -44,22 +46,14 @@ const AddClient = () => {
     const { loading, success } = useSelector(
         (state: any) => state.createClient
     );
+    const [firmInfoValid, setFirmInfoValid] = useState<boolean>(false);
+    const [ownerInfoValid, setOwnerInfoValid] = useState<boolean>(true);
+    const [subScriptionInfoValid, setSubScriptionInfoValid] =
+        useState<boolean>(true);
+    const [paymentInfoValid, setPaymentInfoValid] = useState<boolean>(true);
 
-    let clientTypeOption = [
-        { value: "ca", label: "CA" },
-        {
-            value: "accountant",
-            label: "Accountant",
-        },
-        {
-            value: "tax_consultant",
-            label: "Tax Consultant",
-        },
-        {
-            value: "business_enterprise",
-            label: "Business Enterprise",
-        },
-    ];
+    let clientTypeOption = adminClientTypeOption;
+
     if (roleType !== "superadmin") {
         clientTypeOption = [
             {
@@ -81,6 +75,7 @@ const AddClient = () => {
         dispatch(getSubscriptionsListApi());
         dispatch(getLineOfBusinessReducersApi());
         dispatch(getIndustryTypeListReducersApi());
+        dispatch(getPromocodeReducersListApi());
     }, []);
 
     const setFormValue = (formValue: any) => {
@@ -176,6 +171,7 @@ const AddClient = () => {
                     clientType={clientType}
                 />
             ),
+            disabled: !ownerInfoValid,
         },
         {
             key: 5,
@@ -184,8 +180,10 @@ const AddClient = () => {
                 <SubscriptionTabAddClient
                     onChange={onChange}
                     setFormValue={setFormValue}
+                    clientType={clientType}
                 />
             ),
+            disabled: !subScriptionInfoValid,
         },
         {
             key: 6,
@@ -194,8 +192,10 @@ const AddClient = () => {
                 <PaymentTabAddClient
                     onChange={onChange}
                     setFormValue={setFormValue}
+                    clientType={clientType}
                 />
             ),
+            disabled: !paymentInfoValid,
         },
         // {
         //   key: 7,
@@ -275,7 +275,6 @@ const AddClient = () => {
                             </label>
                             <Form.Item
                                 name="clientType"
-                                className="customAddClientSelectOptions"
                                 rules={[
                                     {
                                         required: true,
@@ -285,6 +284,7 @@ const AddClient = () => {
                             >
                                 <Select
                                     options={clientTypeOption}
+                                    className="customAddClientSelectOptions"
                                     placeholder="Select Type"
                                     onChange={(value: any) =>
                                         setClientType(value)

@@ -121,21 +121,22 @@
         }
     }
     .customAddClientSelectOptions {
+        .ant-select-selector {
+            border: 1px solid var(--falcon-input-border-color);
+            height: 36px;
+            background-color: var(--falcon-input-bg) !important;
+            color: var(--falcon-input-color);
+        }
         .ant-select-selection-item {
             font-size: 1rem;
             font-weight: 400;
             color: var(--falcon-input-color);
         }
-        .ant-select-selector {
-            border: 1px solid var(--falcon-input-border-color);
-            background-color: var(--falcon-input-bg);
-        }
+
         .ant-form-item-control-input {
             min-height: 36px;
         }
-        .ant-select-selector {
-            height: 36px;
-        }
+
         .ant-select-selection-item {
             line-height: 33px;
         }
@@ -260,6 +261,23 @@
     background-color: var(--falcon-input-bg) !important;
 
     .ant-modal-title {
+        text-align: center;
+    }
+}
+
+.ant-divider {
+    background-color: var(--falcon-input-border-color) !important;
+}
+
+.ant-btn-icon {
+    vertical-align: middle !important;
+}
+
+.ant-input-group-addon {
+    padding: 0 !important;
+    text-align: center;
+
+    input {
         text-align: center;
     }
 }

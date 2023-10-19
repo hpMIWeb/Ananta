@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 import Cookies from "js-cookie";
 import { getCurrentItemNumber } from "../../utilities/utility";
+import { adminClientTypeOption } from "../../../utils/constant";
 
 const Clients = () => {
     const navigation = useNavigate();
@@ -174,34 +175,15 @@ const Clients = () => {
 
     const [superAdminAddon, setSuperAdminAddonOption] = useState([
         {
-            value: "Storage Space",
-            label: "Storage Space",
+            value: "All Client",
+            label: "All Client",
         },
-        {
-            value: "No. Of Clients",
-            label: "No. Of Clients",
-        },
-        {
-            value: "No. Of Employees",
-            label: "No. Of Employees",
-        },
-        {
-            value: "No. Of Client Login",
-            label: "No. Of Client Login",
-        },
-        {
-            value: "No. Of Transactions",
-            label: "No. Of Transactions",
-        },
-        {
-            value: "Features List",
-            label: "Features List",
-        },
+        ...adminClientTypeOption,
     ]);
     const [caAdminAddonOption, setCAdminAddonOption] = useState([
         {
             value: "All Client",
-            label: "All Subscription",
+            label: "All Client",
         },
         {
             value: "regular",
@@ -271,6 +253,7 @@ const Clients = () => {
                             setSortState(options);
                         }}
                         addonOption={addonOption}
+                        placeholder={"Select Client Type"}
                     />
                 </div>
                 {getClientsLoading && <CardContentSkeletonLoader />}

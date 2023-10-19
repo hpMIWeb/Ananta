@@ -271,7 +271,7 @@ const BasicInfo = ({ onChange, setFormValue, clientType }: any) => {
                             >
                                 <div>
                                     <label className="form-label">
-                                        Firm GST
+                                        Firm GSTIN
                                         <sup className="text-danger fs--1">
                                             *
                                         </sup>

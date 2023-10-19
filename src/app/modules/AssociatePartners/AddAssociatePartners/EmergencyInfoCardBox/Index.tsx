@@ -169,7 +169,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     countryCodeEditable={false}
-                                    placeholder="Alt Mobile"
+                                    placeholder="Alternate Mobile"
                                     onChange={(data: any) => {
                                         const {
                                             hasError,

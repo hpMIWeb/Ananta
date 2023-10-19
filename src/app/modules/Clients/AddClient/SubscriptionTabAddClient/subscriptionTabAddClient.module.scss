@@ -78,6 +78,7 @@
     height: 30px;
     width: 30px;
     padding: 0;
+    margin-top: 9px;
 }
 .infoCardBtn {
     height: 30px;
@@ -160,4 +161,11 @@
 
 .detail-value {
     font-size: 14px;
+}
+
+.addonDetails {
+    text-align: center;
+    p {
+        color: var(--primary-blue);
+    }
 }

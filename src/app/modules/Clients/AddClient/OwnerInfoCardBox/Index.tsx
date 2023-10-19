@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import styles from "./ownerInfoCardBox.module.scss";
-import { DatePicker, Form, Select } from "antd";
+import { DatePicker, Divider, Form, Select } from "antd";
 import Input from "../../../../../components/Input/Index";
 import Button from "../../../../../components/Button/Index";
 import uploadPhoto from "../../../../../assets/images/upload_photo.jpg";
 import Upload from "../../../../../components/Upload/Index";
 import Icon from "../../../../../components/Icon/Index";
 import PhoneInput from "react-phone-input-2";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const OwnerInfoCardBox = ({
     index,
@@ -19,6 +20,21 @@ const OwnerInfoCardBox = ({
 }: any) => {
     return (
         <>
+            <div>
+                <div className={styles.itemNumber}>{index + 1}</div>
+                <div>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => {
+                            onDeleteCardClick(field.index);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </div>
+            </div>
             <div className="col-12 col-md-9 col-lg-9">
                 <div className={classNames("row", styles.formFieldWrapper)}>
                     <div
@@ -126,7 +142,6 @@ const OwnerInfoCardBox = ({
                                 className="form-label"
                             >
                                 Select Gender
-                                <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
                                 {...field}
@@ -135,7 +150,7 @@ const OwnerInfoCardBox = ({
                                 fieldKey={[field.fieldKey, "gender"]}
                                 rules={[
                                     {
-                                        required: true,
+                                        required: false,
                                         message: "Please Select gender!",
                                     },
                                 ]}
@@ -165,7 +180,6 @@ const OwnerInfoCardBox = ({
                                 className="form-label"
                             >
                                 Date of Birth
-                                <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
                                 {...field}
@@ -173,7 +187,7 @@ const OwnerInfoCardBox = ({
                                 fieldKey={[field.fieldKey, "birthDate"]}
                                 rules={[
                                     {
-                                        required: true,
+                                        required: false,
                                         message: "Please Enter Date of Birth!",
                                     },
                                 ]}
@@ -206,11 +220,19 @@ const OwnerInfoCardBox = ({
                                     {...field}
                                     name={[field.name, "membershipNo"]}
                                     fieldKey={[field.fieldKey, "membershipNo"]}
+                                    rules={[
+                                        {
+                                            pattern: /^(?:\d*)$/,
+                                            message:
+                                                "Value should contain just number !!",
+                                        },
+                                    ]}
                                 >
                                     <Input
                                         id={`membershipNo-${field.key}`}
                                         placeholder={"Membership No"}
                                         className="customAddFormInputText"
+                                        maxLength={6}
                                     />
                                 </Form.Item>
                             </div>
@@ -238,6 +260,7 @@ const OwnerInfoCardBox = ({
                                     {
                                         required: true,
                                         message: "Please Enter Email id!",
+                                        type: "email",
                                     },
                                 ]}
                             >
@@ -262,6 +285,7 @@ const OwnerInfoCardBox = ({
                                 className="form-label"
                             >
                                 Mobile
+                                <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
                                 {...field}
@@ -300,7 +324,7 @@ const OwnerInfoCardBox = ({
                                 style={{ marginBottom: 5 }}
                                 className="form-label"
                             >
-                                {canDelete ? "Alternate Mobile" : "Alt Mobile"}
+                                Alternate Mobile
                             </label>
                             <Form.Item
                                 {...field}
@@ -321,11 +345,7 @@ const OwnerInfoCardBox = ({
                                     countryCodeEditable={false}
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
-                                    placeholder={
-                                        canDelete
-                                            ? "Alternate Mobile"
-                                            : "Alt Mobile"
-                                    }
+                                    placeholder={"Alternate Mobile"}
                                 />
                             </Form.Item>
                         </div>

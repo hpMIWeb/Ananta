@@ -14,6 +14,7 @@ const SearchFilterBar = ({
     setSortState = () => {},
     showAddOn = false,
     defaultSortLabel,
+    placeholder,
     initialAddOnsValue = "All Addons",
     allowSortBy = true,
     addonOption = [
@@ -102,10 +103,10 @@ const SearchFilterBar = ({
                 {showAddOn && (
                     <div className="ms-auto">
                         <Select
-                            style={{ width: 120 }}
+                            style={{ width: "auto", minWidth: "120px" }}
                             className="addOnSelectDropdown"
                             popupMatchSelectWidth={false}
-                            placeholder="Select AddOn Type"
+                            placeholder={placeholder}
                             defaultValue={initialAddOnsValue}
                             clearIcon={
                                 <Icon name="downArrow" width={9} height={14} />
