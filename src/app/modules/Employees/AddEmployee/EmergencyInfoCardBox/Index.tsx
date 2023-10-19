@@ -5,11 +5,28 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 import Input from "../../../../../components/Input/Index";
+import Button from "../../../../../components/Button/Index";
+import Icon from "../../../../../components/Icon/Index";
 
-const EmergencyInfoCardBox = ({ form }: any) => {
+const EmergencyInfoCardBox = ({
+    index,
+    displayNumber,
+    field,
+    branchDetailsFormValue,
+    remove,
+    canDelete,
+    onDeleteCardClick,
+    clientType,
+    form,
+}: any) => {
     return (
         <>
             <div className="col-12 col-md-12 col-lg-12">
+                <div className="flex-shrink-0">
+                    <span className={styles.cardPointCounter}>
+                        {displayNumber + 1}
+                    </span>
+                </div>
                 <div className={classNames("row", styles.formFieldWrapper)}>
                     <div
                         className={classNames(
@@ -25,7 +42,9 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 Contact Person
                             </label>
                             <Form.Item
-                                name="name"
+                                {...field}
+                                name={[field.name, "name"]}
+                                key={[field.fieldKey, "name"]}
                                 rules={[
                                     {
                                         pattern: /^[A-Za-z\s]+$/,
@@ -35,6 +54,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 ]}
                             >
                                 <Input
+                                    id={`name-${field.key}`}
                                     placeholder="Contact Person"
                                     className="customAddFormInputText"
                                 />
@@ -55,7 +75,9 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 Relation
                             </label>
                             <Form.Item
-                                name="relation"
+                                {...field}
+                                name={[field.name, "relation"]}
+                                key={[field.fieldKey, "relation"]}
                                 rules={[
                                     {
                                         pattern: /^[A-Za-z\s]+$/,
@@ -65,6 +87,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 ]}
                             >
                                 <Input
+                                    id={`relation-${field.key}`}
                                     placeholder="Relation"
                                     className="customAddFormInputText"
                                 />
@@ -85,7 +108,9 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                 Mobile
                             </label>
                             <Form.Item
-                                name="mobile"
+                                {...field}
+                                name={[field.name, "mobile"]}
+                                fieldKey={[field.fieldKey, "mobile"]}
                                 rules={[
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
@@ -109,6 +134,7 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
+                                    countryCodeEditable={false}
                                     onChange={(data: any) => {
                                         const { hasError } = data;
                                         form.setFieldsValue({
@@ -132,10 +158,15 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                             >
                                 Alternative Mobile
                             </label>
-                            <Form.Item name="alternateMobile">
+                            <Form.Item
+                                {...field}
+                                name={[field.name, "alternateMobile"]}
+                                fieldKey={[field.fieldKey, "alternateMobile"]}
+                            >
                                 <PhoneInput
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
+                                    countryCodeEditable={false}
                                     placeholder="Alt Mobile"
                                     onChange={(data: any) => {
                                         const {
@@ -153,6 +184,37 @@ const EmergencyInfoCardBox = ({ form }: any) => {
                     </div>
                 </div>
                 <div className="row"></div>
+                <div className="row">
+                    {canDelete && (
+                        <div
+                            className={classNames(
+                                "col-12 col-md-2 col-lg-2",
+                                styles.fieldPadding8
+                            )}
+                        >
+                            <div className="d-grid gap-2">
+                                <Button
+                                    className={classNames(
+                                        "cancelBtn",
+                                        styles.deleteCardBtn
+                                    )}
+                                    type="primary"
+                                    onClick={() => onDeleteCardClick(index)}
+                                    danger
+                                >
+                                    <Icon
+                                        height={14}
+                                        width={14}
+                                        name="trashIcon"
+                                    />
+                                    <span style={{ marginLeft: 5 }}>
+                                        Delete
+                                    </span>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     );

@@ -9,7 +9,7 @@ export const getDesignationReducersApi = createAsyncThunk(
     async (payload) => {
         const jwtToken = Cookies.get("jwt_token");
         const response = await axios.get(
-            `${apiEndpoint}department/get-department/`,
+            `${apiEndpoint}designation/get-designation/`,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,

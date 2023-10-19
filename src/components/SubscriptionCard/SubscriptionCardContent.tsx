@@ -22,10 +22,15 @@ const SubscriptionCardContent = ({
     handleSubscriptionHistoryModalClick = () => {},
     historyData,
     displayIndex,
+    handleViewBtnClick = () => {},
 }: any) => {
     const navigation = useNavigate();
     const onChangeActive = (e: any) => {
         onChangeActiveClick(e, id);
+    };
+
+    const viewBtnClick = (e: any) => {
+        handleViewBtnClick(id);
     };
 
     return (
@@ -50,11 +55,9 @@ const SubscriptionCardContent = ({
                                 )}
                             >
                                 <span
-                                    style={
-                                        planNameLabelBlue
-                                            ? { color: "#2c7be5" }
-                                            : {}
+                                    style={ { color: "#2c7be5",cursor:"pointer" }
                                     }
+                                    onClick={viewBtnClick}
                                 >
                                     {planName}
                                 </span>
