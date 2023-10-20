@@ -26,7 +26,7 @@ const EmergencyInfo = ({
   };
 
   useEffect(() => {
-    console.log("selectedEmployeeData", selectedEmployeeData);
+    console.log("emeg", selectedEmployeeData.emergencyDetails);
     if (selectedEmployeeData) {
       form.setFieldsValue({});
     }

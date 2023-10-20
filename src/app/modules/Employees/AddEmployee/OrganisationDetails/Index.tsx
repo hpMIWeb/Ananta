@@ -44,11 +44,8 @@ const OrganisationDetails = ({
 
   useEffect(() => {
     if (selectedEmployeeData) {
-      // Assuming 'form' is the form object, and it provides a method to set field values
       const organizationDetails = selectedEmployeeData.organizationDetails;
-      //setBranchInfoData(organizationDetails);
 
-      // Iterate over each item in the organizationDetails array
       organizationDetails.forEach((orgDetail: any, index: number) => {
         console.log("orgDetail", orgDetail.aadhar);
         form.setFieldsValue({

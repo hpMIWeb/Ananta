@@ -17,7 +17,6 @@ const AssignClient = ({
   selectedEmployeeData,
 }: any) => {
   const getClients = useSelector((state: any) => state.getClients.data);
-  const [addedClientList, setAddedClientList] = useState<any>([]);
   const [clientList, setClientList] = useState<any>(getClients);
   const [assignClient, setAssignClient] = useState<any>([]);
 
@@ -33,12 +32,13 @@ const AssignClient = ({
 
   useEffect(() => {
     if (selectedEmployeeData) {
-      console.log("selectedEmployeeData", selectedEmployeeData.assignClients);
+      console.log("selectedEmp2loyeeData", selectedEmployeeData.assignClients);
       setAssignClient(selectedEmployeeData.assignClients);
       setSelectedClients(selectedEmployeeData.assignClients);
-      //selectedEmployeeData.assignClients
 
-      // Assuming 'form' is the form object, and it provides a method to set field values
+      selectedEmployeeData.assignClients.map((clientId: string) => {
+        handleClientSelection(clientId);
+      });
     }
   }, []);
 

@@ -8,7 +8,7 @@ import styles from "./basicInfo.module.scss";
 import Input from "../../../../../components/Input/Index";
 import TextArea from "antd/es/input/TextArea";
 import Button from "../../../../../components/Button/Index";
-import uploadLogo from "../../../../../assets/images/upload_logo.png";
+import uploadPhoto from "../../../../../assets/images/upload_photo.jpg";
 import Upload from "../../../../../components/Upload/Index";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -481,14 +481,14 @@ const BasicInfo = ({
                   // onChange={handleChange}
                 >
                   <img
-                    src={uploadLogo}
+                    src={uploadPhoto}
                     alt="avatar"
                     style={{ width: "100%" }}
                   />
                 </Upload>
               </div>
             </div>
-            <div className={styles.uploadLogoText}>Upload Logo</div>
+            <div className={styles.uploadLogoText}>Upload Photo</div>
           </div>
         </div>
         <div className={classNames("row", styles.formFieldWrapper)}>

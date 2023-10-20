@@ -7,7 +7,7 @@ import "react-phone-input-2/lib/style.css";
 import Input from "../../../../../components/Input/Index";
 import TextArea from "antd/es/input/TextArea";
 import Button from "../../../../../components/Button/Index";
-import uploadLogo from "../../../../../assets/images/upload_logo.png";
+import uploadPhoto from "../../../../../assets/images/upload_photo.jpg";
 import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -389,14 +389,14 @@ const BasicInfo = ({ onChange, setFormValue, partnerType }: any) => {
                   // onChange={handleChange}
                 >
                   <img
-                    src={uploadLogo}
+                    src={uploadPhoto}
                     alt="avatar"
                     style={{ width: "100%" }}
                   />
                 </Upload>
               </div>
             </div>
-            <div className={styles.uploadLogoText}>Upload Logo</div>
+            <div className={styles.uploadLogoText}>Upload Photo</div>
           </div>
         </div>
         <div className={classNames("row", styles.formFieldWrapper)}>
