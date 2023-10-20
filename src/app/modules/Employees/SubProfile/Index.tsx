@@ -78,12 +78,19 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   }, []);
 
   const onChangeActiveClick = (e: any, id: any) => {
-    dispatch(
-      createEmployeeReducersApi({
-        payload: { status: !!e ? true : false },
-        employeeId: id,
-      })
-    );
+    console.log("e", e);
+    console.log("id", id);
+    // const newSubProfile = subProfileList.map(transformOldDataToNewFormat);
+
+    // // Add the 'value' object to the newSubProfile array
+    // //newSubProfile.push(value);
+
+    // dispatch(
+    //   createEmployeeReducersApi({
+    //     payload: { subProfile: newSubProfile },
+    //     employeeId: selectedEmployeeData?._id,
+    //   })
+    // );
   };
   const cardDesc = (cardData: any) => {
     return [
@@ -181,16 +188,12 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   };
 
   const onFinish = (value: any) => {
-    // setLoading(true);
-    console.log(selectedEmployeeData?._id);
+    setLoading(true);
 
-    // Map the existing subProfileList to the new format
     const newSubProfile = subProfileList.map(transformOldDataToNewFormat);
-
     // Add the 'value' object to the newSubProfile array
     newSubProfile.push(value);
 
-    // console.log("newSubProfile", newSubProfile);
     dispatch(
       createEmployeeReducersApi({
         payload: { subProfile: newSubProfile },
@@ -207,7 +210,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
       firstName: oldData.firstName,
       middleName: oldData.middleName,
       lastName: oldData.lastName,
-      gender: oldData.gender, // You can set the gender as needed
+      gender: oldData.gender,
       dateOfBirth: oldData.dateOfBirth,
       bloodGroup: oldData.bloodGroup,
       email: oldData.email,
@@ -222,13 +225,8 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   }
 
   return (
-    <div className={styles.promoCodesPageWrapper}>
-      <div
-        className={classNames(
-          "card-header d-flex",
-          styles.promoCodesPageHeader
-        )}
-      >
+    <div>
+      <div>
         <div
           className={classNames(
             "d-flex align-items-center w-100",
