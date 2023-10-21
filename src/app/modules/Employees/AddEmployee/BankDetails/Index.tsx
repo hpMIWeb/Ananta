@@ -23,25 +23,18 @@ const BankDetails = ({
   };
 
   useEffect(() => {
-    console.log("selectedEmployeeData", selectedEmployeeData);
-    // if (selectedEmployeeData) {
-    //   const organizationDetails = selectedEmployeeData.organizationDetails;
-    //   //setBranchInfoData(organizationDetails);
-
-    //   // Iterate over each item in the organizationDetails array
-    //   organizationDetails.forEach((orgDetail: any, index: number) => {
-    //     //    console.log("orgDetail", orgDetail);
-    //     form.setFieldsValue({
-    //       department: orgDetail.department?._id,
-    //       team: orgDetail.team,
-    //       designation: orgDetail.designation?._id,
-    //       role: orgDetail.role?._id,
-    //       aadhar: orgDetail.aadhar,
-    //       pan: orgDetail.pan,
-    //       referance: orgDetail.referance,
-    //     });
-    //   });
-    // }
+    if (selectedEmployeeData) {
+      let bankDetails = selectedEmployeeData.employeeBankDetails;
+      form.setFieldsValue({
+        bankName: bankDetails.bankName,
+        accountNo: bankDetails.accountNo,
+        accountType: bankDetails.accountType,
+        branchName: bankDetails.branchName,
+        ifscCode: bankDetails.ifscCode,
+        micrCode: bankDetails.micrCode,
+        swiftCode: bankDetails.swiftCode,
+      });
+    }
   }, []);
 
   const getBankDetails = async (ifscCode: any) => {
@@ -62,7 +55,10 @@ const BankDetails = ({
     }
   };
   const onFinish = (value: any) => {
-    setEmployeeInfo({ clientBankDetails: value });
+    console.log("employeeBankDetails", value);
+    setEmployeeInfo({ employeeBankDetails: value });
+
+    // return false;
     console.log(value);
     onChange(5);
   };

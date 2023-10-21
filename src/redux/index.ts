@@ -23,6 +23,7 @@ import getLineOfBusinessReducers from "./getLineOfBusinessReducers";
 import getIndustryTypeReducers from "./getIndustryTypeReducers";
 import deleteAddonReducers from "./deleteAddonReducers";
 import deletePromoCodeReducers from "./deletePromoCodeReducers";
+import createAssociatePartnerReducers from "./createAssociatePartnerReducers";
 
 export const store = configureStore({
     reducer: {
@@ -45,6 +46,7 @@ export const store = configureStore({
         getTeams: getTeamsReducer,
         getDesignation: getDesignationReducers,
         getAssociatePartner: getAssociatePartnerReducers,
+        createAssociatePartner:createAssociatePartnerReducers,
         getLineOfBusiness: getLineOfBusinessReducers,
         getIndustryType: getIndustryTypeReducers,
         deleteAddon: deleteAddonReducers,

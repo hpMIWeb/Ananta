@@ -32,6 +32,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     const roundOff = Form.useWatch("roundOff", form) || 0;
     const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
     const [totalAddonAmount, setTotalAddonAmount] = useState(0);
+    const [billingType, setBillingType] = useState<string>();
 
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);

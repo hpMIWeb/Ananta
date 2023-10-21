@@ -54,6 +54,7 @@ const Employees = () => {
     );
   };
   const cardDesc = (cardData: any) => {
+    console.log("cardData", cardData);
     return [
       {
         iconName: "client",
