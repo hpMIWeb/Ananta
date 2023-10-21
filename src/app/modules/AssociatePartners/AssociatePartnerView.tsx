@@ -93,11 +93,11 @@ const AssociatePartnerView = () => {
     {
       key: 3,
       label: `Sub Profile`,
-      children: (
-        <SubProfile
-          selectedAssociatePartnerData={selectedAssociatePartnerData}
-        />
-      ),
+      // children: (
+      //   <SubProfile
+      //     selectedAssociatePartnerData={selectedAssociatePartnerData}
+      //   />
+      // ),
     },
     {
       key: 4,

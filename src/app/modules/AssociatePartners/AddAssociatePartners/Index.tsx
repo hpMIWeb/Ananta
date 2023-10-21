@@ -34,17 +34,19 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
   const { clientId } = useParams();
   const [form] = Form.useForm();
   const roleType = Cookies.get("roleTypeName");
-  const getClientsListSuccess = useSelector(
-    (state: any) => state.getClients.success
+  const getAssociatePartnerListSucess = useSelector(
+    (state: any) => state.getAssociatePartner.success
   );
-  const getClientsListLoading = useSelector(
-    (state: any) => state.getClients.loading
+  const getAssociatePartnerListLoading = useSelector(
+    (state: any) => state.getAssociatePartner.loading
   );
   const [partnerType, setPartnerType] = useState<string>("");
   const [partnerTypeLabel, setPartnerTypeLabel] = useState("Partner ");
   const [partnerCategory, setPartnerCategory] = useState("");
 
-  const getClientsList = useSelector((state: any) => state.getClients.data);
+  const getAssociatePartnerList = useSelector(
+    (state: any) => state.getAssociatePartner.data
+  );
   const { loading, success } = useSelector((state: any) => state.createClient);
   const partnerTypeOption = [
     { value: "ca", label: "CA" },
@@ -68,7 +70,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
 
   useEffect(() => {
     //TODO:: Need to convert in GET API
-    if (!getClientsListSuccess) {
+    if (!getAssociatePartnerList) {
       dispatch(getClientsReducersApi());
     }
     dispatch(getSubscriptionsListApi());
@@ -83,13 +85,15 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
   };
 
   useEffect(() => {
-    if (getClientsList.length && clientId) {
-      const currentCardDetail = getClientsList.find(
+    if (getAssociatePartnerList.length && clientId) {
+      const currentCardDetail = getAssociatePartnerList.find(
         (s: any) => s._id === clientId
       );
       form.setFieldsValue(currentCardDetail);
+      console.log("currentCardDetail", currentCardDetail);
+      //setPartnerCategory(currentCardDetail.);
     }
-  }, [getClientsList, clientId, form]);
+  }, [getAssociatePartnerList, clientId, form]);
 
   useEffect(() => {
     if (success) {
@@ -233,7 +237,9 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
       ) : null}
 
       <div className={styles.addClientDetailBox}>
-        {getClientsListLoading && clientId && <FormContentSkeletonLoader />}
+        {getAssociatePartnerListLoading && clientId && (
+          <FormContentSkeletonLoader />
+        )}
         <div className="row">
           {roleType === "client" && (
             <div className={classNames("col-12 col-md-4 col-lg-4")}>

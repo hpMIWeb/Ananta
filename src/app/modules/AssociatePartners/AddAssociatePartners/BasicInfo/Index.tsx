@@ -14,7 +14,12 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { firmTypes } from "../../../../../utils/constant";
 
-const BasicInfo = ({ onChange, setFormValue, partnerType }: any) => {
+const BasicInfo = ({
+  onChange,
+  setFormValue,
+  partnerType,
+  selectedAssociatePartnerData,
+}: any) => {
   const [countriesListData, setCountriesListData] = useState<any>([]);
   const [statesListData, setStatesListData] = useState<any>([]);
   const [citiesListData, setCitiesListData] = useState<any>([]);
