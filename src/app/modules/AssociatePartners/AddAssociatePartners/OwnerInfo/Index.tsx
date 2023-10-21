@@ -9,7 +9,7 @@ import { filterObjectByKey } from "../../../../../utils/helpers";
 const OwnerInfo = ({ onChange, setFormValue, partnerType }: any) => {
   const [form] = Form.useForm();
   const [ownerInfoData, setOwnerInfoData] = useState([
-    { type: "default", index: 0, name: "index0" },
+    { type: "default", index: 1, name: "index1" },
   ]);
   const onFinish = (value: any) => {
     const filteredValue = filterObjectByKey(
@@ -28,12 +28,11 @@ const OwnerInfo = ({ onChange, setFormValue, partnerType }: any) => {
       ...prev,
       {
         type: "new",
-        index: ownerInfoData.length,
-        name: `index${ownerInfoData.length}`,
+        index: ownerInfoData.length + 1,
+        name: `index${ownerInfoData.length + 1}`,
       },
     ]);
   };
-
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = ownerInfoData.filter((a) => a.index !== cardIndex);
     setOwnerInfoData(newOwnerInfoData);
@@ -55,14 +54,14 @@ const OwnerInfo = ({ onChange, setFormValue, partnerType }: any) => {
             <>
               {ownerInfoData.map((field, index) => (
                 <div style={{ marginTop: 2 }} key={index} className="row">
-                  {/* {form.type === "new" && (
+                  {field.type === "new" && (
                     <hr className={styles.ownerInfoCardLine} />
-                  )} */}
+                  )}
                   <OwnerInfoCardBox
                     index={index}
                     field={field}
                     remove={remove}
-                    //  canDelete={form.type === "new"}
+                    canDelete={field.type === "new"}
                     onDeleteCardClick={onDeleteCardClick}
                     partnerType={partnerType}
                   />

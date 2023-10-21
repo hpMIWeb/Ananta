@@ -12,6 +12,7 @@ import Upload from "../../../../../components/Upload/Index";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { firmTypes } from "../../../../../utils/constant";
 
 const BasicInfo = ({ onChange, setFormValue, partnerType }: any) => {
   const [countriesListData, setCountriesListData] = useState<any>([]);
@@ -167,19 +168,7 @@ const BasicInfo = ({ onChange, setFormValue, partnerType }: any) => {
                     name="firmType"
                     className="customAddFormSelectOptions"
                   >
-                    <Select
-                      defaultValue="Partnership"
-                      options={[
-                        {
-                          value: "Partnership",
-                          label: "Partnership",
-                        },
-                        {
-                          value: "Private",
-                          label: "Private",
-                        },
-                      ]}
-                    />
+                    <Select options={firmTypes} />
                   </Form.Item>
                 </div>
               </div>

@@ -22,6 +22,12 @@ import Cookies from "js-cookie";
 
 const AddAssociatePartners = () => {
   const [activeTab, setActiveTab] = useState(1);
+  const [disableTabArray, setDisableTabArray] = useState({
+    1: false,
+    2: true,
+    3: true,
+    4: true,
+  });
   const [associatePartnerValue, setAssociatePartner] = useState({});
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
@@ -96,9 +102,14 @@ const AddAssociatePartners = () => {
       const payload = { ...associatePartnerValue, ...formValue };
 
       payload.partnerType = partnerType;
+      payload.fileNumber = "kok";
       // @ts-ignore
       dispatch(createAssociatePartnerReducersApi({ payload: payload }));
     } else {
+      setDisableTabArray((prevDisableTabArray) => ({
+        ...prevDisableTabArray,
+        [key]: false,
+      }));
       setActiveTab(key);
     }
   };
@@ -107,6 +118,7 @@ const AddAssociatePartners = () => {
     {
       key: 1,
       label: `Firm Info`,
+      disabled: disableTabArray[1],
       children: (
         <BasicInfo
           onChange={onChange}
@@ -118,6 +130,7 @@ const AddAssociatePartners = () => {
     {
       key: 2,
       label: `Owner Details`,
+      disabled: disableTabArray[2],
       children: (
         <OwnerInfo
           onChange={onChange}
@@ -128,6 +141,7 @@ const AddAssociatePartners = () => {
     },
     {
       key: 3,
+      disabled: disableTabArray[3],
       label:
         partnerTypeLabel !== "Service Partner" ? `Revenue Program` : `Billing`,
       children:
@@ -146,6 +160,7 @@ const AddAssociatePartners = () => {
     },
     {
       key: 4,
+      disabled: disableTabArray[4],
       label:
         partnerTypeLabel !== "Service Partner" ? `Bank Details` : `Payment`,
       children:
