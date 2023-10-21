@@ -110,8 +110,10 @@ const BasicInfo = ({
         gender: selectedEmployeeData.gender,
         bloodGroup: selectedEmployeeData.bloodGroup,
         email: selectedEmployeeData.email,
+        //        dateOfBirth: dayjs(selectedEmployeeData.).format("DD/MM/YYYY");
+        // dateOfBirth: new Date(selectedEmployeeData.dateOfBirth),
         mobile: selectedEmployeeData.mobile,
-        //alternateMobile: selectedEmployeeData?.alternateMobile,
+        alternateMobile: selectedEmployeeData?.alternateMobile,
         address: selectedEmployeeData.address,
         pinCode: selectedEmployeeData.pinCode,
         country: selectedEmployeeData.country,
