@@ -1,87 +1,77 @@
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
-import styles from "./viewEmployee.module.scss";
+import styles from "./viewAssocicatePartner.module.scss";
 import Tabs from "../../../components/Tabs/Index";
 import Button from "../../../components/Button/Index";
 import Icon from "../../../components/Icon/Index";
 import { useEffect, useState } from "react";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Form } from "antd";
-import { getEmployeesReducersApi } from "../../../redux/getEmployeesReducers";
 import FormContentSkeletonLoader from "../../../components/FormContentSkeletonLoader/Index";
 
-import { getClientsReducersApi } from "../../../redux/getClientsReducers";
-import { getRolesReducersApi } from "../../../redux/getRolesReducers";
-import { getRoleTypeReducersApi } from "../../../redux/getRoleTypeReducers";
-import { getTeamReducersApi } from "../../../redux/getTeamsReducer";
-import { getDepartmentsReducersApi } from "../../../redux/getDepartmentsReducers";
-import { getDesignationReducersApi } from "../../../redux/getDesignationReducers";
 import { useAppDispatch } from "../../states/store";
-import AddEmployee from "./AddEmployee/Index";
+import { getAssociatePartnerReducersApi } from "../../../redux/getAssociatePartnerReducers";
 import SubProfile from "./SubProfile/Index";
+import AddAssociatePartners from "./AddAssociatePartners/Index";
 
-const EmployeeView = () => {
+const AssociatePartnerView = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
   const { state } = useLocation();
   const [form] = Form.useForm();
 
   const [activeTab, setActiveTab] = useState(1);
-  const [employeeDetails, setEmployeeDetails] = useState({});
-  const [selectedEmployeeData, setSelectedEmployeeData] = useState<any>({});
+  const [selectedAssociatePartnerData, setSelectedAssociatePartnerData] =
+    useState<any>({});
 
-  const getEmployeesListSuccess = useSelector(
-    (state: any) => state.getEmployees.success
+  const getAssociatePartnerListSuccess = useSelector(
+    (state: any) => state.getAssociatePartner.success
   );
-  const getEmployeesListLoading = useSelector(
-    (state: any) => state.getEmployees.loading
+  const getAssociatePartnerListLoading = useSelector(
+    (state: any) => state.getAssociatePartner.loading
   );
-  const getEmployeesList = useSelector((state: any) => state.getEmployees.data);
-  const [employeeId, setEmployeeId] = useState<string>("");
+  const getAssociatePartnerList = useSelector(
+    (state: any) => state.getAssociatePartner.data
+  );
+  const [associatePartnerId, setAssociatePartnerId] = useState<string>("");
 
   const { loading, success } = useSelector(
     (state: any) => state.createEmployee
   );
 
   useEffect(() => {
-    if (state) setEmployeeId(state.id);
+    if (state) setAssociatePartnerId(state.id);
   }, []);
   useEffect(() => {
-    dispatch(getRolesReducersApi());
-    dispatch(getRoleTypeReducersApi());
-    dispatch(getDepartmentsReducersApi());
-    dispatch(getClientsReducersApi());
-    dispatch(getTeamReducersApi());
-    dispatch(getDesignationReducersApi());
-    if (!getEmployeesListSuccess) {
-      dispatch(getEmployeesReducersApi());
+    if (!getAssociatePartnerListSuccess) {
+      dispatch(getAssociatePartnerReducersApi());
     }
   }, []);
 
   const handleCancelClick = () => {
-    navigation("/employee");
+    navigation("/associatePartners");
   };
 
-  const setEmployeeInfo = (value: any) => {
-    setEmployeeDetails((prev) => ({ ...prev, ...value }));
-  };
+  // const setEmployeeInfo = (value: any) => {
+  //   setEmployeeDetails((prev) => ({ ...prev, ...value }));
+  // };
 
   useEffect(() => {
-    if (getEmployeesList.length && employeeId) {
-      const currentCardDetail = getEmployeesList.find(
-        (s: any) => s._id === employeeId
+    if (getAssociatePartnerList.length && associatePartnerId) {
+      const currentCardDetail = getAssociatePartnerList.find(
+        (s: any) => s._id === associatePartnerId
       );
       form.setFieldsValue(currentCardDetail);
-      setSelectedEmployeeData(currentCardDetail);
+      console.log();
+      setSelectedAssociatePartnerData(currentCardDetail);
     }
-  }, [getEmployeesList, employeeId, form]);
+  }, [getAssociatePartnerList, associatePartnerId, form]);
 
   useEffect(() => {
     if (success) {
-      navigation("/employee");
+      navigation("/associatePartners");
     }
   }, [success]);
 
@@ -103,7 +93,11 @@ const EmployeeView = () => {
     {
       key: 3,
       label: `Sub Profile`,
-      children: <SubProfile selectedEmployeeData={selectedEmployeeData} />,
+      children: (
+        <SubProfile
+          selectedAssociatePartnerData={selectedAssociatePartnerData}
+        />
+      ),
     },
     {
       key: 4,
@@ -113,9 +107,8 @@ const EmployeeView = () => {
       key: 5,
       label: `Profile`,
       children: (
-        <AddEmployee
-          selectedEmployeeID={employeeId}
-          selectedEmployeeData={selectedEmployeeData}
+        <AddAssociatePartners
+          selectedAssociatePartnerData={selectedAssociatePartnerData}
         />
       ),
     },
@@ -147,7 +140,7 @@ const EmployeeView = () => {
                 styles.addPromoCodeLabel
               )}
             >
-              {selectedEmployeeData.firstName} {selectedEmployeeData.lastName}
+              {selectedAssociatePartnerData.firmName}s{" "}
             </h5>
           </div>
           <div className={classNames("ms-auto z-index-1")}>
@@ -167,8 +160,10 @@ const EmployeeView = () => {
         </div>
       </div>
       <div className={styles.addEmployeeDetailBox}>
-        {getEmployeesListLoading && employeeId && <FormContentSkeletonLoader />}
-        {!(getEmployeesListLoading && employeeId) && (
+        {getAssociatePartnerListLoading && associatePartnerId && (
+          <FormContentSkeletonLoader />
+        )}
+        {!(getAssociatePartnerListLoading && associatePartnerId) && (
           <Tabs
             className="subscriptionTabs"
             defaultActiveKey="1"
@@ -182,4 +177,4 @@ const EmployeeView = () => {
   );
 };
 
-export default EmployeeView;
+export default AssociatePartnerView;

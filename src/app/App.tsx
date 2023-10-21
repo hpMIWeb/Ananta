@@ -53,206 +53,171 @@ import TimeSheet from "./modules/timesheet/TimeSheet";
 import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Setting from "./modules/Setting/Setting";
+import AssociatePartnerView from "./modules/AssociatePartners/AssociatePartnerView";
 
 const App = () => {
-    const dispatch = useDispatch();
-    const defaultDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
-    const [theme, setTheme] = useLocalStorage(
-        "theme",
-        defaultDark ? "dark" : "light"
-    );
+  const dispatch = useDispatch();
+  const defaultDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const [theme, setTheme] = useLocalStorage(
+    "theme",
+    defaultDark ? "dark" : "light"
+  );
 
-    const switchTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
-        setTheme(newTheme);
-    };
+  const switchTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  };
 
-    useEffect(() => {
-        if (getAuthToken) {
-            // @ts-ignore
-            dispatch(getUserInfoReducersApi());
-        }
-    }, [getAuthToken]);
+  useEffect(() => {
+    if (getAuthToken) {
+      // @ts-ignore
+      dispatch(getUserInfoReducersApi());
+    }
+  }, [getAuthToken]);
 
-    return (
-        <div
-            className="AppWrapper"
-            style={{ paddingRight: 16 }}
-            data-theme={theme}
-        >
-            <BrowserRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Layout switchTheme={switchTheme} theme={theme} />
-                        }
-                    >
-                        <Route path="login" element={<Login />} />
-                        <Route
-                            path="reset-password"
-                            element={<ResetPassword />}
-                        />
-                        <Route
-                            index
-                            element={<PrivateRoute component={Home} />}
-                        />
-                        <Route
-                            path="subscription"
-                            element={<PrivateRoute component={Subscription} />}
-                        />
-                        <Route
-                            path="subscription/add-subscription"
-                            element={
-                                <PrivateRoute component={AddSubscription} />
-                            }
-                        />
-                        <Route
-                            path="subscription/edit-subscription"
-                            element={
-                                <PrivateRoute component={AddSubscription} />
-                            }
-                        />
-                        <Route
-                            path="addons"
-                            element={<PrivateRoute component={AddOns} />}
-                        />
-                        <Route
-                            path="addons/create"
-                            element={<PrivateRoute component={NewAddOns} />}
-                        />
-                        <Route
-                            path="addons/edit"
-                            element={<PrivateRoute component={NewAddOns} />}
-                        />
-                        <Route
-                            path="promocodes"
-                            element={<PrivateRoute component={PromoCodes} />}
-                        />
-                        <Route
-                            path="promocodes/create"
-                            element={<PrivateRoute component={AddPromoCode} />}
-                        />
-                        <Route
-                            path="promocodes/edit"
-                            element={<PrivateRoute component={AddPromoCode} />}
-                        />
-                        <Route
-                            path="caclient"
-                            element={<PrivateRoute component={Clients} />}
-                        />
-                        <Route
-                            path="caclient/create"
-                            element={<PrivateRoute component={AddClient} />}
-                        />
-                        <Route
-                            path="caclient/edit/:clientId"
-                            element={<PrivateRoute component={AddClient} />}
-                        />
-                        <Route
-                            path="caclient/createbulk"
-                            element={<PrivateRoute component={BulkAddClient} />}
-                        />
-                        <Route
-                            path="employee"
-                            element={<PrivateRoute component={Employees} />}
-                        />
-                        <Route
-                            path="employee/add-employee"
-                            element={<PrivateRoute component={AddEmployee} />}
-                        />
-                        <Route
-                            path="employee/edit-employee/:employeeId"
-                            element={<PrivateRoute component={AddEmployee} />}
-                        />{" "}
-                        <Route
-                            path="employee/view-employee"
-                            element={<PrivateRoute component={EmployeeView} />}
-                        />
-                        <Route
-                            path="associatePartners"
-                            element={<AssociatePartners />}
-                        />
-                        <Route
-                            path="associatePartners/create"
-                            element={<AddAssociatePartners />}
-                        />{" "}
-                        <Route
-                            path="associatePartners/create/edit/:associatePartnerId"
-                            element={
-                                <PrivateRoute
-                                    component={AddAssociatePartners}
-                                />
-                            }
-                        />
-                        {/* Master link */}
-                        <Route path="department" element={<Department />} />
-                        <Route path="designation" element={<Designation />} />
-                        <Route path="role" element={<Role />} />
-                        <Route path="role-action" element={<RoleAction />} />
-                        <Route path="team" element={<Team />} />
-                        <Route path="checklist" element={<Checklist />} />
-                        {/* Default Master link */}
-                        <Route
-                            path="default-department"
-                            element={<DefaultDepartment />}
-                        />{" "}
-                        <Route
-                            path="default-designation"
-                            element={<DefaultDesignation />}
-                        />{" "}
-                        <Route path="default-role" element={<DefaultRole />} />
-                        <Route
-                            path="default-role-action"
-                            element={<DefaultRoleAction />}
-                        />{" "}
-                        <Route
-                            path="default-checklist"
-                            element={<DefaultChecklist />}
-                        />{" "}
-                        <Route
-                            path="default-industry-type"
-                            element={<DefaultIndustryType />}
-                        />
-                        <Route
-                            path="default-line-of-business"
-                            element={<DefaultLineOfBusiness />}
-                        />{" "}
-                        <Route
-                            path="logout"
-                            element={<PrivateRoute component={Logout} />}
-                        />
-                        {/* Task Master link */}
-                        <Route index path="task" element={<TaskList />} />
-                        <Route path="add-task" element={<AddTask />} />
-                        <Route
-                            path="add-multi-task"
-                            element={<AddMultipleTask />}
-                        />
-                        <Route path="compliance" element={<ComplianceList />} />
-                        <Route
-                            path="add-compliance"
-                            element={<AddCompliance />}
-                        />
-                        <Route path="approval" element={<Approval />} />
-                        <Route path="timesheet" element={<TimeSheet />} />
-                        <Route
-                            path="emp-time-sheet"
-                            element={<EmpTimeSheet />}
-                        />
-                        <Route
-                            path="client-time-sheet"
-                            element={<ClientTimeSheet />}
-                        />
-                        <Route path="Setting" element={<Setting />} />
-                        <Route path="*" element={<NoMatch />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </div>
-    );
+  return (
+    <div className="AppWrapper" style={{ paddingRight: 16 }} data-theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Layout switchTheme={switchTheme} theme={theme} />}
+          >
+            <Route path="login" element={<Login />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+            <Route index element={<PrivateRoute component={Home} />} />
+            <Route
+              path="subscription"
+              element={<PrivateRoute component={Subscription} />}
+            />
+            <Route
+              path="subscription/add-subscription"
+              element={<PrivateRoute component={AddSubscription} />}
+            />
+            <Route
+              path="subscription/edit-subscription"
+              element={<PrivateRoute component={AddSubscription} />}
+            />
+            <Route
+              path="addons"
+              element={<PrivateRoute component={AddOns} />}
+            />
+            <Route
+              path="addons/create"
+              element={<PrivateRoute component={NewAddOns} />}
+            />
+            <Route
+              path="addons/edit"
+              element={<PrivateRoute component={NewAddOns} />}
+            />
+            <Route
+              path="promocodes"
+              element={<PrivateRoute component={PromoCodes} />}
+            />
+            <Route
+              path="promocodes/create"
+              element={<PrivateRoute component={AddPromoCode} />}
+            />
+            <Route
+              path="promocodes/edit"
+              element={<PrivateRoute component={AddPromoCode} />}
+            />
+            <Route
+              path="caclient"
+              element={<PrivateRoute component={Clients} />}
+            />
+            <Route
+              path="caclient/create"
+              element={<PrivateRoute component={AddClient} />}
+            />
+            <Route
+              path="caclient/edit/:clientId"
+              element={<PrivateRoute component={AddClient} />}
+            />
+            <Route
+              path="caclient/createbulk"
+              element={<PrivateRoute component={BulkAddClient} />}
+            />
+            <Route
+              path="employee"
+              element={<PrivateRoute component={Employees} />}
+            />
+            <Route
+              path="employee/add-employee"
+              element={<PrivateRoute component={AddEmployee} />}
+            />
+            <Route
+              path="employee/edit-employee/:employeeId"
+              element={<PrivateRoute component={AddEmployee} />}
+            />{" "}
+            <Route
+              path="employee/view-employee"
+              element={<PrivateRoute component={EmployeeView} />}
+            />
+            <Route path="associatePartners" element={<AssociatePartners />} />
+            <Route
+              path="associatePartners/create"
+              element={<AddAssociatePartners />}
+            />
+            <Route
+              path="associatePartners/create/edit/:associatePartnerId"
+              element={<PrivateRoute component={AddAssociatePartners} />}
+            />
+            <Route
+              path="associatePartners/view-associatePartners"
+              element={<PrivateRoute component={AssociatePartnerView} />}
+            />
+            {/* Master link */}
+            <Route path="department" element={<Department />} />
+            <Route path="designation" element={<Designation />} />
+            <Route path="role" element={<Role />} />
+            <Route path="role-action" element={<RoleAction />} />
+            <Route path="team" element={<Team />} />
+            <Route path="checklist" element={<Checklist />} />
+            {/* Default Master link */}
+            <Route
+              path="default-department"
+              element={<DefaultDepartment />}
+            />{" "}
+            <Route
+              path="default-designation"
+              element={<DefaultDesignation />}
+            />{" "}
+            <Route path="default-role" element={<DefaultRole />} />
+            <Route
+              path="default-role-action"
+              element={<DefaultRoleAction />}
+            />{" "}
+            <Route path="default-checklist" element={<DefaultChecklist />} />{" "}
+            <Route
+              path="default-industry-type"
+              element={<DefaultIndustryType />}
+            />
+            <Route
+              path="default-line-of-business"
+              element={<DefaultLineOfBusiness />}
+            />{" "}
+            <Route
+              path="logout"
+              element={<PrivateRoute component={Logout} />}
+            />
+            {/* Task Master link */}
+            <Route index path="task" element={<TaskList />} />
+            <Route path="add-task" element={<AddTask />} />
+            <Route path="add-multi-task" element={<AddMultipleTask />} />
+            <Route path="compliance" element={<ComplianceList />} />
+            <Route path="add-compliance" element={<AddCompliance />} />
+            <Route path="approval" element={<Approval />} />
+            <Route path="timesheet" element={<TimeSheet />} />
+            <Route path="emp-time-sheet" element={<EmpTimeSheet />} />
+            <Route path="client-time-sheet" element={<ClientTimeSheet />} />
+            <Route path="Setting" element={<Setting />} />
+            <Route path="*" element={<NoMatch />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 };
 
 export default App;

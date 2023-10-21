@@ -34,6 +34,10 @@ const AssociatePartners = () => {
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
+  const handleViewBtnClick = (id: string) => {
+    console.log(id);
+    navigation(`view-associatePartners/`, { state: { id: id } });
+  };
   const superAdminAddonOption = [
     { value: "ca", label: "CA" },
     {
@@ -227,6 +231,7 @@ const AssociatePartners = () => {
               isProfileViewAction
               onChangeActiveClick={onChangeActiveClick}
               isActive={card.status}
+              handleViewBtnClick={handleViewBtnClick}
             />
           ))}
 

@@ -20,7 +20,7 @@ import SubscriptionTabAddClient from "./SubscriptionTabAddClient/Index";
 import PaymentTabAddClient from "./PaymentTabAddClient/Index";
 import Cookies from "js-cookie";
 
-const AddAssociatePartners = () => {
+const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
   const [activeTab, setActiveTab] = useState(1);
   const [disableTabArray, setDisableTabArray] = useState({
     1: false,
@@ -102,9 +102,15 @@ const AddAssociatePartners = () => {
       const payload = { ...associatePartnerValue, ...formValue };
 
       payload.partnerType = partnerType;
+      // TODO Remove static value
       payload.fileNumber = "kok";
-      // @ts-ignore
-      dispatch(createAssociatePartnerReducersApi({ payload: payload }));
+
+      dispatch(
+        createAssociatePartnerReducersApi({
+          payload: payload,
+          associatePartnerId: "",
+        })
+      );
     } else {
       setDisableTabArray((prevDisableTabArray) => ({
         ...prevDisableTabArray,
@@ -124,6 +130,7 @@ const AddAssociatePartners = () => {
           onChange={onChange}
           setFormValue={setFormValue}
           partnerType={partnerType}
+          selectedAssociatePartnerData={selectedAssociatePartnerData}
         />
       ),
     },
@@ -136,6 +143,7 @@ const AddAssociatePartners = () => {
           onChange={onChange}
           setFormValue={setFormValue}
           partnerType={partnerType}
+          selectedAssociatePartnerData={selectedAssociatePartnerData}
         />
       ),
     },
@@ -150,11 +158,13 @@ const AddAssociatePartners = () => {
             onChange={onChange}
             setFormValue={setFormValue}
             partnerType={partnerType}
+            selectedAssociatePartnerData={selectedAssociatePartnerData}
           />
         ) : (
           <SubscriptionTabAddClient
             onChange={onChange}
             setFormValue={setFormValue}
+            selectedAssociatePartnerData={selectedAssociatePartnerData}
           />
         ),
     },
@@ -169,11 +179,13 @@ const AddAssociatePartners = () => {
             onChange={onChange}
             setFormValue={setFormValue}
             partnerType={partnerType}
+            selectedAssociatePartnerData={selectedAssociatePartnerData}
           />
         ) : (
           <PaymentTabAddClient
             onChange={onChange}
             setFormValue={setFormValue}
+            selectedAssociatePartnerData={selectedAssociatePartnerData}
           />
         ),
     },
@@ -181,42 +193,45 @@ const AddAssociatePartners = () => {
 
   return (
     <div className={classNames("card mb-3", styles.addPromoCodeCardWrapper)}>
-      <div
-        className={classNames(
-          "card-header d-flex",
-          styles.promoCodeCardHeaderBox
-        )}
-        style={{ minHeight: 60 }}
-      >
+      {!selectedAssociatePartnerData ? (
         <div
           className={classNames(
-            "d-flex align-items-center w-100",
-            styles.promocodeHeaderTitle
+            "card-header d-flex",
+            styles.promoCodeCardHeaderBox
           )}
+          style={{ minHeight: 60 }}
         >
-          <div className="me-auto">
-            <h5
-              className={classNames(
-                "my-2 position-relative z-index-1",
-                styles.addPromoCodeLabel
-              )}
-            >
-              Add New Associate Partner
-            </h5>
-          </div>
-          <div className={classNames("ms-auto z-index-1")}>
-            <Button
-              onClick={handleCancelClick}
-              style={{
-                minWidth: 104,
-              }}
-              className="greyBtn"
-            >
-              Cancel
-            </Button>
+          <div
+            className={classNames(
+              "d-flex align-items-center w-100",
+              styles.promocodeHeaderTitle
+            )}
+          >
+            <div className="me-auto">
+              <h5
+                className={classNames(
+                  "my-2 position-relative z-index-1",
+                  styles.addPromoCodeLabel
+                )}
+              >
+                Add New Associate Partner
+              </h5>
+            </div>
+            <div className={classNames("ms-auto z-index-1")}>
+              <Button
+                onClick={handleCancelClick}
+                style={{
+                  minWidth: 104,
+                }}
+                className="greyBtn"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
+
       <div className={styles.addClientDetailBox}>
         {getClientsListLoading && clientId && <FormContentSkeletonLoader />}
         <div className="row">
