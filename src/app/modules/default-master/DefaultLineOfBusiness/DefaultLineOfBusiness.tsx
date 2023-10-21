@@ -391,7 +391,7 @@ const DefaultLineOfBusiness = () => {
                         ? "Add New Line Of Business"
                         : "Edit " +
                           selectedLineOfBusiness.name +
-                          " Industry Type"
+                          " Line Of Business"
                 }
                 open={isModalOpen}
                 onOk={handleOk}

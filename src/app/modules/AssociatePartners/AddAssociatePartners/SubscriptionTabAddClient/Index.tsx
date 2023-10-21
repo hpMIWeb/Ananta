@@ -1,10 +1,4 @@
-import {
-    JSXElementConstructor,
-    ReactElement,
-    ReactNode,
-    useEffect,
-    useState,
-} from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
@@ -788,6 +782,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 placement="right"
                 onClose={onClose}
                 open={openPromoCodeDrawer}
+                className={classNames(styles.couponList)}
             >
                 <Row
                     gutter={[8, 8]}

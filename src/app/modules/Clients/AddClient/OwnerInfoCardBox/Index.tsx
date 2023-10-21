@@ -21,9 +21,13 @@ const OwnerInfoCardBox = ({
     return (
         <>
             <div>
-                <div className={styles.itemNumber}>{index + 1}</div>
+                {/* <div className={styles.itemNumber}>{index + 1}</div> */}
                 <div>
                     <Button
+                        className={classNames(
+                            "cancelBtn",
+                            styles.deleteCardBtn
+                        )}
                         type="primary"
                         danger
                         icon={<DeleteOutlined />}

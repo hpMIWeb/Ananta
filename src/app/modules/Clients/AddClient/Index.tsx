@@ -181,6 +181,7 @@ const AddClient = () => {
                     onChange={onChange}
                     setFormValue={setFormValue}
                     clientType={clientType}
+                    clientValue={clientValue}
                 />
             ),
             disabled: !subScriptionInfoValid,
@@ -193,6 +194,7 @@ const AddClient = () => {
                     onChange={onChange}
                     setFormValue={setFormValue}
                     clientType={clientType}
+                    clientValue={clientValue}
                 />
             ),
             disabled: !paymentInfoValid,

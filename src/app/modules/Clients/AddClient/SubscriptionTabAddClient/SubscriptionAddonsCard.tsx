@@ -125,10 +125,6 @@ const SubscriptionAddonsCard = memo(
             setSelectNumber((prev) => prev - 1);
         };
 
-        useEffect(() => {
-            console.log("selectAddonDetails", selectAddonDetails);
-        }, [selectAddonDetails]);
-
         const generateAddonDetails = () => {
             const priceSuffix = "/-";
             const pricePrefix = " Rs ";

@@ -28,6 +28,7 @@ const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
     clientType,
+    clientValue,
 }: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
@@ -312,9 +313,17 @@ const SubscriptionTabAddClient = ({
             period_type
         );
 
-        const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
+        //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
+        const taxableValue =
+            selectedSubscriptionPlan.price +
+            totalAddonAmount -
+            (adminDiscount ?? 0) -
+            couponDiscount;
         const gstAmount = (taxableValue / 100) * 18;
-        const invoiceAmount = taxableValue + gstAmount + parseFloat(roundOff);
+        const invoiceAmount =
+            taxableValue +
+            gstAmount +
+            (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
         const finalFormValues = {
             subscriptionType,
@@ -646,8 +655,20 @@ const SubscriptionTabAddClient = ({
                                                     className="customAddFormSelectOptions"
                                                 >
                                                     <Input
+                                                        onKeyPress={(
+                                                            event: any
+                                                        ) => {
+                                                            if (
+                                                                !/[0-9]/.test(
+                                                                    event.key
+                                                                )
+                                                            ) {
+                                                                event.preventDefault();
+                                                            }
+                                                        }}
                                                         defaultValue={0}
                                                         className="customAddFormInputText text-end"
+                                                        maxLength="10"
                                                     />
                                                 </Form.Item>
                                             </div>
@@ -676,24 +697,78 @@ const SubscriptionTabAddClient = ({
                                         </div>
                                     </div>
 
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                GST @ 18%
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1"
-                                                    id="total"
-                                                >
-                                                    Rs. {Math.round(gstAmount)}
-                                                    /-
+                                    {clientValue.state !== "Gujarat" && (
+                                        <div className="row rowPadding">
+                                            <div className="col">
+                                                <p className="text-end mb-1">
+                                                    GST @ 18%
                                                 </p>
                                             </div>
+                                            <div className="col-auto">
+                                                <div style={{ width: 100 }}>
+                                                    <p
+                                                        className="text-end mb-1"
+                                                        id="total"
+                                                    >
+                                                        Rs.
+                                                        {Math.round(gstAmount)}
+                                                        /-
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {clientValue.state === "Gujarat" && (
+                                        <>
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        SGST @ 9%
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.
+                                                            {Math.round(
+                                                                (taxableValue /
+                                                                    100) *
+                                                                    9
+                                                            )}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        CGST @ 9%
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.
+                                                            {Math.round(
+                                                                (taxableValue /
+                                                                    100) *
+                                                                    9
+                                                            )}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
 
                                     <div className="row rowPadding">
                                         <div className="col">
