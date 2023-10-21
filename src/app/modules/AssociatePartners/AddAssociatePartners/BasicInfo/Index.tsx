@@ -111,6 +111,29 @@ const BasicInfo = ({
   };
 
   useEffect(() => {
+    console.log("selectedAssociatePartnerData", selectedAssociatePartnerData);
+    if (selectedAssociatePartnerData) {
+      form.setFieldsValue({
+        //  employeeId: selectedAssociatePartnerData.employeeId,
+        firmName: selectedAssociatePartnerData.firmName,
+        firmType: selectedAssociatePartnerData.firmType,
+        partnerId: selectedAssociatePartnerData.partnerId,
+        firmPAN: selectedAssociatePartnerData.firmPAN,
+        firmGSTIN: selectedAssociatePartnerData.firmGSTIN,
+        firmRegistrationNo: selectedAssociatePartnerData.firmRegistrationNo,
+        email: selectedAssociatePartnerData.email,
+        mobile: selectedAssociatePartnerData.mobile,
+        address: selectedAssociatePartnerData.address,
+        pinCode: selectedAssociatePartnerData.pinCode,
+        country: selectedAssociatePartnerData.country,
+        state: selectedAssociatePartnerData.state,
+        city: selectedAssociatePartnerData.city,
+        groupName: selectedAssociatePartnerData.groupName,
+        referredBy: selectedAssociatePartnerData.referredBy,
+      });
+    }
+  }, []);
+  useEffect(() => {
     fetchCountries();
   }, []);
 
