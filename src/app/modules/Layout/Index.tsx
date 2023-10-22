@@ -350,6 +350,7 @@ const LayoutComponent = ({
         "add-subscription": "Create New",
         "edit-subscription": "Edit",
         "add-employee": "Create New",
+        "view-employee": "View Employee",
         caclient: "Dashboard",
         employee: "Dashboard",
         create: "Create New",
