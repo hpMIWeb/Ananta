@@ -20,7 +20,6 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
     });
     const onFinish = (values: any) => {
         setFormValue(values);
-        //onChange(7);
         onChange(8);
     };
 
@@ -261,36 +260,10 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
                     </div>
                 </div>
                 {paymentRowData.map((payment, index) => (
-                    <React.Fragment key={index}>
-                        <PaymentFieldRow />
-                        {/* {payment.type === "new" && (
-                            <hr style={{ marginTop: 0 }} />
-                        )}
-                        {payment.type === "new" && (
-                            <div className="d-grid gap-2">
-                                <Button
-                                    className={classNames(
-                                        "cancelBtn",
-                                        styles.deleteCardBtn
-                                    )}
-                                    type="primary"
-                                    onClick={() =>
-                                        onDeleteCardClick(payment.index)
-                                    }
-                                    danger
-                                >
-                                    <Icon
-                                        height={14}
-                                        width={14}
-                                        name="trashIcon"
-                                    />
-                                    <span style={{ marginLeft: 5 }}>
-                                        Delete
-                                    </span>
-                                </Button>
-                            </div>
-                        )} */}
-                    </React.Fragment>
+                    <PaymentFieldRow
+                        onDelete={onDeleteCardClick}
+                        instrumentIndex={payment.index}
+                    />
                 ))}
             </div>
             <div className="row">

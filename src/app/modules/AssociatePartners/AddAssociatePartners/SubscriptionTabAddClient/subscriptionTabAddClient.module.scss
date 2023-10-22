@@ -163,6 +163,6 @@
 }
 
 .couponList {
-    background: var(--falcon-card-bg);
-    box-shadow: var(--falcon-box-shadow);
+    background: var(--falcon-card-bg) !important;
+    box-shadow: var(--falcon-box-shadow) !important;
 }

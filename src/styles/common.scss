@@ -281,3 +281,14 @@
         text-align: center;
     }
 }
+
+.ant-drawer {
+    .ant-drawer-content-wrapper {
+        .ant-drawer-content {
+            .ant-drawer-wrapper-body {
+                background-color: var(--white) !important;
+                border-left: 2px solid var(--black) !important;
+            }
+        }
+    }
+}
