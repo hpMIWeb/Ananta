@@ -1,16 +1,15 @@
 .smallCheckBox {
-  height: 14px !important;
-  line-height: 14px !important;
-  border: 1px solid var(--falcon-form-check-input-border-color);
-  .ant-switch-handle {
-    width: 10px !important;
-    height: 10px !important;
-    top: 1px;
-  }
+    height: 14px !important;
+    line-height: 14px !important;
+    border: 1px solid var(--falcon-form-check-input-border-color);
+    .ant-switch-handle {
+        width: 10px !important;
+        height: 10px !important;
+        top: -1px;
+    }
 }
 .ant-switch-checked.smallCheckBox {
-    .ant-switch-handle{
-        inset-inline-start: calc(100% - 12px) !important;
-      }
-  }
-  
+    .ant-switch-handle {
+        inset-inline-start: calc(100% - 11px) !important;
+    }
+}
