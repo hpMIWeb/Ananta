@@ -351,6 +351,7 @@ const LayoutComponent = ({
         "edit-subscription": "Edit",
         "add-employee": "Create New",
         "view-employee": "View Employee",
+        "view-associatePartners": "View Associate Partners",
         caclient: "Dashboard",
         employee: "Dashboard",
         create: "Create New",
@@ -507,7 +508,12 @@ const LayoutComponent = ({
     };
 
     return (
-        <Layout style={{ minHeight: "100vh", background: "#EDF2F9" }}>
+        <Layout
+            style={{
+                minHeight: "100vh",
+                background: "#EDF2F9",
+            }}
+        >
             <Sider
                 collapsible
                 className={classNames(
@@ -518,7 +524,7 @@ const LayoutComponent = ({
                 onCollapse={(value) => setCollapsed(value)}
                 trigger={null}
                 collapsedWidth={65}
-                width={218}
+                width={225}
             >
                 <Menu
                     theme="dark"

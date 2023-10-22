@@ -55,7 +55,7 @@
     }
     .ant-layout-sider-children {
         position: fixed;
-        width: 218px;
+        width: 225px;
     }
 
     .ant-menu-submenu-title {
@@ -81,6 +81,10 @@
             line-height: 1.4;
             margin-top: 5px;
         }
+    }
+
+    .ant-menu-inline-collapsed {
+        width: 70px !important;
     }
 }
 .ant-layout-sider-collapsed {
