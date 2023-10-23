@@ -13,7 +13,7 @@ const EmergencyInfo = ({
 }: any) => {
   const [form] = Form.useForm();
   const [emergencyInfoData, setEmergencyInfoData] = useState([
-    { type: "default", index: 0, name: "index0" },
+    { type: "default", index: 1, name: "index1" },
   ]);
 
   const onFinish = (value: any) => {
@@ -21,27 +21,36 @@ const EmergencyInfo = ({
       value,
       emergencyInfoData.map((a: any) => a.name)
     );
+
+    console.log("value", value);
+    console.log(filteredValue);
     setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
-    onChange(6, { emergencyDetails: Object.values(filteredValue) });
+    // onChange(6, { emergencyDetails: Object.values(filteredValue) });
   };
 
   useEffect(() => {
     if (selectedEmployeeData && selectedEmployeeData.emergencyDetails) {
+      console.log("Nnkn");
       setEmergencyInfoData(selectedEmployeeData.emergencyDetails);
       form.setFieldsValue({
         emergencyDetails: selectedEmployeeData.emergencyDetails,
       });
     }
   }, []);
+
   const addMoreOwnerCard = () => {
+    const newIndex = emergencyInfoData.length;
     setEmergencyInfoData((prev) => [
       ...prev,
       {
         type: "new",
-        index: emergencyInfoData.length,
-        name: `index${emergencyInfoData.length}`,
+        index: newIndex,
+        name: `index${newIndex}`,
       },
     ]);
+    form.setFieldsValue({
+      emergencyDetails: emergencyInfoData,
+    });
   };
 
   const onDeleteCardClick = (cardIndex: any) => {
@@ -49,6 +58,9 @@ const EmergencyInfo = ({
       (a) => a.index !== cardIndex
     );
     setEmergencyInfoData(newOwnerInfoData);
+    form.setFieldsValue({
+      emergencyDetails: newOwnerInfoData,
+    });
   };
   return (
     <div>
