@@ -33,11 +33,7 @@ const compareIgnoreCaseWithTypo = (str1, str2) => {
         }
     }
 
-    console.log(
-        "search - ",
-        matrix[normalizedStr1.length][normalizedStr2.length],
-        tolerance
-    );
+   
 
     return matrix[normalizedStr1.length][normalizedStr2.length] <= tolerance;
 };

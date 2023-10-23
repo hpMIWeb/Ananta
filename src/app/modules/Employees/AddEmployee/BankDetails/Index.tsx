@@ -42,24 +42,15 @@ const BankDetails = ({
       const response = await axios.get(`https://ifsc.razorpay.com/${ifscCode}`);
 
       const bankData = response.data;
-      console.log(bankData.BANK);
-
-      // form.setFieldsValue({ bankName: bankData.BANK });
       form.setFieldsValue({
         bankName: bankData.BANK,
         branchName: bankData.BRANCH,
         micrCode: bankData.MICR,
       });
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-    }
+    } catch (error) {}
   };
   const onFinish = (value: any) => {
-    console.log("employeeBankDetails", value);
     setEmployeeInfo({ employeeBankDetails: value });
-
-    // return false;
-    console.log(value);
     onChange(5);
   };
 

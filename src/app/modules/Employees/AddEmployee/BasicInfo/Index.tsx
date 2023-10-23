@@ -56,7 +56,6 @@ const BasicInfo = ({
       const { Country, State, District } = response?.data[0]?.PostOffice[0];
 
       // Set the retrieved values in the form fields
-      console.log("Country", Country);
       form.setFieldsValue({
         country: Country,
         state: State,
@@ -100,7 +99,6 @@ const BasicInfo = ({
   };
 
   useEffect(() => {
-    console.log("selectedEmployeeData", selectedEmployeeData);
     if (selectedEmployeeData) {
       form.setFieldsValue({
         employeeId: selectedEmployeeData.employeeId,
@@ -155,7 +153,6 @@ const BasicInfo = ({
       mobile: value.mobile,
       alternateMobile: value.alternateMobile,
     });
-    console.log("ONvnjnjnk", value);
     onChange(2);
   };
 

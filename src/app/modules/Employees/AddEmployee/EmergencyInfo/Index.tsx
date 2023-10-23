@@ -21,14 +21,12 @@ const EmergencyInfo = ({
       value,
       emergencyInfoData.map((a: any) => a.name)
     );
-    console.log("filteredValue", filteredValue);
     setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
     onChange(6, { emergencyDetails: Object.values(filteredValue) });
   };
 
   useEffect(() => {
     if (selectedEmployeeData && selectedEmployeeData.emergencyDetails) {
-      console.log("emergencyDetails", selectedEmployeeData.emergencyDetails);
       setEmergencyInfoData(selectedEmployeeData.emergencyDetails);
       form.setFieldsValue({
         emergencyDetails: selectedEmployeeData.emergencyDetails,
@@ -36,7 +34,6 @@ const EmergencyInfo = ({
     }
   }, []);
   const addMoreOwnerCard = () => {
-    console.log("data", emergencyInfoData);
     setEmergencyInfoData((prev) => [
       ...prev,
       {

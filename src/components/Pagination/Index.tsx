@@ -82,7 +82,6 @@ const Pagination = ({
     current,
     pageSize
   ) => {
-    console.log(current, pageSize);
     setCurrentPage(current);
     setCurrentPageSize(pageSize);
   };

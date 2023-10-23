@@ -223,7 +223,6 @@ export default {
             transformResponse: [
                 function (data) {
                     const json = JSON.parse(data);
-                    console.log("all compliance", json.payload);
                     return json.payload;
                 },
             ],

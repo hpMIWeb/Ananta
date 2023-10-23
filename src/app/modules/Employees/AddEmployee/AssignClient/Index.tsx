@@ -22,7 +22,6 @@ const AssignClient = ({
 
   const [modalOpen, setModalOpen] = useState(false);
   const onFinish = () => {
-    console.log(assignClient);
     setEmployeeInfo({ assignClients: assignClient });
 
     onChange(4);
@@ -30,7 +29,6 @@ const AssignClient = ({
 
   useEffect(() => {
     if (selectedEmployeeData) {
-      console.log("selectedEmp2loyeeData", selectedEmployeeData.assignClients);
       setAssignClient(selectedEmployeeData.assignClients);
       setSelectedClients(selectedEmployeeData.assignClients);
 
@@ -74,7 +72,6 @@ const AssignClient = ({
         ]);
       }
     }
-    console.log("assignClient", assignClient);
   };
 
   // Render clients with checkboxes in the modal body
@@ -106,7 +103,6 @@ const AssignClient = ({
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     // Filter the promo codes based on the search input
-    console.log("query", query);
     if (query !== "") {
       const filteredClient = clientList.filter((client: any) =>
         client.firmName.toLowerCase().includes(query.toLowerCase())

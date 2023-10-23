@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-    Table,
-    Typography,
-    Button,
-    Modal,
-    Row,
-    Col,
-    Form,
-    Popconfirm,
-    Divider,
-    Spin,
+  Table,
+  Typography,
+  Button,
+  Modal,
+  Row,
+  Col,
+  Form,
+  Popconfirm,
+  Divider,
+  Spin,
 } from "antd";
 import "./DefaultDepartment.scss";
 import styles from "./defaultDepartment.module.scss";
@@ -19,8 +19,8 @@ import classNames from "classnames";
 import api from "../../../utilities/apiServices";
 import { ToastContainer, toast } from "react-toastify";
 import {
-    DefaultDepartment as IDefaultDepartment,
-    AddDefaultDepartment as IAddDefaultDepartment,
+  DefaultDepartment as IDefaultDepartment,
+  AddDefaultDepartment as IAddDefaultDepartment,
 } from "./interfaces/IDefaultDeparment";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,526 +38,501 @@ const { Title } = Typography;
 const pageSize = 25;
 
 const DefaultDepartment = () => {
-    const [current, setCurrent] = useState(1);
+  const [current, setCurrent] = useState(1);
 
-    const [searchValue, setSearchValue] = useState<string>("");
-    const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
 
-    const [departmentList, setDepartmentList] = useState<IDefaultDepartment[]>(
-        []
-    );
-    const [addDepartment, setAddDepartment] = useState<IAddDefaultDepartment>(
-        {} as IAddDefaultDepartment
-    );
-    const [selectedDepartment, setSelectedDepartment] =
-        useState<IDefaultDepartment>({} as IDefaultDepartment);
-    const [searchQuery, setSearchQuery] = useState<string>("");
+  const [departmentList, setDepartmentList] = useState<IDefaultDepartment[]>(
+    []
+  );
+  const [addDepartment, setAddDepartment] = useState<IAddDefaultDepartment>(
+    {} as IAddDefaultDepartment
+  );
+  const [selectedDepartment, setSelectedDepartment] =
+    useState<IDefaultDepartment>({} as IDefaultDepartment);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-    const [modalMode, setModalMode] = useState<"add" | "edit">("add");
-    const [form] = Form.useForm();
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [form] = Form.useForm();
 
-    const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
-    const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
-        useState<IDefaultDepartment[]>([]);
+  const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
+  const [selectedDepartmentEmployees, setSelectedDepartmentEmployees] =
+    useState<IDefaultDepartment[]>([]);
 
-    const [loading, setLoading] = useState(true);
-    const [tableRowSelected, setTableRowSelected] =
-        useState<IAddDefaultDepartment>({} as IAddDefaultDepartment);
+  const [loading, setLoading] = useState(true);
+  const [tableRowSelected, setTableRowSelected] =
+    useState<IAddDefaultDepartment>({} as IAddDefaultDepartment);
 
-    const staticEmployees = [
-        { EmployeeName: "Employee 1", EmployeeId: "1" },
-        { EmployeeName: "Employee 2", EmployeeId: "2" },
-        { EmployeeName: "Employee 3", EmployeeId: "3" },
-        { EmployeeName: "Employee 4", EmployeeId: "4" },
-        { EmployeeName: "Employee 5", EmployeeId: "5" },
-    ];
+  const staticEmployees = [
+    { EmployeeName: "Employee 1", EmployeeId: "1" },
+    { EmployeeName: "Employee 2", EmployeeId: "2" },
+    { EmployeeName: "Employee 3", EmployeeId: "3" },
+    { EmployeeName: "Employee 4", EmployeeId: "4" },
+    { EmployeeName: "Employee 5", EmployeeId: "5" },
+  ];
 
-    const columns = [
-        {
-            title: "Sr.No",
-            dataIndex: "srNo",
-            key: "srNo",
-            width: "5%",
-            sorter: (a: any, b: any) => a.srNo - b.srNo,
-            className: "center-align-cell",
-        },
-        {
-            title: "Department Name",
-            dataIndex: "name",
-            key: "name",
-            width: "70%",
-            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
-            render: (text: string, record: IDefaultDepartment) => (
-                <div>
-                    <span className="">{text}</span>
-                    <p className="description">{record.description}</p>
-                </div>
-            ),
-        },
-        {
-            title: "Employee",
-            dataIndex: "employeeCount",
-            key: "employeeCount",
-            width: "5%",
-            className: "center-align-cell",
-            sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
-            render: (employeeCount: any, record: IDefaultDepartment) => (
-                <span
-                    className="actionColumn"
-                    onClick={() => showEmployeeModal(record)}
-                >
-                    <FontAwesomeIcon
-                        icon={faUser}
-                        style={{ marginRight: "5px" }}
-                    />{" "}
-                    <span>{employeeCount ? employeeCount : 0}</span>
-                </span>
-            ),
-        },
-        {
-            title: "Action",
-            dataIndex: "",
-            key: "action",
-            width: "10%",
-            className: "center-align-cell",
-            render: (_: any, record: IDefaultDepartment) => (
-                <span className="actionColumn">
-                    <FontAwesomeIcon
-                        icon={faEdit}
-                        className="btn-at"
-                        title="Edit Department"
-                        style={{ color: "#2c7be5", marginLeft: "15px" }}
-                        onClick={() => editClickHandler(record)}
-                    />
-                    <Divider type="vertical" />
-                    <DeletePopupConfirm
-                        popUpTitle={`Do you want to delete ${record.name} Department?`}
-                        content=""
-                        onConfirm={() => deleteClickHandler(record._id)}
-                        button-label="Delete  Department"
-                    />
-                </span>
-            ),
-        },
-    ];
+  const columns = [
+    {
+      title: "Sr.No",
+      dataIndex: "srNo",
+      key: "srNo",
+      width: "5%",
+      sorter: (a: any, b: any) => a.srNo - b.srNo,
+      className: "center-align-cell",
+    },
+    {
+      title: "Department Name",
+      dataIndex: "name",
+      key: "name",
+      width: "70%",
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+      render: (text: string, record: IDefaultDepartment) => (
+        <div>
+          <span className="">{text}</span>
+          <p className="description">{record.description}</p>
+        </div>
+      ),
+    },
+    {
+      title: "Employee",
+      dataIndex: "employeeCount",
+      key: "employeeCount",
+      width: "5%",
+      className: "center-align-cell",
+      sorter: (a: any, b: any) => a.employeeCount - b.employeeCount,
+      render: (employeeCount: any, record: IDefaultDepartment) => (
+        <span
+          className="actionColumn"
+          onClick={() => showEmployeeModal(record)}
+        >
+          <FontAwesomeIcon icon={faUser} style={{ marginRight: "5px" }} />{" "}
+          <span>{employeeCount ? employeeCount : 0}</span>
+        </span>
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "action",
+      width: "10%",
+      className: "center-align-cell",
+      render: (_: any, record: IDefaultDepartment) => (
+        <span className="actionColumn">
+          <FontAwesomeIcon
+            icon={faEdit}
+            className="btn-at"
+            title="Edit Department"
+            style={{ color: "#2c7be5", marginLeft: "15px" }}
+            onClick={() => editClickHandler(record)}
+          />
+          <Divider type="vertical" />
+          <DeletePopupConfirm
+            popUpTitle={`Do you want to delete ${record.name} Department?`}
+            content=""
+            onConfirm={() => deleteClickHandler(record._id)}
+            button-label="Delete  Department"
+          />
+        </span>
+      ),
+    },
+  ];
 
-    const employeeColumns = [
-        {
-            title: "Employee Name",
-            dataIndex: "EmployeeName",
-            key: "EmployeeName",
-            width: "90%",
-        },
-        {
-            title: "Action",
-            dataIndex: "",
-            key: "action",
-            width: "10%",
-            render: (employee: any) => (
-                <Popconfirm
-                    title="Sure to remove?"
-                    onConfirm={() =>
-                        removeEmployeeFromDepartment(employee.EmployeeId)
-                    }
-                >
-                    <FontAwesomeIcon
-                        icon={faTrash}
-                        className="btn-at"
-                        title="Delete Department"
-                        style={{ color: "#fa5c7c" }}
-                    />
-                </Popconfirm>
-            ),
-        },
-    ];
+  const employeeColumns = [
+    {
+      title: "Employee Name",
+      dataIndex: "EmployeeName",
+      key: "EmployeeName",
+      width: "90%",
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "action",
+      width: "10%",
+      render: (employee: any) => (
+        <Popconfirm
+          title="Sure to remove?"
+          onConfirm={() => removeEmployeeFromDepartment(employee.EmployeeId)}
+        >
+          <FontAwesomeIcon
+            icon={faTrash}
+            className="btn-at"
+            title="Delete Department"
+            style={{ color: "#fa5c7c" }}
+          />
+        </Popconfirm>
+      ),
+    },
+  ];
 
-    useEffect(() => {
-        getDepartmentList();
-    }, []);
+  useEffect(() => {
+    getDepartmentList();
+  }, []);
 
-    const getDepartmentList = () => {
-        setLoading(true); // Set loading state to true
-        api.getDefaultDepartment()
-            .then((resp: any) => {
-                setDepartmentList(resp.data);
-            })
-            .finally(() => {
-                setLoading(false); // Reset loading state
-            });
-    };
+  const getDepartmentList = () => {
+    setLoading(true); // Set loading state to true
+    api
+      .getDefaultDepartment()
+      .then((resp: any) => {
+        setDepartmentList(resp.data);
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state
+      });
+  };
 
-    const deleteClickHandler = (departmentId: string) => {
-        // Delete from  DB
-        setLoading(true); // Set loading state to true
-        api.deleteDefaultDepartment(departmentId)
-            .then((resp: any) => {
-                const updatedData = departmentList.filter(
-                    (item: IDefaultDepartment) => item._id !== departmentId
-                );
-                setDepartmentList(updatedData);
-                toast.success("Department successfully deleted.", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            })
-            .finally(() => {
-                setLoading(false); // Reset loading state
-            })
-            .catch((error) => {
-                toast.error("Technical error while deleting Department.", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-            });
-    };
-
-    const editClickHandler = (department: IDefaultDepartment) => {
-        setModalMode("edit"); // Set mode to "edit"
-        setSelectedDepartment(department);
-        form.setFieldsValue({
-            name: department.name,
-            description: department.description,
+  const deleteClickHandler = (departmentId: string) => {
+    // Delete from  DB
+    setLoading(true); // Set loading state to true
+    api
+      .deleteDefaultDepartment(departmentId)
+      .then((resp: any) => {
+        const updatedData = departmentList.filter(
+          (item: IDefaultDepartment) => item._id !== departmentId
+        );
+        setDepartmentList(updatedData);
+        toast.success("Department successfully deleted.", {
+          position: toast.POSITION.TOP_RIGHT,
         });
-        setAddDepartment({
-            name: department.name,
-            description: department.description,
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state
+      })
+      .catch((error) => {
+        toast.error("Technical error while deleting Department.", {
+          position: toast.POSITION.TOP_RIGHT,
         });
-        showModal("edit"); // Open the modal
-    };
+      });
+  };
 
-    // Search input change handler
-    const handleSearch = (searchValue: string) => {
-        setSearchQuery(searchValue);
-    };
+  const editClickHandler = (department: IDefaultDepartment) => {
+    setModalMode("edit"); // Set mode to "edit"
+    setSelectedDepartment(department);
+    form.setFieldsValue({
+      name: department.name,
+      description: department.description,
+    });
+    setAddDepartment({
+      name: department.name,
+      description: department.description,
+    });
+    showModal("edit"); // Open the modal
+  };
 
-    const getData = (current: number, pageSize: number) => {
-        const startIndex = (current - 1) * pageSize;
-        let retVal = departmentList;
+  // Search input change handler
+  const handleSearch = (searchValue: string) => {
+    setSearchQuery(searchValue);
+  };
 
-        if (searchQuery.trim() !== "") {
-            retVal = retVal.filter((item) => {
-                return Object.values(item).some(
-                    (value) =>
-                        value
-                            .toString()
-                            .toLowerCase()
-                            .indexOf(searchQuery?.toLowerCase()) !== -1
-                );
-            });
-        }
+  const getData = (current: number, pageSize: number) => {
+    const startIndex = (current - 1) * pageSize;
+    let retVal = departmentList;
 
-        return retVal.map((item: any, index: number) => {
-            const serialNumber = startIndex + index + 1; // Calculate the serial number
-            return {
-                ...item,
-                key: index,
-                srNo: serialNumber, // Assign the serial number to the 'srNo' property
-            };
-        });
-    };
-
-    function onChange(sorter: any) {
-        console.log(sorter);
+    if (searchQuery.trim() !== "") {
+      retVal = retVal.filter((item) => {
+        return Object.values(item).some(
+          (value) =>
+            value
+              .toString()
+              .toLowerCase()
+              .indexOf(searchQuery?.toLowerCase()) !== -1
+        );
+      });
     }
 
-    /*Modal action start*/
+    return retVal.map((item: any, index: number) => {
+      const serialNumber = startIndex + index + 1; // Calculate the serial number
+      return {
+        ...item,
+        key: index,
+        srNo: serialNumber, // Assign the serial number to the 'srNo' property
+      };
+    });
+  };
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  function onChange(sorter: any) {}
 
-    const showModal = (mode: "add" | "edit") => {
-        console.log("mode", mode);
-        if (mode === "add") {
-            form.resetFields();
-            form.setFieldsValue({ name: "", description: "" });
-            setModalMode(mode);
-            setIsModalOpen(true);
-        } else {
-            setModalMode(mode);
-            setIsModalOpen(true);
-        }
-    };
+  /*Modal action start*/
 
-    const inputChangeHandler = (event: any, nameItem: string = "") => {
-        let name = "";
-        let value = "";
-        if (event && event.target) {
-            name = event.target.name;
-            value = event.target.value;
-        } else if (nameItem !== "" && event !== "" && event !== undefined) {
-            name = nameItem;
-            value = event.value ?? event;
-        } else if (event) {
-            name = event.name;
-            value = event.value;
-        }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-        setAddDepartment({
-            ...addDepartment,
-            [name]: value,
-        });
-    };
+  const showModal = (mode: "add" | "edit") => {
+    if (mode === "add") {
+      form.resetFields();
+      form.setFieldsValue({ name: "", description: "" });
+      setModalMode(mode);
+      setIsModalOpen(true);
+    } else {
+      setModalMode(mode);
+      setIsModalOpen(true);
+    }
+  };
 
-    const handleOk = () => {
-        form.validateFields()
-            .then((values) => {
-                console.log("ok modalMode", modalMode);
-                //return;
-                try {
-                    setLoading(true); // Set loading state to true
-                    const apiCall =
-                        modalMode === "add"
-                            ? api.createDefaultDepartment(addDepartment)
-                            : api.updateDefaultDepartment(
-                                  addDepartment,
-                                  selectedDepartment._id
-                              );
+  const inputChangeHandler = (event: any, nameItem: string = "") => {
+    let name = "";
+    let value = "";
+    if (event && event.target) {
+      name = event.target.name;
+      value = event.target.value;
+    } else if (nameItem !== "" && event !== "" && event !== undefined) {
+      name = nameItem;
+      value = event.value ?? event;
+    } else if (event) {
+      name = event.name;
+      value = event.value;
+    }
 
-                    apiCall
-                        .then((resp: any) => {
-                            const successMessage =
-                                modalMode === "add"
-                                    ? "Department Added."
-                                    : "Department Updated.";
+    setAddDepartment({
+      ...addDepartment,
+      [name]: value,
+    });
+  };
 
-                            toast.success(successMessage, {
-                                position: toast.POSITION.TOP_RIGHT,
-                            });
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        try {
+          setLoading(true); // Set loading state to true
+          const apiCall =
+            modalMode === "add"
+              ? api.createDefaultDepartment(addDepartment)
+              : api.updateDefaultDepartment(
+                  addDepartment,
+                  selectedDepartment._id
+                );
 
-                            form.setFieldsValue({} as IAddDefaultDepartment);
-                            setSelectedDepartment({} as IDefaultDepartment);
-                            form.setFieldsValue({ name: "", description: "" });
-                            getDepartmentList();
-                            setIsModalOpen(false);
-                        })
-                        .finally(() => {
-                            setLoading(false); // Reset loading state
-                        });
-                } catch (ex) {
-                    toast.error("Technical error while creating Department.", {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
-                }
+          apiCall
+            .then((resp: any) => {
+              const successMessage =
+                modalMode === "add"
+                  ? "Department Added."
+                  : "Department Updated.";
+
+              toast.success(successMessage, {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+
+              form.setFieldsValue({} as IAddDefaultDepartment);
+              setSelectedDepartment({} as IDefaultDepartment);
+              form.setFieldsValue({ name: "", description: "" });
+              getDepartmentList();
+              setIsModalOpen(false);
             })
-            .catch((errorInfo) => {
-                setIsModalOpen(true);
-                console.log("Validation failed:", errorInfo);
+            .finally(() => {
+              setLoading(false); // Reset loading state
             });
-    };
+        } catch (ex) {
+          toast.error("Technical error while creating Department.", {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      })
+      .catch((errorInfo) => {
+        setIsModalOpen(true);
+      });
+  };
 
-    const handleCancel = () => {
-        setModalMode("add"); // Set mode to "add"
-        form.setFieldsValue({ name: "", description: "" });
-        setSelectedDepartment({} as IDefaultDepartment);
-        setIsModalOpen(false);
-    };
+  const handleCancel = () => {
+    setModalMode("add"); // Set mode to "add"
+    form.setFieldsValue({ name: "", description: "" });
+    setSelectedDepartment({} as IDefaultDepartment);
+    setIsModalOpen(false);
+  };
 
-    const showEmployeeModal = (department: IDefaultDepartment) => {
-        setSelectedDepartmentEmployees(department.employees); // Assuming "Employees" is the property containing the list of employees for a department
-        setIsEmployeeModalOpen(true);
-    };
+  const showEmployeeModal = (department: IDefaultDepartment) => {
+    setSelectedDepartmentEmployees(department.employees); // Assuming "Employees" is the property containing the list of employees for a department
+    setIsEmployeeModalOpen(true);
+  };
 
-    const closeEmployeeModal = () => {
-        setSelectedDepartmentEmployees([]);
-        setIsEmployeeModalOpen(false);
-    };
+  const closeEmployeeModal = () => {
+    setSelectedDepartmentEmployees([]);
+    setIsEmployeeModalOpen(false);
+  };
 
-    const removeEmployeeFromDepartment = (employeeId: string) => {
-        // Call your API to remove the employee from the department
-        // After successful removal, update the selectedDepartmentEmployees state
-        const updatedEmployees = selectedDepartmentEmployees.filter(
-            (employee: any) => employee.EmployeeId !== employeeId
-        );
-        setSelectedDepartmentEmployees(updatedEmployees);
-        // You can also update the Employees property of the department in the departmentList state
-    };
-
-    /*Modal action end */
-    return (
-        <>
-            <ToastContainer autoClose={25000} />
-            {/* <LoadingSpinner isLoading={loading} /> */}
-            <div className={classNames(styles.promoCodesPageWrapper)}>
-                <div
-                    className={classNames(
-                        "card-header d-flex",
-                        styles.promoCodesPageHeader
-                    )}
-                    style={{ minHeight: 60 }}
-                >
-                    <div
-                        className={classNames(
-                            "d-flex align-items-center w-100",
-                            styles.departmentHeaderTitle
-                        )}
-                    >
-                        <div className="me-auto">
-                            <h5
-                                className={classNames(
-                                    "my-2 position-relative z-index-1",
-                                    styles.deapartmentLabel
-                                )}
-                            >
-                                Department
-                            </h5>
-                        </div>
-                        <div className={classNames("ms-auto z-index-1")}>
-                            <Button
-                                onClick={() => {
-                                    showModal("add");
-                                }}
-                                className={styles.newPromoBtn}
-                                type="primary"
-                            >
-                                Add New
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.departmentBottomWrapper}>
-                    <div style={{ marginBottom: 24 }}>
-                        <SearchFilterBar
-                            searchValue={searchQuery}
-                            setSearchValue={handleSearch}
-                            sortState={sortState}
-                            setSortState={setSortState}
-                            setSortStateHandler={(options: any) => {
-                                setSortState(options);
-                            }}
-                            allowSortBy={false}
-                        />
-                    </div>
-                    {loading && <CardContentSkeletonLoader />}
-                    {!loading && (
-                        <div>
-                            <Table
-                                columns={columns}
-                                dataSource={getData(current, pageSize)}
-                                size="small"
-                                style={{ width: "100%" }}
-                                className="r4 table-striped-rows"
-                                bordered
-                                pagination={false}
-                            />
-                        </div>
-                    )}
-                    <Modal
-                        title={
-                            modalMode === "add"
-                                ? "Add New Department"
-                                : "Edit Department - " + selectedDepartment.name
-                        }
-                        open={isModalOpen}
-                        onOk={handleOk}
-                        onCancel={handleCancel}
-                        okText={modalMode === "add" ? "Add" : "Update"}
-                    >
-                        <Form form={form} initialValues={addDepartment}>
-                            <Row gutter={[8, 8]} className="form-row">
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 16 }}
-                                    md={{ span: 24 }}
-                                >
-                                    <Form.Item
-                                        name="name"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please enter department name",
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Department Name"
-                                            className="w100"
-                                            name="name"
-                                            onChange={(event: any) => {
-                                                inputChangeHandler(event);
-                                            }}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            <Row gutter={[8, 8]} className="">
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                >
-                                    <Form.Item
-                                        name="description"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please enter a description!",
-                                            },
-                                        ]}
-                                    >
-                                        <TextArea
-                                            rows={4}
-                                            placeholder="Description.."
-                                            name="description"
-                                            onChange={(event) => {
-                                                inputChangeHandler(
-                                                    event,
-                                                    "description"
-                                                );
-                                            }}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Modal>
-                    <Modal
-                        title="Department Employees"
-                        open={isEmployeeModalOpen}
-                        onCancel={closeEmployeeModal}
-                        footer={null}
-                    >
-                        <Row gutter={[8, 8]} className="form-row">
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 24 }}
-                            >
-                                <Row
-                                    gutter={[8, 8]}
-                                    className="form-row"
-                                    style={{ marginTop: "0" }}
-                                >
-                                    <Col
-                                        xs={{ span: 24 }}
-                                        sm={{ span: 24 }}
-                                        md={{ span: 8 }}
-                                        style={{
-                                            float: "right",
-                                            marginBottom: "10px",
-                                            marginTop: "7px",
-                                        }}
-                                    >
-                                        <Input
-                                            placeholder="Search..."
-                                            className="search-box"
-                                            bordered={false}
-                                            //  onChange={handleSearch}
-                                            prefix={<SearchOutlined />}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-
-                        <Table
-                            dataSource={staticEmployees}
-                            columns={employeeColumns}
-                            pagination={false}
-                        />
-                    </Modal>
-                </div>
-            </div>
-        </>
+  const removeEmployeeFromDepartment = (employeeId: string) => {
+    // Call your API to remove the employee from the department
+    // After successful removal, update the selectedDepartmentEmployees state
+    const updatedEmployees = selectedDepartmentEmployees.filter(
+      (employee: any) => employee.EmployeeId !== employeeId
     );
+    setSelectedDepartmentEmployees(updatedEmployees);
+    // You can also update the Employees property of the department in the departmentList state
+  };
+
+  /*Modal action end */
+  return (
+    <>
+      <ToastContainer autoClose={25000} />
+      {/* <LoadingSpinner isLoading={loading} /> */}
+      <div className={classNames(styles.promoCodesPageWrapper)}>
+        <div
+          className={classNames(
+            "card-header d-flex",
+            styles.promoCodesPageHeader
+          )}
+          style={{ minHeight: 60 }}
+        >
+          <div
+            className={classNames(
+              "d-flex align-items-center w-100",
+              styles.departmentHeaderTitle
+            )}
+          >
+            <div className="me-auto">
+              <h5
+                className={classNames(
+                  "my-2 position-relative z-index-1",
+                  styles.deapartmentLabel
+                )}
+              >
+                Department
+              </h5>
+            </div>
+            <div className={classNames("ms-auto z-index-1")}>
+              <Button
+                onClick={() => {
+                  showModal("add");
+                }}
+                className={styles.newPromoBtn}
+                type="primary"
+              >
+                Add New
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className={styles.departmentBottomWrapper}>
+          <div style={{ marginBottom: 24 }}>
+            <SearchFilterBar
+              searchValue={searchQuery}
+              setSearchValue={handleSearch}
+              sortState={sortState}
+              setSortState={setSortState}
+              setSortStateHandler={(options: any) => {
+                setSortState(options);
+              }}
+              allowSortBy={false}
+            />
+          </div>
+          {loading && <CardContentSkeletonLoader />}
+          {!loading && (
+            <div>
+              <Table
+                columns={columns}
+                dataSource={getData(current, pageSize)}
+                size="small"
+                style={{ width: "100%" }}
+                className="r4 table-striped-rows"
+                bordered
+                pagination={false}
+              />
+            </div>
+          )}
+          <Modal
+            title={
+              modalMode === "add"
+                ? "Add New Department"
+                : "Edit Department - " + selectedDepartment.name
+            }
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            okText={modalMode === "add" ? "Add" : "Update"}
+          >
+            <Form form={form} initialValues={addDepartment}>
+              <Row gutter={[8, 8]} className="form-row">
+                <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 24 }}>
+                  <Form.Item
+                    name="name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter department name",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Department Name"
+                      className="w100"
+                      name="name"
+                      onChange={(event: any) => {
+                        inputChangeHandler(event);
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={[8, 8]} className="">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                  <Form.Item
+                    name="description"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter a description!",
+                      },
+                    ]}
+                  >
+                    <TextArea
+                      rows={4}
+                      placeholder="Description.."
+                      name="description"
+                      onChange={(event) => {
+                        inputChangeHandler(event, "description");
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+          <Modal
+            title="Department Employees"
+            open={isEmployeeModalOpen}
+            onCancel={closeEmployeeModal}
+            footer={null}
+          >
+            <Row gutter={[8, 8]} className="form-row">
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }}>
+                <Row
+                  gutter={[8, 8]}
+                  className="form-row"
+                  style={{ marginTop: "0" }}
+                >
+                  <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 8 }}
+                    style={{
+                      float: "right",
+                      marginBottom: "10px",
+                      marginTop: "7px",
+                    }}
+                  >
+                    <Input
+                      placeholder="Search..."
+                      className="search-box"
+                      bordered={false}
+                      //  onChange={handleSearch}
+                      prefix={<SearchOutlined />}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Table
+              dataSource={staticEmployees}
+              columns={employeeColumns}
+              pagination={false}
+            />
+          </Modal>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default DefaultDepartment;

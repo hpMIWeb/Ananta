@@ -86,8 +86,6 @@ const EmployeeView = () => {
   }, [success]);
 
   const onChange = (key: any, formInfo: any) => {
-    console.log("key", key);
-
     setActiveTab(key);
   };
 

@@ -955,7 +955,6 @@ const TimeSheet = () => {
 
         // Create an array of timesheet data
         const timesheetPayload = newTimesheets.map((entry) => {
-            console.log("entry.start_time", entry.start_time);
             const startTime = entry.is_edit
                 ? dayjs.utc(entry.start_time).format("YYYY-MM-DD HH:mm")
                 : selectedDate + " " + entry.start_time;
@@ -1034,10 +1033,7 @@ const TimeSheet = () => {
                             );
                             return;
                         }
-                        console.log(
-                            "calculateTotalTime(selectedTableRow);",
-                            calculateTotalTime(selectedTableRow)
-                        );
+                      
                         selectedTableRow.total_time =
                             calculateTotalTime(selectedTableRow);
 

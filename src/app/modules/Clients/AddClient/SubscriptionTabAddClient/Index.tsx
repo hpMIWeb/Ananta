@@ -286,7 +286,6 @@ const SubscriptionTabAddClient = ({
         //     //     (acc: any, addon: any) => acc + addon.price,
         //     //     0
         //     // );
-        //     console.log(addOnTotalPrice);
         // }
     };
 

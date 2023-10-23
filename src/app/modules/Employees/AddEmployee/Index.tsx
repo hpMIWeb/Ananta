@@ -51,7 +51,6 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
   );
 
   useEffect(() => {
-    console.log("selectedEmployeeID", selectedEmployeeID);
     dispatch(getRolesReducersApi());
     dispatch(getRoleTypeReducersApi());
     dispatch(getDepartmentsReducersApi());
@@ -87,10 +86,8 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
   }, [success]);
 
   const onChange = (key: any, formInfo: any) => {
-    console.log("key", key);
     if (key === 6) {
       const payload = { ...employeeDetails, ...formInfo };
-      console.log("payload", payload);
 
       dispatch(
         createEmployeeReducersApi({
