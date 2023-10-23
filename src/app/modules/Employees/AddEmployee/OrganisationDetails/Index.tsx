@@ -326,7 +326,7 @@ const OrganisationDetails = ({
                         placeholder="From"
                         className="customFormDatePicker"
                         use12Hours
-                        format="h:mm a"
+                        format="h:mm A"
                       />
                     </Form.Item>
                   </div>
@@ -348,7 +348,7 @@ const OrganisationDetails = ({
                       <TimePicker
                         placeholder="To"
                         className="customFormDatePicker"
-                        format="h:mm a"
+                        format="h:mm A"
                         use12Hours
                       />
                     </Form.Item>
