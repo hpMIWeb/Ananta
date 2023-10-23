@@ -36,7 +36,6 @@ const Employees = () => {
   };
 
   const handleViewBtnClick = (id: string) => {
-    console.log(id);
     navigation(`view-employee/`, { state: { id: id } });
   };
 
@@ -54,7 +53,6 @@ const Employees = () => {
     );
   };
   const cardDesc = (cardData: any) => {
-    console.log("cardData", cardData);
     return [
       {
         iconName: "client",
@@ -163,7 +161,6 @@ const Employees = () => {
 
   // Search input change handler
   const handleSearch = (searchValue: string) => {
-    console.log("searchQuery", searchQuery);
     setSearchQuery(searchValue);
   };
   const clientSortLabel = {
