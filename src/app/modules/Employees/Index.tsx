@@ -143,7 +143,7 @@ const Employees = () => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Total Hours</p>
-            <p className="semiBold">0:0 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },
@@ -152,7 +152,7 @@ const Employees = () => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Billable Hours</p>
-            <p className="semiBold">0:0 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },

@@ -65,10 +65,6 @@ const EmployeeView = () => {
     navigation("/employee");
   };
 
-  const setEmployeeInfo = (value: any) => {
-    setEmployeeDetails((prev) => ({ ...prev, ...value }));
-  };
-
   useEffect(() => {
     if (getEmployeesList.length && employeeId) {
       const currentCardDetail = getEmployeesList.find(

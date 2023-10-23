@@ -138,7 +138,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Current Task</p>
-            <p className="semiBold">3/6</p>
+            <p className="semiBold">0/0</p>
           </>
         ),
       },
@@ -147,7 +147,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Total Task</p>
-            <p className="semiBold">56/85</p>
+            <p className="semiBold">0/0</p>
           </>
         ),
       },
@@ -156,7 +156,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Pending Approval</p>
-            <p className="semiBold">56</p>
+            <p className="semiBold">0</p>
           </>
         ),
       },
@@ -165,7 +165,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Total Hours</p>
-            <p className="semiBold">45:11 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },
@@ -174,7 +174,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Billable Hours</p>
-            <p className="semiBold">45:11 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },

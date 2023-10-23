@@ -76,13 +76,26 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   }, []);
 
   const onChangeActiveClick = (e: any, id: any) => {
-    // dispatch(
-    //   createEmployeeReducersApi({
-    //     payload: { subProfile: newSubProfile },
-    //     employeeId: selectedEmployeeData?._id,
-    //   })
-    // );
+    const newSubProfile = subProfileList.map(transformOldDataToNewFormat);
+    const changedSubProfile = newSubProfile.find(
+      (s: any) => s.subProfileId === id
+    );
+
+    if (changedSubProfile) {
+      changedSubProfile.isActive = !!e ? true : false;
+      const updateSubProfileList = newSubProfile.filter(
+        (s: any) => s.subProfileId !== id
+      );
+      updateSubProfileList.push(changedSubProfile);
+      dispatch(
+        createEmployeeReducersApi({
+          payload: { subProfile: updateSubProfileList },
+          employeeId: selectedEmployeeData?._id,
+        })
+      );
+    }
   };
+
   const cardDesc = (cardData: any) => {
     return [
       {
@@ -135,7 +148,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Current Task</p>
-            <p className="semiBold">3/6</p>
+            <p className="semiBold">0/0</p>
           </>
         ),
       },
@@ -144,7 +157,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Total Task</p>
-            <p className="semiBold">56/85</p>
+            <p className="semiBold">0/0</p>
           </>
         ),
       },
@@ -153,7 +166,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Pending Approval</p>
-            <p className="semiBold">56</p>
+            <p className="semiBold">0</p>
           </>
         ),
       },
@@ -162,7 +175,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Total Hours</p>
-            <p className="semiBold">45:11 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },
@@ -171,7 +184,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Billable Hours</p>
-            <p className="semiBold">45:11 Hours</p>
+            <p className="semiBold">00:00 Hours</p>
           </>
         ),
       },
@@ -250,7 +263,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
               cardDesc={cardDesc}
               isProfileViewAction
               onChangeActiveClick={onChangeActiveClick}
-              isActive={card.status}
+              isActive={card.isActive}
               handleViewBtnClick={handleViewBtnClick}
             />
           ))}
