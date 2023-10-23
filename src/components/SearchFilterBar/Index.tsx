@@ -11,7 +11,7 @@ const SearchFilterBar = ({
     searchValue,
     setSearchValue,
     sortState = {},
-    setSortState = () => {},
+    setSortStateHandler = () => {},
     showAddOn = false,
     defaultSortLabel,
     placeholder,
@@ -76,7 +76,7 @@ const SearchFilterBar = ({
             direction = "";
         }
 
-        setSortState({ type, sortOrder: direction });
+        setSortStateHandler({ type, sortOrder: direction });
     };
 
     return (
@@ -116,7 +116,7 @@ const SearchFilterBar = ({
                             }
                             value={sortState?.addOnValue}
                             onChange={(value: any) => {
-                                setSortState((prev: any) => ({
+                                setSortStateHandler((prev: any) => ({
                                     ...prev,
                                     addOnValue: value,
                                 }));

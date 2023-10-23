@@ -515,7 +515,7 @@ const SubscriptionTab = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 sortState={sortState}
-                setSortState={setSortState}
+                setSortStateHandler={setSortState}
                 showAddOn={true}
                 addonOption={addonOption}
                 initialAddOnsValue="All Subscription"

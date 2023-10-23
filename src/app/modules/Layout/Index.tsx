@@ -566,7 +566,11 @@ const LayoutComponent = ({
                         <Breadcrumb separator=">">{breadcrumbs}</Breadcrumb>
                     </div>
                 </div>
-                <Content style={{ margin: 0 }}>
+                <Content
+                    style={{
+                        margin: 0,
+                    }}
+                >
                     <div className={styles.outletWrapper}>
                         <Outlet />
                     </div>

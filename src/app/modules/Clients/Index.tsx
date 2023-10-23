@@ -241,7 +241,7 @@ const Clients = () => {
                 </div>
             </div>
             <div className={styles.promoCodesBottomWrapper}>
-                <div style={{ marginBottom: 24 }}>
+                <div style={{ marginBottom: 4 }}>
                     <SearchFilterBar
                         showAddOn
                         defaultSortLabel={clientSortLabel}
@@ -256,42 +256,56 @@ const Clients = () => {
                         placeholder={"Select Client Type"}
                     />
                 </div>
-                {getClientsLoading && <CardContentSkeletonLoader />}
-                {!getClientsLoading &&
-                    getFilteredValue(
-                        displayedPaginationItems,
-                        searchValue,
-                        sortState
-                    ).map((card: any, index: number) => (
-                        <SubscriptionCard
-                            displayIndex={getCurrentItemNumber(
-                                index + 1,
-                                currentPageNumber,
-                                currentPageSize
-                            )}
-                            key={card._id}
-                            id={card._id}
-                            planNameLabelBlue
-                            column={3}
-                            cardDetails={card}
-                            titleDesc={card.firmType}
-                            planNameLabel={card.firmGSTIN}
-                            planName={card.firmName}
-                            cardDesc={cardDesc}
-                            isProfileViewAction
-                            isActive={card.status}
-                            onChangeActiveClick={onChangeActiveClick}
-                        />
-                    ))}
+                <div
+                    className="contentData"
+                    style={{
+                        height: "612px",
+                        overflowX: "hidden",
+                        overflowY: "auto",
+                        paddingRight: "10px",
+                    }}
+                >
+                    {getClientsLoading && <CardContentSkeletonLoader />}
+                    {!getClientsLoading &&
+                        getFilteredValue(
+                            displayedPaginationItems,
+                            searchValue,
+                            sortState
+                        ).map((card: any, index: number) => (
+                            <SubscriptionCard
+                                displayIndex={getCurrentItemNumber(
+                                    index + 1,
+                                    currentPageNumber,
+                                    currentPageSize
+                                )}
+                                key={card._id}
+                                id={card._id}
+                                planNameLabelBlue
+                                column={3}
+                                cardDetails={card}
+                                titleDesc={card.firmType}
+                                planNameLabel={card.firmGSTIN}
+                                planName={card.firmName}
+                                cardDesc={cardDesc}
+                                isProfileViewAction
+                                isActive={card.status}
+                                onChangeActiveClick={onChangeActiveClick}
+                            />
+                        ))}
 
-                {!getClientsLoading && !getClientsList.length && (
-                    <NoDataAvailable name="No Clients Available!" />
-                )}
-                <Pagination
-                    data={getClientsList}
-                    setPaginationDisplayedItems={setPaginationDisplayedItems}
-                    setPageNumber={setPageChange}
-                />
+                    {!getClientsLoading && !getClientsList.length && (
+                        <NoDataAvailable name="No Clients Available!" />
+                    )}
+                    {getClientsList.length > 0 && (
+                        <Pagination
+                            data={getClientsList}
+                            setPaginationDisplayedItems={
+                                setPaginationDisplayedItems
+                            }
+                            setPageNumber={setPageChange}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
