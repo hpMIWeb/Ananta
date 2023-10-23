@@ -350,6 +350,8 @@ const LayoutComponent = ({
         "add-subscription": "Create New",
         "edit-subscription": "Edit",
         "add-employee": "Create New",
+        "view-employee": "View Employee",
+        "view-associatePartners": "View Associate Partners",
         caclient: "Dashboard",
         employee: "Dashboard",
         create: "Create New",
@@ -506,7 +508,12 @@ const LayoutComponent = ({
     };
 
     return (
-        <Layout style={{ minHeight: "100vh", background: "#EDF2F9" }}>
+        <Layout
+            style={{
+                minHeight: "100vh",
+                background: "#EDF2F9",
+            }}
+        >
             <Sider
                 collapsible
                 className={classNames(
@@ -517,7 +524,7 @@ const LayoutComponent = ({
                 onCollapse={(value) => setCollapsed(value)}
                 trigger={null}
                 collapsedWidth={65}
-                width={218}
+                width={225}
             >
                 <Menu
                     theme="dark"
@@ -559,7 +566,11 @@ const LayoutComponent = ({
                         <Breadcrumb separator=">">{breadcrumbs}</Breadcrumb>
                     </div>
                 </div>
-                <Content style={{ margin: 0 }}>
+                <Content
+                    style={{
+                        margin: 0,
+                    }}
+                >
                     <div className={styles.outletWrapper}>
                         <Outlet />
                     </div>

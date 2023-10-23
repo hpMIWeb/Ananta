@@ -4,10 +4,10 @@
     background-color: var(--light-blue) !important;
     margin-top: 70px;
     &:hover {
-        flex: 0 0 218px !important;
-        max-width: 218px !important;
-        min-width: 218px !important;
-        width: 218px !important;
+        flex: 0 0 225px !important;
+        max-width: 225px !important;
+        min-width: 225px !important;
+        width: 225px !important;
         .navbarMenuList {
             width: 100% !important;
         }
@@ -23,6 +23,13 @@
     background: var(--light-blue);
     padding-left: 16px;
     padding-top: 2px;
+    height: 800px;
+    max-height: 800px;
+    overflow: hidden;
+}
+
+.navbarMenuList:hover {
+    overflow-y: auto;
 }
 
 .headerWrapper {
@@ -35,7 +42,7 @@
     color: var(--light-grey);
     font-family: $body-font-family !important;
     font-size: 13px;
-    margin-top: 28px !important;
+    margin-top: 5px !important;
     margin-bottom: 16px;
 }
 .navigationWrapper {
