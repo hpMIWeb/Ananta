@@ -64,7 +64,6 @@ const AssociatePartnerView = () => {
         (s: any) => s._id === associatePartnerId
       );
       form.setFieldsValue(currentCardDetail);
-      console.log("currentCardDetail", currentCardDetail);
       setSelectedAssociatePartnerData(currentCardDetail);
     }
   }, [getAssociatePartnerList, associatePartnerId, form]);
@@ -76,8 +75,6 @@ const AssociatePartnerView = () => {
   }, [success]);
 
   const onChange = (key: any, formInfo: any) => {
-    console.log("key", key);
-
     setActiveTab(key);
   };
 

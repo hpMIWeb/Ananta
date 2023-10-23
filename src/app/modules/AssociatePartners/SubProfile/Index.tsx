@@ -64,9 +64,7 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
     setOpen(false);
   };
 
-  const handleViewBtnClick = (id: string) => {
-    console.log(id);
-  };
+  const handleViewBtnClick = (id: string) => {};
 
   useEffect(() => {
     setSubProfileList(selectedAssociatePartnerData.subProfile);
@@ -78,13 +76,9 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
   }, []);
 
   const onChangeActiveClick = (e: any, id: any) => {
-    console.log("e", e);
-    console.log("id", id);
     // const newSubProfile = subProfileList.map(transformOldDataToNewFormat);
-
     // // Add the 'value' object to the newSubProfile array
     // //newSubProfile.push(value);
-
     // dispatch(
     //   createEmployeeReducersApi({
     //     payload: { subProfile: newSubProfile },
@@ -204,7 +198,6 @@ const SubProfile = ({ selectedAssociatePartnerData }: any) => {
   };
 
   function transformOldDataToNewFormat(oldData: any) {
-    console.log("oldData", oldData);
     const newFormat = {
       subProfileId: oldData.subProfileId,
       firstName: oldData.firstName,

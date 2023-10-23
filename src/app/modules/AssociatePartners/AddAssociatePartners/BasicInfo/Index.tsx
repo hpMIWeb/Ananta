@@ -25,6 +25,7 @@ const BasicInfo = ({
   const [citiesListData, setCitiesListData] = useState<any>([]);
   const [form] = Form.useForm();
   const roleType = Cookies.get("roleTypeName");
+
   const fetchCountries = async () => {
     try {
       const response = await fetch(
@@ -75,13 +76,11 @@ const BasicInfo = ({
 
   const getPostalCodeData = async (changedValues: any) => {
     try {
-      console.log(changedValues.pinCode);
       const response = await axios.get(
         `https://api.postalpincode.in/pincode/${changedValues?.pinCode}`
       );
       const { Country, State, District } = response?.data[0]?.PostOffice[0];
 
-      console.log(Country);
       // Set the retrieved values in the form fields
       form.setFieldsValue({
         country: Country,
@@ -104,17 +103,14 @@ const BasicInfo = ({
       ).geonameId;
       fetchCities(selectedStateId);
     }
-    console.log("changedValues", changedValues);
     if ("pinCode" in changedValues && changedValues.pinCode.length === 6) {
       getPostalCodeData(changedValues);
     }
   };
 
   useEffect(() => {
-    console.log("selectedAssociatePartnerData", selectedAssociatePartnerData);
     if (selectedAssociatePartnerData) {
       form.setFieldsValue({
-        //  employeeId: selectedAssociatePartnerData.employeeId,
         firmName: selectedAssociatePartnerData.firmName,
         firmType: selectedAssociatePartnerData.firmType,
         partnerId: selectedAssociatePartnerData.partnerId,
@@ -147,7 +143,7 @@ const BasicInfo = ({
       <Form
         form={form}
         name="basic"
-        initialValues={{ remember: true, firmType: "Partnership" }}
+        //initialValues={}
         onFinish={onFinish}
         onValuesChange={handleFormValuesChange}
         autoComplete="off"

@@ -250,8 +250,8 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
           subProfileList.map((card: any, index: number) => (
             <SubscriptionCard
               displayIndex={index + 1}
-              key={card._id}
-              id={card._id}
+              key={card.subProfileId}
+              id={card.subProfileId}
               planNameLabelBlue
               column={3}
               cardDetails={card}

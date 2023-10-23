@@ -85,16 +85,11 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
   };
 
   useEffect(() => {
-    console.log(
-      "selectedAssociatePartnerData ADD INDEX",
-      selectedAssociatePartnerData
-    );
     if (getAssociatePartnerList.length && clientId) {
       const currentCardDetail = getAssociatePartnerList.find(
         (s: any) => s._id === clientId
       );
       form.setFieldsValue(currentCardDetail);
-      console.log("currentCardDetail", currentCardDetail);
       //setPartnerCategory(currentCardDetail.);
     }
 

@@ -253,7 +253,6 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     //     //     (acc: any, addon: any) => acc + addon.price,
     //     //     0
     //     // );
-    //     console.log(addOnTotalPrice);
     // }
   };
 

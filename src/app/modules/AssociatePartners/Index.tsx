@@ -35,7 +35,6 @@ const AssociatePartners = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const handleViewBtnClick = (id: string) => {
-    console.log(id);
     navigation(`view-associatePartners/`, { state: { id: id } });
   };
   const superAdminAddonOption = [

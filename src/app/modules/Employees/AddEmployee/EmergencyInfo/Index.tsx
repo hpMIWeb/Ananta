@@ -18,20 +18,25 @@ const EmergencyInfo = ({
 
   const onFinish = (value: any) => {
     const filteredValue = filterObjectByKey(
-      value.ownerDetails,
+      value,
       emergencyInfoData.map((a: any) => a.name)
     );
+    console.log("filteredValue", filteredValue);
     setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
     onChange(6, { emergencyDetails: Object.values(filteredValue) });
   };
 
   useEffect(() => {
-    if (selectedEmployeeData) {
-      console.log("emeg", selectedEmployeeData.emergencyDetails);
-      form.setFieldsValue({});
+    if (selectedEmployeeData && selectedEmployeeData.emergencyDetails) {
+      console.log("emergencyDetails", selectedEmployeeData.emergencyDetails);
+      setEmergencyInfoData(selectedEmployeeData.emergencyDetails);
+      form.setFieldsValue({
+        emergencyDetails: selectedEmployeeData.emergencyDetails,
+      });
     }
   }, []);
   const addMoreOwnerCard = () => {
+    console.log("data", emergencyInfoData);
     setEmergencyInfoData((prev) => [
       ...prev,
       {
@@ -52,16 +57,17 @@ const EmergencyInfo = ({
     <div>
       <Form
         name="basic"
-        initialValues={{ remember: true }}
+        form={form}
+        // initialValues={{ remember: true }}
         onFinish={onFinish}
         autoComplete="off"
         requiredMark={false}
         className="customAddForm"
       >
-        <Form.List name="ownerDetails">
+        <Form.List name="emergencyDetails">
           {(fields, { add, remove }) => (
             <>
-              {emergencyInfoData.map((field, index) => (
+              {fields.map((field, index) => (
                 <div style={{ marginTop: 2 }} key={index} className="row">
                   <EmergencyInfoCardBox
                     form={form}
@@ -69,7 +75,7 @@ const EmergencyInfo = ({
                     displayNumber={index++}
                     field={field}
                     remove={remove}
-                    canDelete={field.type === "new"}
+                    canDelete={true}
                     onDeleteCardClick={onDeleteCardClick}
                   />
                   <hr className={styles.ownerInfoCardLine} />
