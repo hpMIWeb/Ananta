@@ -54,6 +54,7 @@ import EmpTimeSheet from "./modules/timesheet/EmpTimeSheet";
 import ClientTimeSheet from "./modules/timesheet/ClientTimeSheet";
 import Setting from "./modules/Setting/Setting";
 import AssociatePartnerView from "./modules/AssociatePartners/AssociatePartnerView";
+import ClientView from "./modules/Clients/ClientView";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -133,6 +134,10 @@ const App = () => {
             <Route
               path="caclient/edit/:clientId"
               element={<PrivateRoute component={AddClient} />}
+            />
+            <Route
+              path="caclient/view-caclient"
+              element={<PrivateRoute component={ClientView} />}
             />
             <Route
               path="caclient/createbulk"
