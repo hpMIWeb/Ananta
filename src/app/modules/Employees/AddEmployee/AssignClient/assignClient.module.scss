@@ -49,9 +49,6 @@
 }
 .clientNameLabel {
   font-weight: 600;
-  font-size: 15px;
-  padding: 3px 10px;
-  margin: 4px 0;
   cursor: pointer;
   font-family: $body-font-family;
   text-shadow: none !important;
@@ -59,4 +56,27 @@
 }
 .selectedClientNameLabel{
   background-color: #74819430;
+}
+
+/* styles.module.css or styles.scss */
+.clientTag {
+  background-color: #74819430;
+  margin-top: 8px;
+}
+
+.tagName {
+  //display: flex;
+ // align-items: center;
+}
+.anticon {
+    display: inline-block;
+    color: inherit;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+   vertical-align: 0rem !important; 
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
