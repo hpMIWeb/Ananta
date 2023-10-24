@@ -13,7 +13,7 @@ const EmergencyInfo = ({
 }: any) => {
   const [form] = Form.useForm();
   const [emergencyInfoData, setEmergencyInfoData] = useState([
-    { type: "default", index: 1, name: "index1" },
+    { type: "default", index: 0, name: "index0" },
   ]);
 
   const onFinish = (value: any) => {
@@ -44,14 +44,18 @@ const EmergencyInfo = ({
       ...prev,
       {
         type: "new",
-        index: newIndex + 1,
-        name: `index${newIndex + 1}`,
+        index: newIndex,
+        name: `index${newIndex}`,
       },
     ]);
+  };
+
+  useEffect(() => {
+    // set fields
     form.setFieldsValue({
       emergencyDetails: emergencyInfoData,
     });
-  };
+  }, [emergencyInfoData]);
 
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = emergencyInfoData.filter(
@@ -67,6 +71,7 @@ const EmergencyInfo = ({
       <Form
         name="basic"
         form={form}
+        // initialValues={{ remember: true }}
         onFinish={onFinish}
         autoComplete="off"
         requiredMark={false}

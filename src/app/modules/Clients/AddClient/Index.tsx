@@ -85,12 +85,14 @@ const AddClient = ({ selectedClientData }: any) => {
   };
 
   useEffect(() => {
-    if (getClientsList.length && clientId) {
+    console.log("clientId");
+    if (getClientsList.length && selectedClientData) {
       const currentCardDetail = getClientsList.find(
-        (s: any) => s._id === clientId
+        (s: any) => s._id === selectedClientData._id
       );
+      console.log("currentCardDetail.clientType", currentCardDetail.clientType);
+      form.setFieldsValue({ clientType: currentCardDetail.clientType });
       setClientType(currentCardDetail.clientType);
-      form.setFieldsValue(currentCardDetail);
     }
   }, [getClientsList, clientId, form]);
 
@@ -147,6 +149,7 @@ const AddClient = ({ selectedClientData }: any) => {
           setFormValue={setFormValue}
           clientType={clientType}
           handleCancelClick={handleCancelClick}
+          selectedClientData={selectedClientData}
         />
       ),
     },
@@ -168,6 +171,7 @@ const AddClient = ({ selectedClientData }: any) => {
           onChange={onChange}
           setFormValue={setFormValue}
           clientType={clientType}
+          selectedClientData={selectedClientData}
         />
       ),
       disabled: !ownerInfoValid,
@@ -181,6 +185,7 @@ const AddClient = ({ selectedClientData }: any) => {
           setFormValue={setFormValue}
           clientType={clientType}
           clientValue={clientValue}
+          selectedClientData={selectedClientData}
         />
       ),
       disabled: !subScriptionInfoValid,
@@ -194,6 +199,7 @@ const AddClient = ({ selectedClientData }: any) => {
           setFormValue={setFormValue}
           clientType={clientType}
           clientValue={clientValue}
+          selectedClientData={selectedClientData}
         />
       ),
       disabled: !paymentInfoValid,
@@ -278,6 +284,7 @@ const AddClient = ({ selectedClientData }: any) => {
                   className="customAddClientSelectOptions"
                   placeholder="Select Type"
                   onChange={(value: any) => setClientType(value)}
+                  defaultValue={clientType}
                 />
               </Form.Item>
             </div>
