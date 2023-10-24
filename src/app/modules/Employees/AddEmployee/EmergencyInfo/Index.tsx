@@ -22,15 +22,12 @@ const EmergencyInfo = ({
       emergencyInfoData.map((a: any) => a.name)
     );
 
-    console.log("value", value);
-    console.log(filteredValue);
-    setEmployeeInfo({ emergencyDetails: Object.values(filteredValue) });
-    // onChange(6, { emergencyDetails: Object.values(filteredValue) });
+    setEmployeeInfo(value);
+    onChange(6, value);
   };
 
   useEffect(() => {
     if (selectedEmployeeData && selectedEmployeeData.emergencyDetails) {
-      console.log("Nnkn");
       setEmergencyInfoData(selectedEmployeeData.emergencyDetails);
       form.setFieldsValue({
         emergencyDetails: selectedEmployeeData.emergencyDetails,
@@ -38,16 +35,31 @@ const EmergencyInfo = ({
     }
   }, []);
 
+  // const addMoreOwnerCard = () => {
+  //   const newIndex = emergencyInfoData.length;
+  //   setEmergencyInfoData((prev) => [
+  //     ...prev,
+  //     {
+  //       type: "new",
+  //       index: newIndex,
+  //       name: `index${newIndex}`,
+  //     },
+  //   ]);
+  // };
+
   const addMoreOwnerCard = () => {
-    const newIndex = emergencyInfoData.length;
-    setEmergencyInfoData((prev) => [
-      ...prev,
-      {
-        type: "new",
-        index: newIndex,
-        name: `index${newIndex}`,
-      },
-    ]);
+    const existingData = form.getFieldsValue();
+    const newIndex = existingData.emergencyDetails.length;
+    form.setFieldsValue({
+      emergencyDetails: [
+        ...existingData.emergencyDetails,
+        {
+          type: "new",
+          index: newIndex,
+          name: `index${newIndex}`,
+        },
+      ],
+    });
   };
 
   useEffect(() => {
