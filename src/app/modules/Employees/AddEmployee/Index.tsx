@@ -28,10 +28,10 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
   const [activeTab, setActiveTab] = useState(1);
   const [disableTabArray, setDisableTabArray] = useState({
     1: false,
-    2: true,
-    3: true,
-    4: true,
-    5: true,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
   });
   const [employeeDetails, setEmployeeDetails] = useState({});
   const dispatch = useAppDispatch();
@@ -120,7 +120,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
     },
     {
       key: 2,
-      label: `Organisation Details`,
+      label: `Organization Details`,
       disabled: disableTabArray[2],
       children: (
         <OrganisationDetails

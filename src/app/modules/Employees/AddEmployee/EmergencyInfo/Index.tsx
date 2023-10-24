@@ -44,8 +44,8 @@ const EmergencyInfo = ({
       ...prev,
       {
         type: "new",
-        index: newIndex,
-        name: `index${newIndex}`,
+        index: newIndex + 1,
+        name: `index${newIndex + 1}`,
       },
     ]);
     form.setFieldsValue({
@@ -67,7 +67,6 @@ const EmergencyInfo = ({
       <Form
         name="basic"
         form={form}
-        // initialValues={{ remember: true }}
         onFinish={onFinish}
         autoComplete="off"
         requiredMark={false}

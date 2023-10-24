@@ -127,63 +127,57 @@ const EmergencyInfoCardBox = ({
               </Form.Item>
             </div>
           </div>
-          {/* <div
-                        className={classNames(
-                            "col-12 col-md-3 col-lg-3",
-                            styles.fieldPadding8
-                        )}
-                    >
-                        <div>
-                            <label
-                                style={{ marginBottom: 5 }}
-                                className="form-label"
-                            >
-                                Alternative Mobile
-                            </label>
-                            <Form.Item
-                                {...field}
-                                name={[field.name, "alternateMobile"]}
-                                fieldKey={[field.fieldKey, "alternateMobile"]}
-                            >
-                                <PhoneInput
-                                    containerClass="phoneNumberContainerClassInput"
-                                    country="in"
-                                    countryCodeEditable={false}
-                                    placeholder="Alt Mobile"
-                                    onChange={(data: any) => {
-                                        const {
-                                            hasError,
-                                            phoneNumber,
-                                            countryCode,
-                                        } = data;
-                                        form.setFieldsValue({
-                                            alternateMobile_hasError: hasError,
-                                        });
-                                    }}
-                                />
-                            </Form.Item>
-                        </div>
-                    </div> */}
-        </div>
-        <div className="row"></div>
-        <div className="row">
+          <div
+            className={classNames(
+              "col-12 col-md-2 col-lg-2",
+              styles.fieldPadding8
+            )}
+          >
+            <div>
+              <label style={{ marginBottom: 5 }} className="form-label">
+                Alternative Mobile
+              </label>
+              <Form.Item
+                {...field}
+                name={[field.name, "alternateMobile"]}
+                fieldKey={[field.fieldKey, "alternateMobile"]}
+              >
+                <PhoneInput
+                  containerClass="phoneNumberContainerClassInput"
+                  country="in"
+                  countryCodeEditable={false}
+                  placeholder="Alt Mobile"
+                  onChange={(data: any) => {
+                    const { hasError, phoneNumber, countryCode } = data;
+                    form.setFieldsValue({
+                      alternateMobile_hasError: hasError,
+                    });
+                  }}
+                />
+              </Form.Item>
+            </div>
+          </div>
           {canDelete && (
             <div
-              className={classNames(
-                "col-12 col-md-2 col-lg-2",
-                styles.fieldPadding8
-              )}
+              className={classNames("col-12 col-md-1 col-lg-1")}
+              style={{ marginTop: "25px" }}
             >
-              <div className="d-grid gap-2">
-                <Button
-                  className={classNames("cancelBtn", styles.deleteCardBtn)}
-                  type="primary"
-                  onClick={() => onDeleteCardClick(index)}
-                  danger
-                >
-                  <Icon height={14} width={14} name="trashIcon" />
-                  <span style={{ marginLeft: 5 }}>Delete</span>
-                </Button>
+              <div
+                className={classNames(
+                  "col-12 col-sm-6 col-md-1",
+                  styles.instrumentFieldBox
+                )}
+              >
+                <div>
+                  <Button
+                    className={classNames("cancelBtn", styles.deleteCardBtn)}
+                    type="primary"
+                    onClick={() => onDeleteCardClick(index)}
+                    danger
+                  >
+                    <Icon height={14} width={14} name="trashIcon" />
+                  </Button>
+                </div>
               </div>
             </div>
           )}
