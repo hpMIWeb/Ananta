@@ -28,11 +28,11 @@ const Clients = () => {
   const getClientsLoading = useSelector(
     (state: any) => state.getClients.loading
   );
-  const [searchValue, setSearchValue] = useState("");
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleNewClientClick = () => {
     navigation("/caclient/create");
@@ -191,6 +191,10 @@ const Clients = () => {
     Storage: { asc: "Highest", desc: "Lowest" },
   };
 
+  // Search input change handler
+  const handleSearch = (searchValue: string) => {
+    setSearchQuery(searchValue);
+  };
   return (
     <div className={styles.promoCodesPageWrapper}>
       <div
@@ -232,8 +236,8 @@ const Clients = () => {
             showAddOn
             defaultSortLabel={clientSortLabel}
             initialAddOnsValue="All Clients"
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
+            searchValue={searchQuery}
+            setSearchValue={handleSearch}
             sortState={sortState}
             setSortStateHandler={(options: any) => {
               setSortState(options);
@@ -253,32 +257,30 @@ const Clients = () => {
         >
           {getClientsLoading && <CardContentSkeletonLoader />}
           {!getClientsLoading &&
-            getFilteredValue(
-              displayedPaginationItems,
-              searchValue,
-              sortState
-            ).map((card: any, index: number) => (
-              <SubscriptionCard
-                displayIndex={getCurrentItemNumber(
-                  index + 1,
-                  currentPageNumber,
-                  currentPageSize
-                )}
-                key={card._id}
-                id={card._id}
-                planNameLabelBlue
-                column={3}
-                cardDetails={card}
-                titleDesc={card.firmType}
-                planNameLabel={card.firmGSTIN}
-                planName={card.firmName}
-                cardDesc={cardDesc}
-                isProfileViewAction
-                isActive={card.status}
-                onChangeActiveClick={onChangeActiveClick}
-                handleViewBtnClick={handleViewBtnClick}
-              />
-            ))}
+            getFilteredValue(getClientsList, searchQuery, sortState).map(
+              (card: any, index: number) => (
+                <SubscriptionCard
+                  displayIndex={getCurrentItemNumber(
+                    index + 1,
+                    currentPageNumber,
+                    currentPageSize
+                  )}
+                  key={card._id}
+                  id={card._id}
+                  planNameLabelBlue
+                  column={3}
+                  cardDetails={card}
+                  titleDesc={card.firmType}
+                  planNameLabel={card.firmGSTIN}
+                  planName={card.firmName}
+                  cardDesc={cardDesc}
+                  isProfileViewAction
+                  isActive={card.status}
+                  onChangeActiveClick={onChangeActiveClick}
+                  handleViewBtnClick={handleViewBtnClick}
+                />
+              )
+            )}
 
           {!getClientsLoading && !getClientsList.length && (
             <NoDataAvailable name="No Clients Available!" />

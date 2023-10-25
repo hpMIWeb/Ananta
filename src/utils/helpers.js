@@ -91,23 +91,12 @@ export const getFilteredValue = (
     searchValue,
     sortState,
     addOnValue,
-    filterFrom = ""
 ) => {
     const searchedValues = data.filter((card) => {
-        if (filterFrom != "") {
-            return data.filter((item) => {
-                return item.filterFrom
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase());
-            });
-            // return Object.values(card).some((value) =>
-            //     // compareIgnoreCaseWithTypo(
-            //     //     String(value),
-            //     //     searchValue?.toLowerCase()
-            //     // )
-            // );
-        } else {
+      
             // re-write search logic - it will check all the values with `searchvalue`
+            console.log("card",card)
+            console.log("searchValue",card)
             return Object.values(card).some(
                 (value) =>
                     value
@@ -121,7 +110,7 @@ export const getFilteredValue = (
             //         searchValue?.toLowerCase()
             //     )
             // );
-        }
+        
     });
 
     

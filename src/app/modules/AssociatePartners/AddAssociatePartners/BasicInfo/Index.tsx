@@ -570,10 +570,7 @@ const BasicInfo = ({
             )}
           >
             <div>
-              <label className="form-label">
-                Referred By
-                <sup className="text-danger fs--1">*</sup>
-              </label>
+              <label className="form-label">Referred By</label>
               <Form.Item name=" referredBy">
                 <Input
                   placeholder="Referred By"
