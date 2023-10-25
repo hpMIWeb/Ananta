@@ -6,10 +6,14 @@ import Button from "../../../../../components/Button/Index";
 import Icon from "../../../../../components/Icon/Index";
 import { DatePicker, Form, Select } from "antd";
 
-const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
+const PaymentFieldRow = ({
+  onDelete,
+  instrumentIndex,
+  handleInstrumentChange,
+  ...props
+}: any) => {
   return (
     <div className={classNames("row", styles.paymentFormRow)}>
-      <div>{instrumentIndex}</div>
       <div
         className={classNames(
           "col-12 col-sm-6 col-md-3",
@@ -18,7 +22,7 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
       >
         <div>
           <label className="form-label">Instrument Type</label>
-          <Form.Item id={`name-${instrumentIndex}`}>
+          <Form.Item id={`name-${instrumentIndex}`} name="instrumentType">
             <Select
               options={[
                 { value: "NEFT", label: "NEFT" },
@@ -33,6 +37,9 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
                 { value: "DD", label: "DD" },
               ]}
               placeholder="Select Payment Term"
+              onChange={(value) =>
+                handleInstrumentChange("instrumentType", value, instrumentIndex)
+              }
             />
           </Form.Item>
         </div>
@@ -45,11 +52,14 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
       >
         <div>
           <label className="form-label">Instrument Date</label>
-          <Form.Item name="instrumentDate">
+          <Form.Item name="instrumentDate" id={`date-${instrumentIndex}`}>
             <DatePicker
               placeholder="Instrument Date"
               className="customFormDatePicker"
               format="DD/MM/YYYY"
+              onChange={(value) =>
+                handleInstrumentChange("instrumentDate", value, instrumentIndex)
+              }
             />
           </Form.Item>
         </div>
@@ -62,10 +72,18 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
       >
         <div>
           <label className="form-label">Instrument ID</label>
-          <Form.Item name="instrumentId">
+          <Form.Item name="instrumentId" id={`ins-id-${instrumentIndex}`}>
             <Input
+              id={`ins-id-${instrumentIndex}`}
               placeholder="Instrument ID"
               className="customAddFormInputText"
+              onChange={(item: any) =>
+                handleInstrumentChange(
+                  "instrumentId",
+                  item.target.value,
+                  instrumentIndex
+                )
+              }
             />
           </Form.Item>
         </div>
@@ -78,7 +96,7 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
       >
         <div>
           <label className="form-label">Instrument Amount</label>
-          <Form.Item name="instrumentAmount">
+          <Form.Item name="instrumentAmount" id={`inst-amt-${instrumentIndex}`}>
             <Input
               placeholder="Instrument Amount"
               className="customAddFormInputText"
@@ -88,6 +106,13 @@ const PaymentFieldRow = ({ onDelete, instrumentIndex }: any) => {
                 }
               }}
               maxLength="15"
+              onChange={(item: any) =>
+                handleInstrumentChange(
+                  "instrumentAmount",
+                  item.target.value,
+                  instrumentIndex
+                )
+              }
             />
           </Form.Item>
         </div>

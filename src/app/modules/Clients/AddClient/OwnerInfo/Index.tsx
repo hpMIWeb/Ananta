@@ -5,8 +5,8 @@ import OwnerInfoCardBox from "../OwnerInfoCardBox/Index";
 import { useEffect, useState } from "react";
 import CardBottomAction from "./CardBottomAction";
 import { filterObjectByKey } from "../../../../../utils/helpers";
-import dayjs from "dayjs";
-
+import moment from "moment";
+moment.locale("en"); // Replace 'en' with your desired locale
 const OwnerInfo = ({
   onChange,
   setFormValue,
@@ -18,14 +18,10 @@ const OwnerInfo = ({
     { type: "default", index: 1, name: "index1" },
   ]);
   const onFinish = (value: any) => {
-    const filteredValue = filterObjectByKey(
-      value.ownerDetails,
-      ownerInfoData.map((a) => a.name)
-    );
-
-    setFormValue({ ownerDetails: Object.values(filteredValue) });
+    setFormValue(value);
     onChange(5);
   };
+  // Set the locale
 
   const addMoreOwnerCard = () => {
     setOwnerInfoData((prev) => [
@@ -36,6 +32,18 @@ const OwnerInfo = ({
         name: `index${ownerInfoData.length + 1}`,
       },
     ]);
+    const existingData = form.getFieldsValue();
+    const newIndex = existingData.ownerDetails.length;
+    form.setFieldsValue({
+      ownerDetails: [
+        ...existingData.ownerDetails,
+        {
+          type: "new",
+          index: newIndex,
+          name: `index${newIndex}`,
+        },
+      ],
+    });
   };
 
   useEffect(() => {
@@ -45,19 +53,42 @@ const OwnerInfo = ({
     });
   }, [ownerInfoData]);
 
+  useEffect(() => {
+    // set fields
+    form.setFieldsValue({
+      ownerDetails: ownerInfoData,
+    });
+  }, [ownerInfoData]);
+
+  useEffect(() => {
+    if (selectedClientData && selectedClientData.ownerDetails) {
+      // Loop through the array and format the date strings with 'moment'
+      const formattedOwnerDetails = selectedClientData.ownerDetails.map(
+        (owner: any) => {
+          if (owner.birthDate) {
+            return {
+              ...owner,
+              birthDate: moment(owner.birthDate).format("DD/MM/YYYY"),
+            };
+          }
+          return owner;
+        }
+      );
+
+      setOwnerInfoData(formattedOwnerDetails);
+      form.setFieldsValue({
+        ownerDetails: formattedOwnerDetails,
+      });
+    }
+  }, []);
+
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = ownerInfoData.filter((a) => a.index !== cardIndex);
     setOwnerInfoData(newOwnerInfoData);
+    form.setFieldsValue({
+      ownerDetails: newOwnerInfoData,
+    });
   };
-
-  useEffect(() => {
-    // if (selectedClientData && selectedClientData.ownerDetails) {
-    //   setOwnerInfoData(selectedClientData.ownerDetails);
-    //   form.setFieldsValue({
-    //     ownerDetails: selectedClientData.ownerDetails,
-    //   });
-    // }
-  }, []);
 
   return (
     <div>

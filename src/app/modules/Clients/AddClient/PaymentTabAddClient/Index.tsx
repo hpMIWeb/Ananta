@@ -8,10 +8,21 @@ import Icon from "../../../../../components/Icon/Index";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 
+interface IInstrument {
+  instrumentAmount: number;
+  instrumentDate: string;
+  instrumentId: number;
+  instrumentIndex: number;
+  instrumentType: string;
+}
+
 const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
-  const [paymentRowData, setPaymentRowData] = useState([
-    { type: "default", index: 1 },
+  const [paymentRowData, setPaymentRowData] = useState<IInstrument[]>([
+    {
+      instrumentIndex: 1,
+    } as IInstrument,
   ]);
+  const [form] = Form.useForm();
 
   const [paymentForm, setPaymentForm] = useState({
     creditPeriodTime: "",
@@ -19,20 +30,51 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
     paymentTerms: "",
   });
   const onFinish = (values: any) => {
-    setFormValue(values);
+    const finalFormValues = {
+      invoiceAmount: clientValue.subscriptionDetails.invoicePrice,
+      paymentTerms: values.paymentTerms,
+      creditPeriod: values.creditPeriodTime,
+      creditType: values.creditPeriodType,
+      paymentMode: values.paymentMode,
+      instrumentDetails: paymentRowData,
+    };
+
+    setFormValue({ paymentDetails: [finalFormValues] });
+
     onChange(8);
   };
 
   const addMoreOwnerCard = () => {
+    const fieldData = form.getFieldsValue();
     setPaymentRowData((prev) => [
       ...prev,
-      { type: "new", index: paymentRowData.length + 1 },
+      {
+        instrumentIndex: paymentRowData.length + 1,
+      } as IInstrument,
     ]);
+  };
+
+  const handleInstrumentChange = (key: any, value: any, index: any) => {
+    const instrumentInfoData = paymentRowData.find(
+      (a) => a.instrumentIndex === index
+    );
+    if (instrumentInfoData) {
+      const updatedInstrumentInfoData = {
+        ...instrumentInfoData,
+        [key]: value,
+      };
+
+      const updatedPaymentRowData = paymentRowData.map((rowData) =>
+        rowData.instrumentIndex === index ? updatedInstrumentInfoData : rowData
+      );
+
+      setPaymentRowData(updatedPaymentRowData);
+    }
   };
 
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = paymentRowData.filter(
-      (a) => a.index !== cardIndex
+      (a) => a.instrumentIndex !== cardIndex
     );
     setPaymentRowData(newOwnerInfoData);
   };
@@ -58,6 +100,7 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
   return (
     <Form
       name="basic"
+      form={form}
       initialValues={{ remember: true, creditPeriodType: "Days" }}
       onFinish={onFinish}
       autoComplete="off"
@@ -226,10 +269,12 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
             </Form.Item>
           </div>
         </div>
-        {paymentRowData.map((payment, index) => (
+        {paymentRowData.map((payment, index: number) => (
           <PaymentFieldRow
+            key={index}
             onDelete={onDeleteCardClick}
-            instrumentIndex={payment.index}
+            instrumentIndex={payment.instrumentIndex}
+            handleInstrumentChange={handleInstrumentChange}
           />
         ))}
       </div>

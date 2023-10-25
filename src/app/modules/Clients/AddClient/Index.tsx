@@ -42,6 +42,7 @@ const AddClient = ({ selectedClientData }: any) => {
     (state: any) => state.getClients.loading
   );
   const [clientType, setClientType] = useState("");
+  const [selectedClientId, setSelectedClientId] = useState("");
   const getClientsList = useSelector((state: any) => state.getClients.data);
   const { loading, success } = useSelector((state: any) => state.createClient);
   const [firmInfoValid, setFirmInfoValid] = useState<boolean>(false);
@@ -84,6 +85,7 @@ const AddClient = ({ selectedClientData }: any) => {
   useEffect(() => {
     if (selectedClientData) {
       setClientType(selectedClientData.clientType);
+      setSelectedClientId(selectedClientData._id);
       form.setFieldsValue({ clientType: selectedClientData.clientType });
     }
   }, [selectedClientData]);
@@ -115,17 +117,13 @@ const AddClient = ({ selectedClientData }: any) => {
   const onChange = (key: number, formValue: any) => {
     if (key === 8) {
       const payload = { ...clientValue, ...formValue };
-      delete payload.subscriptionPlan;
-      delete payload.startDate;
-      delete payload.paymentTerms;
-      delete payload.paymentMode;
-      delete payload.instrumentType;
-      delete payload.instrumentDate;
-      delete payload.instrumentId;
-      delete payload.instrumentAmount;
       payload.clientType = clientType;
-      // @ts-ignore
-      dispatch(createClientReducersApi({ payload: payload }));
+      dispatch(
+        createClientReducersApi({
+          payload: payload,
+          clientId: selectedClientId,
+        })
+      );
     } else {
       setActiveTab(key);
     }

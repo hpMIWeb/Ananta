@@ -23,6 +23,7 @@ import { Option } from "antd/es/mentions";
 import { toast } from "react-toastify";
 import { ClientType, RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
+import moment from "moment";
 
 const SubscriptionTabAddClient = ({
   onChange,
@@ -101,6 +102,7 @@ const SubscriptionTabAddClient = ({
   };
 
   const cardDesc = (details: any) => {
+    const features = details.features || {};
     return [
       {
         iconName: "time",
@@ -172,7 +174,7 @@ const SubscriptionTabAddClient = ({
         descComponent: (
           <>
             <p className="mb-0 fs--1 description-label">Modules</p>
-            {generateFeatureLists(Object.entries(details.features))}
+            {generateFeatureLists(Object.entries(features))}
           </>
         ),
       },
@@ -201,7 +203,6 @@ const SubscriptionTabAddClient = ({
     {};
 
   const onValuesChange = (changedFields: any, allFields: any) => {
-    console.log("allFields", allFields);
     setSubscriptionValue(allFields);
   };
 
@@ -219,16 +220,19 @@ const SubscriptionTabAddClient = ({
   useEffect(() => {
     if (selectedClientData) {
       let subscriptionDetails = selectedClientData.subscriptionDetails;
-      console.log("subscriptionDetails", subscriptionDetails);
-      // setSubscriptionValue({
-      //   subscriptionType: subscriptionDetails.subscriptionType,
-      // });
-      // setSubscriptionAddons(subscriptionDetails.addOns);
+      const addons = subscriptionDetails.addOns || [];
+      setSubscriptionValue({
+        subscriptionType: subscriptionDetails.subscriptionType,
+        billingType: subscriptionDetails?.billingType,
+        startDate: moment(subscriptionDetails.startDate),
+      });
+      //setSubscriptionAddons(addons);
 
-      // form.setFieldsValue({
-      //   subscriptionType: subscriptionDetails.subscriptionType,
-      //   billingType: subscriptionDetails?.billingType,
-      // });
+      form.setFieldsValue({
+        subscriptionType: subscriptionDetails.subscriptionType,
+        billingType: subscriptionDetails?.billingType,
+        startDate: moment(subscriptionDetails.startDate),
+      });
     }
     //onValuesChange("", form);
   }, [selectedClientData]);
@@ -284,12 +288,6 @@ const SubscriptionTabAddClient = ({
       return addon;
     });
     setSubscriptionAddons(updatedAddons);
-    // if (updatedAddons) {
-    //     // const addOnTotalPrice = updatedAddons.reduce(
-    //     //     (acc: any, addon: any) => acc + addon.price,
-    //     //     0
-    //     // );
-    // }
   };
 
   const onFinish = (values: any) => {
@@ -300,7 +298,7 @@ const SubscriptionTabAddClient = ({
       addOnType: addon.addOnType,
       addOnPlans: addon.addOnPlans,
       addOnQuantity: addon.addOnQuantity,
-      addonsPrice: addon.price,
+      addonsPrice: addon.addonsPrice,
     }));
 
     const period_type =

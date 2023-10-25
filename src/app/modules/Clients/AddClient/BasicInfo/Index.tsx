@@ -140,12 +140,15 @@ const BasicInfo = ({
         firmGSTIN: selectedClientData.firmGSTIN,
         email: selectedClientData.email,
         mobile: selectedClientData.mobile,
+        firmRegistrationNo: selectedClientData.firmRegistrationNo,
         //  alternateMobile: selectedClientData?.alternateMobile,
         address: selectedClientData.address,
         pinCode: selectedClientData.pinCode,
         country: selectedClientData.country,
         state: selectedClientData.state,
         city: selectedClientData.city,
+        groupName: selectedClientData.groupName,
+        referredBy: selectedClientData.referredBy,
       });
     }
   }, []);
@@ -627,7 +630,7 @@ const BasicInfo = ({
           >
             <div>
               <label className="form-label">Referred By</label>
-              <Form.Item name=" referredBy">
+              <Form.Item name="referredBy">
                 <Input
                   placeholder="Referred By"
                   className="customAddFormInputText"
