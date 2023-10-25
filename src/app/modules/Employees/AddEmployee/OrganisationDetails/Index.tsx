@@ -7,6 +7,7 @@ import Input from "../../../../../components/Input/Index";
 import Select from "../../../../../components/Select/Index";
 import { filterObjectByKey } from "../../../../../utils/helpers";
 import { useEffect, useState } from "react";
+import moment from "moment";
 
 const initialBranchInfoData = [{ type: "default", index: 0 }];
 
@@ -34,6 +35,8 @@ const OrganisationDetails = ({
       ...value,
     };
 
+    console.log("organizationDetails", organizationDetails);
+
     setEmployeeInfo({
       organizationDetails: [organizationDetails],
     });
@@ -46,6 +49,7 @@ const OrganisationDetails = ({
     if (selectedEmployeeData) {
       const organizationDetails = selectedEmployeeData.organizationDetails;
 
+      console.log("orgDetail", organizationDetails);
       organizationDetails.forEach((orgDetail: any, index: number) => {
         form.setFieldsValue({
           department: orgDetail.department?._id,
@@ -55,6 +59,8 @@ const OrganisationDetails = ({
           aadhar: orgDetail.aadhar,
           pan: orgDetail.pan,
           referance: orgDetail.referance,
+          workingTimeFrom: moment(orgDetail.workingTimeFrom),
+          workingTimeTo: moment(orgDetail.workingTimeTo),
         });
       });
     }

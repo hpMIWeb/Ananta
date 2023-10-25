@@ -57,7 +57,6 @@ const ClientView = () => {
         (s: any) => s._id === clientId
       );
       form.setFieldsValue(currentCardDetail);
-      console.log(currentCardDetail);
       setSelectedClientData(currentCardDetail);
     }
   }, [getClientsList, clientId, form]);

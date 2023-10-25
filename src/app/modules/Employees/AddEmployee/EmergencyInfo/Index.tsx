@@ -17,11 +17,6 @@ const EmergencyInfo = ({
   ]);
 
   const onFinish = (value: any) => {
-    const filteredValue = filterObjectByKey(
-      value,
-      emergencyInfoData.map((a: any) => a.name)
-    );
-
     setEmployeeInfo(value);
     onChange(6, value);
   };
@@ -34,18 +29,6 @@ const EmergencyInfo = ({
       });
     }
   }, []);
-
-  // const addMoreOwnerCard = () => {
-  //   const newIndex = emergencyInfoData.length;
-  //   setEmergencyInfoData((prev) => [
-  //     ...prev,
-  //     {
-  //       type: "new",
-  //       index: newIndex,
-  //       name: `index${newIndex}`,
-  //     },
-  //   ]);
-  // };
 
   const addMoreOwnerCard = () => {
     const existingData = form.getFieldsValue();

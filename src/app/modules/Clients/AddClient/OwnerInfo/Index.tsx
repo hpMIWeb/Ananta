@@ -2,11 +2,17 @@ import styles from "./ownerInfo.module.scss";
 import { Divider, Form } from "antd";
 
 import OwnerInfoCardBox from "../OwnerInfoCardBox/Index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardBottomAction from "./CardBottomAction";
 import { filterObjectByKey } from "../../../../../utils/helpers";
+import dayjs from "dayjs";
 
-const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
+const OwnerInfo = ({
+  onChange,
+  setFormValue,
+  clientType,
+  selectedClientData,
+}: any) => {
   const [form] = Form.useForm();
   const [ownerInfoData, setOwnerInfoData] = useState([
     { type: "default", index: 1, name: "index1" },
@@ -21,8 +27,6 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
     onChange(5);
   };
 
-  const ownerDetailsFormValue = Form.useWatch("ownerDetails", form) || {};
-
   const addMoreOwnerCard = () => {
     setOwnerInfoData((prev) => [
       ...prev,
@@ -34,10 +38,26 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
     ]);
   };
 
+  useEffect(() => {
+    // set fields
+    form.setFieldsValue({
+      ownerDetails: ownerInfoData,
+    });
+  }, [ownerInfoData]);
+
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = ownerInfoData.filter((a) => a.index !== cardIndex);
     setOwnerInfoData(newOwnerInfoData);
   };
+
+  useEffect(() => {
+    // if (selectedClientData && selectedClientData.ownerDetails) {
+    //   setOwnerInfoData(selectedClientData.ownerDetails);
+    //   form.setFieldsValue({
+    //     ownerDetails: selectedClientData.ownerDetails,
+    //   });
+    // }
+  }, []);
 
   return (
     <div>
@@ -53,24 +73,20 @@ const OwnerInfo = ({ onChange, setFormValue, clientType }: any) => {
         <Form.List name="ownerDetails">
           {(fields, { add, remove }) => (
             <>
-              {ownerInfoData.map((field, index) => (
+              {fields.map((field, index) => (
                 <>
                   {index !== 0 && <Divider type="horizontal" />}
                   <div
                     style={{
                       marginTop: 2,
                     }}
-                    key={field.index}
+                    key={index}
                     className="row"
                   >
-                    {/* {form.type === "new" && (
-                    <hr className={styles.ownerInfoCardLine} />
-                  )} */}
                     <OwnerInfoCardBox
                       index={index}
                       field={field}
                       remove={remove}
-                      //  canDelete={form.type === "new"}
                       onDeleteCardClick={onDeleteCardClick}
                       clientType={clientType}
                     />

@@ -80,21 +80,17 @@ const AddClient = ({ selectedClientData }: any) => {
     setClientValue((prev) => ({ ...prev, ...formValue }));
   };
 
+  // Set clientType based on selectedClientData or a default value
+  useEffect(() => {
+    if (selectedClientData) {
+      setClientType(selectedClientData.clientType);
+      form.setFieldsValue({ clientType: selectedClientData.clientType });
+    }
+  }, [selectedClientData]);
+
   const handleCancelClick = () => {
     navigation("/caclient");
   };
-
-  useEffect(() => {
-    console.log("clientId");
-    if (getClientsList.length && selectedClientData) {
-      const currentCardDetail = getClientsList.find(
-        (s: any) => s._id === selectedClientData._id
-      );
-      console.log("currentCardDetail.clientType", currentCardDetail.clientType);
-      form.setFieldsValue({ clientType: currentCardDetail.clientType });
-      setClientType(currentCardDetail.clientType);
-    }
-  }, [getClientsList, clientId, form]);
 
   useEffect(() => {
     if (success) {
@@ -270,23 +266,31 @@ const AddClient = ({ selectedClientData }: any) => {
                 Client Type
                 <sup className="text-danger fs--1">*</sup>
               </label>
-              <Form.Item
-                name="clientType"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please Enter Client Type!",
-                  },
-                ]}
+              <Form
+                form={form}
+                name="basic"
+                autoComplete="off"
+                requiredMark={false}
+                className="customAddForm"
               >
-                <Select
-                  options={clientTypeOption}
-                  className="customAddClientSelectOptions"
-                  placeholder="Select Type"
-                  onChange={(value: any) => setClientType(value)}
-                  defaultValue={clientType}
-                />
-              </Form.Item>
+                <Form.Item
+                  name="clientType"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter Client Type!",
+                    },
+                  ]}
+                >
+                  <Select
+                    options={clientTypeOption}
+                    className="customAddClientSelectOptions"
+                    placeholder="Select Type"
+                    onChange={(value: any) => setClientType(value)}
+                    value={clientType}
+                  />
+                </Form.Item>
+              </Form>
             </div>
           </div>
         </div>

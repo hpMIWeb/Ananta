@@ -47,7 +47,6 @@ const SubscriptionTabAddClient = ({
   const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
   const [totalAddonAmount, setTotalAddonAmount] = useState(0);
 
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
   const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
   const [couponDiscount, setCouponDiscount] = useState<number>(0);
@@ -202,6 +201,7 @@ const SubscriptionTabAddClient = ({
     {};
 
   const onValuesChange = (changedFields: any, allFields: any) => {
+    console.log("allFields", allFields);
     setSubscriptionValue(allFields);
   };
 
@@ -215,6 +215,23 @@ const SubscriptionTabAddClient = ({
     };
     setSubscriptionAddons((prevAddons: any) => [...prevAddons, newAddon]);
   };
+
+  useEffect(() => {
+    if (selectedClientData) {
+      let subscriptionDetails = selectedClientData.subscriptionDetails;
+      console.log("subscriptionDetails", subscriptionDetails);
+      // setSubscriptionValue({
+      //   subscriptionType: subscriptionDetails.subscriptionType,
+      // });
+      // setSubscriptionAddons(subscriptionDetails.addOns);
+
+      // form.setFieldsValue({
+      //   subscriptionType: subscriptionDetails.subscriptionType,
+      //   billingType: subscriptionDetails?.billingType,
+      // });
+    }
+    //onValuesChange("", form);
+  }, [selectedClientData]);
 
   const isPlanSelected = !!subscriptionValue.subscriptionType;
   const period_type =
@@ -351,18 +368,6 @@ const SubscriptionTabAddClient = ({
       toast.error("Please select a coupon.");
     }
   };
-
-  useEffect(() => {
-    if (selectedClientData) {
-      console.log("subscriptionType", selectedClientData.subscriptionDetails);
-      let subscriptionDetails = selectedClientData.subscriptionDetails;
-      form.setFieldsValue({
-        billingType: subscriptionDetails?.billingType,
-        subscriptionType: subscriptionDetails.subscriptionType,
-        //  subscriptionType: subscriptionDetails.subscriptionType,
-      });
-    }
-  }, []);
 
   return (
     <Form
