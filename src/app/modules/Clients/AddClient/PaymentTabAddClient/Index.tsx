@@ -16,7 +16,12 @@ interface IInstrument {
   instrumentType: string;
 }
 
-const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
+const PaymentTabAddClient = ({
+  onChange,
+  setFormValue,
+  clientValue,
+  selectedClientData,
+}: any) => {
   const [paymentRowData, setPaymentRowData] = useState<IInstrument[]>([
     {
       instrumentIndex: 1,
@@ -29,6 +34,30 @@ const PaymentTabAddClient = ({ onChange, setFormValue, clientValue }: any) => {
     creditPeriodType: "",
     paymentTerms: "",
   });
+
+  useEffect(() => {
+    if (selectedClientData) {
+      console.log("selectedClientData", selectedClientData);
+      // form.setFieldsValue({
+      //   firmName: selectedClientData.firmName,
+      //   firmType: selectedClientData.firmType,
+      //   firmPAN: selectedClientData.firmPAN,
+      //   firmGSTIN: selectedClientData.firmGSTIN,
+      //   email: selectedClientData.email,
+      //   mobile: selectedClientData.mobile,
+      //   firmRegistrationNo: selectedClientData.firmRegistrationNo,
+      //   //  alternateMobile: selectedClientData?.alternateMobile,
+      //   address: selectedClientData.address,
+      //   pinCode: selectedClientData.pinCode,
+      //   country: selectedClientData.country,
+      //   state: selectedClientData.state,
+      //   city: selectedClientData.city,
+      //   groupName: selectedClientData.groupName,
+      //   referredBy: selectedClientData.referredBy,
+      // });
+    }
+  }, []);
+
   const onFinish = (values: any) => {
     const finalFormValues = {
       invoiceAmount: clientValue.subscriptionDetails.invoicePrice,

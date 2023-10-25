@@ -131,6 +131,7 @@ const BasicInfo = ({
     //onChange(2); redirect to branch
     onChange(4);
   };
+
   useEffect(() => {
     if (selectedClientData) {
       form.setFieldsValue({
