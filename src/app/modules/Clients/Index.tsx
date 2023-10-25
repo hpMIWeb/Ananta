@@ -238,10 +238,10 @@ const Clients = () => {
             initialAddOnsValue="All Clients"
             searchValue={searchQuery}
             setSearchValue={handleSearch}
-            sortState={sortState}
-            setSortStateHandler={(options: any) => {
-              setSortState(options);
-            }}
+            //sortState={sortState}
+            // setSortStateHandler={(options: any) => {
+            //   setSortState(options);
+            // }}
             addonOption={addonOption}
             placeholder={"Select Client Type"}
           />
@@ -257,30 +257,32 @@ const Clients = () => {
         >
           {getClientsLoading && <CardContentSkeletonLoader />}
           {!getClientsLoading &&
-            getFilteredValue(getClientsList, searchQuery, sortState).map(
-              (card: any, index: number) => (
-                <SubscriptionCard
-                  displayIndex={getCurrentItemNumber(
-                    index + 1,
-                    currentPageNumber,
-                    currentPageSize
-                  )}
-                  key={card._id}
-                  id={card._id}
-                  planNameLabelBlue
-                  column={3}
-                  cardDetails={card}
-                  titleDesc={card.firmType}
-                  planNameLabel={card.firmGSTIN}
-                  planName={card.firmName}
-                  cardDesc={cardDesc}
-                  isProfileViewAction
-                  isActive={card.status}
-                  onChangeActiveClick={onChangeActiveClick}
-                  handleViewBtnClick={handleViewBtnClick}
-                />
-              )
-            )}
+            getFilteredValue(
+              displayedPaginationItems,
+              searchQuery,
+              sortState
+            ).map((card: any, index: number) => (
+              <SubscriptionCard
+                displayIndex={getCurrentItemNumber(
+                  index + 1,
+                  currentPageNumber,
+                  currentPageSize
+                )}
+                key={card._id}
+                id={card._id}
+                planNameLabelBlue
+                column={3}
+                cardDetails={card}
+                titleDesc={card.firmType}
+                planNameLabel={card.firmGSTIN}
+                planName={card.firmName}
+                cardDesc={cardDesc}
+                isProfileViewAction
+                isActive={card.status}
+                onChangeActiveClick={onChangeActiveClick}
+                handleViewBtnClick={handleViewBtnClick}
+              />
+            ))}
 
           {!getClientsLoading && !getClientsList.length && (
             <NoDataAvailable name="No Clients Available!" />

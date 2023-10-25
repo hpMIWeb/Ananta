@@ -91,28 +91,37 @@ export const getFilteredValue = (
     searchValue,
     sortState,
     addOnValue,
+    filterFrom = ""
 ) => {
-    const searchedValues = data.filter((card) => {
-      
-            // re-write search logic - it will check all the values with `searchvalue`
-            console.log("card",card)
-            console.log("searchValue",card)
-            return Object.values(card).some(
-                (value) =>
-                    value
-                        .toString()
-                        .toLowerCase()
-                        .indexOf(searchValue?.toLowerCase()) !== -1
-            );
-            // return Object.values(card).some((value) =>
-            //     compareIgnoreCaseWithTypo(
-            //         String(value),
-            //         searchValue?.toLowerCase()
-            //     )
-            // );
+    
+    console.log("searchValue",searchValue)
+    console.log("data",data)
+    // const searchedValues = data.filter((card) => {
+     
+    //     return Object.values(card).some(
+    //         (value) =>
+    //             value
+    //                 .toString()
+    //                 .toLowerCase()
+    //                 .indexOf(searchValue?.toLowerCase()) !== -1
+    //     );
+    //     // return Object.values(card).some((value) =>
+    //     //     compareIgnoreCaseWithTypo(
+    //     //         String(value),
+    //     //         searchValue?.toLowerCase()
+    //     //     )
+    //     // );
         
+    // });
+
+    const searchedValues = data.filter((card) => {
+    return Object.values(card).some((value) =>
+        value !== null && value.toString().toLowerCase().indexOf(searchValue?.toLowerCase()) !== -1
+    );
     });
 
+
+    console.log("searchedValues",searchedValues)
     
 
     const sortedValues = searchedValues.sort((a, b) =>
