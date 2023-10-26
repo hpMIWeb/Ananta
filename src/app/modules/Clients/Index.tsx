@@ -33,6 +33,7 @@ const Clients = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [clientData, setClientData] = useState<any>([]);
 
   const handleNewClientClick = () => {
     navigation("/caclient/create");
@@ -191,6 +192,11 @@ const Clients = () => {
     Storage: { asc: "Highest", desc: "Lowest" },
   };
 
+  useEffect(() => {
+    const clientInfo = getFilteredValue(getClientsList, searchQuery, sortState);
+    setClientData(clientInfo);
+  }, [searchQuery]);
+
   // Search input change handler
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
@@ -257,11 +263,7 @@ const Clients = () => {
         >
           {getClientsLoading && <CardContentSkeletonLoader />}
           {!getClientsLoading &&
-            getFilteredValue(
-              displayedPaginationItems,
-              searchQuery,
-              sortState
-            ).map((card: any, index: number) => (
+            clientData.map((card: any, index: number) => (
               <SubscriptionCard
                 displayIndex={getCurrentItemNumber(
                   index + 1,
@@ -284,12 +286,12 @@ const Clients = () => {
               />
             ))}
 
-          {!getClientsLoading && !getClientsList.length && (
+          {!getClientsLoading && !clientData.length && (
             <NoDataAvailable name="No Clients Available!" />
           )}
-          {getClientsList.length > 0 && (
+          {clientData.length > 0 && (
             <Pagination
-              data={getClientsList}
+              data={clientData}
               setPaginationDisplayedItems={setPaginationDisplayedItems}
               setPageNumber={setPageChange}
             />
