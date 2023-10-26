@@ -157,8 +157,8 @@ const OwnerInfoCardBox = ({
               </Form.Item>
             </div>
           </div>
-          //TODO Discuss with HP for Select Date at Edit time
-          {/* <div
+
+          <div
             className={classNames(
               "col-12 col-md-4 col-lg-4",
               styles.fieldPadding8
@@ -187,7 +187,7 @@ const OwnerInfoCardBox = ({
                 />
               </Form.Item>
             </div>
-          </div> */}
+          </div>
           {clientType === "ca" && ( // Check if clientType is "CA"
             <div
               className={classNames(

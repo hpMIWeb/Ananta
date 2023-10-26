@@ -22,7 +22,7 @@ const PaymentFieldRow = ({
       >
         <div>
           <label className="form-label">Instrument Type</label>
-          <Form.Item id={`name-${instrumentIndex}`} name="instrumentType">
+          <Form.Item id={`name-${instrumentIndex}`}>
             <Select
               options={[
                 { value: "NEFT", label: "NEFT" },
@@ -52,7 +52,7 @@ const PaymentFieldRow = ({
       >
         <div>
           <label className="form-label">Instrument Date</label>
-          <Form.Item name="instrumentDate" id={`date-${instrumentIndex}`}>
+          <Form.Item id={`date-${instrumentIndex}`}>
             <DatePicker
               placeholder="Instrument Date"
               className="customFormDatePicker"
@@ -72,7 +72,7 @@ const PaymentFieldRow = ({
       >
         <div>
           <label className="form-label">Instrument ID</label>
-          <Form.Item name="instrumentId" id={`ins-id-${instrumentIndex}`}>
+          <Form.Item id={`ins-id-${instrumentIndex}`}>
             <Input
               id={`ins-id-${instrumentIndex}`}
               placeholder="Instrument ID"
@@ -96,7 +96,7 @@ const PaymentFieldRow = ({
       >
         <div>
           <label className="form-label">Instrument Amount</label>
-          <Form.Item name="instrumentAmount" id={`inst-amt-${instrumentIndex}`}>
+          <Form.Item id={`inst-amt-${instrumentIndex}`}>
             <Input
               placeholder="Instrument Amount"
               className="customAddFormInputText"
