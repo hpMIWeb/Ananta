@@ -11,11 +11,13 @@ const SearchFilterBar = ({
   searchValue,
   setSearchValue,
   sortState = {},
+  addonFilterState = {},
   setSortStateHandler = () => {},
+  setAddonFilterHandler = () => {},
   showAddOn = false,
   defaultSortLabel,
   placeholder,
-  initialAddOnsValue = "All Addons",
+  initialAddOnsValue = "all",
   allowSortBy = true,
   addonOption = [
     {
@@ -79,6 +81,13 @@ const SearchFilterBar = ({
     setSortStateHandler({ type, sortOrder: direction });
   };
 
+  const addonFilterClick = (filterValue: any) => {
+    setAddonFilterHandler({
+      type: addonFilterState.type,
+      value: filterValue,
+    });
+  };
+
   return (
     <>
       <div
@@ -107,10 +116,7 @@ const SearchFilterBar = ({
               suffixIcon={<Icon name="downArrow" width={9} height={14} />}
               value={sortState?.addOnValue}
               onChange={(value: any) => {
-                setSortStateHandler((prev: any) => ({
-                  ...prev,
-                  addOnValue: value,
-                }));
+                addonFilterClick(value);
               }}
               allowClear
               options={addonOption}

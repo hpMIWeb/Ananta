@@ -25,13 +25,16 @@ const Employees = () => {
     (state: any) => state.getEmployees.loading
   );
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
-
+  const [addonFilterState, setAddonFilterValueState] = useState({
+    type: "clientType",
+    value: "",
+  });
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [employeeData, setEmployeeData] = useState<any>(
-    getFilteredValue(getEmployeesList, searchQuery, sortState)
+    getFilteredValue(getEmployeesList, searchQuery, sortState, addonFilterState)
   );
 
   useEffect(() => {
@@ -244,7 +247,19 @@ const Employees = () => {
               const employeeDataList = getFilteredValue(
                 employeeData,
                 searchQuery,
-                sortState
+                sortState,
+                addonFilterState
+              );
+
+              setEmployeeData(employeeDataList);
+            }}
+            setAddonFilterHandler={(fillerValue: any) => {
+              setAddonFilterValueState(fillerValue);
+              const employeeDataList = getFilteredValue(
+                employeeData,
+                searchQuery,
+                sortState,
+                fillerValue
               );
               setEmployeeData(employeeDataList);
             }}

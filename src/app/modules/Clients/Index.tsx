@@ -28,6 +28,10 @@ const Clients = () => {
     (state: any) => state.getClients.loading
   );
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
+  const [addonFilterState, setAddonFilterValueState] = useState({
+    type: "clientType",
+    value: "",
+  });
 
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
@@ -171,14 +175,14 @@ const Clients = () => {
 
   const [superAdminAddon, setSuperAdminAddonOption] = useState([
     {
-      value: "All Client",
+      value: "",
       label: "All Client",
     },
     ...adminClientTypeOption,
   ]);
   const [caAdminAddonOption, setCAdminAddonOption] = useState([
     {
-      value: "All Client",
+      value: "",
       label: "All Client",
     },
     {
@@ -202,7 +206,12 @@ const Clients = () => {
   };
 
   useEffect(() => {
-    const clientData = getFilteredValue(getClientsList, searchQuery, sortState);
+    const clientData = getFilteredValue(
+      getClientsList,
+      searchQuery,
+      sortState,
+      addonFilterState
+    );
     setClientData(clientData);
   }, [searchQuery]);
 
@@ -255,12 +264,24 @@ const Clients = () => {
             showAddOn
             initialAddOnsValue="All Clients"
             sortState={sortState}
+            addonFilterState={addonFilterState}
             setSortStateHandler={(options: any) => {
               setSortState(options);
               const clientDataList = getFilteredValue(
                 clientData,
                 searchQuery,
-                sortState
+                sortState,
+                addonFilterState
+              );
+              setClientData(clientDataList);
+            }}
+            setAddonFilterHandler={(fillerValue: any) => {
+              setAddonFilterValueState(fillerValue);
+              const clientDataList = getFilteredValue(
+                clientData,
+                searchQuery,
+                sortState,
+                addonFilterState
               );
               setClientData(clientDataList);
             }}
