@@ -43,6 +43,7 @@ const SubscriptionTabAddClient = ({
   const [form] = Form.useForm();
   const startDate = Form.useWatch("startDate", form);
   const subscriptionType = Form.useWatch("subscriptionType", form);
+  const subscriptionPlan = Form.useWatch("subscriptionPlan", form);
   const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
   const roundOff = Form.useWatch("roundOff", form) || 0;
   const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
@@ -50,6 +51,7 @@ const SubscriptionTabAddClient = ({
 
   const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
   const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
+  const [selectedCouponId, setSelectedCouponId] = useState<string>("");
   const [couponDiscount, setCouponDiscount] = useState<number>(0);
   const roleType = Cookies.get("roleTypeName");
 
@@ -199,7 +201,7 @@ const SubscriptionTabAddClient = ({
   };
 
   const selectedSubscriptionPlan =
-    subscriptionCardList.find((plan: any) => plan._id === subscriptionType) ||
+    subscriptionCardList.find((plan: any) => plan._id === subscriptionPlan) ||
     {};
 
   const onValuesChange = (changedFields: any, allFields: any) => {
@@ -212,7 +214,7 @@ const SubscriptionTabAddClient = ({
       addOnPlans: "",
       addOnPlanName: "",
       addOnQuantity: 1,
-      addonsPrice: 0,
+      addOnPrice: 0,
     };
     setSubscriptionAddons((prevAddons: any) => [...prevAddons, newAddon]);
   };
@@ -220,24 +222,26 @@ const SubscriptionTabAddClient = ({
   useEffect(() => {
     if (selectedClientData) {
       let subscriptionDetails = selectedClientData.subscriptionDetails;
+      console.log("subscriptionDetails", subscriptionDetails);
       const addons = subscriptionDetails.addOns || [];
       setSubscriptionValue({
-        subscriptionType: subscriptionDetails.subscriptionType,
-        billingType: subscriptionDetails?.billingType,
+        subscriptionType: subscriptionDetails?.subscriptionType,
+        subscriptionPlan: subscriptionDetails.subscriptionPlan,
         startDate: moment(subscriptionDetails.startDate),
       });
       //setSubscriptionAddons(addons);
 
       form.setFieldsValue({
-        subscriptionType: subscriptionDetails.subscriptionType,
-        billingType: subscriptionDetails?.billingType,
+        subscriptionType: subscriptionDetails?.subscriptionType,
+        subscriptionPlan: subscriptionDetails.subscriptionPlan,
         startDate: moment(subscriptionDetails.startDate),
+        adminDiscount: subscriptionDetails.adminDiscount,
       });
     }
     //onValuesChange("", form);
   }, [selectedClientData]);
 
-  const isPlanSelected = !!subscriptionValue.subscriptionType;
+  const isPlanSelected = !!subscriptionValue.subscriptionPlan;
   const period_type =
     selectedSubscriptionPlan.period_type === "DAY" ? "day" : "months";
 
@@ -281,7 +285,7 @@ const SubscriptionTabAddClient = ({
         return {
           ...addon,
           [field]: value,
-          addonsPrice: priceValue,
+          addOnPrice: priceValue,
           planName: addOnPlanName,
         };
       }
@@ -291,14 +295,20 @@ const SubscriptionTabAddClient = ({
   };
 
   const onFinish = (values: any) => {
-    const { subscriptionType, promoCode, startDate, adminDiscount, roundOff } =
-      values;
+    const {
+      subscriptionType,
+      subscriptionPlan,
+      promocode,
+      startDate,
+      adminDiscount,
+      roundOff,
+    } = values;
 
     const formattedAddons = subscriptionAddons.map((addon: any) => ({
       addOnType: addon.addOnType,
       addOnPlans: addon.addOnPlans,
       addOnQuantity: addon.addOnQuantity,
-      addonsPrice: addon.addonsPrice,
+      addOnPrice: addon.addOnPrice,
     }));
 
     const period_type =
@@ -308,6 +318,7 @@ const SubscriptionTabAddClient = ({
       period_type
     );
 
+    console.log("values", values);
     //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
     const taxableValue =
       selectedSubscriptionPlan.price +
@@ -321,14 +332,18 @@ const SubscriptionTabAddClient = ({
       (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
     const finalFormValues = {
-      subscriptionType,
+      subscriptionType: subscriptionType ? subscriptionType : "subscription",
+      subscriptionPlan,
       addOns: formattedAddons,
-      promoCode,
+      promoCode: selectedCouponId,
       startDate,
       endDate: monthAdded,
-      adminDiscount,
+      adminDiscount: adminDiscount ? adminDiscount : 0,
       invoicePrice: invoiceAmount,
+      roundOff: roundOff ? roundOff : 0,
     };
+
+    console.log("finalFormValues", finalFormValues);
 
     setFormValue({ subscriptionDetails: finalFormValues });
     onChange(6);
@@ -359,6 +374,7 @@ const SubscriptionTabAddClient = ({
 
   const applyCoupon = (coupon: any) => {
     setSelectedCoupon(coupon);
+    setSelectedCouponId(coupon._id);
     setOpenPromoCodeDrawer(false);
     if (coupon) {
       toast.success(`Coupon "${coupon.name}" applied successfully!`);
@@ -402,7 +418,7 @@ const SubscriptionTabAddClient = ({
                       <sup className="text-danger fs--1">*</sup>
                     </label>
                     <Form.Item
-                      name="billingType"
+                      name="subscriptionType"
                       className="customAddClientSelectOptions"
                     >
                       <Select
@@ -441,7 +457,7 @@ const SubscriptionTabAddClient = ({
                     <sup className="text-danger fs--1">*</sup>
                   </label>
                   <Form.Item
-                    name="subscriptionType"
+                    name="subscriptionPlan"
                     className="customAddClientSelectOptions"
                     rules={[
                       {

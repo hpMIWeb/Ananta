@@ -68,6 +68,7 @@ const PaymentTabAddClient = ({
       instrumentDetails: paymentRowData,
     };
 
+    console.log("finalFormValues", finalFormValues);
     setFormValue({ paymentDetails: [finalFormValues] });
 
     onChange(8);

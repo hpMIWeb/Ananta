@@ -169,7 +169,7 @@ const OwnerInfoCardBox = ({
                 Date of Birth
               </label>
               <Form.Item
-                {...field}
+                //  {...field}
                 name={[field.name, "birthDate"]}
                 fieldKey={[field.fieldKey, "birthDate"]}
                 rules={[

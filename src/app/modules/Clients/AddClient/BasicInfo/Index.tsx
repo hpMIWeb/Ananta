@@ -128,6 +128,7 @@ const BasicInfo = ({
 
   const onFinish = (value: any) => {
     setFormValue(value);
+    console.log("value", value);
     //onChange(2); redirect to branch
     onChange(4);
   };
@@ -149,7 +150,7 @@ const BasicInfo = ({
         state: selectedClientData.state,
         city: selectedClientData.city,
         groupName: selectedClientData.groupName,
-        referredBy: selectedClientData.referredBy,
+        refferedBy: selectedClientData.refferedBy,
       });
     }
   }, []);
@@ -240,6 +241,7 @@ const BasicInfo = ({
                     <Input
                       placeholder="Client ID"
                       className="customAddFormInputText"
+                      disabled
                     />
                   </Form.Item>
                 </div>
@@ -406,58 +408,62 @@ const BasicInfo = ({
                 </div>
               </div>
             </div>
-            {clientType === "business_enterprise" && (
-              <div className={classNames("row", styles.formFieldWrapper)}>
-                <div
-                  className={classNames(
-                    "col-12 col-md-4 col-lg-4",
-                    styles.fieldPadding8
-                  )}
-                >
-                  <div>
-                    <label className="form-label">Industry Type</label>
-                    <Form.Item
-                      name="industryType"
-                      className="customAddFormSelectOptions"
-                    >
-                      <Select
-                        showSearch
-                        placeholder="Select Industry Type"
-                        options={industryTypeList.map((industryType: any) => ({
-                          value: industryType._id,
-                          label: industryType.name,
-                        }))}
-                      />
-                    </Form.Item>
+            {clientType === "business_enterprise" ||
+              clientType === "regular" ||
+              (clientType === "non_regular" && (
+                <div className={classNames("row", styles.formFieldWrapper)}>
+                  <div
+                    className={classNames(
+                      "col-12 col-md-4 col-lg-4",
+                      styles.fieldPadding8
+                    )}
+                  >
+                    <div>
+                      <label className="form-label">Industry Type</label>
+                      <Form.Item
+                        name="industryType"
+                        className="customAddFormSelectOptions"
+                      >
+                        <Select
+                          showSearch
+                          placeholder="Select Industry Type"
+                          options={industryTypeList.map(
+                            (industryType: any) => ({
+                              value: industryType._id,
+                              label: industryType.name,
+                            })
+                          )}
+                        />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div
+                    className={classNames(
+                      "col-12 col-md-4 col-lg-4",
+                      styles.fieldPadding8
+                    )}
+                  >
+                    <div>
+                      <label className="form-label">Line Of Business</label>
+                      <Form.Item
+                        name="lineOfBusiness"
+                        className="customAddFormSelectOptions"
+                      >
+                        <Select
+                          showSearch
+                          placeholder="Select Industry Type"
+                          options={lineOfBusinessList.map(
+                            (lineOfBusiness: any) => ({
+                              value: lineOfBusiness._id,
+                              label: lineOfBusiness.name,
+                            })
+                          )}
+                        />
+                      </Form.Item>
+                    </div>
                   </div>
                 </div>
-                <div
-                  className={classNames(
-                    "col-12 col-md-4 col-lg-4",
-                    styles.fieldPadding8
-                  )}
-                >
-                  <div>
-                    <label className="form-label">Line Of Business</label>
-                    <Form.Item
-                      name="lineOfBusiness"
-                      className="customAddFormSelectOptions"
-                    >
-                      <Select
-                        showSearch
-                        placeholder="Select Industry Type"
-                        options={lineOfBusinessList.map(
-                          (lineOfBusiness: any) => ({
-                            value: lineOfBusiness._id,
-                            label: lineOfBusiness.name,
-                          })
-                        )}
-                      />
-                    </Form.Item>
-                  </div>
-                </div>
-              </div>
-            )}
+              ))}
             <div className="row"></div>
           </div>
           <div className="col-12 col-md-3 col-lg-3 text-center">
@@ -631,7 +637,7 @@ const BasicInfo = ({
           >
             <div>
               <label className="form-label">Referred By</label>
-              <Form.Item name="referredBy">
+              <Form.Item name="refferedBy">
                 <Input
                   placeholder="Referred By"
                   className="customAddFormInputText"

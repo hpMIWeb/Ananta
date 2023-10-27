@@ -68,13 +68,13 @@ const OwnerInfo = ({
           if (owner.birthDate) {
             return {
               ...owner,
-              birthDate: moment(owner.birthDate).format("DD/MM/YYYY"),
+              birthDate: moment(owner.birthDate),
             };
           }
           return owner;
         }
       );
-      console.log("formattedOwnerDetails", formattedOwnerDetails);
+      console.log("formattedOwnerDetails");
 
       setOwnerInfoData(formattedOwnerDetails);
       form.setFieldsValue({

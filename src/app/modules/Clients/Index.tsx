@@ -25,6 +25,7 @@ const Clients = () => {
   const dispatch = useAppDispatch();
   const roleType = Cookies.get("roleTypeName");
   const getClientsList = useSelector((state: any) => state.getClients.data);
+
   const getClientsLoading = useSelector(
     (state: any) => state.getClients.loading
   );
@@ -33,7 +34,20 @@ const Clients = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [clientData, setClientData] = useState<any>([]);
+  const [clientData, setClientData] = useState<any>(getClientsList);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch data
+        await dispatch(getClientsReducersApi());
+      } catch (error) {
+        // Handle error, e.g., set an error state
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNewClientClick = () => {
     navigation("/caclient/create");
@@ -51,10 +65,6 @@ const Clients = () => {
       })
     );
   };
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(getClientsReducersApi());
-  }, []);
 
   const setPageChange = (pageNumber: number, pageSize: number) => {
     setCurrentPageNumber(pageNumber);
@@ -186,16 +196,15 @@ const Clients = () => {
 
   const clientSortLabel = {
     Name: { asc: "Ascending", desc: "Descending" },
-    Clients: { asc: "Ascending", desc: "Descending" },
+    Clients: { asc: "Highest", desc: "Lowest" },
     "Transactions Processed": { asc: "Ascending", desc: "Descending" },
     Employees: { asc: "Highest", desc: "Lowest" },
     Storage: { asc: "Highest", desc: "Lowest" },
   };
 
   useEffect(() => {
-    const clientInfo = getFilteredValue(getClientsList, searchQuery, sortState);
-    setClientData(clientInfo);
-  }, [searchQuery]);
+    setClientData(getFilteredValue(getClientsList, searchQuery, sortState));
+  }, [searchQuery, sortState]);
 
   // Search input change handler
   const handleSearch = (searchValue: string) => {
@@ -244,10 +253,16 @@ const Clients = () => {
             initialAddOnsValue="All Clients"
             searchValue={searchQuery}
             setSearchValue={handleSearch}
-            //sortState={sortState}
-            // setSortStateHandler={(options: any) => {
-            //   setSortState(options);
-            // }}
+            sortState={sortState}
+            setSortStateHandler={(options: any) => {
+              setSortState(options);
+              const clientInfo = getFilteredValue(
+                getClientsList,
+                searchQuery,
+                sortState
+              );
+              setClientData(clientInfo);
+            }}
             addonOption={addonOption}
             placeholder={"Select Client Type"}
           />

@@ -16,7 +16,10 @@ import VaultTabAddClient from "./VaultTabAddClient/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "antd";
 import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
-import { createClientReducersApi } from "../../../../redux/createClientReducers";
+import {
+  // resetSuccessState,
+  createClientReducersApi,
+} from "../../../../redux/createClientReducers";
 import FormContentSkeletonLoader from "../../../../components/FormContentSkeletonLoader/Index";
 import { getSubscriptionsListApi } from "../../../../redux/getSubscriptionsReducers";
 import { getLineOfBusinessReducersApi } from "../../../../redux/getLineOfBusinessReducers";
@@ -43,14 +46,14 @@ const AddClient = ({ selectedClientData }: any) => {
   );
   const [clientType, setClientType] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
-  const getClientsList = useSelector((state: any) => state.getClients.data);
+
   const { loading, success } = useSelector((state: any) => state.createClient);
   const [firmInfoValid, setFirmInfoValid] = useState<boolean>(false);
   const [ownerInfoValid, setOwnerInfoValid] = useState<boolean>(true);
   const [subScriptionInfoValid, setSubScriptionInfoValid] =
     useState<boolean>(true);
   const [paymentInfoValid, setPaymentInfoValid] = useState<boolean>(true);
-
+  //dispatch(resetSuccessState()); // Reset success state
   let clientTypeOption = adminClientTypeOption;
 
   if (roleType !== "superadmin") {
@@ -95,8 +98,9 @@ const AddClient = ({ selectedClientData }: any) => {
   };
 
   useEffect(() => {
+    console.log("success", success);
     if (success) {
-      navigation("/caclient");
+      navigation("/caclient"); // Replace with your actual route
     }
   }, [success]);
 
@@ -118,12 +122,16 @@ const AddClient = ({ selectedClientData }: any) => {
     if (key === 8) {
       const payload = { ...clientValue, ...formValue };
       payload.clientType = clientType;
+      console.log(payload);
       dispatch(
         createClientReducersApi({
           payload: payload,
           clientId: selectedClientId,
         })
       );
+      if (success) {
+        navigation("/caclient"); // Replace with your actual route
+      }
     } else {
       setActiveTab(key);
     }
