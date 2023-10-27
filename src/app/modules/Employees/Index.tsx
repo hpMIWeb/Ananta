@@ -30,6 +30,22 @@ const Employees = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [employeeData, setEmployeeData] = useState<any>(
+    getFilteredValue(getEmployeesList, searchQuery, sortState)
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch data
+        await dispatch(getEmployeesReducersApi());
+      } catch (error) {
+        // Handle error, e.g., set an error state
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNewEmployeeClick = () => {
     navigation("/employee/add-employee");
@@ -39,11 +55,6 @@ const Employees = () => {
     navigation(`view-employee/`, { state: { id: id } });
   };
 
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(getEmployeesReducersApi());
-  }, []);
-
   const onChangeActiveClick = (e: any, id: any) => {
     dispatch(
       createEmployeeReducersApi({
@@ -52,6 +63,7 @@ const Employees = () => {
       })
     );
   };
+
   const cardDesc = (cardData: any) => {
     return [
       {
@@ -159,13 +171,24 @@ const Employees = () => {
     ];
   };
 
+  useEffect(() => {
+    console.log("CALl fuunc");
+    const employeeData = getFilteredValue(
+      getEmployeesList,
+      searchQuery,
+      sortState
+    );
+    setEmployeeData(employeeData);
+  }, [searchQuery]);
+
   // Search input change handler
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
   };
+
   const clientSortLabel = {
     Name: { asc: "Ascending", desc: "Descending" },
-    Client: { asc: "Ascending", desc: "Descending" },
+    Client: { asc: "Highest", desc: "Lowest" },
     "Transactions Processed": { asc: "Ascending", desc: "Descending" },
     Employees: { asc: "Ascending", desc: "Descending" },
     Storage: { asc: "Highest", desc: "Lowest" },
@@ -218,16 +241,20 @@ const Employees = () => {
             setSearchValue={handleSearch}
             defaultSortLabel={clientSortLabel}
             sortState={sortState}
-            setSortState={setSortState}
+            setSortStateHandler={(options: any) => {
+              setSortState(options);
+              const employeeDataList = getFilteredValue(
+                employeeData,
+                searchQuery,
+                sortState
+              );
+              setEmployeeData(employeeDataList);
+            }}
           />
         </div>
         {getEmployeesLoading && <CardContentSkeletonLoader />}
         {!getEmployeesLoading &&
-          getFilteredValue(
-            displayedPaginationItems,
-            searchQuery,
-            sortState
-          ).map((card: any, index: number) => (
+          employeeData.map((card: any, index: number) => (
             <SubscriptionCard
               displayIndex={getCurrentItemNumber(
                 index + 1,
@@ -250,11 +277,11 @@ const Employees = () => {
             />
           ))}
 
-        {!getEmployeesLoading && !getEmployeesList.length && (
+        {!getEmployeesLoading && !employeeData.length && (
           <NoDataAvailable name="No Employees Available!" />
         )}
         <Pagination
-          data={getEmployeesList}
+          data={employeeData}
           setPaginationDisplayedItems={setPaginationDisplayedItems}
           setPageNumber={setPageChange}
         />

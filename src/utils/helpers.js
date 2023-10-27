@@ -39,7 +39,7 @@ const compareIgnoreCaseWithTypo = (str1, str2) => {
 };
 
 const customSort = (a, b, sortState) => {
-    switch (sortState.type) {
+            switch (sortState.type) {
         case "Latest":
             if (sortState.sortOrder === "Latest") {
                 return new Date(b.createdAt) - new Date(a.createdAt);
@@ -47,9 +47,9 @@ const customSort = (a, b, sortState) => {
             break;
         case "Name":
             const nameA =
-                a.plan_name?.toUpperCase() || a.add_on_title?.toUpperCase();
+                a.plan_name?.toUpperCase() || a.add_on_title?.toUpperCase() || a.firmName?.toUpperCase() || a.firstName?.toUpperCase();
             const nameB =
-                b.plan_name?.toUpperCase() || b.add_on_title?.toUpperCase();
+                b.plan_name?.toUpperCase() || b.add_on_title?.toUpperCase() || b.firmName?.toUpperCase() || b.firstName?.toUpperCase();
 
             if (sortState.sortOrder === "Ascending") {
                 if (nameA < nameB) return -1;
@@ -78,6 +78,16 @@ const customSort = (a, b, sortState) => {
             } else if (sortState.sortOrder === "Lowest") {
                 return subscribersA - subscribersB;
             }
+                break;
+        case "Client":
+            const clientA = a.assignClients.length || 0;
+            const clientB = b.assignClients.length || 0;
+
+            if (sortState.sortOrder === "Highest") {
+                return clientB - clientA;
+            } else if (sortState.sortOrder === "Lowest") {
+                return clientA - clientB;
+            }
             break;
         default:
             break;
@@ -91,37 +101,14 @@ export const getFilteredValue = (
     searchValue,
     sortState,
     addOnValue,
-    filterFrom = ""
 ) => {
     
-    console.log("searchValue",searchValue)
-    console.log("data",data)
-    // const searchedValues = data.filter((card) => {
-     
-    //     return Object.values(card).some(
-    //         (value) =>
-    //             value
-    //                 .toString()
-    //                 .toLowerCase()
-    //                 .indexOf(searchValue?.toLowerCase()) !== -1
-    //     );
-    //     // return Object.values(card).some((value) =>
-    //     //     compareIgnoreCaseWithTypo(
-    //     //         String(value),
-    //     //         searchValue?.toLowerCase()
-    //     //     )
-    //     // );
-        
-    // });
-
+   
     const searchedValues = data.filter((card) => {
-    return Object.values(card).some((value) =>
-        value !== null && value.toString().toLowerCase().indexOf(searchValue?.toLowerCase()) !== -1
-    );
+        return Object.values(card).some((value) =>
+            value !== null && value.toString().toLowerCase().indexOf(searchValue?.toLowerCase()) !== -1
+        );
     });
-
-
-    console.log("searchedValues",searchedValues)
     
 
     const sortedValues = searchedValues.sort((a, b) =>
