@@ -216,6 +216,11 @@ const OwnerInfoCardBox = ({
                     placeholder={"Membership No"}
                     className="customAddFormInputText"
                     maxLength={6}
+                    onKeyPress={(event: any) => {
+                      if (!/[0-9]/.test(event.key)) {
+                        event.preventDefault();
+                      }
+                    }}
                   />
                 </Form.Item>
               </div>

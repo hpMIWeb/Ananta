@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "./clients.module.scss";
-import addSubImg from "../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import SubscriptionCard from "../../../components/SubscriptionCard/Index";
 import Button from "../../../components/Button/Index";
-import Icon from "../../../components/Icon/Index";
 import { useNavigate } from "react-router-dom";
 import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
 import NoDataAvailable from "../../../components/NoDataAvailable/Index";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getClientsReducersApi } from "../../../redux/getClientsReducers";
 import { createClientReducersApi } from "../../../redux/createClientReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
@@ -30,11 +28,13 @@ const Clients = () => {
     (state: any) => state.getClients.loading
   );
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
+
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [clientData, setClientData] = useState<any>(getClientsList);
+
+  const [clientData, setClientData] = useState<any>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +45,6 @@ const Clients = () => {
         // Handle error, e.g., set an error state
       }
     };
-
     fetchData();
   }, []);
 
@@ -203,13 +202,15 @@ const Clients = () => {
   };
 
   useEffect(() => {
-    setClientData(getFilteredValue(getClientsList, searchQuery, sortState));
-  }, [searchQuery, sortState]);
+    const clientData = getFilteredValue(getClientsList, searchQuery, sortState);
+    setClientData(clientData);
+  }, [searchQuery]);
 
   // Search input change handler
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
   };
+
   return (
     <div className={styles.promoCodesPageWrapper}>
       <div
@@ -248,20 +249,20 @@ const Clients = () => {
       <div className={styles.promoCodesBottomWrapper}>
         <div style={{ marginBottom: 4 }}>
           <SearchFilterBar
-            showAddOn
-            defaultSortLabel={clientSortLabel}
-            initialAddOnsValue="All Clients"
             searchValue={searchQuery}
             setSearchValue={handleSearch}
+            defaultSortLabel={clientSortLabel}
+            showAddOn
+            initialAddOnsValue="All Clients"
             sortState={sortState}
             setSortStateHandler={(options: any) => {
               setSortState(options);
-              const clientInfo = getFilteredValue(
-                getClientsList,
+              const clientDataList = getFilteredValue(
+                clientData,
                 searchQuery,
                 sortState
               );
-              setClientData(clientInfo);
+              setClientData(clientDataList);
             }}
             addonOption={addonOption}
             placeholder={"Select Client Type"}
@@ -304,13 +305,11 @@ const Clients = () => {
           {!getClientsLoading && !clientData.length && (
             <NoDataAvailable name="No Clients Available!" />
           )}
-          {clientData.length > 0 && (
-            <Pagination
-              data={clientData}
-              setPaginationDisplayedItems={setPaginationDisplayedItems}
-              setPageNumber={setPageChange}
-            />
-          )}
+          <Pagination
+            data={clientData}
+            setPaginationDisplayedItems={setPaginationDisplayedItems}
+            setPageNumber={setPageChange}
+          />
         </div>
       </div>
     </div>

@@ -24,8 +24,8 @@ const Employees = () => {
   const getEmployeesLoading = useSelector(
     (state: any) => state.getEmployees.loading
   );
-  const [searchValue, setSearchValue] = useState("");
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
+
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
@@ -43,7 +43,6 @@ const Employees = () => {
         // Handle error, e.g., set an error state
       }
     };
-
     fetchData();
   }, []);
 
@@ -172,7 +171,6 @@ const Employees = () => {
   };
 
   useEffect(() => {
-    console.log("CALl fuunc");
     const employeeData = getFilteredValue(
       getEmployeesList,
       searchQuery,

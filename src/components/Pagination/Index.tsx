@@ -32,7 +32,11 @@ const Pagination = ({
   const updateDisplayedItems = (page: number) => {
     const startIndex = (page - 1) * currentPageSize;
     const endIndex = startIndex + currentPageSize;
+    console.log("startIndex", startIndex);
+    console.log("endIndex", endIndex);
     const itemsToDisplay = data.slice(startIndex, endIndex);
+    console.log("itemsToDisplay", itemsToDisplay);
+    console.log("length", itemsToDisplay.length);
     setPaginationDisplayedItems(itemsToDisplay);
     setPageNumber(page, currentPageSize);
   };

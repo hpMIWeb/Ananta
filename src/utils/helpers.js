@@ -84,9 +84,9 @@ const customSort = (a, b, sortState) => {
             const clientB = b.assignClients.length || 0;
 
             if (sortState.sortOrder === "Highest") {
-                return clientB - clientA;
-            } else if (sortState.sortOrder === "Lowest") {
                 return clientA - clientB;
+            } else if (sortState.sortOrder === "Lowest") {
+                return clientB - clientA;
             }
             break;
         default:

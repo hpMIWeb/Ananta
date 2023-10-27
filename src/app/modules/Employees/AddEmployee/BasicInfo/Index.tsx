@@ -185,6 +185,7 @@ const BasicInfo = ({
                     <Input
                       className="customInputNumber"
                       placeholder="Employee Id"
+                      disabled
                     />
                   </Form.Item>
                 </div>
@@ -530,6 +531,12 @@ const BasicInfo = ({
                 <Input
                   placeholder="Pin Code"
                   className="customAddFormInputText"
+                  maxLength={6}
+                  onKeyPress={(event: any) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                 />
               </Form.Item>
             </div>

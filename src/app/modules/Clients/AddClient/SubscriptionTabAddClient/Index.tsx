@@ -226,15 +226,19 @@ const SubscriptionTabAddClient = ({
       const addons = subscriptionDetails.addOns || [];
       setSubscriptionValue({
         subscriptionType: subscriptionDetails?.subscriptionType,
-        subscriptionPlan: subscriptionDetails.subscriptionPlan,
+        subscriptionPlan: subscriptionDetails.subscriptionPlan._id,
         startDate: moment(subscriptionDetails.startDate),
+        endDate: moment(subscriptionDetails.endDate),
+        promoCode: subscriptionDetails.promoCode._id,
       });
-      //setSubscriptionAddons(addons);
-
+      setSubscriptionAddons(addons);
+      setSelectedCouponId(subscriptionDetails.promoCode);
+      setSelectedCoupon(subscriptionDetails.promoCode);
       form.setFieldsValue({
         subscriptionType: subscriptionDetails?.subscriptionType,
-        subscriptionPlan: subscriptionDetails.subscriptionPlan,
+        subscriptionPlan: subscriptionDetails.subscriptionPlan._id,
         startDate: moment(subscriptionDetails.startDate),
+        promoCode: subscriptionDetails.promoCode._id,
         adminDiscount: subscriptionDetails.adminDiscount,
       });
     }
@@ -318,7 +322,6 @@ const SubscriptionTabAddClient = ({
       period_type
     );
 
-    console.log("values", values);
     //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
     const taxableValue =
       selectedSubscriptionPlan.price +
@@ -342,8 +345,6 @@ const SubscriptionTabAddClient = ({
       invoicePrice: invoiceAmount,
       roundOff: roundOff ? roundOff : 0,
     };
-
-    console.log("finalFormValues", finalFormValues);
 
     setFormValue({ subscriptionDetails: finalFormValues });
     onChange(6);

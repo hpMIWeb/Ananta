@@ -8,6 +8,8 @@ import Icon from "../../../../../components/Icon/Index";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../../components/Input/Index";
+import { RoleTypes } from "../../../../../utils/constant";
+import Cookies from "js-cookie";
 
 const SubscriptionAddonsCard = memo(
   ({
@@ -19,9 +21,11 @@ const SubscriptionAddonsCard = memo(
   }: any) => {
     const [selectNumber, setSelectNumber] = useState(1);
     const currentAddon = subscriptionAddons[cardIndex];
+    console.log(":currentAddon", currentAddon);
 
     const [addOnType, setAddOnType] = useState("");
     const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
+    const roleType = Cookies.get("roleTypeName");
     const [selectAddonDetails, setSelectedAddonDetails] = useState<any>(
       {} as any
     );
@@ -31,6 +35,103 @@ const SubscriptionAddonsCard = memo(
       (state: any) => state.getAddonsList.data
     );
 
+    const superAdminAddonType = [
+      {
+        value: "storage_space",
+        label: "Storage Space",
+      },
+      {
+        value: "No. Of Clients",
+        label: "No. Of Clients",
+      },
+      {
+        value: "No. Of Employees",
+        label: "No. Of Employees",
+      },
+      {
+        value: "No. Of Client Login",
+        label: "No. Of Client Login",
+      },
+      {
+        value: "No. Of Transactions",
+        label: "No. Of Transactions",
+      },
+      {
+        value: "Features List",
+        label: "Features List",
+      },
+    ];
+    const caAdminAddonType = [
+      {
+        value: "storage_space",
+        label: "Storage Space",
+      },
+      {
+        value: "client",
+        label: "Clients",
+      },
+      {
+        value: "office_users",
+        label: "Office Users",
+      },
+      {
+        value: "client_users",
+        label: "Client Users",
+      },
+      {
+        value: "vendor_users",
+        label: "Vendor Users",
+      },
+      {
+        value: "transactional_credit",
+        label: "Transactional Credit",
+      },
+      {
+        value: "branches",
+        label: "Branches",
+      },
+      {
+        value: "feature",
+        label: "Feature",
+      },
+      {
+        value: "turnover",
+        label: "Turnover",
+      },
+      {
+        value: "sales_and_purchase",
+        label: "Sales And Purchase",
+      },
+      {
+        value: "credit_and_debit_notes",
+        label: "Credit And Debit notes",
+      },
+      {
+        value: "receipt_and_payments",
+        label: "Receipt and payments",
+      },
+      {
+        value: "contras",
+        label: "Contras",
+      },
+      {
+        value: "journals",
+        label: "Journals",
+      },
+      {
+        value: "stock_journals",
+        label: "Stock Journals",
+      },
+      {
+        value: "transactional_all",
+        label: "Transactional All",
+      },
+    ];
+
+    const addonTypeOption =
+      roleType === RoleTypes.SuperAdmin
+        ? superAdminAddonType
+        : caAdminAddonType;
     // const getAddOnsList = () => {
     //     return addonsCardList.filter(
     //         (a: any) => a.add_on_type === addOnType
@@ -83,17 +184,41 @@ const SubscriptionAddonsCard = memo(
       handleRemoveAddon(cardIndex);
     };
 
+    // const calculateTotal = () => {
+    //   const selectedAddonData = addonsCardList.find(
+    //     (a: any) => a._id === currentAddon.addOnPlans
+    //   );
+    //   const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
+    //   setSelectedAddonPrice(addonPrice * selectNumber);
+    //   currentAddon.addOnPrice = addonPrice * selectNumber;
+    //   const total = subscriptionAddons.reduce(
+    //     (acc: any, addon: any) => acc + addon.addonsPrice,
+    //     0
+    //   );
+    //   setTotalAddonAmount(total);
+    // };
+
     const calculateTotal = () => {
       const selectedAddonData = addonsCardList.find(
         (a: any) => a._id === currentAddon.addOnPlans
       );
       const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
+      const updatedAddon = {
+        ...currentAddon,
+        addOnPrice: addonPrice * selectNumber,
+      };
+
+      // Assuming subscriptionAddons is an array, update it with the updated addon object.
+      const updatedSubscriptionAddons = [...subscriptionAddons];
+      updatedSubscriptionAddons[cardIndex] = updatedAddon;
+
       setSelectedAddonPrice(addonPrice * selectNumber);
-      currentAddon.addonsPrice = addonPrice * selectNumber;
-      const total = subscriptionAddons.reduce(
-        (acc: any, addon: any) => acc + addon.addonsPrice,
+
+      const total = updatedSubscriptionAddons.reduce(
+        (acc: any, addon: any) => acc + addon.addOnPrice,
         0
       );
+
       setTotalAddonAmount(total);
     };
 
@@ -199,32 +324,7 @@ const SubscriptionAddonsCard = memo(
                 style={{ height: 33 }}
               >
                 <Select
-                  options={[
-                    {
-                      value: "Storage Space",
-                      label: "Storage Space",
-                    },
-                    {
-                      value: "No. Of Clients",
-                      label: "No. Of Clients",
-                    },
-                    {
-                      value: "No. Of Employees",
-                      label: "No. Of Employees",
-                    },
-                    {
-                      value: "No. Of Client Login",
-                      label: "No. Of Client Login",
-                    },
-                    {
-                      value: "No. Of Transactions",
-                      label: "No. Of Transactions",
-                    },
-                    {
-                      value: "Features List",
-                      label: "Features List",
-                    },
-                  ]}
+                  options={addonTypeOption}
                   onChange={(e: any) => {
                     handleAddonTypeChange(e);
                     setAddOnType(e);

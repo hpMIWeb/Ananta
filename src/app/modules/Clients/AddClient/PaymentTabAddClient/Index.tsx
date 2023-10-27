@@ -37,24 +37,11 @@ const PaymentTabAddClient = ({
 
   useEffect(() => {
     if (selectedClientData) {
-      console.log("selectedClientData", selectedClientData);
-      // form.setFieldsValue({
-      //   firmName: selectedClientData.firmName,
-      //   firmType: selectedClientData.firmType,
-      //   firmPAN: selectedClientData.firmPAN,
-      //   firmGSTIN: selectedClientData.firmGSTIN,
-      //   email: selectedClientData.email,
-      //   mobile: selectedClientData.mobile,
-      //   firmRegistrationNo: selectedClientData.firmRegistrationNo,
-      //   //  alternateMobile: selectedClientData?.alternateMobile,
-      //   address: selectedClientData.address,
-      //   pinCode: selectedClientData.pinCode,
-      //   country: selectedClientData.country,
-      //   state: selectedClientData.state,
-      //   city: selectedClientData.city,
-      //   groupName: selectedClientData.groupName,
-      //   referredBy: selectedClientData.referredBy,
-      // });
+      form.setFieldsValue({
+        paymentTerms: selectedClientData.paymentDetails.paymentTerms,
+        paymentMode: selectedClientData.paymentDetails.paymentMode,
+      });
+      setPaymentRowData(selectedClientData.paymentDetails.instrumentDetails);
     }
   }, []);
 
@@ -67,11 +54,9 @@ const PaymentTabAddClient = ({
       paymentMode: values.paymentMode,
       instrumentDetails: paymentRowData,
     };
+    setFormValue({ paymentDetails: finalFormValues });
 
-    console.log("finalFormValues", finalFormValues);
-    setFormValue({ paymentDetails: [finalFormValues] });
-
-    onChange(8);
+    //onChange(8, { paymentDetails: finalFormValues });
   };
 
   const addMoreOwnerCard = () => {

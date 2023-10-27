@@ -98,9 +98,8 @@ const AddClient = ({ selectedClientData }: any) => {
   };
 
   useEffect(() => {
-    console.log("success", success);
     if (success) {
-      navigation("/caclient"); // Replace with your actual route
+      navigation("/caclient");
     }
   }, [success]);
 
@@ -122,7 +121,6 @@ const AddClient = ({ selectedClientData }: any) => {
     if (key === 8) {
       const payload = { ...clientValue, ...formValue };
       payload.clientType = clientType;
-      console.log(payload);
       dispatch(
         createClientReducersApi({
           payload: payload,

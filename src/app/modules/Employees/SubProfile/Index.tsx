@@ -357,6 +357,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
                         <Input
                           className="customInputNumber"
                           placeholder="Sub Profile ID"
+                          disabled
                         />
                       </Form.Item>
                     </div>

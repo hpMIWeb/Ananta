@@ -128,7 +128,6 @@ const BasicInfo = ({
 
   const onFinish = (value: any) => {
     setFormValue(value);
-    console.log("value", value);
     //onChange(2); redirect to branch
     onChange(4);
   };
@@ -143,6 +142,8 @@ const BasicInfo = ({
         email: selectedClientData.email,
         mobile: selectedClientData.mobile,
         firmRegistrationNo: selectedClientData.firmRegistrationNo,
+        industryType: selectedClientData.industryType,
+        lineOfBusiness: selectedClientData.lineOfBusiness,
         //  alternateMobile: selectedClientData?.alternateMobile,
         address: selectedClientData.address,
         pinCode: selectedClientData.pinCode,
@@ -544,6 +545,12 @@ const BasicInfo = ({
                 <Input
                   placeholder="Pin Code"
                   className="customAddFormInputText"
+                  maxLength={6}
+                  onKeyPress={(event: any) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                 />
               </Form.Item>
             </div>
