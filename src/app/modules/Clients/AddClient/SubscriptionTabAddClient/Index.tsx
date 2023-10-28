@@ -47,11 +47,14 @@ const SubscriptionTabAddClient = ({
   const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
   const roundOff = Form.useWatch("roundOff", form) || 0;
   const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
+
   const [totalAddonAmount, setTotalAddonAmount] = useState(0);
 
   const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
   const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
   const [selectedCouponId, setSelectedCouponId] = useState<string>("");
+  const [billingMethod, setBillingMethod] = useState<string>("subscription");
+  const [makeValidate, setMakeValidate] = useState(true);
   const [couponDiscount, setCouponDiscount] = useState<number>(0);
   const roleType = Cookies.get("roleTypeName");
 
@@ -220,25 +223,26 @@ const SubscriptionTabAddClient = ({
   };
 
   useEffect(() => {
-    if (selectedClientData) {
+    console.log("cdsdcdscsdcds", selectedClientData);
+    if (selectedClientData && Object.keys(selectedClientData).length > 0) {
       let subscriptionDetails = selectedClientData.subscriptionDetails;
       console.log("subscriptionDetails", subscriptionDetails);
-      const addons = subscriptionDetails.addOns || [];
+      const addons = subscriptionDetails?.addOns || [];
       setSubscriptionValue({
         subscriptionType: subscriptionDetails?.subscriptionType,
-        subscriptionPlan: subscriptionDetails.subscriptionPlan._id,
-        startDate: moment(subscriptionDetails.startDate),
-        endDate: moment(subscriptionDetails.endDate),
-        promoCode: subscriptionDetails.promoCode._id,
+        subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
+        startDate: moment(subscriptionDetails?.startDate),
+        endDate: moment(subscriptionDetails?.endDate),
+        promoCode: subscriptionDetails?.promoCode?._id,
       });
       setSubscriptionAddons(addons);
       setSelectedCouponId(subscriptionDetails.promoCode);
       setSelectedCoupon(subscriptionDetails.promoCode);
       form.setFieldsValue({
         subscriptionType: subscriptionDetails?.subscriptionType,
-        subscriptionPlan: subscriptionDetails.subscriptionPlan._id,
-        startDate: moment(subscriptionDetails.startDate),
-        promoCode: subscriptionDetails.promoCode._id,
+        subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
+        startDate: moment(subscriptionDetails?.startDate),
+        promoCode: subscriptionDetails?.promoCode?._id,
         adminDiscount: subscriptionDetails.adminDiscount,
       });
     }
@@ -299,54 +303,62 @@ const SubscriptionTabAddClient = ({
   };
 
   const onFinish = (values: any) => {
-    const {
-      subscriptionType,
-      subscriptionPlan,
-      promocode,
-      startDate,
-      adminDiscount,
-      roundOff,
-    } = values;
+    if (billingMethod === "subscription") {
+      const {
+        subscriptionType,
+        subscriptionPlan,
+        promocode,
+        startDate,
+        adminDiscount,
+        roundOff,
+      } = values;
 
-    const formattedAddons = subscriptionAddons.map((addon: any) => ({
-      addOnType: addon.addOnType,
-      addOnPlans: addon.addOnPlans,
-      addOnQuantity: addon.addOnQuantity,
-      addOnPrice: addon.addOnPrice,
-    }));
+      const formattedAddons = subscriptionAddons.map((addon: any) => ({
+        addOnType: addon.addOnType,
+        addOnPlans: addon.addOnPlans,
+        addOnQuantity: addon.addOnQuantity,
+        addOnPrice: addon.addOnPrice,
+      }));
 
-    const period_type =
-      selectedSubscriptionPlan.period_type === "DAY" ? "day" : "months";
-    const monthAdded = startDate.add(
-      selectedSubscriptionPlan.period,
-      period_type
-    );
+      const period_type =
+        selectedSubscriptionPlan.period_type === "DAY" ? "day" : "months";
+      const monthAdded = startDate.add(
+        selectedSubscriptionPlan.period,
+        period_type
+      );
 
-    //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
-    const taxableValue =
-      selectedSubscriptionPlan.price +
-      totalAddonAmount -
-      (adminDiscount ?? 0) -
-      couponDiscount;
-    const gstAmount = (taxableValue / 100) * 18;
-    const invoiceAmount =
-      taxableValue +
-      gstAmount +
-      (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
+      //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
+      const taxableValue =
+        selectedSubscriptionPlan.price +
+        totalAddonAmount -
+        (adminDiscount ?? 0) -
+        couponDiscount;
+      const gstAmount = (taxableValue / 100) * 18;
+      const invoiceAmount =
+        taxableValue +
+        gstAmount +
+        (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
-    const finalFormValues = {
-      subscriptionType: subscriptionType ? subscriptionType : "subscription",
-      subscriptionPlan,
-      addOns: formattedAddons,
-      promoCode: selectedCouponId,
-      startDate,
-      endDate: monthAdded,
-      adminDiscount: adminDiscount ? adminDiscount : 0,
-      invoicePrice: invoiceAmount,
-      roundOff: roundOff ? roundOff : 0,
-    };
+      const finalFormValues = {
+        subscriptionType: subscriptionType ? subscriptionType : "subscription",
+        subscriptionPlan,
+        addOns: formattedAddons,
+        promoCode: selectedCouponId,
+        startDate,
+        endDate: monthAdded,
+        adminDiscount: adminDiscount ? adminDiscount : 0,
+        invoicePrice: invoiceAmount,
+        roundOff: roundOff ? roundOff : 0,
+      };
 
-    setFormValue({ subscriptionDetails: finalFormValues });
+      setFormValue({ subscriptionDetails: finalFormValues });
+    } else {
+      const finalFormValues = {
+        subscriptionType: subscriptionType ? subscriptionType : "subscription",
+      };
+      setFormValue({ subscriptionDetails: finalFormValues });
+    }
+
     onChange(6);
   };
 
@@ -439,311 +451,330 @@ const SubscriptionTabAddClient = ({
                         ]}
                         showSearch
                         placeholder="Select Billing Type"
-                      />
-                    </Form.Item>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="row g-3">
-              <div className={classNames("col", styles.subscriptionFormColumn)}>
-                <div className="mb-2">
-                  <label
-                    className={classNames(
-                      "form-label",
-                      styles.subscriptionFormLabel
-                    )}
-                  >
-                    Subscription Plan
-                    <sup className="text-danger fs--1">*</sup>
-                  </label>
-                  <Form.Item
-                    name="subscriptionPlan"
-                    className="customAddClientSelectOptions"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please Enter your Subscription Plan!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      options={subscriptionCardList.map((s: any) => ({
-                        value: s._id,
-                        label: s.plan_name,
-                      }))}
-                      showSearch
-                      placeholder="Select Plan"
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="col-auto align-self-center">
-                <div className={styles.addCa}></div>
-              </div>
-              <div className="col-auto">
-                {isPlanSelected && (
-                  <p
-                    className={classNames(
-                      "text-end mb-2",
-                      styles.subscriptionPrice
-                    )}
-                  >
-                    Rs. {selectedSubscriptionPlan.price}/-
-                  </p>
-                )}
-              </div>
-            </div>
-            {[...subscriptionAddons].map((addOns: any, index: number) => (
-              <SubscriptionAddonsCard
-                key={index}
-                cardIndex={index}
-                handleAddonChange={handleAddonChange}
-                handleRemoveAddon={handleRemoveAddon}
-                subscriptionAddons={subscriptionAddons} // Pass the subscriptionAddons array
-                //totalAddonAmount={totalAddonAmount} // Pass the total addon amount
-                setTotalAddonAmount={setTotalAddonAmount} // Pass the function to update total
-              />
-            ))}
-            {isPlanSelected && (
-              <div className="d-flex mt-2">
-                <div className="me-auto">
-                  <Button
-                    className={styles.addOwnerInfoBtn}
-                    onClick={handleAddonClick}
-                    type="primary"
-                  >
-                    <Icon name="plus" width={14.25} height={16} />
-                    Add AddOns
-                  </Button>
-                </div>
-              </div>
-            )}
-            <hr className={styles.subscriptionLine} />
-            {isPlanSelected && (
-              <div className="row">
-                <div
-                  className={classNames(
-                    "col-auto",
-                    styles.subscriptionLineLeft
-                  )}
-                >
-                  <div className="d-flex mb-3">
-                    <label
-                      className="form-label form-label text-nowrap mt-2 me-2"
-                      style={{ minWidth: 85 }}
-                    >
-                      Start Date
-                      <sup className="text-danger fs--1">*</sup>
-                    </label>
-                    <Form.Item
-                      name="startDate"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please Enter Start Date!",
-                        },
-                      ]}
-                    >
-                      <DatePicker
-                        placeholder="Start Date"
-                        style={{
-                          maxWidth: 154,
-                          marginBottom: 0,
+                        onChange={(value: string) => {
+                          setBillingMethod(value);
+                          if (value !== "subscription") {
+                            setMakeValidate(false);
+                          }
                         }}
-                        className="customFormDatePicker"
-                        format="DD/MM/YYYY"
                       />
                     </Form.Item>
                   </div>
-                  <div className="d-flex align-items-center mb-3">
-                    <label
-                      className="form-label form-label text-nowrap mt-1 me-2"
-                      style={{ minWidth: 85, top: 0 }}
-                    >
-                      End Date
-                    </label>
-                    <p
+                </div>
+              </div>
+            )}
+            {billingMethod === "subscription" && ( // Conditionally render this section
+              <>
+                <div className="row g-3">
+                  <div
+                    className={classNames("col", styles.subscriptionFormColumn)}
+                  >
+                    <div className="mb-2">
+                      <label
+                        className={classNames(
+                          "form-label",
+                          styles.subscriptionFormLabel
+                        )}
+                      >
+                        Subscription Plan
+                        <sup className="text-danger fs--1">*</sup>
+                      </label>
+                      <Form.Item
+                        name="subscriptionPlan"
+                        className="customAddClientSelectOptions"
+                        rules={[
+                          {
+                            required: makeValidate,
+                            message: "Please Enter your Subscription Plan!",
+                          },
+                        ]}
+                      >
+                        <Select
+                          options={subscriptionCardList.map((s: any) => ({
+                            value: s._id,
+                            label: s.plan_name,
+                          }))}
+                          showSearch
+                          placeholder="Select Plan"
+                        />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="col-auto align-self-center">
+                    <div className={styles.addCa}></div>
+                  </div>
+                  <div className="col-auto">
+                    {isPlanSelected && (
+                      <p
+                        className={classNames(
+                          "text-end mb-2",
+                          styles.subscriptionPrice
+                        )}
+                      >
+                        Rs. {selectedSubscriptionPlan.price}/-
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {[...subscriptionAddons].map((addOns: any, index: number) => (
+                  <SubscriptionAddonsCard
+                    key={index}
+                    cardIndex={index}
+                    handleAddonChange={handleAddonChange}
+                    handleRemoveAddon={handleRemoveAddon}
+                    subscriptionAddons={subscriptionAddons} // Pass the subscriptionAddons array
+                    //totalAddonAmount={totalAddonAmount} // Pass the total addon amount
+                    setTotalAddonAmount={setTotalAddonAmount} // Pass the function to update total
+                  />
+                ))}
+                {isPlanSelected && (
+                  <div className="d-flex mt-2">
+                    <div className="me-auto">
+                      <Button
+                        className={styles.addOwnerInfoBtn}
+                        onClick={handleAddonClick}
+                        type="primary"
+                      >
+                        <Icon name="plus" width={14.25} height={16} />
+                        Add AddOns
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <hr className={styles.subscriptionLine} />
+                {isPlanSelected && (
+                  <div className="row">
+                    <div
                       className={classNames(
-                        "text-end mb-0",
-                        styles.subscriptionPrice
+                        "col-auto",
+                        styles.subscriptionLineLeft
                       )}
                     >
-                      {monthAdded ? monthAdded.format("DD/MM/YYYY") : "--"}
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className={classNames("col", styles.subscriptionLineRight)}
-                >
-                  <div className="row rowPadding">
-                    <div className="col">
-                      <p className="text-end mb-1">Total</p>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <p className="text-end mb-1" id="total">
-                          Rs.{" "}
-                          {selectedSubscriptionPlan.price +
-                            (subscriptionAddons && subscriptionAddons.length > 0
-                              ? totalAddonAmount
-                              : 0)}
-                          /-
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="row rowPadding">
-                    <div className="col right-align-cell">
-                      <a
-                        className="text-end mb-1 promocode-link"
-                        onClick={showDrawer}
-                      >
-                        Apply Promo Code
-                      </a>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <p className="text-end mb-1 success-text" id="total">
-                          -Rs. {couponDiscount}/-
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="row rowPadding">
-                    <div className="col">
-                      <p className="text-end mb-1">Admin Discount</p>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <Form.Item
-                          name="adminDiscount"
-                          className="customAddFormSelectOptions"
+                      <div className="d-flex mb-3">
+                        <label
+                          className="form-label form-label text-nowrap mt-2 me-2"
+                          style={{ minWidth: 85 }}
                         >
-                          <Input
-                            onKeyPress={(event: any) => {
-                              if (!/[0-9]/.test(event.key)) {
-                                event.preventDefault();
-                              }
+                          Start Date
+                          <sup className="text-danger fs--1">*</sup>
+                        </label>
+                        <Form.Item
+                          name="startDate"
+                          rules={[
+                            {
+                              required: makeValidate,
+                              message: "Please Enter Start Date!",
+                            },
+                          ]}
+                        >
+                          <DatePicker
+                            placeholder="Start Date"
+                            style={{
+                              maxWidth: 154,
+                              marginBottom: 0,
                             }}
-                            defaultValue={0}
-                            className="customAddFormInputText text-end"
-                            maxLength="10"
+                            className="customFormDatePicker"
+                            format="DD/MM/YYYY"
                           />
                         </Form.Item>
                       </div>
-                    </div>
-                  </div>
-                  <hr
-                    className={styles.subscriptionLine}
-                    style={{ marginTop: 0 }}
-                  />
-
-                  <div className="row rowPadding">
-                    <div className="col">
-                      <p className="text-end mb-1">Taxable Value</p>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <p className="text-end mb-1" id="total">
-                          Rs. {taxableValue}/-
+                      <div className="d-flex align-items-center mb-3">
+                        <label
+                          className="form-label form-label text-nowrap mt-1 me-2"
+                          style={{ minWidth: 85, top: 0 }}
+                        >
+                          End Date
+                        </label>
+                        <p
+                          className={classNames(
+                            "text-end mb-0",
+                            styles.subscriptionPrice
+                          )}
+                        >
+                          {monthAdded ? monthAdded.format("DD/MM/YYYY") : "--"}
                         </p>
                       </div>
                     </div>
-                  </div>
-
-                  {clientValue.state !== "Gujarat" && (
-                    <div className="row rowPadding">
-                      <div className="col">
-                        <p className="text-end mb-1">GST @ 18%</p>
+                    <div
+                      className={classNames(
+                        "col",
+                        styles.subscriptionLineRight
+                      )}
+                    >
+                      <div className="row rowPadding">
+                        <div className="col">
+                          <p className="text-end mb-1">Total</p>
+                        </div>
+                        <div className="col-auto">
+                          <div style={{ width: 100 }}>
+                            <p className="text-end mb-1" id="total">
+                              Rs.{" "}
+                              {selectedSubscriptionPlan.price +
+                                (subscriptionAddons &&
+                                subscriptionAddons.length > 0
+                                  ? totalAddonAmount
+                                  : 0)}
+                              /-
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="col-auto">
-                        <div style={{ width: 100 }}>
-                          <p className="text-end mb-1" id="total">
-                            Rs.
-                            {Math.round(gstAmount)}
-                            /-
+
+                      <div className="row rowPadding">
+                        <div className="col right-align-cell">
+                          <a
+                            className="text-end mb-1 promocode-link"
+                            onClick={showDrawer}
+                          >
+                            Apply Promo Code
+                          </a>
+                        </div>
+                        <div className="col-auto">
+                          <div style={{ width: 100 }}>
+                            <p
+                              className="text-end mb-1 success-text"
+                              id="total"
+                            >
+                              -Rs. {couponDiscount}/-
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="row rowPadding">
+                        <div className="col">
+                          <p className="text-end mb-1">Admin Discount</p>
+                        </div>
+                        <div className="col-auto">
+                          <div style={{ width: 100 }}>
+                            <Form.Item
+                              name="adminDiscount"
+                              className="customAddFormSelectOptions"
+                            >
+                              <Input
+                                onKeyPress={(event: any) => {
+                                  if (!/[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                  }
+                                }}
+                                defaultValue={0}
+                                className="customAddFormInputText text-end"
+                                maxLength="10"
+                              />
+                            </Form.Item>
+                          </div>
+                        </div>
+                      </div>
+                      <hr
+                        className={styles.subscriptionLine}
+                        style={{ marginTop: 0 }}
+                      />
+
+                      <div className="row rowPadding">
+                        <div className="col">
+                          <p className="text-end mb-1">Taxable Value</p>
+                        </div>
+                        <div className="col-auto">
+                          <div style={{ width: 100 }}>
+                            <p className="text-end mb-1" id="total">
+                              Rs. {taxableValue}/-
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {clientValue.state !== "Gujarat" && (
+                        <div className="row rowPadding">
+                          <div className="col">
+                            <p className="text-end mb-1">GST @ 18%</p>
+                          </div>
+                          <div className="col-auto">
+                            <div style={{ width: 100 }}>
+                              <p className="text-end mb-1" id="total">
+                                Rs.
+                                {Math.round(gstAmount)}
+                                /-
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {clientValue.state === "Gujarat" && (
+                        <>
+                          <div className="row rowPadding">
+                            <div className="col">
+                              <p className="text-end mb-1">SGST @ 9%</p>
+                            </div>
+                            <div className="col-auto">
+                              <div style={{ width: 100 }}>
+                                <p className="text-end mb-1" id="total">
+                                  Rs.
+                                  {Math.round((taxableValue / 100) * 9)}
+                                  /-
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row rowPadding">
+                            <div className="col">
+                              <p className="text-end mb-1">CGST @ 9%</p>
+                            </div>
+                            <div className="col-auto">
+                              <div style={{ width: 100 }}>
+                                <p className="text-end mb-1" id="total">
+                                  Rs.
+                                  {Math.round((taxableValue / 100) * 9)}
+                                  /-
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="row rowPadding">
+                        <div className="col">
+                          <p className="text-end mb-1">Round Off</p>
+                        </div>
+                        <div className="col-auto">
+                          <div style={{ width: 100 }}>
+                            <Form.Item
+                              name="roundOff"
+                              className="customAddFormSelectOptions"
+                            >
+                              <Input
+                                defaultValue={0}
+                                className="customAddFormInputText text-end"
+                                maxLength={6}
+                              />
+                            </Form.Item>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{ marginTop: "-16px" }}
+                        className="row rowPadding"
+                      >
+                        <div className="col">
+                          <p className="text-end mb-1">
+                            <b>Invoice Value</b>
                           </p>
                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {clientValue.state === "Gujarat" && (
-                    <>
-                      <div className="row rowPadding">
-                        <div className="col">
-                          <p className="text-end mb-1">SGST @ 9%</p>
-                        </div>
                         <div className="col-auto">
                           <div style={{ width: 100 }}>
                             <p className="text-end mb-1" id="total">
-                              Rs.
-                              {Math.round((taxableValue / 100) * 9)}
+                              Rs. {Math.round(invoiceAmount)}
                               /-
                             </p>
                           </div>
                         </div>
                       </div>
-                      <div className="row rowPadding">
-                        <div className="col">
-                          <p className="text-end mb-1">CGST @ 9%</p>
-                        </div>
-                        <div className="col-auto">
-                          <div style={{ width: 100 }}>
-                            <p className="text-end mb-1" id="total">
-                              Rs.
-                              {Math.round((taxableValue / 100) * 9)}
-                              /-
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  <div className="row rowPadding">
-                    <div className="col">
-                      <p className="text-end mb-1">Round Off</p>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <Form.Item
-                          name="roundOff"
-                          className="customAddFormSelectOptions"
-                        >
-                          <Input
-                            defaultValue={0}
-                            className="customAddFormInputText text-end"
-                            maxLength={6}
-                          />
-                        </Form.Item>
-                      </div>
                     </div>
                   </div>
-
-                  <div
-                    style={{ marginTop: "-16px" }}
-                    className="row rowPadding"
-                  >
-                    <div className="col">
-                      <p className="text-end mb-1">
-                        <b>Invoice Value</b>
-                      </p>
-                    </div>
-                    <div className="col-auto">
-                      <div style={{ width: 100 }}>
-                        <p className="text-end mb-1" id="total">
-                          Rs. {Math.round(invoiceAmount)}
-                          /-
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                )}
+              </>
             )}
           </div>
           <div

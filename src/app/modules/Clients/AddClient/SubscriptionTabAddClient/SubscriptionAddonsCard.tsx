@@ -20,8 +20,8 @@ const SubscriptionAddonsCard = memo(
     setTotalAddonAmount,
   }: any) => {
     const [selectNumber, setSelectNumber] = useState(1);
+    console.log("subscriptionAddons", subscriptionAddons);
     const currentAddon = subscriptionAddons[cardIndex];
-    console.log(":currentAddon", currentAddon);
 
     const [addOnType, setAddOnType] = useState("");
     const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
@@ -336,7 +336,7 @@ const SubscriptionAddonsCard = memo(
             </div>
             <div className="col-6">
               <Form.Item
-                // name="addOnPlans" //TODO: need to check this - due to this Id display as value
+                name="addOnPlans" //TODO: need to check this - due to this Id display as value
                 className="customAddClientSelectOptions formItemSelect33"
                 rules={[
                   {
