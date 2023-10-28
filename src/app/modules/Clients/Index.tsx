@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 import Cookies from "js-cookie";
 import { getCurrentItemNumber } from "../../utilities/utility";
-import { adminClientTypeOption } from "../../../utils/constant";
+import { RoleTypes, adminClientTypeOption } from "../../../utils/constant";
 
 const Clients = () => {
   const navigation = useNavigate();
@@ -75,7 +75,20 @@ const Clients = () => {
   };
 
   const cardDesc = (cardInfo: any) => {
-    if (roleType === "superadmin") {
+    const noOfUsers: { [key: string]: number } =
+      cardInfo.subscriptionDetails?.subscriptionPlan?.no_of_users;
+    let sumOfUsers = 0;
+
+    if (noOfUsers) {
+      sumOfUsers = Object.values(noOfUsers).reduce(
+        (acc, value) => acc + value,
+        0
+      );
+    }
+
+    const planName = cardInfo.subscriptionDetails?.subscriptionPlan?.plan_name;
+
+    if (roleType === RoleTypes.SuperAdmin) {
       //super admin code
       return [
         {
@@ -92,7 +105,7 @@ const Clients = () => {
           descComponent: (
             <>
               <p className="mb-0 fs--1 description-label">Employees</p>
-              <p className="semiBold">9</p>
+              <p className="semiBold">0</p>
             </>
           ),
         },
@@ -103,7 +116,7 @@ const Clients = () => {
               <p className="mb-0 fs--1 description-label">
                 Transaction Credits
               </p>
-              <p className="semiBold">12423/15000</p>
+              <p className="semiBold">0/{sumOfUsers}</p>
             </>
           ),
         },
@@ -112,7 +125,7 @@ const Clients = () => {
           descComponent: (
             <>
               <p className="mb-0 fs--1 description-label">Storage</p>
-              <p className="semiBold">2 / 4 GB</p>
+              <p className="semiBold">0 / 0 GB</p>
             </>
           ),
         },
@@ -123,7 +136,7 @@ const Clients = () => {
               <p className="mb-0 fs--1 description-label">
                 Associated Partners
               </p>
-              <p className="semiBold">3</p>
+              <p className="semiBold">0</p>
             </>
           ),
         },
@@ -131,7 +144,9 @@ const Clients = () => {
           iconName: "cash",
           descComponent: (
             <>
-              <p className="mb-0 fs--1 description-label">Gold Subscription</p>
+              <p className="mb-0 fs--1 description-label">
+                {planName ? planName : ""}
+              </p>
               <p className="semiBold">
                 Expire on -{" "}
                 {dayjs(cardInfo.subscriptionDetails.endDate).format(
@@ -159,7 +174,9 @@ const Clients = () => {
           iconName: "cash",
           descComponent: (
             <>
-              <p className="mb-0 fs--1 description-label">Gold Subscription</p>
+              <p className="mb-0 fs--1 description-label">
+                {planName ? planName : ""}
+              </p>
               <p className="semiBold">
                 Expire on -{" "}
                 {dayjs(cardInfo.subscriptionDetails.endDate).format(
@@ -195,7 +212,7 @@ const Clients = () => {
     },
   ]);
   const addonOption =
-    roleType === "superadmin" ? superAdminAddon : caAdminAddonOption;
+    roleType === RoleTypes.SuperAdmin ? superAdminAddon : caAdminAddonOption;
 
   const clientSortLabel = {
     Name: { asc: "Ascending", desc: "Descending" },
