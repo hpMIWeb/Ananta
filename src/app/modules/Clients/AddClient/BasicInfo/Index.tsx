@@ -241,7 +241,7 @@ const BasicInfo = ({
                   >
                     <Input
                       placeholder="Client ID"
-                      className="customAddFormInputText"
+                      className="customInputNumber"
                       disabled
                     />
                   </Form.Item>

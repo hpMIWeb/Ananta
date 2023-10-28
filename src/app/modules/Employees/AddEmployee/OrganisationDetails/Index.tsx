@@ -222,9 +222,14 @@ const OrganisationDetails = ({
                       ]}
                     >
                       <Input
-                        style={{ width: "100%" }}
                         className="customAddFormInputText"
                         placeholder="Aadhar Number"
+                        maxLength={12}
+                        onKeyPress={(event: any) => {
+                          if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
                       />
                     </Form.Item>
                   </div>

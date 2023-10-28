@@ -17,6 +17,7 @@ const EmergencyInfo = ({
   ]);
 
   const onFinish = (value: any) => {
+    console.log("value", value);
     setEmployeeInfo(value);
     onChange(6, value);
   };

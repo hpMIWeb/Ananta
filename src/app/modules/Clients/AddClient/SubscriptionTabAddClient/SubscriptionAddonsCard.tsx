@@ -336,7 +336,7 @@ const SubscriptionAddonsCard = memo(
             </div>
             <div className="col-6">
               <Form.Item
-                name="addOnPlans" //TODO: need to check this - due to this Id display as value
+                //  name="addOnPlans" //TODO: need to check this - due to this Id display as value
                 className="customAddClientSelectOptions formItemSelect33"
                 rules={[
                   {

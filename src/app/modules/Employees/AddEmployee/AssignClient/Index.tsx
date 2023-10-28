@@ -93,6 +93,7 @@ const AssignClient = ({
   };
 
   const handleRemoveClient = (clientId: string) => {
+    console.log("clientId", clientId);
     const updatedClients = selectedClients.filter(
       (client: any) => client.id !== clientId
     );

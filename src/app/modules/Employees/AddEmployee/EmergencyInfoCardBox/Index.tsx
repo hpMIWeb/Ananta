@@ -38,8 +38,8 @@ const EmergencyInfoCardBox = ({
               </label>
               <Form.Item
                 {...field}
-                name={[field.name, "name"]}
-                key={[field.fieldKey, "name"]}
+                name={[field.name, "person"]}
+                key={[field.fieldKey, "person"]}
                 rules={[
                   {
                     pattern: /^[A-Za-z\s]+$/,

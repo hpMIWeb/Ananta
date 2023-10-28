@@ -48,6 +48,11 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
   const getDepartmentsList =
     useSelector((state: any) => state.getDepartments.data) || [];
 
+  const [departmentList, setDepartmentList] = useState<any>([]);
+  const [designationList, setDesignationList] = useState<any>([]);
+  const [teamList, setTeamList] = useState<any>([]);
+  const [roleList, setRoleList] = useState<any>([]);
+
   const showModal = () => {
     if (!selectedEmployeeData) {
     }
@@ -78,6 +83,13 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
     dispatch(getRoleTypeReducersApi());
     dispatch(getTeamReducersApi());
     dispatch(getDesignationReducersApi());
+  }, []);
+
+  useEffect(() => {
+    setDepartmentList(getDepartmentsList);
+    setDesignationList(getDepartmentsList);
+    setRoleList(getRolesList);
+    setTeamList(getTeamList);
   }, []);
 
   const onChangeActiveClick = (e: any, id: any) => {
@@ -667,7 +679,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
                   >
                     <Select
                       placeholder="Select Department"
-                      options={getDepartmentsList.map((department: any) => ({
+                      options={departmentList.map((department: any) => ({
                         label: department?.name,
                         value: department?._id,
                       }))}
@@ -688,7 +700,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
                   <Form.Item name="team" className="customAddFormSelectOptions">
                     <Select
                       placeholder="Select Team"
-                      options={getTeamList.map((team: any) => ({
+                      options={teamList.map((team: any) => ({
                         label: team?.name,
                         value: team?._id,
                       }))}
@@ -712,7 +724,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
                   >
                     <Select
                       placeholder="Select Designation"
-                      options={getDesignationList.map((designation: any) => ({
+                      options={designationList.map((designation: any) => ({
                         label: designation?.name,
                         value: designation?._id,
                       }))}
@@ -743,7 +755,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
                   >
                     <Select
                       placeholder="Select Role"
-                      options={getRolesList.map((role: any) => ({
+                      options={roleList.map((role: any) => ({
                         label: role.roleName,
                         value: role._id,
                       }))}
