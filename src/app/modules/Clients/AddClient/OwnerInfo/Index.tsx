@@ -24,14 +24,6 @@ const OwnerInfo = ({
   // Set the locale
 
   const addMoreOwnerCard = () => {
-    setOwnerInfoData((prev) => [
-      ...prev,
-      {
-        type: "new",
-        index: ownerInfoData.length + 1,
-        name: `index${ownerInfoData.length + 1}`,
-      },
-    ]);
     const existingData = form.getFieldsValue();
     const newIndex = existingData.ownerDetails.length;
     form.setFieldsValue({
@@ -82,6 +74,13 @@ const OwnerInfo = ({
     }
   }, []);
 
+  useEffect(() => {
+    // set fields
+    form.setFieldsValue({
+      ownerInfoData: ownerInfoData,
+    });
+  }, [ownerInfoData]);
+
   const onDeleteCardClick = (cardIndex: any) => {
     const newOwnerInfoData = ownerInfoData.filter((a) => a.index !== cardIndex);
     setOwnerInfoData(newOwnerInfoData);
@@ -105,24 +104,23 @@ const OwnerInfo = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map((field, index) => (
-                <>
-                  {index !== 0 && <Divider type="horizontal" />}
-                  <div
-                    style={{
-                      marginTop: 2,
-                    }}
-                    key={index}
-                    className="row"
-                  >
-                    <OwnerInfoCardBox
-                      index={index}
-                      field={field}
-                      remove={remove}
-                      onDeleteCardClick={onDeleteCardClick}
-                      clientType={clientType}
-                    />
-                  </div>
-                </>
+                <div
+                  style={{
+                    marginTop: 2,
+                  }}
+                  key={index}
+                  className="row"
+                >
+                  <OwnerInfoCardBox
+                    form={form}
+                    index={index}
+                    field={field}
+                    displayNumber={index++}
+                    remove={remove}
+                    onDeleteCardClick={onDeleteCardClick}
+                    clientType={clientType}
+                  />
+                </div>
               ))}
             </>
           )}

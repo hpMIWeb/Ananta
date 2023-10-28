@@ -19,11 +19,12 @@ const OwnerInfoCardBox = ({
   canDelete,
   onDeleteCardClick,
   clientType,
+  form,
 }: any) => {
   return (
     <>
       <div>
-        {/* <div className={styles.itemNumber}>{index + 1}</div> */}
+        <div className={styles.itemNumber}>{index + 1}</div>
         <div>
           <Button
             className={classNames("cancelBtn", styles.deleteCardBtn)}
