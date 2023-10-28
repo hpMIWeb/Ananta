@@ -167,10 +167,9 @@ export const getFilteredValue = (data, searchValue, sortState, addonFilterState)
   // Sort the filtered data based on sortState
   const sortedValues = searchedValues.sort((a, b) => customSort(a, b, sortState));
 
-  // Apply addon filter if a value is selected
-    if (addonFilterState.value!=='') {
-        console.log("addonFilterState.value",addonFilterState.value)
-        console.log("dasddadasddas")
+    // Apply addon filter if a value is selected
+    console.log("addonFilterState",addonFilterState)
+    if (addonFilterState && addonFilterState.value!=='') {
       return customFilter(sortedValues, addonFilterState);
   } else {
     return sortedValues;

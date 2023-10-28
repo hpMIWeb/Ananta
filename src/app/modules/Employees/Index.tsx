@@ -26,7 +26,7 @@ const Employees = () => {
   );
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
   const [addonFilterState, setAddonFilterValueState] = useState({
-    type: "clientType",
+    type: "",
     value: "",
   });
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
@@ -259,7 +259,7 @@ const Employees = () => {
                 employeeData,
                 searchQuery,
                 sortState,
-                fillerValue
+                addonFilterState
               );
               setEmployeeData(employeeDataList);
             }}
