@@ -100,20 +100,17 @@ const customFilter = (sortedValues, addonFilterState) => {
     const fieldName = addonFilterState.type;
     const filterValue = addonFilterState.value;
    
-    if (filterValue) {
-        switch (fieldName) {
-            case "clientType":
-                const addOnFilteredData = sortedValues.filter(
-                    (value) => value.clientType === filterValue
-                    );
-            return addOnFilteredData;
-        default:
-            return sortedValues; 
-            break;
-    }
-    } else {
-        return sortedValues; 
-    }
+    if (filterValue && fieldName) {
+    return sortedValues.filter((value) => {
+      // Check if the field specified in fieldName exists in the data
+      if (value.hasOwnProperty(fieldName)) {
+        return value[fieldName] === filterValue;
+      }
+      return false;
+    });
+  } else {
+    return sortedValues;
+  }
     
     
 }
@@ -147,34 +144,64 @@ const customFilter = (sortedValues, addonFilterState) => {
     
 // };
 
+// export const getFilteredValue = (data, searchValue, sortState, addonFilterState) => {
+  
+
+//     // Filter data based on searchValue
+//     let searchedValues = data;
+//     console.log("data",data)
+//     if (searchValue) {
+//          searchedValues = data.filter((card) => {
+//             // Ensure that card is not undefined
+//             return (
+//             card &&
+//             Object.values(card).some((value) =>
+//                 value !== null && value.toString().toLowerCase().includes(searchValue?.toLowerCase())
+//             )
+//             );
+//         });
+//     }
+  
+
+//   // Sort the filtered data based on sortState
+//   const sortedValues = searchedValues.sort((a, b) => customSort(a, b, sortState));
+
+//     // Apply addon filter if a value is selected
+//     console.log("addonFilterState",addonFilterState)
+//     if (addonFilterState && addonFilterState.value!=='') {
+//       return customFilter(sortedValues, addonFilterState);
+//   } else {
+//     return sortedValues;
+//   }
+// };
+
 export const getFilteredValue = (data, searchValue, sortState, addonFilterState) => {
-  // Check if data is undefined or empty, and return an empty array if it is.
-  if (!data || data.length === 0) {
-    return [];
-  }
+  // Create a copy of the original data to avoid modifying it directly
+  let filteredData = [...data];
 
   // Filter data based on searchValue
-  const searchedValues = data.filter((card) => {
-    // Ensure that card is not undefined
-    return (
-      card &&
-      Object.values(card).some((value) =>
-        value !== null && value.toString().toLowerCase().includes(searchValue?.toLowerCase())
-      )
-    );
-  });
+  if (searchValue) {
+    filteredData = filteredData.filter((card) => {
+      return (
+        card &&
+        Object.values(card).some((value) =>
+          value !== null && value.toString().toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+    });
+  }
 
   // Sort the filtered data based on sortState
-  const sortedValues = searchedValues.sort((a, b) => customSort(a, b, sortState));
+  filteredData.sort((a, b) => customSort(a, b, sortState));
 
-    // Apply addon filter if a value is selected
-    console.log("addonFilterState",addonFilterState)
-    if (addonFilterState && addonFilterState.value!=='') {
-      return customFilter(sortedValues, addonFilterState);
-  } else {
-    return sortedValues;
+  // Apply addon filter if a value is selected
+  if (addonFilterState && addonFilterState.value !== '') {
+    filteredData = customFilter(filteredData, addonFilterState);
   }
+
+  return filteredData;
 };
+
 
 
 export const filterObjectByKey = (object, keysArray) => {

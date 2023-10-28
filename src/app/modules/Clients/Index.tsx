@@ -23,7 +23,6 @@ const Clients = () => {
   const dispatch = useAppDispatch();
   const roleType = Cookies.get("roleTypeName");
   const getClientsList = useSelector((state: any) => state.getClients.data);
-
   const getClientsLoading = useSelector(
     (state: any) => state.getClients.loading
   );
@@ -41,16 +40,15 @@ const Clients = () => {
   const [clientData, setClientData] = useState<any>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch data
-        await dispatch(getClientsReducersApi());
-      } catch (error) {
-        // Handle error, e.g., set an error state
-      }
-    };
-    fetchData();
+    dispatch(getClientsReducersApi());
   }, []);
+
+  // Set the initial state of clientData to all clients
+  useEffect(() => {
+    setClientData(
+      getFilteredValue(getClientsList, "", sortState, addonFilterState)
+    );
+  }, [getClientsList, sortState, addonFilterState]);
 
   const handleNewClientClick = () => {
     navigation("/caclient/create");
@@ -197,6 +195,7 @@ const Clients = () => {
     },
     ...adminClientTypeOption,
   ]);
+
   const [caAdminAddonOption, setCAdminAddonOption] = useState([
     {
       value: "",
@@ -235,6 +234,13 @@ const Clients = () => {
   // Search input change handler
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
+    const filteredClients = getFilteredValue(
+      getClientsList,
+      searchValue,
+      sortState,
+      addonFilterState
+    );
+    setClientData(filteredClients);
   };
 
   return (

@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 import Cookies from "js-cookie";
 import { getCurrentItemNumber } from "../../utilities/utility";
+import { RoleTypes } from "../../../utils/constant";
 
 const AssociatePartners = () => {
   const navigation = useNavigate();
@@ -29,11 +30,29 @@ const AssociatePartners = () => {
   const getAssociatePartnerLoading = useSelector(
     (state: any) => state.getAssociatePartner.loading
   );
-  const [searchValue, setSearchValue] = useState("");
   const [sortState, setSortState] = useState({ type: "", sortOrder: "" });
+  const [addonFilterState, setAddonFilterValueState] = useState({
+    type: "partnerType",
+    value: "",
+  });
+
   const [displayedPaginationItems, setPaginationDisplayedItems] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [associatePartnerData, setAssociatePartnerData] = useState<any>([]);
+
+  useEffect(() => {
+    dispatch(getAssociatePartnerReducersApi());
+  }, []);
+
+  // Set the initial state of clientData to all clients
+  useEffect(() => {
+    setAssociatePartnerData(
+      getFilteredValue(getAssociatePartnerList, "", sortState, addonFilterState)
+    );
+  }, [getAssociatePartnerList, sortState, addonFilterState]);
+
   const handleViewBtnClick = (id: string) => {
     navigation(`view-associatePartners/`, { state: { id: id } });
   };
@@ -59,7 +78,9 @@ const AssociatePartners = () => {
   ];
 
   const addonOption =
-    roleType === "superadmin" ? superAdminAddonOption : caAdminAddonOption;
+    roleType === RoleTypes.SuperAdmin
+      ? superAdminAddonOption
+      : caAdminAddonOption;
 
   const handleNewAssociatePartnerClick = () => {
     navigation("/associatePartners/create");
@@ -73,10 +94,6 @@ const AssociatePartners = () => {
       })
     );
   };
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(getAssociatePartnerReducersApi());
-  }, []);
 
   const setPageChange = (pageNumber: number, pageSize: number) => {
     setCurrentPageNumber(pageNumber);
@@ -84,7 +101,7 @@ const AssociatePartners = () => {
   };
 
   const cardDesc = (cardInfo: any) => {
-    if (roleType === "superadmin") {
+    if (roleType === RoleTypes.SuperAdmin) {
       return [
         {
           iconName: "client",
@@ -148,12 +165,26 @@ const AssociatePartners = () => {
     }
   };
 
-  const clientSortLabel = {
-    Name: { asc: "Ascending", desc: "Descending" },
-    Clients: { asc: "Ascending", desc: "Descending" },
-    "Transactions Processed": { asc: "Ascending", desc: "Descending" },
-    Employees: { asc: "Highest", desc: "Lowest" },
-    Storage: { asc: "Highest", desc: "Lowest" },
+  useEffect(() => {
+    const filteredAssociatePartnersData = getFilteredValue(
+      getAssociatePartnerList,
+      searchQuery,
+      sortState,
+      addonFilterState
+    );
+    setAssociatePartnerData(filteredAssociatePartnersData);
+  }, [searchQuery]);
+
+  // Search input change handler
+  const handleSearch = (searchValue: string) => {
+    setSearchQuery(searchValue);
+    const filteredAssociatePartnersData = getFilteredValue(
+      getAssociatePartnerList,
+      searchQuery,
+      sortState,
+      addonFilterState
+    );
+    setAssociatePartnerData(filteredAssociatePartnersData);
   };
 
   return (
@@ -194,24 +225,37 @@ const AssociatePartners = () => {
       <div className={styles.associatePartnerBottomWrapper}>
         <div style={{ marginBottom: 24 }}>
           <SearchFilterBar
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
+            searchValue={searchQuery}
+            setSearchValue={handleSearch}
             sortState={sortState}
             showAddOn={true}
             addonOption={addonOption}
             initialAddOnsValue="All Partner"
             setSortStateHandler={(options: any) => {
               setSortState(options);
+              const filteredAssociatePartnersData = getFilteredValue(
+                getAssociatePartnerList,
+                searchQuery,
+                sortState,
+                addonFilterState
+              );
+              setAssociatePartnerData(filteredAssociatePartnersData);
+            }}
+            setAddonFilterHandler={(fillerValue: any) => {
+              setAddonFilterValueState(fillerValue);
+              const filteredAssociatePartnersData = getFilteredValue(
+                getAssociatePartnerList,
+                searchQuery,
+                sortState,
+                addonFilterState
+              );
+              setAssociatePartnerData(filteredAssociatePartnersData);
             }}
           />
         </div>
         {getAssociatePartnerLoading && <CardContentSkeletonLoader />}
         {!getAssociatePartnerLoading &&
-          getFilteredValue(
-            displayedPaginationItems,
-            searchValue,
-            sortState
-          ).map((card: any, index: number) => (
+          associatePartnerData.map((card: any, index: number) => (
             <SubscriptionCard
               displayIndex={getCurrentItemNumber(
                 index + 1,
@@ -234,11 +278,11 @@ const AssociatePartners = () => {
             />
           ))}
 
-        {!getAssociatePartnerLoading && !getAssociatePartnerList.length && (
-          <NoDataAvailable name="No Clients Available!" />
+        {!getAssociatePartnerLoading && !associatePartnerData.length && (
+          <NoDataAvailable name="No Associate Partners Available!" />
         )}
         <Pagination
-          data={getAssociatePartnerList}
+          data={associatePartnerData}
           setPaginationDisplayedItems={setPaginationDisplayedItems}
           setPageNumber={setPageChange}
         />

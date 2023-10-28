@@ -33,21 +33,17 @@ const Employees = () => {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [employeeData, setEmployeeData] = useState<any>(
-    getFilteredValue(getEmployeesList, searchQuery, sortState, addonFilterState)
-  );
+  const [employeeData, setEmployeeData] = useState<any>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch data
-        await dispatch(getEmployeesReducersApi());
-      } catch (error) {
-        // Handle error, e.g., set an error state
-      }
-    };
-    fetchData();
+    dispatch(getEmployeesReducersApi());
   }, []);
+
+  useEffect(() => {
+    setEmployeeData(
+      getFilteredValue(getEmployeesList, "", sortState, addonFilterState)
+    );
+  }, [getEmployeesList, sortState, addonFilterState]);
 
   const handleNewEmployeeClick = () => {
     navigation("/employee/add-employee");
@@ -173,18 +169,17 @@ const Employees = () => {
     ];
   };
 
-  useEffect(() => {
-    const employeeData = getFilteredValue(
-      getEmployeesList,
-      searchQuery,
-      sortState
-    );
-    setEmployeeData(employeeData);
-  }, [searchQuery]);
-
+  // Search input change handler
   // Search input change handler
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
+    const filteredEmployees = getFilteredValue(
+      getEmployeesList,
+      searchValue,
+      sortState,
+      addonFilterState
+    );
+    setEmployeeData(filteredEmployees);
   };
 
   const clientSortLabel = {
@@ -244,24 +239,23 @@ const Employees = () => {
             sortState={sortState}
             setSortStateHandler={(options: any) => {
               setSortState(options);
-              const employeeDataList = getFilteredValue(
-                employeeData,
+              const filteredEmployees = getFilteredValue(
+                getEmployeesList,
                 searchQuery,
                 sortState,
                 addonFilterState
               );
-
-              setEmployeeData(employeeDataList);
+              setEmployeeData(filteredEmployees);
             }}
             setAddonFilterHandler={(fillerValue: any) => {
               setAddonFilterValueState(fillerValue);
-              const employeeDataList = getFilteredValue(
-                employeeData,
+              const filteredEmployees = getFilteredValue(
+                getEmployeesList,
                 searchQuery,
                 sortState,
                 addonFilterState
               );
-              setEmployeeData(employeeDataList);
+              setEmployeeData(filteredEmployees);
             }}
           />
         </div>
