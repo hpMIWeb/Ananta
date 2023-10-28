@@ -255,7 +255,7 @@ const AssociatePartners = () => {
         </div>
         {getAssociatePartnerLoading && <CardContentSkeletonLoader />}
         {!getAssociatePartnerLoading &&
-          associatePartnerData.map((card: any, index: number) => (
+          displayedPaginationItems.map((card: any, index: number) => (
             <SubscriptionCard
               displayIndex={getCurrentItemNumber(
                 index + 1,

@@ -320,10 +320,11 @@ const Clients = () => {
             overflowY: "auto",
             paddingRight: "10px",
           }}
+          //ccsd        >
         >
           {getClientsLoading && <CardContentSkeletonLoader />}
           {!getClientsLoading &&
-            clientData.map((card: any, index: number) => (
+            displayedPaginationItems.map((card: any, index: number) => (
               <SubscriptionCard
                 displayIndex={getCurrentItemNumber(
                   index + 1,

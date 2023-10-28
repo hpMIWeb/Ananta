@@ -261,7 +261,7 @@ const Employees = () => {
         </div>
         {getEmployeesLoading && <CardContentSkeletonLoader />}
         {!getEmployeesLoading &&
-          employeeData.map((card: any, index: number) => (
+          displayedPaginationItems.map((card: any, index: number) => (
             <SubscriptionCard
               displayIndex={getCurrentItemNumber(
                 index + 1,
