@@ -469,28 +469,28 @@ const LayoutComponent = ({
             case "24":
                 navigate("/default-line-of-business");
                 return;
-            case "25":
+            case "401":
                 navigate("/caclient");
                 return;
             case "26":
                 navigate("/caclient");
                 return;
-            case "27":
+            case "501":
                 navigate("/employee");
                 return;
-            case "28":
+            case "502":
                 navigate("/employee");
                 return;
             case "29":
                 navigate("/associatePartners");
                 return;
-            case "30":
+            case "601":
                 navigate("/associatePartners");
                 return;
             case "31":
                 navigate("/associatePartners");
                 return;
-            case "35":
+            case "101":
                 navigate("/task");
                 return;
             case "36":
