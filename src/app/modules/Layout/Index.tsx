@@ -39,12 +39,12 @@ const items: MenuItem[] = [
         [
             getItem(
                 "Dashboard",
-                "25",
+                "401",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Settings",
-                "26",
+                "402",
                 <Icon name="management" width={17.5} height={14} />
             ),
         ]
@@ -56,12 +56,12 @@ const items: MenuItem[] = [
         [
             getItem(
                 "Dashboard",
-                "27",
+                "501",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Settings",
-                "28",
+                "502",
                 <Icon name="management" width={17.5} height={14} />
             ),
         ]
@@ -73,12 +73,12 @@ const items: MenuItem[] = [
         [
             getItem(
                 "Dashboard",
-                "30",
+                "601",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Settings",
-                "31",
+                "602",
                 <Icon name="management" width={17.5} height={14} />
             ),
         ]
@@ -117,32 +117,32 @@ const items: MenuItem[] = [
         [
             getItem(
                 "Department",
-                "19",
+                "701",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Designation",
-                "20",
+                "702",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Role",
-                "21",
+                "703",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Checklist",
-                "22",
+                "704",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Industry Type",
-                "23",
+                "705",
                 <Icon name="management" width={17.5} height={14} />
             ),
             getItem(
                 "Line Of Business",
-                "24",
+                "706",
                 <Icon name="management" width={17.5} height={14} />
             ),
         ]
@@ -181,7 +181,7 @@ const items: MenuItem[] = [
     ),
     getItem(
         "Task Master",
-        "34",
+        "101",
         <Icon name="management" width={17.5} height={14} />,
         [
             getItem(
@@ -352,6 +352,7 @@ const LayoutComponent = ({
         "add-employee": "Create New",
         "view-employee": "View Employee",
         "view-associatePartners": "View Associate Partners",
+        "view-caclient": "View client",
         caclient: "Dashboard",
         employee: "Dashboard",
         create: "Create New",
