@@ -32,8 +32,6 @@ export const createClientReducersApi = createAsyncThunk(
     }
 );
 
-
-
 interface CreateClientReducersState {
     data: any;
     loading: boolean;
@@ -50,7 +48,12 @@ const initialState: CreateClientReducersState = {
 
 const createClientReducersSlice = createSlice({
     name: "createClientReducersApi",
-    initialState,
+    initialState: {
+        data: {},
+        loading: false,
+        success: false,
+        error: null,
+    },
     reducers: {
         resetStateCreateClient: (state) => {
             state.loading = false;
@@ -63,7 +66,8 @@ const createClientReducersSlice = createSlice({
             state.success = false;
             state.error = null;
             state.data = {};
-        }, resetSuccessState: (state) => {
+        },
+        resetSuccessState: (state) => {
             state.success = false;
         },
     },
@@ -91,7 +95,10 @@ const createClientReducersSlice = createSlice({
     },
 });
 
-export const { resetSuccessState,resetStateCreateClient, resetStateCreateSubscriptions } =
-    createClientReducersSlice.actions;
+export const {
+    resetSuccessState,
+    resetStateCreateClient,
+    resetStateCreateSubscriptions,
+} = createClientReducersSlice.actions;
 
 export default createClientReducersSlice.reducer;
