@@ -448,25 +448,22 @@ const LayoutComponent = ({
             case "17":
                 navigate("/checklist");
                 return;
-            case "18":
+            case "701":
                 navigate("/default-department");
                 return;
-            case "19":
-                navigate("/default-department");
-                return;
-            case "20":
+            case "702":
                 navigate("/default-designation");
                 return;
-            case "21":
+            case "703":
                 navigate("/default-role");
                 return;
-            case "22":
+            case "704":
                 navigate("/default-checklist");
                 return;
-            case "23":
+            case "705":
                 navigate("/default-industry-type");
                 return;
-            case "24":
+            case "706":
                 navigate("/default-line-of-business");
                 return;
             case "401":
