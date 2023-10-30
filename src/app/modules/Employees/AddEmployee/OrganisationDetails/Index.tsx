@@ -56,7 +56,7 @@ const OrganisationDetails = ({
                     team: orgDetail.team,
                     designation: orgDetail.designation?._id,
                     role: orgDetail.role?._id,
-                    aadhar: orgDetail.aadhar,
+                    aadhar: orgDetail.aadhar ? orgDetail.aadhar : "",
                     dateOfJoining: dayjs(orgDetail.dateOfJoining),
                     pan: orgDetail.pan,
                     referance: orgDetail.referance,
