@@ -77,10 +77,10 @@ const AssignClient = ({
         );
     };
 
-    const handleRemoveClient = (clientId: string) => {
-        console.log("clientId", clientId);
+    const handleRemoveClient = (clientIdToRemove: string) => {
+        // Filter out the client ID to remove
         const updatedClientIDs = selectedClientIDs.filter(
-            (id: string) => id !== clientId
+            (clientId: string) => clientId !== clientIdToRemove
         );
         setSelectedClientIDs(updatedClientIDs);
     };
@@ -205,7 +205,7 @@ const AssignClient = ({
                                     );
                                     return (
                                         <Tag
-                                            key={index}
+                                            key={clientId} // Use a unique key
                                             closable
                                             onClose={() =>
                                                 handleRemoveClient(clientId)
