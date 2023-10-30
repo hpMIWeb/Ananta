@@ -33,6 +33,12 @@ import { adminClientTypeOption } from "../../../../utils/constant";
 
 const AddClient = ({ selectedClientData }: any) => {
     const [activeTab, setActiveTab] = useState(1);
+    const [disableTabArray, setDisableTabArray] = useState({
+        1: false,
+        4: true,
+        5: true,
+        6: true,
+    });
     const [clientValue, setClientValue] = useState({});
     const roleType = Cookies.get("roleTypeName");
     const dispatch = useAppDispatch();
@@ -135,6 +141,10 @@ const AddClient = ({ selectedClientData }: any) => {
                 navigation("/caclient"); // Replace with your actual route
             }
         } else {
+            setDisableTabArray((prevDisableTabArray) => ({
+                ...prevDisableTabArray,
+                [key]: false,
+            }));
             setActiveTab(key);
         }
     };
@@ -147,6 +157,7 @@ const AddClient = ({ selectedClientData }: any) => {
         {
             key: 1,
             label: `Firm Info`,
+            disabled: disableTabArray[1],
             children: (
                 <BasicInfo
                     onChange={onChange}
@@ -170,6 +181,7 @@ const AddClient = ({ selectedClientData }: any) => {
         {
             key: 4,
             label: `Owner Info`,
+            disabled: disableTabArray[4],
             children: (
                 <OwnerInfo
                     onChange={onChange}
@@ -178,11 +190,11 @@ const AddClient = ({ selectedClientData }: any) => {
                     selectedClientData={selectedClientData}
                 />
             ),
-            disabled: !ownerInfoValid,
         },
         {
             key: 5,
             label: roleType === "superadmin" ? `Subscription` : `Billing`,
+            disabled: disableTabArray[5],
             children: (
                 <SubscriptionTabAddClient
                     onChange={onChange}
@@ -192,11 +204,11 @@ const AddClient = ({ selectedClientData }: any) => {
                     selectedClientData={selectedClientData}
                 />
             ),
-            disabled: !subScriptionInfoValid,
         },
         {
             key: 6,
             label: `Payment`,
+            disabled: disableTabArray[6],
             children: (
                 <PaymentTabAddClient
                     onChange={onChange}
@@ -206,7 +218,6 @@ const AddClient = ({ selectedClientData }: any) => {
                     selectedClientData={selectedClientData}
                 />
             ),
-            disabled: !paymentInfoValid,
         },
         // {
         //   key: 7,
