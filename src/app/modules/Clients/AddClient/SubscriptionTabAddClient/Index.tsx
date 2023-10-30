@@ -23,7 +23,7 @@ import { Option } from "antd/es/mentions";
 import { toast } from "react-toastify";
 import { ClientType, RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const SubscriptionTabAddClient = ({
     onChange,
@@ -53,6 +53,7 @@ const SubscriptionTabAddClient = ({
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
     const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
     const [selectedCouponId, setSelectedCouponId] = useState<string>("");
+    const [st, setST] = useState<string>("");
     const [billingMethod, setBillingMethod] = useState<string>("subscription");
     const [makeValidate, setMakeValidate] = useState(true);
     const [couponDiscount, setCouponDiscount] = useState<number>(0);
@@ -236,15 +237,18 @@ const SubscriptionTabAddClient = ({
     };
 
     useEffect(() => {
+        console.log("selectedClientDatac", selectedClientData);
         if (selectedClientData && Object.keys(selectedClientData).length > 0) {
             let subscriptionDetails = selectedClientData.subscriptionDetails;
             const addons = subscriptionDetails?.addOns || [];
+
             setSubscriptionValue({
                 subscriptionType: subscriptionDetails?.subscriptionType,
                 subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
-                startDate: moment(subscriptionDetails?.startDate),
-                endDate: moment(subscriptionDetails?.endDate),
+                startDate: dayjs(subscriptionDetails?.startDate),
+                endDate: dayjs(subscriptionDetails?.endDate),
                 promoCode: subscriptionDetails?.promoCode?._id,
+                roundOff: subscriptionDetails?.roundOff,
             });
             setSubscriptionAddons(addons);
             setSelectedCoupon(subscriptionDetails.promoCode);
@@ -253,12 +257,13 @@ const SubscriptionTabAddClient = ({
             form.setFieldsValue({
                 subscriptionType: subscriptionDetails?.subscriptionType,
                 subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
-                startDate: moment(subscriptionDetails?.startDate),
+                startDate: dayjs(subscriptionDetails?.startDate),
+                endDate: dayjs(subscriptionDetails?.endDate),
                 promoCode: subscriptionDetails?.promoCode?._id,
                 adminDiscount: subscriptionDetails.adminDiscount,
+                roundOff: subscriptionDetails.roundOff,
             });
         }
-        //onValuesChange("", form);
     }, [selectedClientData]);
 
     const isPlanSelected = !!subscriptionValue.subscriptionPlan;
@@ -361,7 +366,10 @@ const SubscriptionTabAddClient = ({
                     : "subscription",
                 subscriptionPlan,
                 addOns: formattedAddons,
-                promoCode: values.promocode ? values.promocode : undefined, // Pass promocode if available, or omit it if not
+                promoCode:
+                    selectedCouponId && selectedCouponId !== ""
+                        ? selectedCouponId
+                        : undefined, // Pass promocode if available, or omit it if not
                 startDate,
                 endDate: monthAdded,
                 adminDiscount: adminDiscount ? adminDiscount : 0,
@@ -369,6 +377,7 @@ const SubscriptionTabAddClient = ({
                 roundOff: roundOff ? roundOff : 0,
             };
 
+            console.log("finalFormValues", finalFormValues);
             setFormValue({ subscriptionDetails: finalFormValues });
         } else {
             const finalFormValues = {
