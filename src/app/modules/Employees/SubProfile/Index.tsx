@@ -87,7 +87,7 @@ const SubProfile = ({ selectedEmployeeData }: any) => {
 
   useEffect(() => {
     setDepartmentList(getDepartmentsList);
-    setDesignationList(getDepartmentsList);
+    setDesignationList(getDesignationList);
     setRoleList(getRolesList);
     setTeamList(getTeamList);
   }, []);
