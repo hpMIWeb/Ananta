@@ -352,7 +352,7 @@ const LayoutComponent = ({
         "add-employee": "Create New",
         "view-employee": "View Employee",
         "view-associatePartners": "View Associate Partners",
-        "view-caclient": "View client",
+        "view-caclient": "View Client",
         caclient: "Dashboard",
         employee: "Dashboard",
         create: "Create New",
