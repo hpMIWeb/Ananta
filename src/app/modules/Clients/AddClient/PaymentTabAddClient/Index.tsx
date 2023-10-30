@@ -43,9 +43,19 @@ const PaymentTabAddClient = ({
 
     useEffect(() => {
         if (selectedClientData && Object.keys(selectedClientData).length > 0) {
+            console.log("Pinau", selectedClientData?.paymentDetails);
             form.setFieldsValue({
                 paymentTerms: selectedClientData?.paymentDetails.paymentTerms,
                 paymentMode: selectedClientData?.paymentDetails.paymentMode,
+                creditPeriodTime:
+                    selectedClientData?.paymentDetails.creditPeriod,
+                creditType: selectedClientData?.paymentDetails.creditType,
+            });
+            setPaymentForm({
+                paymentTerms: selectedClientData?.paymentDetails.paymentTerms,
+                creditPeriodTime:
+                    selectedClientData?.paymentDetails.creditPeriod,
+                creditPeriodType: selectedClientData?.paymentDetails.creditType,
             });
             setPaymentRowData(
                 selectedClientData?.paymentDetails.instrumentDetails
@@ -58,16 +68,6 @@ const PaymentTabAddClient = ({
             setMakeValidate(false);
         }
     }, []);
-
-    // useEffect(() => {
-    //   if (clientValue) {
-    //     form.setFieldsValue({
-    //       paymentTerms: selectedClientData.paymentDetails.paymentTerms,
-    //       paymentMode: selectedClientData.paymentDetails.paymentMode,
-    //     });
-    //     setPaymentRowData(selectedClientData.paymentDetails.instrumentDetails);
-    //   }
-    // }, []);
 
     const onFinish = (values: any) => {
         if (billingMethod === "subscription") {

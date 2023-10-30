@@ -53,6 +53,7 @@ const ResetPassword = ({}) => {
                                 <Input
                                     placeholder="Email"
                                     className={styles.loginFormInput}
+                                    disabled
                                 />
                             </Form.Item>
                         </div>
