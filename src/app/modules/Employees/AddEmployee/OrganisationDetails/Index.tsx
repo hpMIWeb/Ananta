@@ -50,7 +50,6 @@ const OrganisationDetails = ({
                 selectedEmployeeData.organizationDetails;
 
             organizationDetails.forEach((orgDetail: any, index: number) => {
-                console.log("orgDetail", orgDetail);
                 form.setFieldsValue({
                     department: orgDetail.department?._id,
                     team: orgDetail.team,

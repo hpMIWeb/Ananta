@@ -706,10 +706,28 @@ const BasicInfo = ({
                     >
                         <div>
                             <label className="form-label">Group Name</label>
-                            <Form.Item name="groupName">
+                            <Form.Item
+                                name="groupName"
+                                rules={[
+                                    {
+                                        pattern: /^[a-zA-Z0-9\s&/,.-]+$/,
+                                        message:
+                                            "Please enter alphanumeric characters and limited symbols: - & / , .",
+                                    },
+                                ]}
+                            >
                                 <Input
                                     placeholder="Group Name"
                                     className="customAddFormInputText"
+                                    onKeyPress={(event: any) => {
+                                        if (
+                                            !/^[a-zA-Z0-9\s&/,.-]+$/.test(
+                                                event.key
+                                            )
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                 />
                             </Form.Item>
                         </div>
@@ -722,10 +740,28 @@ const BasicInfo = ({
                     >
                         <div>
                             <label className="form-label">Referred By</label>
-                            <Form.Item name="refferedBy">
+                            <Form.Item
+                                name="refferedBy"
+                                rules={[
+                                    {
+                                        pattern: /^[a-zA-Z0-9\s&/,.-]+$/,
+                                        message:
+                                            "Please enter alphanumeric characters and limited symbols: - & / , .",
+                                    },
+                                ]}
+                            >
                                 <Input
                                     placeholder="Referred By"
                                     className="customAddFormInputText"
+                                    onKeyPress={(event: any) => {
+                                        if (
+                                            !/^[a-zA-Z0-9\s&/,.-]+$/.test(
+                                                event.key
+                                            )
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                 />
                             </Form.Item>
                         </div>
