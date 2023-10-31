@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 const PaymentFieldRow = ({
     onDelete,
-    instrumentIndex,
+    _id,
     handleInstrumentChange,
     data,
     ...props
@@ -24,7 +24,7 @@ const PaymentFieldRow = ({
             >
                 <div>
                     <label className="form-label">Instrument Type</label>
-                    <Form.Item id={`name-${instrumentIndex}`}>
+                    <Form.Item id={`name-${_id}`}>
                         <Select
                             options={[
                                 { value: "NEFT", label: "NEFT" },
@@ -43,7 +43,7 @@ const PaymentFieldRow = ({
                                 handleInstrumentChange(
                                     "instrumentType",
                                     value,
-                                    instrumentIndex
+                                    _id
                                 )
                             }
                             value={data.instrumentType}
@@ -59,7 +59,7 @@ const PaymentFieldRow = ({
             >
                 <div>
                     <label className="form-label">Instrument Date</label>
-                    <Form.Item id={`date-${instrumentIndex}`}>
+                    <Form.Item id={`date-${_id}`}>
                         <DatePicker
                             placeholder="Instrument Date"
                             className="customFormDatePicker"
@@ -68,7 +68,7 @@ const PaymentFieldRow = ({
                                 handleInstrumentChange(
                                     "instrumentDate",
                                     value,
-                                    instrumentIndex
+                                    _id
                                 )
                             }
                             value={dayjs(data.instrumentDate)}
@@ -84,16 +84,16 @@ const PaymentFieldRow = ({
             >
                 <div>
                     <label className="form-label">Instrument ID</label>
-                    <Form.Item id={`ins-id-${instrumentIndex}`}>
+                    <Form.Item id={`ins-id-${_id}`}>
                         <Input
-                            id={`ins-id-${instrumentIndex}`}
+                            id={`ins-id-${_id}`}
                             placeholder="Instrument ID"
                             className="customAddFormInputText"
                             onChange={(item: any) =>
                                 handleInstrumentChange(
                                     "instrumentId",
                                     item.target.value,
-                                    instrumentIndex
+                                    _id
                                 )
                             }
                             value={data.instrumentId}
@@ -109,7 +109,7 @@ const PaymentFieldRow = ({
             >
                 <div>
                     <label className="form-label">Instrument Amount</label>
-                    <Form.Item id={`inst-amt-${instrumentIndex}`}>
+                    <Form.Item id={`inst-amt-${_id}`}>
                         <Input
                             placeholder="Instrument Amount"
                             className="customAddFormInputText"
@@ -123,7 +123,7 @@ const PaymentFieldRow = ({
                                 handleInstrumentChange(
                                     "instrumentAmount",
                                     item.target.value,
-                                    instrumentIndex
+                                    _id
                                 )
                             }
                             value={data.instrumentAmount}
@@ -131,7 +131,7 @@ const PaymentFieldRow = ({
                     </Form.Item>
                 </div>
             </div>
-            {instrumentIndex !== 0 && (
+            {_id !== 0 && (
                 <div
                     className={classNames(
                         "col-12 col-sm-6 col-md-1",
@@ -145,7 +145,7 @@ const PaymentFieldRow = ({
                                 styles.deleteCardBtn
                             )}
                             type="primary"
-                            onClick={() => onDelete(instrumentIndex)}
+                            onClick={() => onDelete(_id)}
                             danger
                         >
                             <Icon height={14} width={14} name="trashIcon" />

@@ -12,7 +12,7 @@ interface IInstrument {
     instrumentAmount: number;
     instrumentDate: string;
     instrumentId: number;
-    instrumentIndex: number;
+    _id: number;
     instrumentType: string;
 }
 
@@ -24,7 +24,7 @@ const PaymentTabAddClient = ({
 }: any) => {
     const [paymentRowData, setPaymentRowData] = useState<IInstrument[]>([
         {
-            instrumentIndex: 1,
+            _id: 1,
         } as IInstrument,
     ]);
     const [form] = Form.useForm();
@@ -94,15 +94,13 @@ const PaymentTabAddClient = ({
         setPaymentRowData((prev) => [
             ...prev,
             {
-                instrumentIndex: paymentRowData.length + 1,
+                _id: paymentRowData.length + 1,
             } as IInstrument,
         ]);
     };
 
     const handleInstrumentChange = (key: any, value: any, index: any) => {
-        const instrumentInfoData = paymentRowData.find(
-            (a) => a.instrumentIndex === index
-        );
+        const instrumentInfoData = paymentRowData.find((a) => a._id === index);
         if (instrumentInfoData) {
             const updatedInstrumentInfoData = {
                 ...instrumentInfoData,
@@ -110,9 +108,7 @@ const PaymentTabAddClient = ({
             };
 
             const updatedPaymentRowData = paymentRowData.map((rowData) =>
-                rowData.instrumentIndex === index
-                    ? updatedInstrumentInfoData
-                    : rowData
+                rowData._id === index ? updatedInstrumentInfoData : rowData
             );
 
             setPaymentRowData(updatedPaymentRowData);
@@ -121,7 +117,7 @@ const PaymentTabAddClient = ({
 
     const onDeleteCardClick = (cardIndex: any) => {
         const newOwnerInfoData = paymentRowData.filter(
-            (a) => a.instrumentIndex !== cardIndex
+            (a) => a._id !== cardIndex
         );
         setPaymentRowData(newOwnerInfoData);
     };
@@ -426,7 +422,7 @@ const PaymentTabAddClient = ({
                             <PaymentFieldRow
                                 key={index}
                                 onDelete={onDeleteCardClick}
-                                instrumentIndex={payment.instrumentIndex}
+                                _id={payment._id}
                                 handleInstrumentChange={handleInstrumentChange}
                                 data={payment}
                             />
