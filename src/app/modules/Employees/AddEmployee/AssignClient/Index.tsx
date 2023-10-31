@@ -20,7 +20,6 @@ const AssignClient = ({
 
     const [modalOpen, setModalOpen] = useState(false);
     const onFinish = () => {
-        console.log("selectedClientIDs", selectedClientIDs);
         setEmployeeInfo({ assignClients: selectedClientIDs });
 
         onChange(4);
@@ -32,9 +31,6 @@ const AssignClient = ({
                 new Set(selectedEmployeeData.assignClients)
             );
             setSelectedClientIDs(uniqueAssignClients);
-
-            // Map through uniqueAssignClients and handle client selection
-            console.log("uniqueAssignClients", uniqueAssignClients);
         }
     }, []);
 

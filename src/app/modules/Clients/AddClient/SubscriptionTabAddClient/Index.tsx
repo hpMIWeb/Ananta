@@ -237,7 +237,6 @@ const SubscriptionTabAddClient = ({
     };
 
     useEffect(() => {
-        console.log("selectedClientDatac", selectedClientData);
         if (selectedClientData && Object.keys(selectedClientData).length > 0) {
             let subscriptionDetails = selectedClientData.subscriptionDetails;
             const addons = subscriptionDetails?.addOns || [];
@@ -373,11 +372,10 @@ const SubscriptionTabAddClient = ({
                 startDate,
                 endDate: monthAdded,
                 adminDiscount: adminDiscount ? adminDiscount : 0,
-                invoicePrice: invoiceAmount,
+                invoicePrice: Math.round(invoiceAmount),
                 roundOff: roundOff ? roundOff : 0,
             };
 
-            console.log("finalFormValues", finalFormValues);
             setFormValue({ subscriptionDetails: finalFormValues });
         } else {
             const finalFormValues = {

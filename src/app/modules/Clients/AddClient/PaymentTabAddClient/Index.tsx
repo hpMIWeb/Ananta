@@ -43,7 +43,6 @@ const PaymentTabAddClient = ({
 
     useEffect(() => {
         if (selectedClientData && Object.keys(selectedClientData).length > 0) {
-            console.log("Pinau", selectedClientData?.paymentDetails);
             form.setFieldsValue({
                 paymentTerms: selectedClientData?.paymentDetails.paymentTerms,
                 paymentMode: selectedClientData?.paymentDetails.paymentMode,
