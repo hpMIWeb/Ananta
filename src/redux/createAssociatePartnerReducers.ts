@@ -60,7 +60,7 @@ const createAssociatePartnerReducersSlice = createSlice({
             state.error = null;
             state.data = {};
         },
-        resetStateCreateSubscriptions: (state) => {
+        resetStateCreateAssociatePartner: (state) => {
             state.loading = false;
             state.success = false;
             state.error = null;
@@ -99,7 +99,7 @@ const createAssociatePartnerReducersSlice = createSlice({
     },
 });
 
-export const { resetStateCreateClient, resetStateCreateSubscriptions } =
+export const { resetStateCreateClient, resetStateCreateAssociatePartner } =
     createAssociatePartnerReducersSlice.actions;
 
 export default createAssociatePartnerReducersSlice.reducer;
