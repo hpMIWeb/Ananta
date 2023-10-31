@@ -1,34 +1,51 @@
 @import "../../../../../styles/variables.scss";
 .formFieldWrapper {
-  margin-left: -8px !important;
-  margin-right: -8px !important;
+    margin-left: -8px !important;
+    margin-right: -8px !important;
 }
 .fieldPadding8 {
-  padding-left: 8px !important;
-  padding-right: 8px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
 }
 .avatarOutlineBoxWrapper {
-  height: 10.5rem;
-  width: 10.5rem;
-  border-radius: 50% !important;
-  padding: 4px;
-  border: 3px solid var(--falcon-thumbnail-bg);
-  margin: 0 auto;
+    height: 10.5rem;
+    width: 10.5rem;
+    border-radius: 50% !important;
+    padding: 4px;
+    border: 3px solid var(--falcon-thumbnail-bg);
+    margin: 0 auto;
 }
 .uploadLogoText {
-  margin-bottom: 0.3rem;
-  margin-top: 0.5rem !important;
-  display: block !important;
-  font-size: 0.875rem;
-  letter-spacing: 0.02em;
-  font-weight: 500 !important;
-  font-family: $btn-font-family;
-  color: var(--falcon-body-color);
-  line-height: 1.4;
+    margin-bottom: 0.3rem;
+    margin-top: 0.5rem !important;
+    display: block !important;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    font-weight: 500 !important;
+    font-family: $btn-font-family;
+    color: var(--falcon-body-color);
+    line-height: 1.4;
 }
 .deleteCardBtn {
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+}
+.itemNumber {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    // background-color: var(--falcon-body-color) !important;
+    // color: var(--falcon-input-bg) !important;
+
+    background-color: var(--primary-blue);
+    color: var(--white);
+    margin-bottom: 9px;
+    float: left;
 }
