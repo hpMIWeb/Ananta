@@ -18,7 +18,7 @@ const OwnerInfo = ({
     ]);
     const onFinish = (value: any) => {
         setFormValue(value);
-        onChange(5);
+        onChange(3);
     };
     // Set the locale
 
