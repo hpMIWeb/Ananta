@@ -21,6 +21,7 @@ const PaymentTabAddClient = ({
     setFormValue,
     clientValue,
     selectedClientData,
+    loading,
 }: any) => {
     const [paymentRowData, setPaymentRowData] = useState<IInstrument[]>([
         {
@@ -468,6 +469,7 @@ const PaymentTabAddClient = ({
                                 className={styles.nextBtn}
                                 type="primary"
                                 htmlType="submit"
+                                loading={loading}
                             >
                                 Save
                             </Button>

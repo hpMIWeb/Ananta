@@ -1,23 +1,17 @@
-import addSubImg from "../../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import styles from "./addClient.module.scss";
 import Tabs from "../../../../components/Tabs/Index";
 import Button from "../../../../components/Button/Index";
-import Icon from "../../../../components/Icon/Index";
 import SubscriptionTabAddClient from "./SubscriptionTabAddClient/Index";
 import { useEffect, useState } from "react";
 import OwnerInfo from "./OwnerInfo/Index";
 import PaymentTabAddClient from "./PaymentTabAddClient/Index";
 import { useNavigate, useParams } from "react-router-dom";
 import BasicInfo from "./BasicInfo/Index";
-import Branches from "./Branches/Index";
-import BankDetails from "./BankDetails/Index";
-import VaultTabAddClient from "./VaultTabAddClient/Index";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Form } from "antd";
 import { getClientsReducersApi } from "../../../../redux/getClientsReducers";
 import {
-    // resetSuccessState,
     createClientReducersApi,
     resetStateCreateClient,
 } from "../../../../redux/createClientReducers";
@@ -29,7 +23,7 @@ import { getPromocodeReducersListApi } from "../../../../redux/getPromocodeReduc
 import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 import Cookies from "js-cookie";
-import { adminClientTypeOption } from "../../../../utils/constant";
+import { RoleTypes, adminClientTypeOption } from "../../../../utils/constant";
 
 const AddClient = ({ selectedClientData }: any) => {
     const [activeTab, setActiveTab] = useState(1);
@@ -57,15 +51,9 @@ const AddClient = ({ selectedClientData }: any) => {
     const { loading, success } = useSelector(
         (state: any) => state.createClient
     );
-    const [firmInfoValid, setFirmInfoValid] = useState<boolean>(false);
-    const [ownerInfoValid, setOwnerInfoValid] = useState<boolean>(true);
-    const [subScriptionInfoValid, setSubScriptionInfoValid] =
-        useState<boolean>(true);
-    const [paymentInfoValid, setPaymentInfoValid] = useState<boolean>(true);
-    //dispatch(resetSuccessState()); // Reset success state
     let clientTypeOption = adminClientTypeOption;
 
-    if (roleType !== "superadmin") {
+    if (roleType !== RoleTypes.SuperAdmin) {
         clientTypeOption = [
             {
                 value: "regular",
@@ -113,20 +101,6 @@ const AddClient = ({ selectedClientData }: any) => {
         }
     }, [success]);
 
-    const operations = (
-        <div className={classNames("ms-auto z-index-1")}>
-            <Button
-                onClick={handleCancelClick}
-                className={classNames("greyBtn", styles.cancelAddClientBtn)}
-                style={{
-                    minWidth: 104,
-                }}
-            >
-                Cancel
-            </Button>
-        </div>
-    );
-
     const onChange = (key: number, formValue: any) => {
         if (key === 8) {
             const payload = { ...clientValue, ...formValue };
@@ -147,10 +121,6 @@ const AddClient = ({ selectedClientData }: any) => {
             }));
             setActiveTab(key);
         }
-    };
-
-    const onCancelClick = () => {
-        navigation("/caclient");
     };
 
     const items = [
@@ -216,6 +186,7 @@ const AddClient = ({ selectedClientData }: any) => {
                     clientType={clientType}
                     clientValue={clientValue}
                     selectedClientData={selectedClientData}
+                    loading={loading}
                 />
             ),
         },

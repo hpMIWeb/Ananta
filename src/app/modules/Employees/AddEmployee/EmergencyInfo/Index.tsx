@@ -13,7 +13,7 @@ const EmergencyInfo = ({
 }: any) => {
     const [form] = Form.useForm();
     const [emergencyInfoData, setEmergencyInfoData] = useState([
-        { type: "default", index: 0, name: "index0" },
+        { type: "default", _id: 1, name: "index0" },
     ]);
 
     const onFinish = (value: any) => {
@@ -32,13 +32,13 @@ const EmergencyInfo = ({
 
     const addMoreOwnerCard = () => {
         const existingData = form.getFieldsValue();
-        const newIndex = existingData.emergencyDetails.length;
+        const newIndex = existingData.emergencyDetails.length + 1;
         form.setFieldsValue({
             emergencyDetails: [
                 ...existingData.emergencyDetails,
                 {
                     type: "new",
-                    index: newIndex,
+                    _id: newIndex,
                     name: `index${newIndex}`,
                 },
             ],
@@ -53,8 +53,10 @@ const EmergencyInfo = ({
     }, [emergencyInfoData]);
 
     const onDeleteCardClick = (cardIndex: any) => {
+        console.log("cardIndex", cardIndex);
+        console.log("emergencyInfoData", emergencyInfoData);
         const newOwnerInfoData = emergencyInfoData.filter(
-            (a) => a.index !== cardIndex
+            (a) => a._id !== cardIndex
         );
         setEmergencyInfoData(newOwnerInfoData);
         form.setFieldsValue({
