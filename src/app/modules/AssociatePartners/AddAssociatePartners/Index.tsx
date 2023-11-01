@@ -50,7 +50,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
         (state: any) => state.getAssociatePartner.data
     );
     const { loading, success } = useSelector(
-        (state: any) => state.createClient
+        (state: any) => state.createAssociatePartner
     );
     const partnerTypeOption = [
         { value: "ca", label: "CA" },
@@ -77,7 +77,6 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     }, []);
 
     const setFormValue = (formValue: any) => {
-        console.log("formValue", formValue);
         setAssociatePartner((prev) => ({ ...prev, ...formValue }));
     };
 
@@ -103,6 +102,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     }, [getAssociatePartnerList, clientId, form]);
 
     useEffect(() => {
+        console.log("success", success);
         if (success) {
             dispatch(resetStateCreateAssociatePartner());
             navigation("/associatePartners");
@@ -114,16 +114,14 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             const payload = { ...associatePartnerValue, ...formValue };
 
             payload.partnerType = partnerType;
-            // TODO Remove static value
-            payload.fileNumber = "kok";
 
-            console.log("payload", payload);
-            // dispatch(
-            //     createAssociatePartnerReducersApi({
-            //         payload: payload,
-            //         associatePartnerId: "",
-            //     })
-            // );
+            dispatch(
+                createAssociatePartnerReducersApi({
+                    payload: payload,
+                    associatePartnerId: selectedAssociatePartnerData._id,
+                })
+            );
+            console.log("success", success);
         } else {
             setDisableTabArray((prevDisableTabArray) => ({
                 ...prevDisableTabArray,

@@ -17,7 +17,6 @@ const BankDetails = ({
     const [bankInfoData, setBankInfoData] = useState<any>([]);
     // const [bankData, setBankData] = useState<any>({ BANK: "" });
     const handleFormValuesChange = (changedValues: any, allValues: any) => {
-        console.log("changedValues");
         if (
             "ifscCode" in changedValues &&
             changedValues.ifscCode.length === 11
@@ -28,7 +27,8 @@ const BankDetails = ({
 
     useEffect(() => {
         if (selectedAssociatePartnerData) {
-            let bankDetails = selectedAssociatePartnerData.employeeBankDetails;
+            let bankDetails = selectedAssociatePartnerData.clientBankDetails[0];
+            console.log("bankDetails", bankDetails);
             form.setFieldsValue({
                 bankName: bankDetails.bankName,
                 accountNo: bankDetails.accountNo,
@@ -39,7 +39,7 @@ const BankDetails = ({
                 swiftCode: bankDetails.swiftCode,
             });
         }
-    }, []);
+    }, [selectedAssociatePartnerData]);
 
     const getBankDetails = async (ifscCode: any) => {
         try {
@@ -60,9 +60,9 @@ const BankDetails = ({
     };
     const onFinish = (value: any) => {
         console.log("bank Details", value);
-        setFormValue({ employeeBankDetails: value });
+        setFormValue({ clientBankDetails: [value] });
 
-        onChange(5);
+        onChange(5, { clientBankDetails: [value] });
     };
 
     const addMoreOwnerCard = () => {

@@ -601,20 +601,8 @@ const BasicInfo = ({
                         )}
                     >
                         <div>
-                            <label className="form-label">
-                                Group Name
-                                <sup className="text-danger fs--1">*</sup>
-                            </label>
-                            <Form.Item
-                                name="groupName"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Please Enter your Group Name!",
-                                    },
-                                ]}
-                            >
+                            <label className="form-label">Group Name</label>
+                            <Form.Item name="groupName">
                                 <Input
                                     placeholder="Group Name"
                                     className="customAddFormInputText"
