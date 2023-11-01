@@ -382,6 +382,8 @@ const SubscriptionTabAddClient = ({
                 subscriptionType: subscriptionType
                     ? subscriptionType
                     : "subscription",
+                startDate: dayjs(),
+                endDate: dayjs(),
             };
             setFormValue({ subscriptionDetails: finalFormValues });
         }

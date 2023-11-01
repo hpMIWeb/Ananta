@@ -74,13 +74,13 @@ const OwnerInfo = ({
     }, [ownerInfoData]);
 
     const onDeleteCardClick = (cardIndex: any) => {
-        const newOwnerInfoData = ownerInfoData.filter(
-            (a) => a.index !== cardIndex
-        );
-        setOwnerInfoData(newOwnerInfoData);
-        form.setFieldsValue({
-            ownerDetails: newOwnerInfoData,
-        });
+        // const newOwnerInfoData = ownerInfoData.filter(
+        //     (a) => a.index !== cardIndex
+        // );
+        // setOwnerInfoData(newOwnerInfoData);
+        // form.setFieldsValue({
+        //     ownerDetails: newOwnerInfoData,
+        // });
     };
 
     return (
@@ -114,6 +114,7 @@ const OwnerInfo = ({
                                         onDeleteCardClick={onDeleteCardClick}
                                         clientType={clientType}
                                     />
+                                    <Divider></Divider>
                                 </div>
                             ))}
                         </>

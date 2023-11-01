@@ -1,10 +1,8 @@
 import classNames from "classnames";
 import styles from "./subscriptionCard.module.scss";
 import Switch from "../Switch/Index";
-import Button from "../Button/Index";
 import Icon from "../Icon/Index";
 import SubscriptionCardPoint from "./SubscriptionCardPoint";
-import { useNavigate } from "react-router-dom";
 
 const SubscriptionCardContent = ({
     id,
@@ -25,7 +23,6 @@ const SubscriptionCardContent = ({
     handleViewBtnClick = () => {},
     handleProfileClick = () => {},
 }: any) => {
-    const navigation = useNavigate();
     const onChangeActive = (e: any) => {
         onChangeActiveClick(e, id);
     };
