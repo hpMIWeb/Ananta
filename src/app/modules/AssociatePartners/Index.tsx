@@ -255,6 +255,7 @@ const AssociatePartners = () => {
                         sortState={sortState}
                         showAddOn={true}
                         addonOption={addonOption}
+                        addonFilterState={addonFilterState}
                         initialAddOnsValue="All Partner"
                         setSortStateHandler={(options: any) => {
                             setSortState(options);
