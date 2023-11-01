@@ -40,6 +40,8 @@ const SubscriptionTabAddClient = ({
         (state: any) => state.getPromocodeList.data
     );
     const [subscriptionAddons, setSubscriptionAddons] = useState<any>([]);
+    const [promoCodeList, setPromoCodeList] = useState<any>(promoCardList);
+
     const [form] = Form.useForm();
     const startDate = Form.useWatch("startDate", form);
     const subscriptionType = Form.useWatch("subscriptionType", form);
@@ -68,12 +70,14 @@ const SubscriptionTabAddClient = ({
         setFilteredPromoCodes(filteredCodes);
     };
     useEffect(() => {
-        // @ts-ignore
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
     }, []);
 
     const showDrawer = () => {
+        dispatch(getAddonsReducersListApi());
+        dispatch(getPromocodeReducersListApi());
+        setPromoCodeList(promoCardList);
         setOpenPromoCodeDrawer(true);
     };
 
