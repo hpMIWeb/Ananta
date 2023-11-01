@@ -22,6 +22,7 @@ import RevenueProgram from "./RevenueProgram/Index";
 import SubscriptionTabAddClient from "./SubscriptionTabAddClient/Index";
 import PaymentTabAddClient from "./PaymentTabAddClient/Index";
 import Cookies from "js-cookie";
+import { RoleTypes } from "../../../../utils/constant";
 
 const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     const [activeTab, setActiveTab] = useState(1);
@@ -80,6 +81,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     }, []);
 
     const setFormValue = (formValue: any) => {
+        console.log("formValue", formValue);
         setAssociatePartner((prev) => ({ ...prev, ...formValue }));
     };
 
@@ -119,12 +121,13 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             // TODO Remove static value
             payload.fileNumber = "kok";
 
-            dispatch(
-                createAssociatePartnerReducersApi({
-                    payload: payload,
-                    associatePartnerId: "",
-                })
-            );
+            console.log("payload", payload);
+            // dispatch(
+            //     createAssociatePartnerReducersApi({
+            //         payload: payload,
+            //         associatePartnerId: "",
+            //     })
+            // );
         } else {
             setDisableTabArray((prevDisableTabArray) => ({
                 ...prevDisableTabArray,
@@ -265,7 +268,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                     <FormContentSkeletonLoader />
                 )}
                 <div className="row">
-                    {roleType === "client" && (
+                    {roleType === RoleTypes.CAAdmin && (
                         <div className={classNames("col-12 col-md-4 col-lg-4")}>
                             <div className="mb-3">
                                 <label

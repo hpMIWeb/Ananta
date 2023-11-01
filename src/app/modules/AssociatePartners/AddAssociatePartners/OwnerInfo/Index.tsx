@@ -10,7 +10,7 @@ const OwnerInfo = ({
     onChange,
     setFormValue,
     clientType,
-    selectedClientData,
+    selectedAssociatePartnerData,
 }: any) => {
     const [form] = Form.useForm();
     const [ownerInfoData, setOwnerInfoData] = useState([
@@ -45,10 +45,13 @@ const OwnerInfo = ({
     }, [ownerInfoData]);
 
     useEffect(() => {
-        if (selectedClientData && selectedClientData.ownerDetails) {
+        if (
+            selectedAssociatePartnerData &&
+            selectedAssociatePartnerData.ownerDetails
+        ) {
             // Loop through the array and format the date strings with 'moment'
-            const formattedOwnerDetails = selectedClientData.ownerDetails.map(
-                (owner: any) => {
+            const formattedOwnerDetails =
+                selectedAssociatePartnerData.ownerDetails.map((owner: any) => {
                     if (owner.birthDate) {
                         return {
                             ...owner,
@@ -56,8 +59,7 @@ const OwnerInfo = ({
                         };
                     }
                     return owner;
-                }
-            );
+                });
 
             setOwnerInfoData(formattedOwnerDetails);
             form.setFieldsValue({
