@@ -142,7 +142,7 @@ const AssociatePartners = () => {
                             <p className="mb-0 fs--1 description-label">
                                 Sales
                             </p>
-                            <p className="semiBold">0 / 0 GB</p>
+                            <p className="semiBold">Rs 0/-</p>
                         </>
                     ),
                 },

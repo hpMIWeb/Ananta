@@ -8,7 +8,7 @@ import Icon from "../../../../../components/Icon/Index";
 import React, { useState } from "react";
 import moment from "moment";
 
-const PaymentTabAddClient = ({ onChange, setFormValue }: any) => {
+const PaymentTabAddClient = ({ onChange, setFormValue, loading }: any) => {
     const [paymentRowData, setPaymentRowData] = useState([
         { type: "default", index: 0 },
     ]);
@@ -302,6 +302,7 @@ const PaymentTabAddClient = ({ onChange, setFormValue }: any) => {
                                 className={styles.nextBtn}
                                 type="primary"
                                 htmlType="submit"
+                                loading={loading}
                             >
                                 Next
                             </Button>

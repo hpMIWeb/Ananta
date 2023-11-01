@@ -53,8 +53,6 @@ const EmergencyInfo = ({
     }, [emergencyInfoData]);
 
     const onDeleteCardClick = (cardIndex: any) => {
-        console.log("cardIndex", cardIndex);
-        console.log("emergencyInfoData", emergencyInfoData);
         const newOwnerInfoData = emergencyInfoData.filter(
             (a) => a._id !== cardIndex
         );

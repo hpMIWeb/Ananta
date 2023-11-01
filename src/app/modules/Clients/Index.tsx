@@ -88,7 +88,6 @@ const Clients = () => {
             );
         }
 
-        console.log("cardInfo", cardInfo);
         const planName =
             cardInfo.subscriptionDetails?.subscriptionPlan?.plan_name;
         const storageSpace =

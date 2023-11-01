@@ -12,6 +12,7 @@ const BankDetails = ({
     onChange,
     setFormValue,
     selectedAssociatePartnerData,
+    loading,
 }: any) => {
     const [form] = Form.useForm();
     const [bankInfoData, setBankInfoData] = useState<any>([]);
@@ -28,7 +29,6 @@ const BankDetails = ({
     useEffect(() => {
         if (selectedAssociatePartnerData) {
             let bankDetails = selectedAssociatePartnerData.clientBankDetails[0];
-            console.log("bankDetails", bankDetails);
             form.setFieldsValue({
                 bankName: bankDetails.bankName,
                 accountNo: bankDetails.accountNo,
@@ -59,9 +59,7 @@ const BankDetails = ({
         } catch (error) {}
     };
     const onFinish = (value: any) => {
-        console.log("bank Details", value);
         setFormValue({ clientBankDetails: [value] });
-
         onChange(5, { clientBankDetails: [value] });
     };
 
@@ -335,6 +333,7 @@ const BankDetails = ({
                     showAdd={false}
                     addCardClick={addMoreOwnerCard}
                     onChange={onChange}
+                    loading={loading}
                 />
             </Form>
         </div>

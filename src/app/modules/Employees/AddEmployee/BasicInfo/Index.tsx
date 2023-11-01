@@ -101,7 +101,6 @@ const BasicInfo = ({
 
     useEffect(() => {
         if (selectedEmployeeData) {
-            console.log("asd", selectedEmployeeData);
             form.setFieldsValue({
                 employeeId: selectedEmployeeData.employeeId,
                 firstName: selectedEmployeeData.firstName,

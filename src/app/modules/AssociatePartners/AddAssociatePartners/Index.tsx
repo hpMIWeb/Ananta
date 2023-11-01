@@ -45,7 +45,8 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     const [partnerType, setPartnerType] = useState<string>("");
     const [partnerTypeLabel, setPartnerTypeLabel] = useState("Partner ");
     const [partnerCategory, setPartnerCategory] = useState("");
-
+    const [selectedAssociatePartnerId, setSelectedAssociatePartnerId] =
+        useState("");
     const getAssociatePartnerList = useSelector(
         (state: any) => state.getAssociatePartner.data
     );
@@ -93,16 +94,16 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
         }
 
         if (selectedAssociatePartnerData) {
+            setSelectedAssociatePartnerId(selectedAssociatePartnerData._id);
             setPartnerType(selectedAssociatePartnerData.partnerType);
 
             form.setFieldsValue({
-                partnerType: selectedAssociatePartnerData.employeeId,
+                partnerType: selectedAssociatePartnerData.partnerType,
             });
         }
     }, [getAssociatePartnerList, clientId, form]);
 
     useEffect(() => {
-        console.log("success", success);
         if (success) {
             dispatch(resetStateCreateAssociatePartner());
             navigation("/associatePartners");
@@ -118,10 +119,9 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             dispatch(
                 createAssociatePartnerReducersApi({
                     payload: payload,
-                    associatePartnerId: selectedAssociatePartnerData._id,
+                    associatePartnerId: selectedAssociatePartnerData?._id,
                 })
             );
-            console.log("success", success);
         } else {
             setDisableTabArray((prevDisableTabArray) => ({
                 ...prevDisableTabArray,
@@ -201,6 +201,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                         selectedAssociatePartnerData={
                             selectedAssociatePartnerData
                         }
+                        loading={loading}
                     />
                 ) : (
                     <PaymentTabAddClient
@@ -209,6 +210,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                         selectedAssociatePartnerData={
                             selectedAssociatePartnerData
                         }
+                        loading={loading}
                     />
                 ),
         },
@@ -261,8 +263,73 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                 {getAssociatePartnerListLoading && clientId && (
                     <FormContentSkeletonLoader />
                 )}
-                <div className="row">
-                    {roleType === RoleTypes.CAAdmin && (
+                <Form
+                    form={form}
+                    name="basic"
+                    autoComplete="off"
+                    requiredMark={false}
+                    className="customAddForm"
+                >
+                    <div className="row">
+                        {roleType === RoleTypes.CAAdmin && (
+                            <div
+                                className={classNames(
+                                    "col-12 col-md-4 col-lg-4"
+                                )}
+                            >
+                                <div className="mb-3">
+                                    <label
+                                        className={classNames(
+                                            "form-label",
+                                            styles.rowTitle
+                                        )}
+                                    >
+                                        Partners Category
+                                        <sup className="text-danger fs--1">
+                                            *
+                                        </sup>
+                                    </label>
+                                    <Form.Item
+                                        name="partnerCategory"
+                                        className="customAddClientSelectOptions"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please Select Category!",
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            options={[
+                                                {
+                                                    value: "sales_partner",
+                                                    label: "Sales Partner",
+                                                },
+                                                {
+                                                    value: "service_partner",
+                                                    label: "Service Partner",
+                                                },
+                                            ]}
+                                            placeholder="Select Type"
+                                            onChange={(value: any) => {
+                                                setPartnerCategory(value);
+                                                if (value === "sales_partner") {
+                                                    setPartnerTypeLabel(
+                                                        "Sales Partner"
+                                                    );
+                                                } else {
+                                                    setPartnerTypeLabel(
+                                                        "Service Partner"
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            </div>
+                        )}
+
                         <div className={classNames("col-12 col-md-4 col-lg-4")}>
                             <div className="mb-3">
                                 <label
@@ -271,86 +338,38 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                                         styles.rowTitle
                                     )}
                                 >
-                                    Partners Category
+                                    {partnerTypeLabel} Type
                                     <sup className="text-danger fs--1">*</sup>
                                 </label>
                                 <Form.Item
-                                    name="partnerCategory"
+                                    name="partnerType"
                                     className="customAddClientSelectOptions"
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Please Select Category!",
+                                            message:
+                                                "Please Enter Client Type!",
                                         },
                                     ]}
                                 >
                                     <Select
-                                        options={[
-                                            {
-                                                value: "sales_partner",
-                                                label: "Sales Partner",
-                                            },
-                                            {
-                                                value: "service_partner",
-                                                label: "Service Partner",
-                                            },
-                                        ]}
+                                        options={partnerTypeOption.map(
+                                            (partnerType: any) => ({
+                                                label: partnerType?.label,
+                                                value: partnerType?.value,
+                                            })
+                                        )}
                                         placeholder="Select Type"
-                                        onChange={(value: any) => {
-                                            setPartnerCategory(value);
-                                            if (value === "sales_partner") {
-                                                setPartnerTypeLabel(
-                                                    "Sales Partner"
-                                                );
-                                            } else {
-                                                setPartnerTypeLabel(
-                                                    "Service Partner"
-                                                );
-                                            }
-                                        }}
+                                        onChange={(value: any) =>
+                                            setPartnerType(value)
+                                        }
+                                        value={partnerType}
                                     />
                                 </Form.Item>
                             </div>
                         </div>
-                    )}
-
-                    <div className={classNames("col-12 col-md-4 col-lg-4")}>
-                        <div className="mb-3">
-                            <label
-                                className={classNames(
-                                    "form-label",
-                                    styles.rowTitle
-                                )}
-                            >
-                                {partnerTypeLabel} Type
-                                <sup className="text-danger fs--1">*</sup>
-                            </label>
-                            <Form.Item
-                                name="partnerType"
-                                className="customAddClientSelectOptions"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please Enter Client Type!",
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    options={partnerTypeOption.map(
-                                        (partnerType: any) => ({
-                                            label: partnerType?.label,
-                                            value: partnerType?.value,
-                                        })
-                                    )}
-                                    placeholder="Select Type"
-                                    onChange={(value: any) =>
-                                        setPartnerType(value)
-                                    }
-                                />
-                            </Form.Item>
-                        </div>
                     </div>
-                </div>
+                </Form>
                 {partnerType && partnerType !== "" && (
                     <Tabs
                         // tabBarExtraContent={operations}

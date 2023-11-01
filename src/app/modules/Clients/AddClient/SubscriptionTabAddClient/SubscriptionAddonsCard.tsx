@@ -208,8 +208,6 @@ const SubscriptionAddonsCard = memo(
 
         // page load effect
         useEffect(() => {
-            console.log("addonsCardList", addonsCardList);
-            console.log("addOnType", addOnType);
             const addOnList = addonsCardList
                 .filter((a: any) => a.add_on_type === addOnType)
                 .map((a: any) => ({

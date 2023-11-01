@@ -15,6 +15,12 @@ import { useAppDispatch } from "../../states/store";
 import { getAssociatePartnerReducersApi } from "../../../redux/getAssociatePartnerReducers";
 import SubProfile from "./SubProfile/Index";
 import AddAssociatePartners from "./AddAssociatePartners/Index";
+import { getRolesReducersApi } from "../../../redux/getRolesReducers";
+import { getRoleTypeReducersApi } from "../../../redux/getRoleTypeReducers";
+import { getDepartmentsReducersApi } from "../../../redux/getDepartmentsReducers";
+import { getClientsReducersApi } from "../../../redux/getClientsReducers";
+import { getTeamReducersApi } from "../../../redux/getTeamsReducer";
+import { getDesignationReducersApi } from "../../../redux/getDesignationReducers";
 
 const AssociatePartnerView = () => {
     const dispatch = useAppDispatch();
@@ -45,6 +51,12 @@ const AssociatePartnerView = () => {
         if (state) setAssociatePartnerId(state.id);
     }, []);
     useEffect(() => {
+        dispatch(getRolesReducersApi());
+        dispatch(getRoleTypeReducersApi());
+        dispatch(getDepartmentsReducersApi());
+        dispatch(getClientsReducersApi());
+        dispatch(getTeamReducersApi());
+        dispatch(getDesignationReducersApi());
         if (!getAssociatePartnerListSuccess) {
             dispatch(getAssociatePartnerReducersApi());
         }
@@ -90,11 +102,11 @@ const AssociatePartnerView = () => {
         {
             key: 3,
             label: `Sub Profile`,
-            // children: (
-            //   <SubProfile
-            //     selectedAssociatePartnerData={selectedAssociatePartnerData}
-            //   />
-            // ),
+            children: (
+                <SubProfile
+                    selectedAssociatePartnerData={selectedAssociatePartnerData}
+                />
+            ),
         },
         {
             key: 4,
@@ -139,7 +151,7 @@ const AssociatePartnerView = () => {
                                 styles.addPromoCodeLabel
                             )}
                         >
-                            {selectedAssociatePartnerData.firmName}s{" "}
+                            {selectedAssociatePartnerData.firmName}
                         </h5>
                     </div>
                     <div className={classNames("ms-auto z-index-1")}>
