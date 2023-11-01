@@ -45,6 +45,12 @@ const AssociatePartners = () => {
     const [associatePartnerData, setAssociatePartnerData] = useState<any>([]);
 
     useEffect(() => {
+        if (roleType === RoleTypes.CAAdmin) {
+            setAddonFilterValueState({
+                type: "partnerCategory",
+                value: "",
+            });
+        }
         dispatch(getAssociatePartnerReducersApi());
     }, []);
 

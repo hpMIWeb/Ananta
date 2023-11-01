@@ -7,6 +7,9 @@ import classNames from "classnames";
 import Icon from "../../../../../components/Icon/Index";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
 import { useDispatch, useSelector } from "react-redux";
+import Input from "../../../../../components/Input/Index";
+import { RoleTypes } from "../../../../../utils/constant";
+import Cookies from "js-cookie";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -16,11 +19,13 @@ const SubscriptionAddonsCard = memo(
         subscriptionAddons,
         setTotalAddonAmount,
     }: any) => {
-        const [selectNumber, setSelectNumber] = useState(1);
         const currentAddon = subscriptionAddons[cardIndex];
-
-        const [addOnType, setAddOnType] = useState("");
+        const [selectNumber, setSelectNumber] = useState(
+            currentAddon ? currentAddon.addOnQuantity : 1
+        );
+        const [addOnType, setAddOnType] = useState(currentAddon.addOnType);
         const [selectedAddonsPrice, setSelectedAddonPrice] = useState(0);
+        const roleType = Cookies.get("roleTypeName");
         const [selectAddonDetails, setSelectedAddonDetails] = useState<any>(
             {} as any
         );
@@ -30,18 +35,110 @@ const SubscriptionAddonsCard = memo(
             (state: any) => state.getAddonsList.data
         );
 
-        // const getAddOnsList = () => {
-        //     return addonsCardList.filter(
-        //         (a: any) => a.add_on_type === addOnType
-        //     );
-        // };
+        const superAdminAddonType = [
+            {
+                value: "storage_space",
+                label: "Storage Space",
+            },
+            {
+                value: "No. Of Clients",
+                label: "No. Of Clients",
+            },
+            {
+                value: "No. Of Employees",
+                label: "No. Of Employees",
+            },
+            {
+                value: "No. Of Client Login",
+                label: "No. Of Client Login",
+            },
+            {
+                value: "No. Of Transactions",
+                label: "No. Of Transactions",
+            },
+            {
+                value: "Features List",
+                label: "Features List",
+            },
+        ];
+        const caAdminAddonType = [
+            {
+                value: "Storage Space",
+                label: "Storage Space",
+            },
+            {
+                value: "client",
+                label: "Clients",
+            },
+            {
+                value: "Office Users",
+                label: "Office Users",
+            },
+            {
+                value: "Client Users",
+                label: "Client Users",
+            },
+            {
+                value: "Vendor Users",
+                label: "Vendor Users",
+            },
+            {
+                value: "Transactional Credit",
+                label: "Transactional Credit",
+            },
+            {
+                value: "Branches",
+                label: "Branches",
+            },
+            {
+                value: "Feature",
+                label: "Feature",
+            },
+            {
+                value: "Turnover",
+                label: "Turnover",
+            },
+            {
+                value: "Sales And Purchase",
+                label: "Sales And Purchase",
+            },
+            {
+                value: "Credit And Debit notes",
+                label: "Credit And Debit notes",
+            },
+            {
+                value: "Receipt and payments",
+                label: "Receipt and payments",
+            },
+            {
+                value: "Contras",
+                label: "Contras",
+            },
+            {
+                value: "Journals",
+                label: "Journals",
+            },
+            {
+                value: "Stock Journals",
+                label: "Stock Journals",
+            },
+            {
+                value: "Transactional All",
+                label: "Transactional All",
+            },
+        ];
+
+        const addonTypeOption =
+            roleType === RoleTypes.SuperAdmin
+                ? superAdminAddonType
+                : caAdminAddonType;
 
         const handleQtyChange = (value: any) => {
             setSelectNumber(value);
             handleAddonChange(
                 cardIndex,
                 "addOnQuantity",
-                value,
+                selectNumber,
                 selectedAddonsPrice,
                 currentAddon.addOnPlanName,
                 setSelectedAddonDetails
@@ -63,37 +160,51 @@ const SubscriptionAddonsCard = memo(
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
-            //  setSelectedAddonPrice(selectedAddonData.price);
+
             setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
             handleAddonChange(
                 cardIndex,
                 "addOnPlans",
                 value,
-                selectedAddonsPrice,
+                selectedAddonData.price * selectNumber,
                 currentAddon.addOnPlanName
             );
         };
 
-        useEffect(() => {
-            // Recalculate the total price when either quantity or addon value changes
+        const handleAddOnRemove = (index: Number) => {
+            calculateTotal();
+            handleRemoveAddon(cardIndex);
+        };
+
+        const calculateTotal = () => {
             const selectedAddonData = addonsCardList.find(
                 (a: any) => a._id === currentAddon.addOnPlans
             );
             const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
+            const updatedAddon = {
+                ...currentAddon,
+                addOnPrice: addonPrice * selectNumber,
+            };
+
+            // Assuming subscriptionAddons is an array, update it with the updated addon object.
+            const updatedSubscriptionAddons = [...subscriptionAddons];
+            updatedSubscriptionAddons[cardIndex] = updatedAddon;
+
             setSelectedAddonPrice(addonPrice * selectNumber);
-            currentAddon.addonsPrice = addonPrice * selectNumber;
-            const total = subscriptionAddons.reduce(
-                (acc: any, addon: any) => acc + addon.addonsPrice,
+
+            const total = updatedSubscriptionAddons.reduce(
+                (acc: any, addon: any) => acc + addon.addOnPrice,
                 0
             );
-            setTotalAddonAmount(total);
-        }, [currentAddon.addOnPlans, selectNumber, subscriptionAddons]);
 
-        // const getAddOnsListOptions = getAddOnsList().map((a: any) => ({
-        //     value: a._id,
-        //     label: a.add_on_title,
-        // }));
+            setTotalAddonAmount(total);
+        };
+
+        useEffect(() => {
+            calculateTotal();
+            // Recalculate the total price when either quantity or addon value changes
+        }, [currentAddon.addOnPlans, selectNumber, subscriptionAddons]);
 
         // page load effect
         useEffect(() => {
@@ -104,20 +215,79 @@ const SubscriptionAddonsCard = memo(
                     label: a.add_on_title,
                 }));
             setAddOnListOpts(addOnList);
-        }, [addOnType]);
+        }, [addOnType, addonsCardList]);
 
         const handlerIncrease = () => {
-            setSelectNumber((prev) => prev + 1);
+            let newNumber = 0;
+            setSelectNumber((prev: number) => (newNumber = prev + 1));
+            handleAddonChange(
+                cardIndex,
+                "addOnQuantity",
+                newNumber,
+                selectedAddonsPrice,
+                currentAddon.addOnPlanName,
+                setSelectedAddonDetails
+            );
         };
 
         const handlerDecrease = () => {
-            setSelectNumber((prev) => prev - 1);
+            let newNumber = 0;
+            setSelectNumber((prev: number) => (newNumber = prev - 1));
+            handleAddonChange(
+                cardIndex,
+                "addOnQuantity",
+                newNumber,
+                selectedAddonsPrice,
+                currentAddon.addOnPlanName,
+                setSelectedAddonDetails
+            );
+        };
+
+        const generateAddonDetails = () => {
+            const priceSuffix = "/-";
+            const pricePrefix = " Rs ";
+
+            let addonStr =
+                selectAddonDetails.add_on_title +
+                " " +
+                selectAddonDetails.add_on_type +
+                " @ " +
+                pricePrefix +
+                selectAddonDetails.price +
+                priceSuffix;
+
+            let dayStr = "";
+
+            switch (selectAddonDetails.time_period_type) {
+                case "DAY": {
+                    dayStr =
+                        selectAddonDetails.time_period > 1 ? "Days" : "Day";
+                    break;
+                }
+                case "MONTH": {
+                    dayStr =
+                        selectAddonDetails.time_period > 1 ? "Months" : "Month";
+                    break;
+                }
+                default: {
+                    dayStr = selectAddonDetails.time_period_type;
+                    break;
+                }
+            }
+
+            const durationStr =
+                ", For " + selectAddonDetails.time_period + " " + dayStr;
+
+            const priceStr =
+                ", " + pricePrefix + selectedAddonsPrice + priceSuffix;
+
+            return addonStr.concat(durationStr).concat(priceStr);
         };
 
         return (
             <div className="row g-3 js-addons-row">
                 <div className="col">
-                    <label className="form-label mb-1">Addon Plans</label>
+                    <label className="form-label mb-1">AddOn Plans</label>
                     <div className={classNames("row g-3")}>
                         <div className="col-6">
                             <Form.Item
@@ -132,44 +302,20 @@ const SubscriptionAddonsCard = memo(
                                 style={{ height: 33 }}
                             >
                                 <Select
-                                    options={[
-                                        {
-                                            value: "Storage Space",
-                                            label: "Storage Space",
-                                        },
-                                        {
-                                            value: "No. Of Clients",
-                                            label: "No. Of Clients",
-                                        },
-                                        {
-                                            value: "No. Of Employees",
-                                            label: "No. Of Employees",
-                                        },
-                                        {
-                                            value: "No. Of Client Login",
-                                            label: "No. Of Client Login",
-                                        },
-                                        {
-                                            value: "No. Of Transactions",
-                                            label: "No. Of Transactions",
-                                        },
-                                        {
-                                            value: "Features List",
-                                            label: "Features List",
-                                        },
-                                    ]}
+                                    options={addonTypeOption}
                                     onChange={(e: any) => {
                                         handleAddonTypeChange(e);
                                         setAddOnType(e);
                                     }}
                                     showSearch
                                     placeholder="Select Type"
+                                    value={currentAddon.addOnType}
                                 />
                             </Form.Item>
                         </div>
                         <div className="col-6">
                             <Form.Item
-                                // name="addOnPlans" //TODO: need to check this - due to this Id display as value
+                                //  name="addOnPlans" //TODO: need to check this - due to this Id display as value
                                 className="customAddClientSelectOptions formItemSelect33"
                                 rules={[
                                     {
@@ -180,18 +326,12 @@ const SubscriptionAddonsCard = memo(
                                 ]}
                             >
                                 <Select
-                                    options={
-                                        // getAddOnsListOptions &&
-                                        // getAddOnsListOptions.length > 0
-                                        //     ? getAddOnsListOptions
-                                        //     : []
-                                        addOnListOpts
-                                    }
-                                    // showSearch
+                                    options={addOnListOpts}
                                     onChange={(e: any) =>
                                         handleAddonPlanChange(e)
                                     }
-                                    placeholder="Select Addons"
+                                    placeholder="Select AddOn"
+                                    value={currentAddon.addOnPlans}
                                 />
                             </Form.Item>
                         </div>
@@ -207,12 +347,13 @@ const SubscriptionAddonsCard = memo(
                                 >
                                     Qty
                                 </label>
-                                <Form.Item
-                                    //name="addOnQuantity" //TODO: Need to think on this - how to update the field on final submit button
-                                    initialValue={selectNumber}
-                                >
-                                    <InputNumber
-                                        style={{ width: 110 }}
+                                <Form.Item initialValue={selectNumber}>
+                                    <Input
+                                        style={{
+                                            width: 110,
+                                            marginTop: "2px",
+                                            border: "none",
+                                        }}
                                         onKeyPress={(event: any) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
@@ -242,7 +383,6 @@ const SubscriptionAddonsCard = memo(
                                         value={selectNumber}
                                         onChange={(e: any) => {
                                             handleQtyChange(e);
-                                            // setSelectNumber(e);
                                         }}
                                         min={0}
                                         max={100}
@@ -258,7 +398,9 @@ const SubscriptionAddonsCard = memo(
                                         styles.deleteCardBtn
                                     )}
                                     type="primary"
-                                    onClick={() => handleRemoveAddon(cardIndex)}
+                                    onClick={() => {
+                                        handleAddOnRemove(cardIndex);
+                                    }}
                                     danger
                                 >
                                     <Icon
@@ -270,17 +412,11 @@ const SubscriptionAddonsCard = memo(
                             </div>
                         </div>
                     </div>
-                    <div className="row g-0">
-                        <p className="semiBold" style={{ color: "#20c997" }}>
-                            {selectAddonDetails.add_on_title}
-                            {" @ RS "}
-                            {selectAddonDetails.price} /-{"   , For "}
-                            {selectAddonDetails.time_period}{" "}
-                            {selectAddonDetails.time_period_type}
-                        </p>
-                    </div>
                 </div>
-                <div className="col-auto align-self-center">
+                <div
+                    className="col-auto align-self-center"
+                    style={{ maxWidth: "150px", width: "100px" }}
+                >
                     <p
                         className={classNames(
                             "text-end mb-2",
@@ -290,6 +426,17 @@ const SubscriptionAddonsCard = memo(
                         Rs. {selectedAddonsPrice.toFixed(2)}/-
                     </p>
                 </div>
+                {selectAddonDetails.add_on_title &&
+                    selectAddonDetails.price && (
+                        <div
+                            className={classNames(
+                                "row g-0",
+                                styles.addonDetails
+                            )}
+                        >
+                            <p className="semiBold">{generateAddonDetails()}</p>
+                        </div>
+                    )}
             </div>
         );
     }

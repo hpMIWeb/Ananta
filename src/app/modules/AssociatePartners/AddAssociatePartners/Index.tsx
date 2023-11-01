@@ -29,13 +29,13 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     const [disableTabArray, setDisableTabArray] = useState({
         1: false,
         2: true,
-        3: true,
-        4: true,
+        3: false,
+        4: false,
     });
     const [associatePartnerValue, setAssociatePartner] = useState({});
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
-    const { clientId } = useParams();
+    const { associatePartnerId } = useParams();
     const [form] = Form.useForm();
     const roleType = Cookies.get("roleTypeName");
 
@@ -45,8 +45,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     const [partnerType, setPartnerType] = useState<string>("");
     const [partnerTypeLabel, setPartnerTypeLabel] = useState("Partner ");
     const [partnerCategory, setPartnerCategory] = useState("");
-    const [selectedAssociatePartnerId, setSelectedAssociatePartnerId] =
-        useState("");
+
     const getAssociatePartnerList = useSelector(
         (state: any) => state.getAssociatePartner.data
     );
@@ -86,22 +85,23 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     };
 
     useEffect(() => {
-        if (getAssociatePartnerList.length && clientId) {
+        if (getAssociatePartnerList.length && associatePartnerId) {
             const currentCardDetail = getAssociatePartnerList.find(
-                (s: any) => s._id === clientId
+                (s: any) => s._id === associatePartnerId
             );
             form.setFieldsValue(currentCardDetail);
         }
 
         if (selectedAssociatePartnerData) {
-            setSelectedAssociatePartnerId(selectedAssociatePartnerData._id);
             setPartnerType(selectedAssociatePartnerData.partnerType);
+            setPartnerCategory(selectedAssociatePartnerData.partnerCategory);
 
             form.setFieldsValue({
                 partnerType: selectedAssociatePartnerData.partnerType,
+                partnerCategory: selectedAssociatePartnerData.partnerCategory,
             });
         }
-    }, [getAssociatePartnerList, clientId, form]);
+    }, [getAssociatePartnerList, associatePartnerId, form]);
 
     useEffect(() => {
         if (success) {
@@ -115,6 +115,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             const payload = { ...associatePartnerValue, ...formValue };
 
             payload.partnerType = partnerType;
+            payload.partnerCategory = partnerCategory;
 
             dispatch(
                 createAssociatePartnerReducersApi({
@@ -182,6 +183,8 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                         selectedAssociatePartnerData={
                             selectedAssociatePartnerData
                         }
+                        partnerType={partnerType}
+                        associatePartnerValue={associatePartnerValue}
                     />
                 ),
         },
@@ -210,6 +213,8 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                         selectedAssociatePartnerData={
                             selectedAssociatePartnerData
                         }
+                        partnerType={partnerType}
+                        associatePartnerValue={associatePartnerValue}
                         loading={loading}
                     />
                 ),
@@ -260,7 +265,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             ) : null}
 
             <div className={styles.addClientDetailBox}>
-                {getAssociatePartnerListLoading && clientId && (
+                {getAssociatePartnerListLoading && associatePartnerId && (
                     <FormContentSkeletonLoader />
                 )}
                 <Form
@@ -324,6 +329,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                                                     );
                                                 }
                                             }}
+                                            value={partnerCategory}
                                         />
                                     </Form.Item>
                                 </div>

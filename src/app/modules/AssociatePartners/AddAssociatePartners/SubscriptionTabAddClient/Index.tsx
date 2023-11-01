@@ -1,4 +1,10 @@
-import { useEffect, useState } from "react";
+import {
+    JSXElementConstructor,
+    ReactElement,
+    ReactNode,
+    useEffect,
+    useState,
+} from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
@@ -15,8 +21,17 @@ import { JSX } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../states/store";
 import { Option } from "antd/es/mentions";
 import { toast } from "react-toastify";
+import { ClientType, RoleTypes } from "../../../../../utils/constant";
+import Cookies from "js-cookie";
+import dayjs from "dayjs";
 
-const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
+const SubscriptionTabAddClient = ({
+    onChange,
+    setFormValue,
+    partnerType,
+    associatePartnerValue,
+    selectedClientData,
+}: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
         (state: any) => state.getSubscriptionsListApi.data
@@ -25,19 +40,25 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         (state: any) => state.getPromocodeList.data
     );
     const [subscriptionAddons, setSubscriptionAddons] = useState<any>([]);
+    const [promoCodeList, setPromoCodeList] = useState<any>(promoCardList);
+
     const [form] = Form.useForm();
     const startDate = Form.useWatch("startDate", form);
     const subscriptionType = Form.useWatch("subscriptionType", form);
+    const subscriptionPlan = Form.useWatch("subscriptionPlan", form);
     const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
     const roundOff = Form.useWatch("roundOff", form) || 0;
     const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
-    const [totalAddonAmount, setTotalAddonAmount] = useState(0);
-    const [billingType, setBillingType] = useState<string>();
 
-    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [totalAddonAmount, setTotalAddonAmount] = useState(0);
+
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
     const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
+    const [selectedCouponId, setSelectedCouponId] = useState<string>("");
+    const [billingMethod, setBillingMethod] = useState<string>("subscription");
+    const [makeValidate, setMakeValidate] = useState(true);
     const [couponDiscount, setCouponDiscount] = useState<number>(0);
+    const roleType = Cookies.get("roleTypeName");
 
     // Search input change handler
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,12 +70,14 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
         setFilteredPromoCodes(filteredCodes);
     };
     useEffect(() => {
-        // @ts-ignore
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
     }, []);
 
     const showDrawer = () => {
+        dispatch(getAddonsReducersListApi());
+        dispatch(getPromocodeReducersListApi());
+        setPromoCodeList(promoCardList);
         setOpenPromoCodeDrawer(true);
     };
 
@@ -88,6 +111,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     };
 
     const cardDesc = (details: any) => {
+        const features = details.features || {};
         return [
             {
                 iconName: "time",
@@ -171,7 +195,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 descComponent: (
                     <>
                         <p className="mb-0 fs--1 description-label">Modules</p>
-                        {generateFeatureLists(Object.entries(details.features))}
+                        {generateFeatureLists(Object.entries(features))}
                     </>
                 ),
             },
@@ -197,10 +221,11 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
 
     const selectedSubscriptionPlan =
         subscriptionCardList.find(
-            (plan: any) => plan._id === subscriptionType
+            (plan: any) => plan._id === subscriptionPlan
         ) || {};
 
     const onValuesChange = (changedFields: any, allFields: any) => {
+        console.log("allFields", allFields);
         setSubscriptionValue(allFields);
     };
 
@@ -210,12 +235,41 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
             addOnPlans: "",
             addOnPlanName: "",
             addOnQuantity: 1,
-            addonsPrice: 0,
+            addOnPrice: 0,
         };
         setSubscriptionAddons((prevAddons: any) => [...prevAddons, newAddon]);
     };
 
-    const isPlanSelected = !!subscriptionValue.subscriptionType;
+    useEffect(() => {
+        if (selectedClientData && Object.keys(selectedClientData).length > 0) {
+            let subscriptionDetails = selectedClientData.subscriptionDetails;
+            const addons = subscriptionDetails?.addOns || [];
+            setBillingMethod(subscriptionDetails?.subscriptionType);
+            setSubscriptionValue({
+                subscriptionType: subscriptionDetails?.subscriptionType,
+                subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
+                startDate: dayjs(subscriptionDetails?.startDate),
+                endDate: dayjs(subscriptionDetails?.endDate),
+                promoCode: subscriptionDetails?.promoCode?._id,
+                roundOff: subscriptionDetails?.roundOff,
+            });
+            setSubscriptionAddons(addons);
+            setSelectedCoupon(subscriptionDetails.promoCode);
+            setSelectedCouponId(subscriptionDetails?.promoCode?._id);
+
+            form.setFieldsValue({
+                subscriptionType: subscriptionDetails?.subscriptionType,
+                subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
+                startDate: dayjs(subscriptionDetails?.startDate),
+                endDate: dayjs(subscriptionDetails?.endDate),
+                promoCode: subscriptionDetails?.promoCode?._id,
+                adminDiscount: subscriptionDetails.adminDiscount,
+                roundOff: subscriptionDetails.roundOff,
+            });
+        }
+    }, [selectedClientData]);
+
+    const isPlanSelected = !!subscriptionValue.subscriptionPlan;
     const period_type =
         selectedSubscriptionPlan.period_type === "DAY" ? "day" : "months";
 
@@ -225,15 +279,26 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
     );
 
     const taxableValue =
-        selectedSubscriptionPlan.price - adminDiscount - couponDiscount;
+        selectedSubscriptionPlan.price +
+        totalAddonAmount -
+        adminDiscount -
+        couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
-    const invoiceAmount = taxableValue + gstAmount + parseFloat(roundOff);
+    const invoiceAmount =
+        taxableValue +
+        gstAmount +
+        (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
     const handleRemoveAddon = (index: any) => {
         const updatedAddons = subscriptionAddons.filter(
             (_: any, i: any) => i !== index
         );
         setSubscriptionAddons(updatedAddons);
+
+        // Reset total addon amount in case of no addons
+        if (updatedAddons.length === 0) {
+            setTotalAddonAmount(0);
+        }
     };
 
     const handleAddonChange = (
@@ -249,7 +314,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                     return {
                         ...addon,
                         [field]: value,
-                        addonsPrice: priceValue,
+                        addOnPrice: priceValue,
                         planName: addOnPlanName,
                     };
                 }
@@ -257,52 +322,76 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
             }
         );
         setSubscriptionAddons(updatedAddons);
-        // if (updatedAddons) {
-        //     // const addOnTotalPrice = updatedAddons.reduce(
-        //     //     (acc: any, addon: any) => acc + addon.price,
-        //     //     0
-        //     // );
-            // }
     };
 
     const onFinish = (values: any) => {
-        const {
-            subscriptionType,
-            promoCode,
-            startDate,
-            adminDiscount,
-            roundOff,
-        } = values;
+        if (billingMethod === "subscription") {
+            const {
+                subscriptionType,
+                subscriptionPlan,
+                promocode,
+                startDate,
+                adminDiscount,
+                roundOff,
+            } = values;
 
-        const formattedAddons = subscriptionAddons.map((addon: any) => ({
-            addOnType: addon.addOnType,
-            addOnPlans: addon.addOnPlans,
-            addOnQuantity: addon.addOnQuantity,
-            addonsPrice: addon.price,
-        }));
+            const formattedAddons = subscriptionAddons.map((addon: any) => ({
+                addOnType: addon.addOnType,
+                addOnPlans: addon.addOnPlans,
+                addOnQuantity: addon.addOnQuantity,
+                addOnPrice: addon.addOnPrice,
+            }));
 
-        const period_type =
-            selectedSubscriptionPlan.period_type === "DAY" ? "day" : "months";
-        const monthAdded = startDate.add(
-            selectedSubscriptionPlan.period,
-            period_type
-        );
+            const period_type =
+                selectedSubscriptionPlan.period_type === "DAY"
+                    ? "day"
+                    : "months";
+            const monthAdded = startDate.add(
+                selectedSubscriptionPlan.period,
+                period_type
+            );
 
-        const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
-        const gstAmount = (taxableValue / 100) * 18;
-        const invoiceAmount = taxableValue + gstAmount + parseFloat(roundOff);
+            //const taxableValue = selectedSubscriptionPlan.price - adminDiscount;
+            const taxableValue =
+                selectedSubscriptionPlan.price +
+                totalAddonAmount -
+                (adminDiscount ?? 0) -
+                couponDiscount;
+            const gstAmount = (taxableValue / 100) * 18;
+            const invoiceAmount =
+                taxableValue +
+                gstAmount +
+                (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
 
-        const finalFormValues = {
-            subscriptionType,
-            addOns: formattedAddons,
-            promoCode,
-            startDate,
-            endDate: monthAdded,
-            adminDiscount,
-            invoicePrice: invoiceAmount,
-        };
+            const finalFormValues = {
+                subscriptionType: subscriptionType
+                    ? subscriptionType
+                    : "subscription",
+                subscriptionPlan,
+                addOns: formattedAddons,
+                promoCode:
+                    selectedCouponId && selectedCouponId !== ""
+                        ? selectedCouponId
+                        : undefined, // Pass promocode if available, or omit it if not
+                startDate,
+                endDate: monthAdded,
+                adminDiscount: adminDiscount ? adminDiscount : 0,
+                invoicePrice: Math.round(invoiceAmount),
+                roundOff: roundOff ? roundOff : 0,
+            };
 
-        setFormValue({ subscriptionDetails: finalFormValues });
+            setFormValue({ subscriptionDetails: finalFormValues });
+        } else {
+            const finalFormValues = {
+                subscriptionType: subscriptionType
+                    ? subscriptionType
+                    : "subscription",
+                startDate: dayjs(),
+                endDate: dayjs(),
+            };
+            setFormValue({ subscriptionDetails: finalFormValues });
+        }
+
         onChange(4);
     };
 
@@ -332,6 +421,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
 
     const applyCoupon = (coupon: any) => {
         setSelectedCoupon(coupon);
+        setSelectedCouponId(coupon._id);
         setOpenPromoCodeDrawer(false);
         if (coupon) {
             toast.success(`Coupon "${coupon.name}" applied successfully!`);
@@ -342,8 +432,8 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
 
     return (
         <Form
-            name="basic"
             form={form}
+            name="basic"
             initialValues={{ remember: true }}
             onFinish={onFinish}
             autoComplete="off"
@@ -359,356 +449,479 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                             styles.subscriptionFormWrapper
                         )}
                     >
-                        <div className="row g-3">
-                            <div
-                                className={classNames(
-                                    "col-6",
-                                    styles.subscriptionFormColumn
-                                )}
-                            >
-                                <div className="mb-2">
-                                    <label
-                                        className={classNames(
-                                            "form-label",
-                                            styles.subscriptionFormLabel
-                                        )}
-                                    >
-                                        Billing Method
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="billingType"
-                                        className="customAddClientSelectOptions"
-                                    >
-                                        <Select
-                                            options={[
-                                                {
-                                                    value: "subscription",
-                                                    label: "Subscription",
-                                                },
-                                                {
-                                                    value: "invoicing",
-                                                    label: "Invoicing",
-                                                },
-                                                {
-                                                    value: "pay_per_use",
-                                                    label: "Pay Per Use",
-                                                },
-                                            ]}
-                                            showSearch
-                                            placeholder="Select Billing Type"
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                        </div>{" "}
-                        <div className="row g-3">
-                            <div
-                                className={classNames(
-                                    "col",
-                                    styles.subscriptionFormColumn
-                                )}
-                            >
-                                <div className="mb-2">
-                                    <label
-                                        className={classNames(
-                                            "form-label",
-                                            styles.subscriptionFormLabel
-                                        )}
-                                    >
-                                        Subscription Plan
-                                        <sup className="text-danger fs--1">
-                                            *
-                                        </sup>
-                                    </label>
-                                    <Form.Item
-                                        name="subscriptionType"
-                                        className="customAddClientSelectOptions"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your Subscription Plan!",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            options={subscriptionCardList.map(
-                                                (s: any) => ({
-                                                    value: s._id,
-                                                    label: s.plan_name,
-                                                })
-                                            )}
-                                            showSearch
-                                            placeholder="Select Plan"
-                                        />
-                                    </Form.Item>
-                                </div>
-                            </div>
-                            <div className="col-auto align-self-center">
-                                <div className={styles.addCa}></div>
-                            </div>
-                            <div className="col-auto">
-                                {isPlanSelected && (
-                                    <p
-                                        className={classNames(
-                                            "text-end mb-2",
-                                            styles.subscriptionPrice
-                                        )}
-                                    >
-                                        Rs. {selectedSubscriptionPlan.price}/-
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        {[...subscriptionAddons].map(
-                            (addOns: any, index: number) => (
-                                <SubscriptionAddonsCard
-                                    key={index}
-                                    cardIndex={index}
-                                    handleAddonChange={handleAddonChange}
-                                    handleRemoveAddon={handleRemoveAddon}
-                                    subscriptionAddons={subscriptionAddons} // Pass the subscriptionAddons array
-                                    //totalAddonAmount={totalAddonAmount} // Pass the total addon amount
-                                    setTotalAddonAmount={setTotalAddonAmount} // Pass the function to update total
-                                />
-                            )
-                        )}
-                        {isPlanSelected && (
-                            <div className="d-flex mt-2">
-                                <div className="me-auto">
-                                    <Button
-                                        className={styles.addOwnerInfoBtn}
-                                        onClick={handleAddonClick}
-                                        type="primary"
-                                    >
-                                        <Icon
-                                            name="plus"
-                                            width={14.25}
-                                            height={16}
-                                        />
-                                        Add
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
-                        <hr className={styles.subscriptionLine} />
-                        {isPlanSelected && (
-                            <div className="row">
+                        {roleType === RoleTypes.CAAdmin && (
+                            <div className="row g-3">
                                 <div
                                     className={classNames(
-                                        "col-auto",
-                                        styles.subscriptionLineLeft
+                                        "col-6",
+                                        styles.subscriptionFormColumn
                                     )}
                                 >
-                                    <div className="d-flex align-items-center mb-3">
+                                    <div className="mb-2">
                                         <label
-                                            className="form-label form-label text-nowrap mt-1 me-2"
-                                            style={{ minWidth: 85, top: 0 }}
+                                            className={classNames(
+                                                "form-label",
+                                                styles.subscriptionFormLabel
+                                            )}
                                         >
-                                            Start Date
+                                            Billing Method
                                             <sup className="text-danger fs--1">
                                                 *
                                             </sup>
                                         </label>
                                         <Form.Item
-                                            name="startDate"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Please Enter Start Date!",
-                                                },
-                                            ]}
+                                            name="subscriptionType"
+                                            className="customAddClientSelectOptions"
                                         >
-                                            <DatePicker
-                                                placeholder="Start Date"
-                                                style={{
-                                                    maxWidth: 154,
-                                                    marginBottom: 0,
+                                            <Select
+                                                options={[
+                                                    {
+                                                        value: "subscription",
+                                                        label: "Subscription",
+                                                    },
+                                                    {
+                                                        value: "invoicing",
+                                                        label: "Invoicing",
+                                                    },
+                                                    {
+                                                        value: "pay_per_use",
+                                                        label: "Pay Per Use",
+                                                    },
+                                                ]}
+                                                showSearch
+                                                placeholder="Select Billing Type"
+                                                onChange={(value: string) => {
+                                                    setBillingMethod(value);
+                                                    if (
+                                                        value !== "subscription"
+                                                    ) {
+                                                        setMakeValidate(false);
+                                                    }
                                                 }}
-                                                className="customFormDatePicker"
-                                                format="DD/MM/YYYY"
                                             />
                                         </Form.Item>
                                     </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <label
-                                            className="form-label form-label text-nowrap mt-1 me-2"
-                                            style={{ minWidth: 85, top: 0 }}
-                                        >
-                                            End Date
-                                        </label>
-                                        <p
-                                            className={classNames(
-                                                "text-end mb-0",
-                                                styles.subscriptionPrice
-                                            )}
-                                        >
-                                            {monthAdded &&
-                                                monthAdded.format("YYYY-MM-DD")}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className={classNames(
-                                        "col",
-                                        styles.subscriptionLineRight
-                                    )}
-                                >
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                Total
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1"
-                                                    id="total"
-                                                >
-                                                    Rs.{" "}
-                                                    {selectedSubscriptionPlan.price +
-                                                        (subscriptionAddons &&
-                                                        subscriptionAddons.length >
-                                                            0
-                                                            ? totalAddonAmount
-                                                            : 0)}
-                                                    /-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p
-                                                className="text-end mb-1 promocode-link"
-                                                onClick={showDrawer}
-                                            >
-                                                Apply Promo Code
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1 success-text"
-                                                    id="total"
-                                                >
-                                                    -Rs. {couponDiscount}/-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                Admin Discount
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <Form.Item
-                                                    name="adminDiscount"
-                                                    className="customAddFormSelectOptions"
-                                                >
-                                                    <Input
-                                                        defaultValue={0}
-                                                        className="customAddFormInputText text-end"
-                                                    />
-                                                </Form.Item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr
-                                        className={styles.subscriptionLine}
-                                        style={{ marginTop: 0 }}
-                                    />
-
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                Taxable Value
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1"
-                                                    id="total"
-                                                >
-                                                    Rs. {taxableValue}/-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                GST @ 18%
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1"
-                                                    id="total"
-                                                >
-                                                    Rs. {gstAmount.toFixed(2)}/-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row rowPadding">
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                Round Off
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <Form.Item
-                                                    name="roundOff"
-                                                    className="customAddFormSelectOptions"
-                                                >
-                                                    <Input
-                                                        defaultValue={0}
-                                                        className="customAddFormInputText text-end"
-                                                    />
-                                                </Form.Item>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        style={{ marginTop: "-16px" }}
-                                        className="row rowPadding"
-                                    >
-                                        <div className="col">
-                                            <p className="text-end mb-1">
-                                                <b>Invoice Value</b>
-                                            </p>
-                                        </div>
-                                        <div className="col-auto">
-                                            <div style={{ width: 100 }}>
-                                                <p
-                                                    className="text-end mb-1"
-                                                    id="total"
-                                                >
-                                                    Rs.{" "}
-                                                    {invoiceAmount.toFixed(2)}/-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
+                        )}
+                        {billingMethod === "subscription" && ( // Conditionally render this section
+                            <>
+                                <div className="row g-3">
+                                    <div
+                                        className={classNames(
+                                            "col",
+                                            styles.subscriptionFormColumn
+                                        )}
+                                    >
+                                        <div className="mb-2">
+                                            <label
+                                                className={classNames(
+                                                    "form-label",
+                                                    styles.subscriptionFormLabel
+                                                )}
+                                            >
+                                                Subscription Plan
+                                                <sup className="text-danger fs--1">
+                                                    *
+                                                </sup>
+                                            </label>
+                                            <Form.Item
+                                                name="subscriptionPlan"
+                                                className="customAddClientSelectOptions"
+                                                rules={[
+                                                    {
+                                                        required: makeValidate,
+                                                        message:
+                                                            "Please Enter your Subscription Plan!",
+                                                    },
+                                                ]}
+                                            >
+                                                <Select
+                                                    options={subscriptionCardList.map(
+                                                        (s: any) => ({
+                                                            value: s._id,
+                                                            label: s.plan_name,
+                                                        })
+                                                    )}
+                                                    showSearch
+                                                    placeholder="Select Plan"
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    </div>
+                                    <div className="col-auto align-self-center">
+                                        <div className={styles.addCa}></div>
+                                    </div>
+                                    <div className="col-auto">
+                                        {isPlanSelected && (
+                                            <p
+                                                className={classNames(
+                                                    "text-end mb-2",
+                                                    styles.subscriptionPrice
+                                                )}
+                                            >
+                                                Rs.{" "}
+                                                {selectedSubscriptionPlan.price}
+                                                /-
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                {[...subscriptionAddons].map(
+                                    (addOns: any, index: number) => (
+                                        <SubscriptionAddonsCard
+                                            key={index}
+                                            cardIndex={index}
+                                            handleAddonChange={
+                                                handleAddonChange
+                                            }
+                                            handleRemoveAddon={
+                                                handleRemoveAddon
+                                            }
+                                            subscriptionAddons={
+                                                subscriptionAddons
+                                            } // Pass the subscriptionAddons array
+                                            //totalAddonAmount={totalAddonAmount} // Pass the total addon amount
+                                            setTotalAddonAmount={
+                                                setTotalAddonAmount
+                                            } // Pass the function to update total
+                                        />
+                                    )
+                                )}
+                                {isPlanSelected && (
+                                    <div className="d-flex mt-2">
+                                        <div className="me-auto">
+                                            <Button
+                                                className={
+                                                    styles.addOwnerInfoBtn
+                                                }
+                                                onClick={handleAddonClick}
+                                                type="primary"
+                                            >
+                                                <Icon
+                                                    name="plus"
+                                                    width={14.25}
+                                                    height={16}
+                                                />
+                                                Add AddOns
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                                <hr className={styles.subscriptionLine} />
+                                {isPlanSelected && (
+                                    <div className="row">
+                                        <div
+                                            className={classNames(
+                                                "col-auto",
+                                                styles.subscriptionLineLeft
+                                            )}
+                                        >
+                                            <div className="d-flex mb-3">
+                                                <label
+                                                    className="form-label form-label text-nowrap mt-2 me-2"
+                                                    style={{ minWidth: 85 }}
+                                                >
+                                                    Start Date
+                                                    <sup className="text-danger fs--1">
+                                                        *
+                                                    </sup>
+                                                </label>
+                                                <Form.Item
+                                                    name="startDate"
+                                                    rules={[
+                                                        {
+                                                            required:
+                                                                makeValidate,
+                                                            message:
+                                                                "Please Enter Start Date!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <DatePicker
+                                                        placeholder="Start Date"
+                                                        style={{
+                                                            maxWidth: 154,
+                                                            marginBottom: 0,
+                                                        }}
+                                                        className="customFormDatePicker"
+                                                        format="DD/MM/YYYY"
+                                                    />
+                                                </Form.Item>
+                                            </div>
+                                            <div className="d-flex align-items-center mb-3">
+                                                <label
+                                                    className="form-label form-label text-nowrap mt-1 me-2"
+                                                    style={{
+                                                        minWidth: 85,
+                                                        top: 0,
+                                                    }}
+                                                >
+                                                    End Date
+                                                </label>
+                                                <p
+                                                    className={classNames(
+                                                        "text-end mb-0",
+                                                        styles.subscriptionPrice
+                                                    )}
+                                                >
+                                                    {monthAdded
+                                                        ? monthAdded.format(
+                                                              "DD/MM/YYYY"
+                                                          )
+                                                        : "--"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            className={classNames(
+                                                "col",
+                                                styles.subscriptionLineRight
+                                            )}
+                                        >
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        Total
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.{" "}
+                                                            {selectedSubscriptionPlan.price +
+                                                                (subscriptionAddons &&
+                                                                subscriptionAddons.length >
+                                                                    0
+                                                                    ? totalAddonAmount
+                                                                    : 0)}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="row rowPadding">
+                                                <div className="col right-align-cell">
+                                                    <a
+                                                        className="text-end mb-1 promocode-link"
+                                                        onClick={showDrawer}
+                                                    >
+                                                        Apply Promo Code
+                                                    </a>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1 success-text"
+                                                            id="total"
+                                                        >
+                                                            -Rs.{" "}
+                                                            {couponDiscount}/-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        Admin Discount
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <Form.Item
+                                                            name="adminDiscount"
+                                                            className="customAddFormSelectOptions"
+                                                        >
+                                                            <Input
+                                                                onKeyPress={(
+                                                                    event: any
+                                                                ) => {
+                                                                    if (
+                                                                        !/[0-9]/.test(
+                                                                            event.key
+                                                                        )
+                                                                    ) {
+                                                                        event.preventDefault();
+                                                                    }
+                                                                }}
+                                                                defaultValue={0}
+                                                                className="customAddFormInputText text-end"
+                                                                maxLength="10"
+                                                            />
+                                                        </Form.Item>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr
+                                                className={
+                                                    styles.subscriptionLine
+                                                }
+                                                style={{ marginTop: 0 }}
+                                            />
+
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        Taxable Value
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs. {taxableValue}/-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {associatePartnerValue.state !==
+                                                "Gujarat" && (
+                                                <div className="row rowPadding">
+                                                    <div className="col">
+                                                        <p className="text-end mb-1">
+                                                            GST @ 18%
+                                                        </p>
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <div
+                                                            style={{
+                                                                width: 100,
+                                                            }}
+                                                        >
+                                                            <p
+                                                                className="text-end mb-1"
+                                                                id="total"
+                                                            >
+                                                                Rs.
+                                                                {Math.round(
+                                                                    gstAmount
+                                                                )}
+                                                                /-
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {associatePartnerValue.state ===
+                                                "Gujarat" && (
+                                                <>
+                                                    <div className="row rowPadding">
+                                                        <div className="col">
+                                                            <p className="text-end mb-1">
+                                                                SGST @ 9%
+                                                            </p>
+                                                        </div>
+                                                        <div className="col-auto">
+                                                            <div
+                                                                style={{
+                                                                    width: 100,
+                                                                }}
+                                                            >
+                                                                <p
+                                                                    className="text-end mb-1"
+                                                                    id="total"
+                                                                >
+                                                                    Rs.
+                                                                    {Math.round(
+                                                                        (taxableValue /
+                                                                            100) *
+                                                                            9
+                                                                    )}
+                                                                    /-
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row rowPadding">
+                                                        <div className="col">
+                                                            <p className="text-end mb-1">
+                                                                CGST @ 9%
+                                                            </p>
+                                                        </div>
+                                                        <div className="col-auto">
+                                                            <div
+                                                                style={{
+                                                                    width: 100,
+                                                                }}
+                                                            >
+                                                                <p
+                                                                    className="text-end mb-1"
+                                                                    id="total"
+                                                                >
+                                                                    Rs.
+                                                                    {Math.round(
+                                                                        (taxableValue /
+                                                                            100) *
+                                                                            9
+                                                                    )}
+                                                                    /-
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        Round Off
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <Form.Item
+                                                            name="roundOff"
+                                                            className="customAddFormSelectOptions"
+                                                        >
+                                                            <Input
+                                                                defaultValue={0}
+                                                                className="customAddFormInputText text-end"
+                                                                maxLength={6}
+                                                            />
+                                                        </Form.Item>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                style={{ marginTop: "-16px" }}
+                                                className="row rowPadding"
+                                            >
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        <b>Invoice Value</b>
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div style={{ width: 100 }}>
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.{" "}
+                                                            {Math.round(
+                                                                invoiceAmount
+                                                            )}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                     <div
@@ -762,7 +975,7 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                             <Button
                                 style={{ minWidth: 104, marginRight: 12 }}
                                 className="greyBtn"
-                                onClick={() => onChange(4)}
+                                onClick={() => onChange(3)}
                             >
                                 Previous
                             </Button>
@@ -782,7 +995,6 @@ const SubscriptionTabAddClient = ({ onChange, setFormValue }: any) => {
                 placement="right"
                 onClose={onClose}
                 open={openPromoCodeDrawer}
-                className={classNames(styles.couponList)}
             >
                 <Row
                     gutter={[8, 8]}
