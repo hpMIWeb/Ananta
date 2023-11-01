@@ -106,6 +106,7 @@ const EmergencyInfo = ({
                             loading={loading}
                             addCardClick={addMoreOwnerCard}
                             onChange={onChange}
+                            previousTab={4}
                             primaryButtonText="Save"
                         />
                     </div>

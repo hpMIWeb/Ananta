@@ -493,6 +493,7 @@ const OrganisationDetails = ({
                     addCardClick={addMoreOwnerCard}
                     onChange={onChange}
                     showAdd={false}
+                    previousTab={1}
                 />
             </Form>
         </div>

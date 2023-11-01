@@ -333,6 +333,7 @@ const BankDetails = ({
                     showAdd={false}
                     addCardClick={addMoreOwnerCard}
                     onChange={onChange}
+                    previousTab={3}
                 />
             </Form>
         </div>

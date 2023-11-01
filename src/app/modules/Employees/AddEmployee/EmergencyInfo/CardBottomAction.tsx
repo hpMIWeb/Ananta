@@ -8,6 +8,7 @@ const CardBottomAction = ({
     showAdd = true,
     loading,
     primaryButtonText,
+    previousTab = 1,
 }: any) => {
     return (
         <div className="d-flex">
@@ -27,7 +28,7 @@ const CardBottomAction = ({
                 <Button
                     style={{ minWidth: 104, marginRight: 12 }}
                     className="greyBtn"
-                    onClick={() => onChange(1)}
+                    onClick={() => onChange(previousTab)}
                 >
                     Previous
                 </Button>

@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import Input from "../../../../../components/Input/Index";
 import { SearchOutlined } from "@ant-design/icons";
 
-import { CloseCircleOutlined } from "@ant-design/icons";
 const AssignClient = ({
     onChange,
     setEmployeeInfo,
@@ -21,7 +20,6 @@ const AssignClient = ({
     const [modalOpen, setModalOpen] = useState(false);
     const onFinish = () => {
         setEmployeeInfo({ assignClients: selectedClientIDs });
-
         onChange(4);
     };
 
