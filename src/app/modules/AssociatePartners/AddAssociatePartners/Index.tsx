@@ -63,10 +63,6 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             label: "Tax Consultant",
         },
         {
-            value: "business_enterprise",
-            label: "Business Enterprise",
-        },
-        {
             value: "other",
             label: "Other",
         },
