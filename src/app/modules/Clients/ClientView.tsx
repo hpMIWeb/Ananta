@@ -22,7 +22,7 @@ const ClientView = () => {
     const { state } = useLocation();
     const [form] = Form.useForm();
 
-    const [activeTab, setActiveTab] = useState(1);
+    const [activeTab, setActiveTab] = useState(2);
     const [selectedClientData, setSelectedClientData] = useState<any>({});
 
     const getClientsList = useSelector((state: any) => state.getClients.data);
@@ -137,7 +137,7 @@ const ClientView = () => {
                 {!(getClientsLoading && clientId) && (
                     <Tabs
                         className="subscriptionTabs"
-                        defaultActiveKey="1"
+                        defaultActiveKey="2 "
                         activeKey={activeTab}
                         items={items}
                         onChange={onChange}
