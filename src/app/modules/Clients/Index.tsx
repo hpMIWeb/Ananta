@@ -88,8 +88,11 @@ const Clients = () => {
             );
         }
 
+        console.log("cardInfo", cardInfo);
         const planName =
             cardInfo.subscriptionDetails?.subscriptionPlan?.plan_name;
+        const storageSpace =
+            cardInfo.subscriptionDetails?.subscriptionPlan?.storage_space;
 
         if (roleType === RoleTypes.SuperAdmin) {
             //super admin code
@@ -136,7 +139,7 @@ const Clients = () => {
                             <p className="mb-0 fs--1 description-label">
                                 Storage
                             </p>
-                            <p className="semiBold">0 / 0 GB</p>
+                            <p className="semiBold">0 / {storageSpace} GB</p>
                         </>
                     ),
                 },
