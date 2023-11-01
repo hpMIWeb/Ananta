@@ -53,7 +53,6 @@ const SubscriptionTabAddClient = ({
     const [filteredPromoCodes, setFilteredPromoCodes] = useState(promoCardList);
     const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
     const [selectedCouponId, setSelectedCouponId] = useState<string>("");
-    const [st, setST] = useState<string>("");
     const [billingMethod, setBillingMethod] = useState<string>("subscription");
     const [makeValidate, setMakeValidate] = useState(true);
     const [couponDiscount, setCouponDiscount] = useState<number>(0);
@@ -240,7 +239,7 @@ const SubscriptionTabAddClient = ({
         if (selectedClientData && Object.keys(selectedClientData).length > 0) {
             let subscriptionDetails = selectedClientData.subscriptionDetails;
             const addons = subscriptionDetails?.addOns || [];
-
+            setBillingMethod(subscriptionDetails?.subscriptionType);
             setSubscriptionValue({
                 subscriptionType: subscriptionDetails?.subscriptionType,
                 subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,

@@ -64,6 +64,7 @@ const PaymentTabAddClient = ({
     }, []);
 
     useEffect(() => {
+        console.log("billingMethod", billingMethod);
         if (billingMethod !== "subscription") {
             setMakeValidate(false);
         }
