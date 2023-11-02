@@ -158,6 +158,7 @@ const AddClient = ({ selectedClientData }: any) => {
                     onChange={onChange}
                     setFormValue={setFormValue}
                     clientType={clientType}
+                    clientValue={clientValue}
                     selectedClientData={selectedClientData}
                 />
             ),
