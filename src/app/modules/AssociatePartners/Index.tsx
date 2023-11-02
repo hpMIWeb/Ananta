@@ -70,6 +70,7 @@ const AssociatePartners = () => {
         navigation(`view-associatePartners/`, { state: { id: id } });
     };
     const superAdminAddonOption = [
+        { value: "", label: "All Partner" },
         { value: "ca", label: "CA" },
         {
             value: "accountant",
@@ -86,6 +87,7 @@ const AssociatePartners = () => {
     ];
 
     const caAdminAddonOption = [
+        { value: "", label: "All Partner" },
         { value: "sales_partner", label: "Sales Partner" },
         { value: "service_partner", label: "Service Partner" },
     ];
