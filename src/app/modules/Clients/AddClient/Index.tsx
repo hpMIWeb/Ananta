@@ -105,12 +105,13 @@ const AddClient = ({ selectedClientData }: any) => {
         if (key === 8) {
             const payload = { ...clientValue, ...formValue };
             payload.clientType = clientType;
-            dispatch(
-                createClientReducersApi({
-                    payload: payload,
-                    clientId: selectedClientId,
-                })
-            );
+            console.log("payload", payload);
+            // dispatch(
+            //     createClientReducersApi({
+            //         payload: payload,
+            //         clientId: selectedClientId,
+            //     })
+            // );
             if (success) {
                 navigation("/caclient"); // Replace with your actual route
             }
