@@ -830,7 +830,7 @@ const SubscriptionTabAddClient = ({
                                                 </div>
                                             )}
 
-                                            {clientValue.state ===
+                                            {/* {clientValue.state ===
                                                 "Gujarat" && (
                                                 <>
                                                     <div className="row rowPadding">
@@ -888,7 +888,34 @@ const SubscriptionTabAddClient = ({
                                                         </div>
                                                     </div>
                                                 </>
-                                            )}
+                                            )} */}
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        GST @ 18%
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div
+                                                        style={{
+                                                            width: 100,
+                                                        }}
+                                                    >
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.
+                                                            {Math.round(
+                                                                (taxableValue /
+                                                                    100) *
+                                                                    18
+                                                            )}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div className="row rowPadding">
                                                 <div className="col">

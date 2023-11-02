@@ -181,7 +181,10 @@ const OwnerInfoCardBox = ({
                                     placeholder={<span>Select Gender</span>}
                                     options={[
                                         { value: "male", label: "Male" },
-                                        { value: "female", label: "Female" },
+                                        {
+                                            value: "female",
+                                            label: "Female",
+                                        },
                                         { value: "Other", label: "Other" },
                                     ]}
                                     onChange={(value: any) =>
