@@ -25,20 +25,22 @@ const OwnerInfoCardBox = ({
             <div>
                 <div className={styles.itemNumber}>{displayNumber + 1}</div>
                 <div>
-                    <Button
-                        className={classNames(
-                            "cancelBtn",
-                            styles.deleteCardBtn
-                        )}
-                        type="primary"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => {
-                            onDelete(_id);
-                        }}
-                    >
-                        Delete
-                    </Button>
+                    {displayNumber !== 0 && (
+                        <Button
+                            className={classNames(
+                                "cancelBtn",
+                                styles.deleteCardBtn
+                            )}
+                            type="primary"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => {
+                                onDelete(_id);
+                            }}
+                        >
+                            Delete
+                        </Button>
+                    )}
                 </div>
             </div>
             <div className="col-12 col-md-9 col-lg-9">
@@ -408,6 +410,7 @@ const OwnerInfoCardBox = ({
                             // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             // beforeUpload={beforeUpload}
                             // onChange={handleChange}
+                            accept="image/png, image/jpeg"
                         >
                             <img
                                 src={uploadPhoto}
