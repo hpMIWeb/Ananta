@@ -2,14 +2,6 @@ export const HIDE_LAYOUT_ROUTES = ["/login", "/reset-password"];
 
 export const firmTypes = [
     {
-        value: "Partnership",
-        label: "Partnership",
-    },
-    {
-        value: "Private",
-        label: "Private",
-    },
-    {
         value: "proprietor",
         label: "Proprietor",
     },
