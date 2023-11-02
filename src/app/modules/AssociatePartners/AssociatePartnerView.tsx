@@ -28,7 +28,7 @@ const AssociatePartnerView = () => {
     const { state } = useLocation();
     const [form] = Form.useForm();
 
-    const [activeTab, setActiveTab] = useState(5);
+    const [activeTab, setActiveTab] = useState(1);
     const [selectedAssociatePartnerData, setSelectedAssociatePartnerData] =
         useState<any>({});
 
@@ -65,10 +65,6 @@ const AssociatePartnerView = () => {
     const handleCancelClick = () => {
         navigation("/associatePartners");
     };
-
-    // const setEmployeeInfo = (value: any) => {
-    //   setEmployeeDetails((prev) => ({ ...prev, ...value }));
-    // };
 
     useEffect(() => {
         if (getAssociatePartnerList.length && associatePartnerId) {

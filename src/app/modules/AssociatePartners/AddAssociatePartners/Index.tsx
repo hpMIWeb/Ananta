@@ -29,8 +29,8 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     const [disableTabArray, setDisableTabArray] = useState({
         1: false,
         2: true,
-        3: false,
-        4: false,
+        3: true,
+        4: true,
     });
     const [associatePartnerValue, setAssociatePartner] = useState({});
     const dispatch = useAppDispatch();
@@ -69,10 +69,6 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
     ];
 
     useEffect(() => {
-        //TODO:: Need to convert in GET API
-        if (!getAssociatePartnerList) {
-            dispatch(getClientsReducersApi());
-        }
         dispatch(getSubscriptionsListApi());
     }, []);
 
@@ -93,6 +89,10 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
         }
 
         if (selectedAssociatePartnerData) {
+            console.log(
+                "selectedAssociatePartnerData.partnerCategory",
+                selectedAssociatePartnerData
+            );
             setPartnerType(selectedAssociatePartnerData.partnerType);
             setPartnerCategory(selectedAssociatePartnerData.partnerCategory);
 
@@ -163,11 +163,11 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             key: 3,
             disabled: disableTabArray[3],
             label:
-                partnerTypeLabel !== "Service Partner"
+                partnerCategory !== "service_partner"
                     ? `Revenue Program`
                     : `Billing`,
             children:
-                partnerTypeLabel !== "Service Partner" ? (
+                partnerCategory !== "service_partner" ? (
                     <RevenueProgram
                         onChange={onChange}
                         setFormValue={setFormValue}
@@ -184,6 +184,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                             selectedAssociatePartnerData
                         }
                         partnerType={partnerType}
+                        partnerCategory={partnerCategory}
                         associatePartnerValue={associatePartnerValue}
                     />
                 ),
@@ -192,11 +193,11 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
             key: 4,
             disabled: disableTabArray[4],
             label:
-                partnerTypeLabel !== "Service Partner"
+                partnerCategory !== "service_partner"
                     ? `Bank Details`
                     : `Payment`,
             children:
-                partnerTypeLabel !== "Service Partner" ? (
+                partnerCategory !== "service_partner" ? (
                     <BankDetails
                         onChange={onChange}
                         setFormValue={setFormValue}

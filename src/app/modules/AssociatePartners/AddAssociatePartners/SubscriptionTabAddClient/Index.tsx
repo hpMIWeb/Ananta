@@ -1,12 +1,6 @@
-import {
-    JSXElementConstructor,
-    ReactElement,
-    ReactNode,
-    useEffect,
-    useState,
-} from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Button from "../../../../../components/Button/Index";
@@ -17,20 +11,18 @@ import SubscriptionCardPoint from "../../../../../components/SubscriptionCard/Su
 import SubscriptionAddonsCard from "./SubscriptionAddonsCard";
 import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
 import { getPromocodeReducersListApi } from "../../../../../redux/getPromocodeReducers";
-import { JSX } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../states/store";
-import { Option } from "antd/es/mentions";
 import { toast } from "react-toastify";
-import { ClientType, RoleTypes } from "../../../../../utils/constant";
+import { RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
 
 const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
-    partnerType,
     associatePartnerValue,
-    selectedClientData,
+    partnerCategory,
+    selectedAssociatePartnerData,
 }: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
@@ -241,8 +233,13 @@ const SubscriptionTabAddClient = ({
     };
 
     useEffect(() => {
-        if (selectedClientData && Object.keys(selectedClientData).length > 0) {
-            let subscriptionDetails = selectedClientData.subscriptionDetails;
+        if (
+            selectedAssociatePartnerData &&
+            Object.keys(selectedAssociatePartnerData).length > 0
+        ) {
+            let subscriptionDetails =
+                selectedAssociatePartnerData.subscriptionDetails;
+            console.log("subscriptionDetails", subscriptionDetails);
             const addons = subscriptionDetails?.addOns || [];
             setBillingMethod(subscriptionDetails?.subscriptionType);
             setSubscriptionValue({
@@ -267,7 +264,7 @@ const SubscriptionTabAddClient = ({
                 roundOff: subscriptionDetails.roundOff,
             });
         }
-    }, [selectedClientData]);
+    }, [selectedAssociatePartnerData]);
 
     const isPlanSelected = !!subscriptionValue.subscriptionPlan;
     const period_type =
