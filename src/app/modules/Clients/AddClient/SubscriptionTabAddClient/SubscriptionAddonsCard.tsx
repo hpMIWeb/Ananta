@@ -281,7 +281,7 @@ const SubscriptionAddonsCard = memo(
             const priceStr =
                 ", " + pricePrefix + selectedAddonsPrice + priceSuffix;
 
-            return addonStr.concat(durationStr).concat(priceStr);
+            return addonStr.concat(durationStr);
         };
 
         return (
