@@ -31,12 +31,15 @@ const Clients = () => {
         type: "clientType",
         value: "",
     });
+
     const { loading, success } = useSelector(
         (state: any) => state.createClient
     );
+
     const [displayedPaginationItems, setPaginationDisplayedItems] = useState(
         []
     );
+
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
     const [currentPageSize, setCurrentPageSize] = useState<number>(5);
     const [searchQuery, setSearchQuery] = useState<string>("");
