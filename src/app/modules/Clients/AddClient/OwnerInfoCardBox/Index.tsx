@@ -182,10 +182,10 @@ const OwnerInfoCardBox = ({
                                         { value: "female", label: "Female" },
                                         { value: "Other", label: "Other" },
                                     ]}
-                                    onChange={(item: any) =>
+                                    onChange={(value: any) =>
                                         handleOwnerInfoChange(
                                             "gender",
-                                            item.target.value,
+                                            value,
                                             _id
                                         )
                                     }
@@ -222,10 +222,10 @@ const OwnerInfoCardBox = ({
                                     placeholder="Date of Birth"
                                     className="customFormDatePicker"
                                     format="DD/MM/YYYY"
-                                    onChange={(item: any) =>
+                                    onChange={(value: any) =>
                                         handleOwnerInfoChange(
                                             "birthDate",
-                                            item.target.value,
+                                            value,
                                             _id
                                         )
                                     }
@@ -351,10 +351,10 @@ const OwnerInfoCardBox = ({
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
-                                    onChange={(item: any) =>
+                                    onChange={(value: any) =>
                                         handleOwnerInfoChange(
                                             "mobile",
-                                            item.target.value,
+                                            value,
                                             _id
                                         )
                                     }
@@ -382,10 +382,10 @@ const OwnerInfoCardBox = ({
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder={"Alternate Mobile"}
-                                    onChange={(item: any) =>
+                                    onChange={(value: any) =>
                                         handleOwnerInfoChange(
                                             "altMobile",
-                                            item.target.value,
+                                            value,
                                             _id
                                         )
                                     }

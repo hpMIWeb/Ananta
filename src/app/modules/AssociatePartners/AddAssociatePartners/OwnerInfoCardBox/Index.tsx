@@ -12,19 +12,18 @@ import moment from "moment";
 moment.locale("en"); // Replace 'en' with your desired locale
 
 const OwnerInfoCardBox = ({
-    index,
-    field,
-    branchDetailsFormValue,
-    remove,
-    canDelete,
-    onDeleteCardClick,
+    onDelete,
+    displayNumber,
+    _id,
+    handleOwnerInfoChange,
+    data,
     clientType,
-    form,
+    ...props
 }: any) => {
     return (
         <>
             <div>
-                <div className={styles.itemNumber}>{index + 1}</div>
+                <div className={styles.itemNumber}>{displayNumber + 1}</div>
                 <div>
                     <Button
                         className={classNames(
@@ -35,7 +34,7 @@ const OwnerInfoCardBox = ({
                         danger
                         icon={<DeleteOutlined />}
                         onClick={() => {
-                            onDeleteCardClick(field.index);
+                            onDelete(_id);
                         }}
                     >
                         Delete
@@ -59,9 +58,7 @@ const OwnerInfoCardBox = ({
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
-                                {...field}
-                                name={[field.name, "firstName"]}
-                                key={[field.fieldKey, "firstName"]}
+                                id={`firstName-${_id}`}
                                 rules={[
                                     {
                                         required: true,
@@ -71,9 +68,17 @@ const OwnerInfoCardBox = ({
                                 ]}
                             >
                                 <Input
-                                    id={`firstName-${field.key}`}
+                                    id={`firstName-${_id}`}
                                     placeholder="First Name"
                                     className="customAddFormInputText"
+                                    onChange={(item: any) =>
+                                        handleOwnerInfoChange(
+                                            "firstName",
+                                            item.target.value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.firstName}
                                 />
                             </Form.Item>
                         </div>
@@ -91,15 +96,19 @@ const OwnerInfoCardBox = ({
                             >
                                 Middle Name
                             </label>
-                            <Form.Item
-                                {...field}
-                                name={[field.name, "middleName"]}
-                                fieldKey={[field.fieldKey, "middleName"]}
-                            >
+                            <Form.Item id={`middleName-${_id}`}>
                                 <Input
-                                    id={`middleName-${field.key}`}
+                                    id={`middleName-${_id}`}
                                     placeholder="Middle Name"
                                     className="customAddFormInputText"
+                                    onChange={(item: any) =>
+                                        handleOwnerInfoChange(
+                                            "middleName",
+                                            item.target.value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.middleName}
                                 />
                             </Form.Item>
                         </div>
@@ -119,9 +128,7 @@ const OwnerInfoCardBox = ({
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
-                                {...field}
-                                name={[field.name, "lastName"]}
-                                fieldKey={[field.fieldKey, "lastName"]}
+                                id={`lastName-${_id}`}
                                 rules={[
                                     {
                                         required: true,
@@ -130,9 +137,17 @@ const OwnerInfoCardBox = ({
                                 ]}
                             >
                                 <Input
-                                    id={`lastName-${field.key}`}
+                                    id={`lastName-${_id}`}
                                     placeholder="Last Name"
                                     className="customAddFormInputText"
+                                    onChange={(item: any) =>
+                                        handleOwnerInfoChange(
+                                            "lastName",
+                                            item.target.value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.lastName}
                                 />
                             </Form.Item>
                         </div>
@@ -151,10 +166,7 @@ const OwnerInfoCardBox = ({
                                 Gender
                             </label>
                             <Form.Item
-                                {...field}
-                                className="customAddFormSelectOptions"
-                                name={[field.name, "gender"]}
-                                fieldKey={[field.fieldKey, "gender"]}
+                                id={`gender-${_id}`}
                                 rules={[
                                     {
                                         required: false,
@@ -163,13 +175,21 @@ const OwnerInfoCardBox = ({
                                 ]}
                             >
                                 <Select
-                                    id={`gender-${field.key}`}
+                                    id={`gender-${_id}`}
                                     placeholder={<span>Select Gender</span>}
                                     options={[
                                         { value: "male", label: "Male" },
                                         { value: "female", label: "Female" },
                                         { value: "Other", label: "Other" },
                                     ]}
+                                    onChange={(value: any) =>
+                                        handleOwnerInfoChange(
+                                            "gender",
+                                            value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.gender}
                                 />
                             </Form.Item>
                         </div>
@@ -189,9 +209,7 @@ const OwnerInfoCardBox = ({
                                 Date of Birth
                             </label>
                             <Form.Item
-                                //  {...field}
-                                name={[field.name, "birthDate"]}
-                                fieldKey={[field.fieldKey, "birthDate"]}
+                                id={`birthDate-${_id}`}
                                 rules={[
                                     {
                                         required: false,
@@ -200,10 +218,18 @@ const OwnerInfoCardBox = ({
                                 ]}
                             >
                                 <DatePicker
-                                    id={`birthDate-${field.key}`}
+                                    id={`birthDate-${_id}`}
                                     placeholder="Date of Birth"
                                     className="customFormDatePicker"
                                     format="DD/MM/YYYY"
+                                    onChange={(value: any) =>
+                                        handleOwnerInfoChange(
+                                            "birthDate",
+                                            value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.birthDate}
                                 />
                             </Form.Item>
                         </div>
@@ -224,9 +250,7 @@ const OwnerInfoCardBox = ({
                                     <sup className="text-danger fs--1">*</sup>
                                 </label>
                                 <Form.Item
-                                    {...field}
-                                    name={[field.name, "membershipNo"]}
-                                    fieldKey={[field.fieldKey, "membershipNo"]}
+                                    id={`membershipNo-${_id}`}
                                     rules={[
                                         {
                                             pattern: /^(?:\d*)$/,
@@ -236,7 +260,7 @@ const OwnerInfoCardBox = ({
                                     ]}
                                 >
                                     <Input
-                                        id={`membershipNo-${field.key}`}
+                                        id={`membershipNo-${_id}`}
                                         placeholder={"Membership No"}
                                         className="customAddFormInputText"
                                         maxLength={6}
@@ -245,6 +269,14 @@ const OwnerInfoCardBox = ({
                                                 event.preventDefault();
                                             }
                                         }}
+                                        onChange={(item: any) =>
+                                            handleOwnerInfoChange(
+                                                "membershipNo",
+                                                item.target.value,
+                                                _id
+                                            )
+                                        }
+                                        value={data.membershipNo}
                                     />
                                 </Form.Item>
                             </div>
@@ -265,9 +297,7 @@ const OwnerInfoCardBox = ({
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
-                                {...field}
-                                name={[field.name, "email"]}
-                                fieldKey={[field.fieldKey, "email"]}
+                                id={`email-${_id}`}
                                 rules={[
                                     {
                                         required: true,
@@ -277,10 +307,18 @@ const OwnerInfoCardBox = ({
                                 ]}
                             >
                                 <Input
-                                    id={`email-${field.key}`}
+                                    id={`email-${_id}`}
                                     type="email"
                                     placeholder="Email Id"
                                     className="customAddFormInputText"
+                                    onChange={(item: any) =>
+                                        handleOwnerInfoChange(
+                                            "email",
+                                            item.target.value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.email}
                                 />
                             </Form.Item>
                         </div>
@@ -300,9 +338,7 @@ const OwnerInfoCardBox = ({
                                 <sup className="text-danger fs--1">*</sup>
                             </label>
                             <Form.Item
-                                {...field}
-                                name={[field.name, "mobile"]}
-                                fieldKey={[field.fieldKey, "mobile"]}
+                                id={`mobile-${_id}`}
                                 rules={[
                                     {
                                         required: true,
@@ -315,6 +351,14 @@ const OwnerInfoCardBox = ({
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
+                                    onChange={(value: any) =>
+                                        handleOwnerInfoChange(
+                                            "mobile",
+                                            value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.mobile}
                                 />
                             </Form.Item>
                         </div>
@@ -332,16 +376,20 @@ const OwnerInfoCardBox = ({
                             >
                                 Alternate Mobile
                             </label>
-                            <Form.Item
-                                {...field}
-                                name={[field.name, "altMobile"]}
-                                fieldKey={[field.fieldKey, "altMobile"]}
-                            >
+                            <Form.Item id={`altMobile-${_id}`}>
                                 <PhoneInput
                                     countryCodeEditable={false}
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder={"Alternate Mobile"}
+                                    onChange={(value: any) =>
+                                        handleOwnerInfoChange(
+                                            "altMobile",
+                                            value,
+                                            _id
+                                        )
+                                    }
+                                    value={data.altMobile}
                                 />
                             </Form.Item>
                         </div>
@@ -371,22 +419,6 @@ const OwnerInfoCardBox = ({
                 </div>
                 <div className={styles.uploadLogoText}>Upload Photo</div>
             </div>
-            {canDelete && (
-                <div className="d-grid gap-2">
-                    <Button
-                        className={classNames(
-                            "cancelBtn",
-                            styles.deleteCardBtn
-                        )}
-                        type="primary"
-                        onClick={() => onDeleteCardClick(index)}
-                        danger
-                    >
-                        <Icon height={14} width={14} name="trashIcon" />
-                        <span style={{ marginLeft: 5 }}>Delete</span>
-                    </Button>
-                </div>
-            )}
         </>
     );
 };
