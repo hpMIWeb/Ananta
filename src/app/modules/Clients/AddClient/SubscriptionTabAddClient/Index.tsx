@@ -664,11 +664,30 @@ const SubscriptionTabAddClient = ({
                                                         styles.subscriptionPrice
                                                     )}
                                                 >
-                                                    {monthAdded
-                                                        ? monthAdded.format(
-                                                              "DD/MM/YYYY"
-                                                          )
-                                                        : "--"}
+                                                    {monthAdded ? (
+                                                        <DatePicker
+                                                            placeholder="Start Date"
+                                                            style={{
+                                                                maxWidth: 154,
+                                                                marginBottom: 0,
+                                                            }}
+                                                            className="customFormDatePicker"
+                                                            format="DD/MM/YYYY"
+                                                            value={monthAdded}
+                                                            disabled
+                                                        />
+                                                    ) : (
+                                                        <DatePicker
+                                                            placeholder="Start Date"
+                                                            style={{
+                                                                maxWidth: 154,
+                                                                marginBottom: 0,
+                                                            }}
+                                                            className="customFormDatePicker"
+                                                            format="DD/MM/YYYY"
+                                                            disabled
+                                                        />
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
