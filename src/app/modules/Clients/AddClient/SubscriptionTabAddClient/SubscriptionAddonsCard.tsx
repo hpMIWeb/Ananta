@@ -1,15 +1,15 @@
-import { Form, InputNumber } from "antd";
+import { Form } from "antd";
 import React, { memo, useEffect, useState } from "react";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Select from "../../../../../components/Select/Index";
 import Button from "../../../../../components/Button/Index";
 import classNames from "classnames";
 import Icon from "../../../../../components/Icon/Index";
-import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Input from "../../../../../components/Input/Index";
 import { RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
+import api from "../../../../utilities/apiServices";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -31,13 +31,26 @@ const SubscriptionAddonsCard = memo(
         );
         const [addOnListOpts, setAddOnListOpts] = useState([]);
 
-        const addonsCardList = useSelector(
+        const getAddonsCardList = useSelector(
             (state: any) => state.getAddonsList.data
         );
 
+        const [addonsCardList, setAddonsCardList] = useState<any>([
+            getAddonsCardList,
+        ]);
+
+        useEffect(() => {
+            getAddonsCardData();
+        }, []);
+
+        const getAddonsCardData = () => {
+            api.getAddonList().then((resp: any) => {
+                setAddonsCardList(resp.data);
+            });
+        };
         const superAdminAddonType = [
             {
-                value: "storage_space",
+                value: "Storage Space",
                 label: "Storage Space",
             },
             {
@@ -147,6 +160,15 @@ const SubscriptionAddonsCard = memo(
 
         const handleAddonTypeChange = (value: any) => {
             setAddOnType(value);
+            getAddonsCardData();
+
+            const addOnList = addonsCardList
+                .filter((a: any) => a.add_on_type === value)
+                .map((a: any) => ({
+                    value: a._id,
+                    label: a.add_on_title,
+                }));
+            setAddOnListOpts(addOnList);
             handleAddonChange(
                 cardIndex,
                 "addOnType",

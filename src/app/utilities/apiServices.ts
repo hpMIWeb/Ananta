@@ -1087,4 +1087,15 @@ export default {
                 },
             ],
         }),
+    getAddonList: () =>
+        instance({
+            method: "GET",
+            url: "add-on/get-add-on",
+            transformResponse: [
+                function (data) {
+                    const json = JSON.parse(data);
+                    return json.payload;
+                },
+            ],
+        }),
 };
