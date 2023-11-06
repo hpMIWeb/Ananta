@@ -511,6 +511,24 @@ const BasicInfo = ({
                                             },
                                             {
                                                 validator: (_, value) => {
+                                                    // Trim the input value to remove leading/trailing whitespace
+                                                    const trimmedValue =
+                                                        value.trim();
+
+                                                    // Use a regular expression pattern for 12 digits
+                                                    const mobileNumberPattern =
+                                                        /^[0-9]{12}$/;
+
+                                                    if (
+                                                        !mobileNumberPattern.test(
+                                                            trimmedValue
+                                                        )
+                                                    ) {
+                                                        return Promise.reject(
+                                                            "Invalid mobile number format"
+                                                        );
+                                                    }
+
                                                     // Skip validation if the mobile matches the current mobile
                                                     if (
                                                         value ===
@@ -525,11 +543,13 @@ const BasicInfo = ({
                                                                 client.mobile ===
                                                                 value
                                                         );
+
                                                     if (mobileExistsInList) {
                                                         return Promise.reject(
                                                             "Mobile already exists in the database"
                                                         );
                                                     }
+
                                                     return Promise.resolve();
                                                 },
                                             },
