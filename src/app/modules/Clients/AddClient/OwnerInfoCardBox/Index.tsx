@@ -194,7 +194,7 @@ const OwnerInfoCardBox = ({
                                             _id
                                         )
                                     }
-                                    value={data.lastName}
+                                    value={data.gender}
                                 />
                             </Form.Item>
                         </div>
