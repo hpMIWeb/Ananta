@@ -312,16 +312,49 @@ const BasicInfo = ({
                                                 message:
                                                     "Please Enter your GSTIN!",
                                             },
-                                            {
-                                                pattern: /^[0-9A-Za-z]{15}$/, // GSTIN pattern: 15 alphanumeric characters
-                                                message:
-                                                    "Invalid GSTIN format!",
-                                            },
+                                            ({ getFieldValue }) => ({
+                                                validator(rule, value) {
+                                                    // Check if the value is "UNREGISTERED" and skip GSTIN validation
+                                                    if (
+                                                        value.toUpperCase() ===
+                                                        "UNREGISTERED"
+                                                    ) {
+                                                        return Promise.resolve();
+                                                    }
+
+                                                    // Check if the GSTIN matches the provided format
+                                                    const gstinRegex =
+                                                        /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
+
+                                                    if (
+                                                        !gstinRegex.test(value)
+                                                    ) {
+                                                        return Promise.reject(
+                                                            "Invalid GSTIN format!"
+                                                        );
+                                                    }
+
+                                                    // Check if GSTIN's PAN part matches the entered PAN
+                                                    const gstinPAN =
+                                                        value.substr(2, 10);
+                                                    if (
+                                                        gstinPAN !==
+                                                        getFieldValue("firmPAN")
+                                                    ) {
+                                                        return Promise.reject(
+                                                            "PAN & GSTIN do not match!"
+                                                        );
+                                                    }
+
+                                                    return Promise.resolve();
+                                                },
+                                            }),
                                         ]}
                                     >
                                         <Input
                                             placeholder="GSTIN"
                                             className="customAddFormInputText"
+                                            maxLength={15}
                                         />
                                     </Form.Item>
                                 </div>
@@ -348,6 +381,20 @@ const BasicInfo = ({
                                                     required: true,
                                                     message:
                                                         "Please Enter your Firm Registration No!",
+                                                },
+                                                {
+                                                    validator: (_, value) => {
+                                                        if (
+                                                            /^\d{6}[a-zA-Z]$/.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        return Promise.reject(
+                                                            "Enter valid Firm Registration No"
+                                                        );
+                                                    },
                                                 },
                                             ]}
                                         >
