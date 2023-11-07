@@ -285,6 +285,7 @@ const BasicInfo = ({
                                         <Input
                                             placeholder="Pan Number"
                                             className="customAddFormInputText"
+                                            maxLength={10}
                                         />
                                     </Form.Item>
                                 </div>

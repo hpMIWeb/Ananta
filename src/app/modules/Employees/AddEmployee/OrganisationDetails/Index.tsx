@@ -315,6 +315,7 @@ const OrganisationDetails = ({
                                             <Input
                                                 placeholder="PAN Number"
                                                 className="customAddFormInputText"
+                                                maxLength={10}
                                             />
                                         </Form.Item>
                                     </div>
