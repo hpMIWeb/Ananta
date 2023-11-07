@@ -401,6 +401,7 @@ const BasicInfo = ({
                                             <Input
                                                 placeholder="Firm Registration No"
                                                 className="customAddFormInputText"
+                                                maxLength={7}
                                             />
                                         </Form.Item>
                                     </div>
