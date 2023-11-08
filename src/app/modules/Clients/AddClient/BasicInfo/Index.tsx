@@ -335,26 +335,21 @@ const BasicInfo = ({
                                     <Form.Item
                                         name="firmGSTIN"
                                         rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please Enter your GSTIN!",
-                                            },
                                             ({ getFieldValue }) => ({
                                                 validator(rule, value) {
-                                                    // Check if the value is "UNREGISTERED" and skip GSTIN validation
                                                     if (
+                                                        value &&
                                                         value.toUpperCase() ===
-                                                        "UNREGISTERED"
+                                                            "UNREGISTERED"
                                                     ) {
                                                         return Promise.resolve();
                                                     }
 
-                                                    // Check if the GSTIN matches the provided format
                                                     const gstinRegex =
                                                         /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
 
                                                     if (
+                                                        value &&
                                                         !gstinRegex.test(value)
                                                     ) {
                                                         return Promise.reject(
@@ -362,7 +357,6 @@ const BasicInfo = ({
                                                         );
                                                     }
 
-                                                    // Check if GSTIN's PAN part matches the entered PAN
                                                     const gstinPAN =
                                                         value.substr(2, 10);
                                                     if (
@@ -371,6 +365,12 @@ const BasicInfo = ({
                                                     ) {
                                                         return Promise.reject(
                                                             "PAN & GSTIN do not match!"
+                                                        );
+                                                    }
+
+                                                    if (!value) {
+                                                        return Promise.reject(
+                                                            "Please enter your GSTIN!"
                                                         );
                                                     }
 
@@ -414,6 +414,7 @@ const BasicInfo = ({
                                                 {
                                                     validator: (_, value) => {
                                                         if (
+                                                            value &&
                                                             /^\d{6}[a-zA-Z]$/.test(
                                                                 value
                                                             )
