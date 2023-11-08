@@ -1,66 +1,50 @@
 import styles from "./ownerInfo.module.scss";
-import { Divider, Form } from "antd";
+import { Divider, Form, Space } from "antd";
 
 import OwnerInfoCardBox from "../OwnerInfoCardBox/Index";
 import { useEffect, useState } from "react";
 import CardBottomAction from "./CardBottomAction";
 import { filterObjectByKey } from "../../../../../utils/helpers";
 import dayjs from "dayjs";
-interface IOwnerInfo {
-    _id: number;
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    gender: string;
-    birthDate: string;
-    membershipNo: string;
-    email: string;
-    mobile: string;
-    altMobile: string;
-}
+
 const OwnerInfo = ({
     onChange,
     setFormValue,
+    clientType,
     selectedAssociatePartnerData,
 }: any) => {
     const [form] = Form.useForm();
-
-    const [ownerInfoData, setOwnerInfoData] = useState<IOwnerInfo[]>([
-        {
-            _id: 1,
-        } as IOwnerInfo,
+    const [ownerInfoData, setOwnerInfoData] = useState([
+        { type: "default", index: 1, name: "index1" },
     ]);
-
     const onFinish = (value: any) => {
-        setFormValue({ ownerDetails: ownerInfoData });
-        onChange(3, { ownerDetails: ownerInfoData });
+        setFormValue(value);
+        onChange(3);
     };
     // Set the locale
 
     const addMoreOwnerCard = () => {
-        setOwnerInfoData((prev) => [
-            ...prev,
-            {
-                _id: ownerInfoData.length + 1,
-            } as IOwnerInfo,
-        ]);
+        const existingData = form.getFieldsValue();
+        const newIndex = existingData.ownerDetails.length;
+        form.setFieldsValue({
+            ownerDetails: [
+                ...existingData.ownerDetails,
+                {
+                    _id: dayjs(new Date()).valueOf(),
+                    type: "new",
+                    index: newIndex,
+                    name: `index${newIndex}`,
+                },
+            ],
+        });
     };
 
-    const handleOwnerInfoChange = (key: any, value: any, index: any) => {
-        const ownerInfoRowsData = ownerInfoData.find((a) => a._id === index);
-        if (ownerInfoRowsData) {
-            const updatedOwnerInfoRowsData = {
-                ...ownerInfoRowsData,
-                [key]: value,
-            };
-
-            const updatedPaymentRowData = ownerInfoData.map((rowData) =>
-                rowData._id === index ? updatedOwnerInfoRowsData : rowData
-            );
-
-            setOwnerInfoData(updatedPaymentRowData);
-        }
-    };
+    useEffect(() => {
+        // set fields
+        form.setFieldsValue({
+            ownerDetails: ownerInfoData,
+        });
+    }, [ownerInfoData]);
 
     useEffect(() => {
         if (
@@ -79,15 +63,31 @@ const OwnerInfo = ({
                     return owner;
                 });
 
+            console.log("formattedOwnerDetails", formattedOwnerDetails);
             setOwnerInfoData(formattedOwnerDetails);
+            form.setFieldsValue({
+                ownerDetails: formattedOwnerDetails,
+            });
         }
     }, []);
 
+    useEffect(() => {
+        // set fields
+        form.setFieldsValue({
+            ownerInfoData: ownerInfoData,
+        });
+    }, [ownerInfoData]);
+
     const onDeleteCardClick = (cardIndex: any) => {
+        console.log("ownerInfoData", ownerInfoData);
+        console.log("cardIndex", cardIndex);
         const newOwnerInfoData = ownerInfoData.filter(
-            (a) => a._id !== cardIndex
+            (a, index: number) => index !== cardIndex
         );
         setOwnerInfoData(newOwnerInfoData);
+        form.setFieldsValue({
+            ownerDetails: newOwnerInfoData,
+        });
     };
 
     return (
@@ -95,31 +95,42 @@ const OwnerInfo = ({
             <Form
                 name="basic"
                 form={form}
+                initialValues={{ remember: true }}
                 onFinish={onFinish}
                 autoComplete="off"
                 requiredMark={false}
                 className="customAddForm"
             >
-                {ownerInfoData.map((owner, index: number) => (
-                    <div
-                        style={{
-                            marginTop: 2,
-                        }}
-                        key={index}
-                        className="row"
-                    >
-                        <OwnerInfoCardBox
-                            key={index}
-                            displayNumber={index}
-                            onDelete={onDeleteCardClick}
-                            _id={owner._id}
-                            clientType
-                            handleOwnerInfoChange={handleOwnerInfoChange}
-                            data={owner}
-                        />
-                        <Divider></Divider>
-                    </div>
-                ))}
+                <Form.List name="ownerDetails">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map((field, index) => (
+                                <Space key={field.key}>
+                                    <div
+                                        style={{
+                                            marginTop: 2,
+                                        }}
+                                        key={index}
+                                        className="row"
+                                    >
+                                        <OwnerInfoCardBox
+                                            form={form}
+                                            index={index}
+                                            field={field}
+                                            displayNumber={index++}
+                                            remove={remove}
+                                            onDeleteCardClick={
+                                                onDeleteCardClick
+                                            }
+                                            clientType={clientType}
+                                        />
+                                        <Divider></Divider>
+                                    </div>
+                                </Space>
+                            ))}
+                        </>
+                    )}
+                </Form.List>
                 <div className="row">
                     <div className={styles.formFooterAction}>
                         <CardBottomAction

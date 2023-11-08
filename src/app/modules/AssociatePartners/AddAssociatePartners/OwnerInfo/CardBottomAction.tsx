@@ -6,18 +6,21 @@ const CardBottomAction = ({
     onChange,
     addCardClick,
     handleCancelClick,
+    firmType,
 }: any) => {
     return (
         <div className="d-flex">
             <div className="me-auto">
-                <Button
-                    className={styles.addOwnerInfoBtn}
-                    onClick={addCardClick}
-                    type="primary"
-                >
-                    <Icon name="plus" width={14.25} height={16} />
-                    Add
-                </Button>
+                {firmType !== "proprietor" && (
+                    <Button
+                        className={styles.addOwnerInfoBtn}
+                        onClick={addCardClick}
+                        type="primary"
+                    >
+                        <Icon name="plus" width={14.25} height={16} />
+                        Add
+                    </Button>
+                )}
             </div>
             <div className="ms-auto">
                 <Button

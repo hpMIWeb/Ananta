@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./associatePartner.module.scss";
-import addSubImg from "../../../assets/images/add-subscription.jpg";
 import classNames from "classnames";
 import SubscriptionCard from "../../../components/SubscriptionCard/Index";
 import Button from "../../../components/Button/Index";
-import Icon from "../../../components/Icon/Index";
 import { useNavigate } from "react-router-dom";
 import SearchFilterBar from "../../../components/SearchFilterBar/Index";
 import Pagination from "../../../components/Pagination/Index";
@@ -14,7 +12,6 @@ import { getAssociatePartnerReducersApi } from "../../../redux/getAssociatePartn
 import { createAssociatePartnerReducersApi } from "../../../redux/createAssociatePartnerReducers";
 import CardContentSkeletonLoader from "../../../components/CardContentSkeletonLoader/Index";
 import { getFilteredValue } from "../../../utils/helpers";
-import dayjs from "dayjs";
 import { useAppDispatch } from "../../states/store";
 import Cookies from "js-cookie";
 import { getCurrentItemNumber } from "../../utilities/utility";
