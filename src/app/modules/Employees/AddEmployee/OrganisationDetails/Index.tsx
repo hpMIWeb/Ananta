@@ -478,6 +478,13 @@ const OrganisationDetails = ({
                                         <Form.Item
                                             name="referance"
                                             className="customAddFormSelectOptions"
+                                            rules={[
+                                                {
+                                                    pattern: /^[a-zA-Z0-9]+$/,
+                                                    message:
+                                                        "Reference should contain only alphanumeric characters!",
+                                                },
+                                            ]}
                                         >
                                             <Input
                                                 placeholder="Reference"
