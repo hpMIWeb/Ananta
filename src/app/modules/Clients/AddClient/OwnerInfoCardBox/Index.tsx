@@ -69,7 +69,12 @@ const OwnerInfoCardBox = ({
                                     {
                                         required: true,
                                         message:
-                                            "Please Enter your First Name!",
+                                            "Please enter your First Name!",
+                                    },
+                                    {
+                                        pattern: /^[A-Za-z]+$/,
+                                        message:
+                                            "Please enter only alphabets for First Name!",
                                     },
                                 ]}
                             >
@@ -98,6 +103,13 @@ const OwnerInfoCardBox = ({
                                 {...field}
                                 name={[field.name, "middleName"]}
                                 key={[field.fieldKey, "middleName"]}
+                                rules={[
+                                    {
+                                        pattern: /^[A-Za-z]+$/,
+                                        message:
+                                            "Please enter only alphabets for Middle Name!",
+                                    },
+                                ]}
                             >
                                 <Input
                                     id={`middleName-${field.key}`}
@@ -129,6 +141,11 @@ const OwnerInfoCardBox = ({
                                     {
                                         required: true,
                                         message: "Please Enter your Last Name!",
+                                    },
+                                    {
+                                        pattern: /^[A-Za-z]+$/,
+                                        message:
+                                            "Please enter only alphabets for Last Name!",
                                     },
                                 ]}
                             >
@@ -229,18 +246,18 @@ const OwnerInfoCardBox = ({
                                 <Form.Item
                                     {...field}
                                     name={[field.name, "membershipNo"]}
-                                    Key={[field.fieldKey, "membershipNo"]}
+                                    key={[field.fieldKey, "membershipNo"]}
                                     rules={[
                                         {
-                                            pattern: /^(?:\d*)$/,
+                                            pattern: /^\d{6}$/,
                                             message:
-                                                "Value should contain just number !!",
+                                                "Membership number should be exactly six digits and contain only numbers!",
                                         },
                                     ]}
                                 >
                                     <Input
                                         id={`membershipNo-${field.key}`}
-                                        placeholder={"Membership No"}
+                                        placeholder="Membership No"
                                         className="customAddFormInputText"
                                         maxLength={6}
                                         onKeyPress={(event: any) => {

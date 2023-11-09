@@ -61,7 +61,6 @@ const OwnerInfo = ({
                 }
             );
 
-            console.log("formattedOwnerDetails", formattedOwnerDetails);
             setOwnerInfoData(formattedOwnerDetails);
             form.setFieldsValue({
                 ownerDetails: formattedOwnerDetails,
