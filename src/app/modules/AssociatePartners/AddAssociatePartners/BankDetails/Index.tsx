@@ -2,7 +2,6 @@ import styles from "./bankdetails.module.scss";
 import { Form } from "antd";
 import CardBottomAction from "../EmergencyInfo/CardBottomAction";
 import { useState, useEffect } from "react";
-import BankInfoCard from "./BankInfoCard";
 import axios from "axios";
 import Input from "../../../../../components/Input/Index";
 import classNames from "classnames";
@@ -75,6 +74,7 @@ const BankDetails = ({
             <Form
                 form={form}
                 name="basic"
+                //initialValues={{ bankName: bankData.BANK }}
                 onFinish={onFinish}
                 autoComplete="off"
                 requiredMark={false}
@@ -246,17 +246,24 @@ const BankDetails = ({
                                         <Form.Item
                                             name="ifscCode"
                                             className="customAddFormSelectOptions"
-                                            // rules={[
-                                            //     {
-                                            //         pattern: /^[A-Za-z]{4}[0-9]{7}$/,
-                                            //         message:
-                                            //             "Invalid IFSC code format.",
-                                            //     },
-                                            // ]}
+                                            rules={[
+                                                {
+                                                    len: 11,
+                                                    message:
+                                                        "IFSC code must be 11 characters long.",
+                                                },
+                                                {
+                                                    pattern:
+                                                        /^[A-Za-z]{4}[0-9]{7}$/,
+                                                    message:
+                                                        "Invalid IFSC code format.",
+                                                },
+                                            ]}
                                         >
                                             <Input
                                                 placeholder="IFSC Code"
                                                 className="customAddFormInputText"
+                                                maxLength={11}
                                             />
                                         </Form.Item>
                                     </div>
@@ -279,7 +286,7 @@ const BankDetails = ({
                                             className="customAddFormSelectOptions"
                                             rules={[
                                                 {
-                                                    pattern: /^[0-9]{9}$/,
+                                                    pattern: /^[0-9]{9,18}$/,
                                                     message:
                                                         "Invalid MICR code format.",
                                                 },
@@ -288,6 +295,7 @@ const BankDetails = ({
                                             <Input
                                                 placeholder="MICR Code"
                                                 className="customAddFormInputText"
+                                                maxLength={18}
                                             />
                                         </Form.Item>
                                     </div>

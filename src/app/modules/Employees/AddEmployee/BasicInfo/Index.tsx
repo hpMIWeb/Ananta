@@ -572,7 +572,10 @@ const BasicInfo = ({
                                     <img
                                         src={uploadPhoto}
                                         alt="avatar"
-                                        style={{ width: "100%" }}
+                                        style={{
+                                            width: "100%",
+                                            marginBottom: "5px",
+                                        }}
                                     />
                                 </Upload>
                             </div>
