@@ -248,15 +248,19 @@ const BankDetails = ({
                                             className="customAddFormSelectOptions"
                                             rules={[
                                                 {
-                                                    len: 11,
-                                                    message:
-                                                        "IFSC code must be 11 characters long.",
-                                                },
-                                                {
-                                                    pattern:
-                                                        /^[A-Za-z]{4}[0-9]{7}$/,
-                                                    message:
-                                                        "Invalid IFSC code format.",
+                                                    validator: (_, value) => {
+                                                        if (
+                                                            /^[A-Za-z]{4}[a-zA-Z0-9]{7}$/.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            return Promise.resolve();
+                                                        } else {
+                                                            return Promise.reject(
+                                                                "Invalid IFSC code format."
+                                                            );
+                                                        }
+                                                    },
                                                 },
                                             ]}
                                         >

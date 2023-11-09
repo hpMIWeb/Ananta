@@ -120,6 +120,7 @@ const BasicInfo = ({
 
     useEffect(() => {
         if (selectedEmployeeData) {
+            console.log("selectedEmployeeData", selectedEmployeeData);
             form.setFieldsValue({
                 employeeId: selectedEmployeeData.employeeId,
                 firstName: selectedEmployeeData.firstName,
