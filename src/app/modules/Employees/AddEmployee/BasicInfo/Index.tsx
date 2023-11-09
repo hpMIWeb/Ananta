@@ -63,6 +63,25 @@ const BasicInfo = ({
                 state: State,
                 city: District,
             });
+            // After setting the values, re-fetch states and cities and update the dropdowns
+            if (Country) {
+                // Fetch states based on the selected country (Country)
+                const selectedCountryId = countriesListData.find(
+                    (country: any) => country.countryName === Country
+                )?.geonameId;
+                if (selectedCountryId) {
+                    await fetchStates(selectedCountryId);
+                }
+
+                // Fetch cities based on the selected state (State)
+                const selectedStateId = statesListData.find(
+                    (state: any) => state.name === State
+                )?.geonameId;
+                console.log("selectedStateId", selectedStateId);
+                if (selectedStateId) {
+                    await fetchCities(selectedStateId);
+                }
+            }
         } catch (error) {
             console.error("Error fetching location data:", error);
         }

@@ -96,10 +96,30 @@ const BasicInfo = ({
                 state: State,
                 city: District,
             });
+            // After setting the values, re-fetch states and cities and update the dropdowns
+            if (Country) {
+                // Fetch states based on the selected country (Country)
+                const selectedCountryId = countriesListData.find(
+                    (country: any) => country.countryName === Country
+                )?.geonameId;
+                if (selectedCountryId) {
+                    await fetchStates(selectedCountryId);
+                }
+
+                // Fetch cities based on the selected state (State)
+                const selectedStateId = statesListData.find(
+                    (state: any) => state.name === State
+                )?.geonameId;
+                console.log("selectedStateId", selectedStateId);
+                if (selectedStateId) {
+                    await fetchCities(selectedStateId);
+                }
+            }
         } catch (error) {
             console.error("Error fetching location data:", error);
         }
     };
+
     const handleFormValuesChange = (changedValues: any, allValues: any) => {
         if ("country" in changedValues) {
             const selectedCountryId = countriesListData.find(
@@ -310,43 +330,50 @@ const BasicInfo = ({
                                             {
                                                 required: true,
                                                 message:
-                                                    "Please Enter your GSTIN!",
+                                                    "Please enter your GSTIN!",
                                             },
                                             ({ getFieldValue }) => ({
                                                 validator(rule, value) {
-                                                    // Check if the value is "UNREGISTERED" and skip GSTIN validation
-                                                    if (
-                                                        value.toUpperCase() ===
-                                                        "UNREGISTERED"
-                                                    ) {
+                                                    if (value !== undefined) {
+                                                        if (
+                                                            value &&
+                                                            value.toUpperCase() ===
+                                                                "UNREGISTERED"
+                                                        ) {
+                                                            return Promise.resolve();
+                                                        }
+
+                                                        const gstinRegex =
+                                                            /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
+
+                                                        if (
+                                                            value &&
+                                                            !gstinRegex.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            return Promise.reject(
+                                                                "Invalid GSTIN format!"
+                                                            );
+                                                        }
+
+                                                        const gstinPAN =
+                                                            value.substr(2, 10);
+                                                        if (
+                                                            gstinPAN !==
+                                                            getFieldValue(
+                                                                "firmPAN"
+                                                            )
+                                                        ) {
+                                                            return Promise.reject(
+                                                                "PAN & GSTIN do not match!"
+                                                            );
+                                                        }
+
                                                         return Promise.resolve();
+                                                    } else {
+                                                        return Promise.reject();
                                                     }
-
-                                                    // Check if the GSTIN matches the provided format
-                                                    const gstinRegex =
-                                                        /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
-
-                                                    if (
-                                                        !gstinRegex.test(value)
-                                                    ) {
-                                                        return Promise.reject(
-                                                            "Invalid GSTIN format!"
-                                                        );
-                                                    }
-
-                                                    // Check if GSTIN's PAN part matches the entered PAN
-                                                    const gstinPAN =
-                                                        value.substr(2, 10);
-                                                    if (
-                                                        gstinPAN !==
-                                                        getFieldValue("firmPAN")
-                                                    ) {
-                                                        return Promise.reject(
-                                                            "PAN & GSTIN do not match!"
-                                                        );
-                                                    }
-
-                                                    return Promise.resolve();
                                                 },
                                             }),
                                         ]}
@@ -385,15 +412,23 @@ const BasicInfo = ({
                                                 {
                                                     validator: (_, value) => {
                                                         if (
-                                                            /^\d{6}[a-zA-Z]$/.test(
-                                                                value
-                                                            )
+                                                            value !== undefined
                                                         ) {
-                                                            return Promise.resolve();
+                                                            if (
+                                                                value &&
+                                                                /^\d{6}[a-zA-Z]$/.test(
+                                                                    value
+                                                                )
+                                                            ) {
+                                                                return Promise.resolve();
+                                                            } else {
+                                                                return Promise.reject(
+                                                                    "Enter valid Firm Registration No Format: 123456D"
+                                                                );
+                                                            }
+                                                        } else {
+                                                            return Promise.reject();
                                                         }
-                                                        return Promise.reject(
-                                                            "Enter valid Firm Registration No"
-                                                        );
                                                     },
                                                 },
                                             ]}
