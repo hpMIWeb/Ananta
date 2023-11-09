@@ -445,7 +445,7 @@ const BasicInfo = ({
                                                                 return Promise.resolve();
                                                             } else {
                                                                 return Promise.reject(
-                                                                    "Enter valid Firm Registration No"
+                                                                    "Enter valid Firm Registration No Format: 123456D"
                                                                 );
                                                             }
                                                         } else {
