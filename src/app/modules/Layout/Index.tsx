@@ -549,7 +549,20 @@ const LayoutComponent = ({
                         theme={themeProp}
                     ></HeaderBox>
                 </Header>
-                <div className={classNames(styles.navigationWrapper)}>
+                <div
+                    className={classNames(
+                        "navbar-glass-shadow",
+                        styles.navigationWrapper
+                    )}
+                    style={{
+                        position: "sticky",
+                        top: "70px",
+                        zIndex: "999",
+                        marginLeft: "0px",
+                        paddingBottom: "10px",
+                        boxShadow: "0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2)",
+                    }}
+                >
                     <div style={{ float: "left", marginRight: "10px" }}>
                         <Icon
                             width={16}
