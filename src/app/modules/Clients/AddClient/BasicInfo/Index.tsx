@@ -109,6 +109,7 @@ const BasicInfo = ({
                 const selectedStateId = statesListData.find(
                     (state: any) => state.name === State
                 )?.geonameId;
+                console.log("selectedStateId", selectedStateId);
                 if (selectedStateId) {
                     await fetchCities(selectedStateId);
                 }
@@ -217,9 +218,10 @@ const BasicInfo = ({
                                                     "Please Enter your Firm Name!",
                                             },
                                             {
-                                                pattern: /^[a-zA-Z0-9&.@\/-]+$/,
+                                                pattern:
+                                                    /^[a-zA-Z0-9&.@\/\s-]+$/,
                                                 message:
-                                                    "Only alphabets, numbers, &, ., @, /, and - are allowed.",
+                                                    "Only alphabets, numbers, spaces, &, ., @, /, and - are allowed.",
                                             },
                                         ]}
                                     >
@@ -231,7 +233,7 @@ const BasicInfo = ({
                                                     e.target.value;
                                                 const filteredValue =
                                                     inputValue.replace(
-                                                        /[^a-zA-Z0-9&.@\/-]/g,
+                                                        /[^a-zA-Z0-9&.@\/\s-]/g,
                                                         ""
                                                     ); // Remove disallowed characters
                                                 e.target.value = filteredValue;
