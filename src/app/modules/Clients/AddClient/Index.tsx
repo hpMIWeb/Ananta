@@ -105,7 +105,6 @@ const AddClient = ({ selectedClientData }: any) => {
         if (key === 8) {
             const payload = { ...clientValue, ...formValue };
             payload.clientType = clientType;
-            console.log("payload", payload);
             dispatch(
                 createClientReducersApi({
                     payload: payload,

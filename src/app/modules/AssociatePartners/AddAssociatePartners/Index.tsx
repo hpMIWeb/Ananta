@@ -89,10 +89,6 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
         }
 
         if (selectedAssociatePartnerData) {
-            console.log(
-                "selectedAssociatePartnerData.partnerCategory",
-                selectedAssociatePartnerData
-            );
             setPartnerType(selectedAssociatePartnerData.partnerType);
             setPartnerCategory(selectedAssociatePartnerData.partnerCategory);
 

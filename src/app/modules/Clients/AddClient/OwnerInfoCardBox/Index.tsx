@@ -384,7 +384,7 @@ const OwnerInfoCardBox = ({
                             <img
                                 src={uploadPhoto}
                                 alt="upload Photo"
-                                style={{ width: "100%" }}
+                                style={{ width: "100%", marginBottom: "5px" }}
                             />
                         </Upload>
                     </div>

@@ -113,7 +113,6 @@ const SubscriptionTabAddClient = ({
     const cardDesc = (details: any) => {
         const features = details.features || {};
         const noOfUsers = details.no_of_users || {};
-        console.log("details", details);
         return [
             {
                 iconName: "time",
@@ -177,7 +176,7 @@ const SubscriptionTabAddClient = ({
                         <p className="mb-0 fs--1 description-label">Users</p>
                         <ul className="ps-3 mt-1 semiBold mb-1 feature-description-list">
                             <li>
-                                CA Office Users -{" "}
+                                Office Users -{" "}
                                 {noOfUsers.office_users
                                     ? noOfUsers.office_users
                                     : 0}

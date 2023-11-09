@@ -77,7 +77,6 @@ const BasicInfo = ({
                 const selectedStateId = statesListData.find(
                     (state: any) => state.name === State
                 )?.geonameId;
-                console.log("selectedStateId", selectedStateId);
                 if (selectedStateId) {
                     await fetchCities(selectedStateId);
                 }

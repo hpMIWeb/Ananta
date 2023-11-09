@@ -63,7 +63,6 @@ const OwnerInfo = ({
                     return owner;
                 });
 
-            console.log("formattedOwnerDetails", formattedOwnerDetails);
             setOwnerInfoData(formattedOwnerDetails);
             form.setFieldsValue({
                 ownerDetails: formattedOwnerDetails,
@@ -79,8 +78,6 @@ const OwnerInfo = ({
     }, [ownerInfoData]);
 
     const onDeleteCardClick = (cardIndex: any) => {
-        console.log("ownerInfoData", ownerInfoData);
-        console.log("cardIndex", cardIndex);
         const newOwnerInfoData = ownerInfoData.filter(
             (a, index: number) => index !== cardIndex
         );

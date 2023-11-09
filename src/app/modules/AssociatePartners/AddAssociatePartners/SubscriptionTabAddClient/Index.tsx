@@ -104,6 +104,7 @@ const SubscriptionTabAddClient = ({
 
     const cardDesc = (details: any) => {
         const features = details.features || {};
+        const noOfUsers = details.no_of_users || {};
         return [
             {
                 iconName: "time",
@@ -167,16 +168,23 @@ const SubscriptionTabAddClient = ({
                         <p className="mb-0 fs--1 description-label">Users</p>
                         <ul className="ps-3 mt-1 semiBold mb-1 feature-description-list">
                             <li>
-                                CA Employee & OwnerLogin -{" "}
-                                {details.no_of_client}
-                            </li>{" "}
+                                Office Users -{" "}
+                                {noOfUsers.office_users
+                                    ? noOfUsers.office_users
+                                    : 0}
+                            </li>
                             <li>
-                                ClientOwner & Employee Login -{" "}
-                                {details.no_of_client_login}
-                            </li>{" "}
+                                Client Office Users -{" "}
+                                {noOfUsers.client_office_users
+                                    ? noOfUsers.client_office_users
+                                    : 0}
+                            </li>
                             <li>
-                                Client Vendor Login - {details.no_of_employee}
-                            </li>{" "}
+                                Vendor Users -{" "}
+                                {noOfUsers.client_vendor
+                                    ? noOfUsers.client_vendor
+                                    : 0}
+                            </li>
                         </ul>
                     </>
                 ),
@@ -217,7 +225,6 @@ const SubscriptionTabAddClient = ({
         ) || {};
 
     const onValuesChange = (changedFields: any, allFields: any) => {
-        console.log("allFields", allFields);
         setSubscriptionValue(allFields);
     };
 
@@ -239,7 +246,6 @@ const SubscriptionTabAddClient = ({
         ) {
             let subscriptionDetails =
                 selectedAssociatePartnerData.subscriptionDetails;
-            console.log("subscriptionDetails", subscriptionDetails);
             const addons = subscriptionDetails?.addOns || [];
             setBillingMethod(subscriptionDetails?.subscriptionType);
             setSubscriptionValue({

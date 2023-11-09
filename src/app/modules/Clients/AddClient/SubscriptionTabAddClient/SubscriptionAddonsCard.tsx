@@ -183,6 +183,20 @@ const SubscriptionAddonsCard = memo(
                 (a: any) => a._id === value
             )[0];
 
+            console.log("selectedAddonData without call", selectedAddonData);
+            // if (selectedAddonData.time_period_type === "MONTH") {
+            //     let newAmount =
+            //         selectedAddonData.price / selectedAddonData.time_period;
+            //     selectedAddonData.price = newAmount;
+            //     selectedAddonData.time_period = 1;
+            // } else if (selectedAddonData.time_period_type === "DAY") {
+            //     let newAmount =
+            //         selectedAddonData.price / selectedAddonData.time_period;
+            //     selectedAddonData.price = newAmount;
+            //     selectedAddonData.time_period = 1;
+            // }
+            console.log("selectedAddonData", selectedAddonData);
+
             setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
             handleAddonChange(
