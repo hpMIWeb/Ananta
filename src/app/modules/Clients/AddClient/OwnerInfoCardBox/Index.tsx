@@ -72,9 +72,9 @@ const OwnerInfoCardBox = ({
                                             "Please enter your First Name!",
                                     },
                                     {
-                                        pattern: /^[A-Za-z]+$/,
+                                        pattern: /^[A-Za-z\s]+$/,
                                         message:
-                                            "Please enter only alphabets for First Name!",
+                                            "Please enter only alphabets and spaces for First Name!",
                                     },
                                 ]}
                             >
@@ -105,9 +105,9 @@ const OwnerInfoCardBox = ({
                                 key={[field.fieldKey, "middleName"]}
                                 rules={[
                                     {
-                                        pattern: /^[A-Za-z]+$/,
+                                        pattern: /^[A-Za-z\s]+$/,
                                         message:
-                                            "Please enter only alphabets for Middle Name!",
+                                            "Please enter only alphabets and spaces for First Name!",
                                     },
                                 ]}
                             >
@@ -143,9 +143,9 @@ const OwnerInfoCardBox = ({
                                         message: "Please Enter your Last Name!",
                                     },
                                     {
-                                        pattern: /^[A-Za-z]+$/,
+                                        pattern: /^[A-Za-z\s]+$/,
                                         message:
-                                            "Please enter only alphabets for Last Name!",
+                                            "Please enter only alphabets and spaces for First Name!",
                                     },
                                 ]}
                             >
