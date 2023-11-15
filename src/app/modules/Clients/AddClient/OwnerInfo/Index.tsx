@@ -11,6 +11,7 @@ const OwnerInfo = ({
     onChange,
     setFormValue,
     clientType,
+    clientValue,
     selectedClientData,
 }: any) => {
     const [form] = Form.useForm();
@@ -131,6 +132,7 @@ const OwnerInfo = ({
                         <CardBottomAction
                             addCardClick={addMoreOwnerCard}
                             onChange={onChange}
+                            firmType={clientValue.firmType}
                         />
                     </div>
                 </div>
