@@ -152,6 +152,7 @@ const AddAssociatePartners = ({ selectedAssociatePartnerData }: any) => {
                     setFormValue={setFormValue}
                     partnerType={partnerType}
                     selectedAssociatePartnerData={selectedAssociatePartnerData}
+                    associatePartnerValue={associatePartnerValue}
                 />
             ),
         },
