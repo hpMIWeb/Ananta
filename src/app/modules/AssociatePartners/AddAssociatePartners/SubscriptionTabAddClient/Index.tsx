@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import {
+    JSXElementConstructor,
+    ReactElement,
+    ReactNode,
+    useEffect,
+    useState,
+} from "react";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Button from "../../../../../components/Button/Index";
@@ -20,8 +26,8 @@ import dayjs from "dayjs";
 const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
-    associatePartnerValue,
     partnerCategory,
+    associatePartnerValue,
     selectedAssociatePartnerData,
 }: any) => {
     const dispatch = useAppDispatch();
@@ -668,11 +674,30 @@ const SubscriptionTabAddClient = ({
                                                         styles.subscriptionPrice
                                                     )}
                                                 >
-                                                    {monthAdded
-                                                        ? monthAdded.format(
-                                                              "DD/MM/YYYY"
-                                                          )
-                                                        : "--"}
+                                                    {monthAdded ? (
+                                                        <DatePicker
+                                                            placeholder="Start Date"
+                                                            style={{
+                                                                maxWidth: 154,
+                                                                marginBottom: 0,
+                                                            }}
+                                                            className="customFormDatePicker"
+                                                            format="DD/MM/YYYY"
+                                                            value={monthAdded}
+                                                            disabled
+                                                        />
+                                                    ) : (
+                                                        <DatePicker
+                                                            placeholder="Start Date"
+                                                            style={{
+                                                                maxWidth: 154,
+                                                                marginBottom: 0,
+                                                            }}
+                                                            className="customFormDatePicker"
+                                                            format="DD/MM/YYYY"
+                                                            disabled
+                                                        />
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
@@ -815,7 +840,7 @@ const SubscriptionTabAddClient = ({
                                                 </div>
                                             )}
 
-                                            {associatePartnerValue.state ===
+                                            {/* {associatePartnerValue.state ===
                                                 "Gujarat" && (
                                                 <>
                                                     <div className="row rowPadding">
@@ -873,7 +898,34 @@ const SubscriptionTabAddClient = ({
                                                         </div>
                                                     </div>
                                                 </>
-                                            )}
+                                            )} */}
+                                            <div className="row rowPadding">
+                                                <div className="col">
+                                                    <p className="text-end mb-1">
+                                                        GST @ 18%
+                                                    </p>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div
+                                                        style={{
+                                                            width: 100,
+                                                        }}
+                                                    >
+                                                        <p
+                                                            className="text-end mb-1"
+                                                            id="total"
+                                                        >
+                                                            Rs.
+                                                            {Math.round(
+                                                                (taxableValue /
+                                                                    100) *
+                                                                    18
+                                                            )}
+                                                            /-
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div className="row rowPadding">
                                                 <div className="col">

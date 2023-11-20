@@ -1,15 +1,15 @@
-import { Form, InputNumber } from "antd";
+import { Form } from "antd";
 import React, { memo, useEffect, useState } from "react";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Select from "../../../../../components/Select/Index";
 import Button from "../../../../../components/Button/Index";
 import classNames from "classnames";
 import Icon from "../../../../../components/Icon/Index";
-import { getAddonsReducersListApi } from "../../../../../redux/getAddonsReducers";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Input from "../../../../../components/Input/Index";
 import { RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
+import api from "../../../../utilities/apiServices";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -31,13 +31,26 @@ const SubscriptionAddonsCard = memo(
         );
         const [addOnListOpts, setAddOnListOpts] = useState([]);
 
-        const addonsCardList = useSelector(
+        const getAddonsCardList = useSelector(
             (state: any) => state.getAddonsList.data
         );
 
+        const [addonsCardList, setAddonsCardList] = useState<any>([
+            getAddonsCardList,
+        ]);
+
+        useEffect(() => {
+            getAddonsCardData();
+        }, []);
+
+        const getAddonsCardData = () => {
+            api.getAddonList().then((resp: any) => {
+                setAddonsCardList(resp.data);
+            });
+        };
         const superAdminAddonType = [
             {
-                value: "storage_space",
+                value: "Storage Space",
                 label: "Storage Space",
             },
             {
@@ -147,6 +160,15 @@ const SubscriptionAddonsCard = memo(
 
         const handleAddonTypeChange = (value: any) => {
             setAddOnType(value);
+            getAddonsCardData();
+
+            const addOnList = addonsCardList
+                .filter((a: any) => a.add_on_type === value)
+                .map((a: any) => ({
+                    value: a._id,
+                    label: a.add_on_title,
+                }));
+            setAddOnListOpts(addOnList);
             handleAddonChange(
                 cardIndex,
                 "addOnType",
@@ -160,6 +182,20 @@ const SubscriptionAddonsCard = memo(
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
+
+            console.log("selectedAddonData without call", selectedAddonData);
+            // if (selectedAddonData.time_period_type === "MONTH") {
+            //     let newAmount =
+            //         selectedAddonData.price / selectedAddonData.time_period;
+            //     selectedAddonData.price = newAmount;
+            //     selectedAddonData.time_period = 1;
+            // } else if (selectedAddonData.time_period_type === "DAY") {
+            //     let newAmount =
+            //         selectedAddonData.price / selectedAddonData.time_period;
+            //     selectedAddonData.price = newAmount;
+            //     selectedAddonData.time_period = 1;
+            // }
+            console.log("selectedAddonData", selectedAddonData);
 
             setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
@@ -281,7 +317,7 @@ const SubscriptionAddonsCard = memo(
             const priceStr =
                 ", " + pricePrefix + selectedAddonsPrice + priceSuffix;
 
-            return addonStr.concat(durationStr).concat(priceStr);
+            return addonStr.concat(durationStr);
         };
 
         return (
