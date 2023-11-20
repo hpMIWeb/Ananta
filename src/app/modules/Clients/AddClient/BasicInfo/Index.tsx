@@ -167,7 +167,10 @@ const BasicInfo = ({
                 refferedBy: selectedClientData.refferedBy,
             });
         } else {
-            setNewClientId(getClientId());
+            //setNewClientId(getClientId());
+            form.setFieldsValue({
+                clientId: getClientId(),
+            });
         }
     }, []);
 
@@ -176,11 +179,6 @@ const BasicInfo = ({
             <Form
                 form={form}
                 name="basic"
-                initialValues={{
-                    remember: true,
-                    firmType: "Partnership",
-                    clientId: newClientId,
-                }}
                 onFinish={onFinish}
                 onValuesChange={handleFormValuesChange}
                 autoComplete="off"
@@ -256,7 +254,8 @@ const BasicInfo = ({
                                         className="customAddFormSelectOptions"
                                     >
                                         <Select
-                                            defaultValue="Partnership"
+                                            showSearch
+                                            placeholder="Select Firm Type"
                                             options={firmTypes}
                                         />
                                     </Form.Item>
