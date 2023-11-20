@@ -35,7 +35,7 @@ const NewAddOns = () => {
 
     const superAdminAddonType = [
         {
-            value: "storage_space",
+            value: "Storage Space",
             label: "Storage Space",
         },
         {
@@ -61,7 +61,7 @@ const NewAddOns = () => {
     ];
     const caAdminAddonType = [
         {
-            value: "storage_space",
+            value: "Storage Space",
             label: "Storage Space",
         },
         {
