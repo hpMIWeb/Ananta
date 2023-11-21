@@ -18,6 +18,7 @@ const SubscriptionAddonsCard = memo(
         cardIndex,
         subscriptionAddons,
         setTotalAddonAmount,
+        isEdit,
     }: any) => {
         const currentAddon = subscriptionAddons[cardIndex];
         const [selectNumber, setSelectNumber] = useState(
@@ -346,6 +347,7 @@ const SubscriptionAddonsCard = memo(
                                     showSearch
                                     placeholder="Select Type"
                                     value={currentAddon.addOnType}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -368,6 +370,7 @@ const SubscriptionAddonsCard = memo(
                                     }
                                     placeholder="Select AddOn"
                                     value={currentAddon.addOnPlans}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -424,6 +427,7 @@ const SubscriptionAddonsCard = memo(
                                         max={100}
                                         step={1}
                                         controls
+                                        disabled={!isEdit}
                                     />
                                 </Form.Item>
                             </div>
@@ -438,6 +442,7 @@ const SubscriptionAddonsCard = memo(
                                         handleAddOnRemove(cardIndex);
                                     }}
                                     danger
+                                    disabled={!isEdit}
                                 >
                                     <Icon
                                         height={14}

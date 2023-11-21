@@ -12,6 +12,7 @@ const PaymentFieldRow = ({
     _id,
     handleInstrumentChange,
     data,
+    isEdit,
     ...props
 }: any) => {
     return (
@@ -47,6 +48,7 @@ const PaymentFieldRow = ({
                                 )
                             }
                             value={data.instrumentType}
+                            disabled={!isEdit}
                         />
                     </Form.Item>
                 </div>
@@ -72,6 +74,7 @@ const PaymentFieldRow = ({
                                 )
                             }
                             value={dayjs(data.instrumentDate)}
+                            disabled={!isEdit}
                         />
                     </Form.Item>
                 </div>
@@ -97,6 +100,7 @@ const PaymentFieldRow = ({
                                 )
                             }
                             value={data.instrumentId}
+                            disabled={!isEdit}
                         />
                     </Form.Item>
                 </div>
@@ -127,6 +131,7 @@ const PaymentFieldRow = ({
                                 )
                             }
                             value={data.instrumentAmount}
+                            disabled={!isEdit}
                         />
                     </Form.Item>
                 </div>
@@ -147,6 +152,7 @@ const PaymentFieldRow = ({
                             type="primary"
                             onClick={() => onDelete(_id)}
                             danger
+                            disabled={!isEdit}
                         >
                             <Icon height={14} width={14} name="trashIcon" />
                         </Button>

@@ -7,6 +7,7 @@ import PaymentFieldRow from "./PaymentFieldRow";
 import Icon from "../../../../../components/Icon/Index";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 interface IInstrument {
     instrumentAmount: number;
@@ -22,6 +23,7 @@ const PaymentTabAddClient = ({
     clientValue,
     selectedClientData,
     loading,
+    isEdit,
 }: any) => {
     const [paymentRowData, setPaymentRowData] = useState<IInstrument[]>([
         {
@@ -70,6 +72,18 @@ const PaymentTabAddClient = ({
     }, []);
 
     const onFinish = (values: any) => {
+        if (values.paymentTerms === "Advance") {
+            const hasValues = paymentRowData.some(
+                (row) => row.instrumentType && row.instrumentAmount
+            );
+            if (hasValues) {
+            } else {
+                toast.error("Please enter at least 1 Instrument details.", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+            return;
+        }
         if (billingMethod === "subscription") {
             const finalFormValues = {
                 invoiceAmount: clientValue?.subscriptionDetails?.invoicePrice,
@@ -240,6 +254,7 @@ const PaymentTabAddClient = ({
                                             },
                                         ]}
                                         placeholder="Select Payment Term"
+                                        disabled={!isEdit}
                                     />
                                 </Form.Item>
                             </div>
@@ -302,6 +317,7 @@ const PaymentTabAddClient = ({
                                                         }
                                                     }}
                                                     maxLength="4"
+                                                    disabled={!isEdit}
                                                 />
                                             </Form.Item>
                                         </div>
@@ -335,6 +351,7 @@ const PaymentTabAddClient = ({
                                                                 label: "Months",
                                                             },
                                                         ]}
+                                                        disabled={!isEdit}
                                                     />
                                                 </Form.Item>
                                             </div>
@@ -377,7 +394,7 @@ const PaymentTabAddClient = ({
                                     className="form-label"
                                 >
                                     Payment Mode
-                                    {paymentForm.paymentTerms !== "Advance" && (
+                                    {paymentForm.paymentTerms !== "Credit" && (
                                         <sup className="text-danger fs--1">
                                             *
                                         </sup>
@@ -397,7 +414,7 @@ const PaymentTabAddClient = ({
                                             required:
                                                 makeValidate &&
                                                 paymentForm.paymentTerms !==
-                                                    "Advance",
+                                                    "Credit",
                                             message:
                                                 "Please Select Payment Mode!",
                                         },
@@ -415,6 +432,7 @@ const PaymentTabAddClient = ({
                                             },
                                         ]}
                                         placeholder="Select Payment Mode"
+                                        disabled={!isEdit}
                                     />
                                 </Form.Item>
                             </div>
@@ -426,6 +444,7 @@ const PaymentTabAddClient = ({
                                 _id={payment._id}
                                 handleInstrumentChange={handleInstrumentChange}
                                 data={payment}
+                                isEdit={isEdit}
                             />
                         ))}
                     </div>
@@ -436,6 +455,7 @@ const PaymentTabAddClient = ({
                                     className={styles.addPaymentRowBtn}
                                     onClick={addMoreOwnerCard}
                                     type="primary"
+                                    disabled={!isEdit}
                                 >
                                     <Icon
                                         name="plus"
@@ -470,6 +490,7 @@ const PaymentTabAddClient = ({
                                 type="primary"
                                 htmlType="submit"
                                 loading={loading}
+                                disabled={!isEdit}
                             >
                                 Save
                             </Button>

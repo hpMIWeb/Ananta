@@ -21,6 +21,7 @@ const OwnerInfoCardBox = ({
     clientType,
     form,
     displayNumber,
+    isEdit,
 }: any) => {
     return (
         <>
@@ -39,6 +40,7 @@ const OwnerInfoCardBox = ({
                             onClick={() => {
                                 onDeleteCardClick(field.fieldKey, "_id");
                             }}
+                            disabled={!isEdit}
                         >
                             Delete
                         </Button>
@@ -82,6 +84,7 @@ const OwnerInfoCardBox = ({
                                     id={`firstName-${field.key}`}
                                     placeholder="First Name"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -115,6 +118,7 @@ const OwnerInfoCardBox = ({
                                     id={`middleName-${field.key}`}
                                     placeholder="Middle Name"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -153,6 +157,7 @@ const OwnerInfoCardBox = ({
                                     id={`lastName-${field.key}`}
                                     placeholder="Last Name"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -190,6 +195,7 @@ const OwnerInfoCardBox = ({
                                         { value: "female", label: "Female" },
                                         { value: "Other", label: "Other" },
                                     ]}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -224,6 +230,7 @@ const OwnerInfoCardBox = ({
                                     placeholder="Date of Birth"
                                     className="customFormDatePicker"
                                     format="DD/MM/YYYY"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -265,6 +272,7 @@ const OwnerInfoCardBox = ({
                                                 event.preventDefault();
                                             }
                                         }}
+                                        disabled={!isEdit}
                                     />
                                 </Form.Item>
                             </div>
@@ -301,6 +309,7 @@ const OwnerInfoCardBox = ({
                                     type="email"
                                     placeholder="Email Id"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -335,6 +344,7 @@ const OwnerInfoCardBox = ({
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder="Mobile"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -362,6 +372,7 @@ const OwnerInfoCardBox = ({
                                     containerClass="phoneNumberContainerClassInput"
                                     country="in"
                                     placeholder={"Alternate Mobile"}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -377,6 +388,7 @@ const OwnerInfoCardBox = ({
                             listType="picture-circle"
                             className="avatar-uploader"
                             showUploadList={false}
+                            disabled={!isEdit}
                             // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             // beforeUpload={beforeUpload}
                             // onChange={handleChange}
@@ -391,22 +403,6 @@ const OwnerInfoCardBox = ({
                 </div>
                 <div className={styles.uploadLogoText}>Upload Photo</div>
             </div>
-            {canDelete && (
-                <div className="d-grid gap-2">
-                    <Button
-                        className={classNames(
-                            "cancelBtn",
-                            styles.deleteCardBtn
-                        )}
-                        type="primary"
-                        onClick={() => onDeleteCardClick(index)}
-                        danger
-                    >
-                        <Icon height={14} width={14} name="trashIcon" />
-                        <span style={{ marginLeft: 5 }}>Delete</span>
-                    </Button>
-                </div>
-            )}
         </>
     );
 };

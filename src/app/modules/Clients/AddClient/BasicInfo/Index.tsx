@@ -19,6 +19,8 @@ const BasicInfo = ({
     setFormValue,
     clientType,
     selectedClientData,
+    isEdit,
+    showEditButton,
 }: any) => {
     const lineOfBusinessList =
         useSelector((state: any) => state.getLineOfBusiness.data) || [];
@@ -235,6 +237,7 @@ const BasicInfo = ({
                                                     ); // Remove disallowed characters
                                                 e.target.value = filteredValue;
                                             }}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -257,6 +260,7 @@ const BasicInfo = ({
                                             showSearch
                                             placeholder="Select Firm Type"
                                             options={firmTypes}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -327,6 +331,7 @@ const BasicInfo = ({
                                             placeholder="Pan Number"
                                             className="customAddFormInputText"
                                             maxLength={10}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -403,6 +408,7 @@ const BasicInfo = ({
                                             placeholder="GSTIN"
                                             className="customAddFormInputText"
                                             maxLength={15}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -459,6 +465,7 @@ const BasicInfo = ({
                                                 placeholder="Firm Registration No"
                                                 className="customAddFormInputText"
                                                 maxLength={7}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -528,6 +535,7 @@ const BasicInfo = ({
                                             placeholder="Email"
                                             type="email"
                                             className="customAddFormInputText"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -616,6 +624,7 @@ const BasicInfo = ({
                                                     mobile_hasError: hasError,
                                                 });
                                             }}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -651,6 +660,7 @@ const BasicInfo = ({
                                                         label: industryType.name,
                                                     })
                                                 )}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -678,6 +688,7 @@ const BasicInfo = ({
                                                         label: lineOfBusiness.name,
                                                     })
                                                 )}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -733,6 +744,7 @@ const BasicInfo = ({
                                 <TextArea
                                     placeholder="Address"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -770,6 +782,7 @@ const BasicInfo = ({
                                             event.preventDefault();
                                         }
                                     }}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -796,6 +809,7 @@ const BasicInfo = ({
                                             label: country.countryName,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -822,6 +836,7 @@ const BasicInfo = ({
                                             label: state.name,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -847,6 +862,7 @@ const BasicInfo = ({
                                             label: city.name,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -884,6 +900,7 @@ const BasicInfo = ({
                                             event.preventDefault();
                                         }
                                     }}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -918,6 +935,7 @@ const BasicInfo = ({
                                             event.preventDefault();
                                         }
                                     }}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>

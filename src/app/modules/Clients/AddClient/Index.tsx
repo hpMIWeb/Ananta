@@ -24,8 +24,14 @@ import { useAppDispatch } from "../../../states/store";
 import Select from "../../../../components/Select/Index";
 import Cookies from "js-cookie";
 import { RoleTypes, adminClientTypeOption } from "../../../../utils/constant";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const AddClient = ({ selectedClientData }: any) => {
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [showEditButton, setShowEditButton] = useState<boolean>(false);
+
     const [activeTab, setActiveTab] = useState(1);
     const [disableTabArray, setDisableTabArray] = useState({
         1: false,
@@ -67,10 +73,8 @@ const AddClient = ({ selectedClientData }: any) => {
     }
     useEffect(() => {
         if (!getClientsListSuccess) {
-            // @ts-ignore
             dispatch(getClientsReducersApi());
         }
-        // @ts-ignore
         dispatch(getSubscriptionsListApi());
         dispatch(getLineOfBusinessReducersApi());
         dispatch(getIndustryTypeListReducersApi());
@@ -84,14 +88,25 @@ const AddClient = ({ selectedClientData }: any) => {
     // Set clientType based on selectedClientData or a default value
     useEffect(() => {
         if (selectedClientData) {
+            setShowEditButton(true);
             setClientType(selectedClientData.clientType);
             setSelectedClientId(selectedClientData._id);
             form.setFieldsValue({ clientType: selectedClientData.clientType });
+            setDisableTabArray({
+                1: false,
+                4: false,
+                5: false,
+                6: false,
+            });
         }
     }, [selectedClientData]);
 
     const handleCancelClick = () => {
         navigation("/caclient");
+    };
+
+    const editClickHandler = () => {
+        setIsEdit(!isEdit);
     };
 
     useEffect(() => {
@@ -135,6 +150,8 @@ const AddClient = ({ selectedClientData }: any) => {
                     clientType={clientType}
                     handleCancelClick={handleCancelClick}
                     selectedClientData={selectedClientData}
+                    isEdit={isEdit}
+                    showEditButton={showEditButton}
                 />
             ),
         },
@@ -159,6 +176,7 @@ const AddClient = ({ selectedClientData }: any) => {
                     clientType={clientType}
                     clientValue={clientValue}
                     selectedClientData={selectedClientData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -173,6 +191,7 @@ const AddClient = ({ selectedClientData }: any) => {
                     clientType={clientType}
                     clientValue={clientValue}
                     selectedClientData={selectedClientData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -188,6 +207,7 @@ const AddClient = ({ selectedClientData }: any) => {
                     clientValue={clientValue}
                     selectedClientData={selectedClientData}
                     loading={loading}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -273,8 +293,8 @@ const AddClient = ({ selectedClientData }: any) => {
                                 form={form}
                                 name="basic"
                                 autoComplete="off"
-                                requiredMark={false}
                                 className="customAddForm"
+                                disabled={!isEdit}
                             >
                                 <Form.Item
                                     name="clientType"
@@ -299,6 +319,36 @@ const AddClient = ({ selectedClientData }: any) => {
                             </Form>
                         </div>
                     </div>
+                    <div
+                        className={classNames("col-12 col-md-6 col-lg-6")}
+                    ></div>
+                    {showEditButton && (
+                        <div className={classNames("col-12 col-md-2 col-lg-2")}>
+                            <div className="mb-3">
+                                <div
+                                    className="ms-auto mt-5"
+                                    style={{ float: "right" }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={isEdit ? faXmark : faEdit}
+                                        style={{
+                                            fontSize: isEdit ? "25px" : "20px",
+                                            color: "#2c7be5",
+                                            cursor: "pointer",
+                                            marginRight: "15px",
+                                            float: "right",
+                                            marginTop: isEdit ? "-3px" : "0",
+                                        }}
+                                        title={
+                                            "Click here to " +
+                                            (isEdit ? "cancel" : "edit")
+                                        }
+                                        onClick={editClickHandler}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 {clientType !== "" && (
                     <Tabs

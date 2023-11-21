@@ -7,6 +7,7 @@ const CardBottomAction = ({
     addCardClick,
     handleCancelClick,
     firmType,
+    isEdit,
 }: any) => {
     return (
         <div className="d-flex">
@@ -16,6 +17,7 @@ const CardBottomAction = ({
                         className={styles.addOwnerInfoBtn}
                         onClick={addCardClick}
                         type="primary"
+                        disabled={!isEdit}
                     >
                         <Icon name="plus" width={14.25} height={16} />
                         Add

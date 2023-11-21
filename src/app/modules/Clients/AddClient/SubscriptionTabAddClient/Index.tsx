@@ -31,6 +31,7 @@ const SubscriptionTabAddClient = ({
     clientType,
     clientValue,
     selectedClientData,
+    isEdit,
 }: any) => {
     const dispatch = useAppDispatch();
     const subscriptionCardList = useSelector(
@@ -505,6 +506,7 @@ const SubscriptionTabAddClient = ({
                                                         setMakeValidate(false);
                                                     }
                                                 }}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -552,6 +554,7 @@ const SubscriptionTabAddClient = ({
                                                     )}
                                                     showSearch
                                                     placeholder="Select Plan"
+                                                    disabled={!isEdit}
                                                 />
                                             </Form.Item>
                                         </div>
@@ -592,6 +595,7 @@ const SubscriptionTabAddClient = ({
                                             setTotalAddonAmount={
                                                 setTotalAddonAmount
                                             } // Pass the function to update total
+                                            isEdit={isEdit}
                                         />
                                     )
                                 )}
@@ -604,6 +608,7 @@ const SubscriptionTabAddClient = ({
                                                 }
                                                 onClick={handleAddonClick}
                                                 type="primary"
+                                                disabled={!isEdit}
                                             >
                                                 <Icon
                                                     name="plus"
@@ -653,6 +658,7 @@ const SubscriptionTabAddClient = ({
                                                         }}
                                                         className="customFormDatePicker"
                                                         format="DD/MM/YYYY"
+                                                        disabled={!isEdit}
                                                     />
                                                 </Form.Item>
                                             </div>
@@ -779,6 +785,9 @@ const SubscriptionTabAddClient = ({
                                                                 defaultValue={0}
                                                                 className="customAddFormInputText text-end"
                                                                 maxLength="10"
+                                                                disabled={
+                                                                    !isEdit
+                                                                }
                                                             />
                                                         </Form.Item>
                                                     </div>
@@ -941,6 +950,9 @@ const SubscriptionTabAddClient = ({
                                                                 defaultValue={0}
                                                                 className="customAddFormInputText text-end"
                                                                 maxLength={6}
+                                                                disabled={
+                                                                    !isEdit
+                                                                }
                                                             />
                                                         </Form.Item>
                                                     </div>

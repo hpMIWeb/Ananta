@@ -13,6 +13,7 @@ const OwnerInfo = ({
     clientType,
     clientValue,
     selectedClientData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const [ownerInfoData, setOwnerInfoData] = useState([
@@ -119,6 +120,7 @@ const OwnerInfo = ({
                                                 onDeleteCardClick
                                             }
                                             clientType={clientType}
+                                            isEdit={isEdit}
                                         />
                                         <Divider></Divider>
                                     </div>
@@ -133,6 +135,7 @@ const OwnerInfo = ({
                             addCardClick={addMoreOwnerCard}
                             onChange={onChange}
                             firmType={clientValue.firmType}
+                            isEdit={isEdit}
                         />
                     </div>
                 </div>
