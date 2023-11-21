@@ -88,7 +88,7 @@ const AddClient = ({ selectedClientData }: any) => {
     // Set clientType based on selectedClientData or a default value
     useEffect(() => {
         if (selectedClientData) {
-            //  setIsEdit(true);
+            setShowEditButton(true);
 
             setClientType(selectedClientData.clientType);
             setSelectedClientId(selectedClientData._id);
