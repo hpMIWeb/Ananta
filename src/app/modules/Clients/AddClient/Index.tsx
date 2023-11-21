@@ -88,7 +88,8 @@ const AddClient = ({ selectedClientData }: any) => {
     // Set clientType based on selectedClientData or a default value
     useEffect(() => {
         if (selectedClientData) {
-            setShowEditButton(true);
+            //  setIsEdit(true);
+
             setClientType(selectedClientData.clientType);
             setSelectedClientId(selectedClientData._id);
             form.setFieldsValue({ clientType: selectedClientData.clientType });
@@ -98,6 +99,8 @@ const AddClient = ({ selectedClientData }: any) => {
                 5: false,
                 6: false,
             });
+        } else {
+            setIsEdit(true);
         }
     }, [selectedClientData]);
 

@@ -65,31 +65,31 @@ const NewAddOns = () => {
             label: "Storage Space",
         },
         {
-            value: "client",
+            value: "Clients",
             label: "Clients",
         },
         {
-            value: "office_users",
+            value: "Office Users",
             label: "Office Users",
         },
         {
-            value: "client_users",
+            value: "Client Users",
             label: "Client Users",
         },
         {
-            value: "vendor_users",
+            value: "Vendor Users",
             label: "Vendor Users",
         },
         {
-            value: "transactional_credit",
+            value: "Transactional Credit",
             label: "Transactional Credit",
         },
         {
-            value: "branches",
+            value: "Branches",
             label: "Branches",
         },
         {
-            value: "feature",
+            value: "Feature",
             label: "Feature",
         },
         {
@@ -97,31 +97,31 @@ const NewAddOns = () => {
             label: "Turnover",
         },
         {
-            value: "sales_and_purchase",
+            value: "Sales And Purchase",
             label: "Sales And Purchase",
         },
         {
-            value: "credit_and_debit_notes",
+            value: "Credit And Debit notes",
             label: "Credit And Debit notes",
         },
         {
-            value: "receipt_and_payments",
+            value: "Receipt and payments",
             label: "Receipt and payments",
         },
         {
-            value: "contras",
+            value: "Contras",
             label: "Contras",
         },
         {
-            value: "journals",
+            value: "Journals",
             label: "Journals",
         },
         {
-            value: "stock_journals",
+            value: "Stock Journals",
             label: "Stock Journals",
         },
         {
-            value: "transactional_all",
+            value: "Transactional All",
             label: "Transactional All",
         },
     ];
