@@ -18,6 +18,7 @@ const SubscriptionAddonsCard = memo(
         cardIndex,
         subscriptionAddons,
         setTotalAddonAmount,
+        selectedSubscriptionPlan,
     }: any) => {
         const currentAddon = subscriptionAddons[cardIndex];
         const [selectNumber, setSelectNumber] = useState(
@@ -29,6 +30,8 @@ const SubscriptionAddonsCard = memo(
         const [selectAddonDetails, setSelectedAddonDetails] = useState<any>(
             {} as any
         );
+        const [selectAddonDetailsForString, setSelectedAddonDetailsForString] =
+            useState<any>({} as any);
         const [addOnListOpts, setAddOnListOpts] = useState([]);
 
         const getAddonsCardList = useSelector(
@@ -74,6 +77,7 @@ const SubscriptionAddonsCard = memo(
                 label: "Features List",
             },
         ];
+
         const caAdminAddonType = [
             {
                 value: "Storage Space",
@@ -162,13 +166,14 @@ const SubscriptionAddonsCard = memo(
             setAddOnType(value);
             getAddonsCardData();
 
-            const addOnList = addonsCardList
-                .filter((a: any) => a.add_on_type === value)
-                .map((a: any) => ({
-                    value: a._id,
-                    label: a.add_on_title,
-                }));
+            const addOnList = addonsCardList.filter(
+                (a: any) => a.add_on_type === value
+            );
+
             setAddOnListOpts(addOnList);
+            currentAddon.addOnPlans = undefined;
+            setSelectedAddonDetailsForString({});
+            generateAddonDetails();
             handleAddonChange(
                 cardIndex,
                 "addOnType",
@@ -183,22 +188,51 @@ const SubscriptionAddonsCard = memo(
                 (a: any) => a._id === value
             )[0];
 
-            console.log("selectedAddonData without call", selectedAddonData);
-            // if (selectedAddonData.time_period_type === "MONTH") {
-            //     let newAmount =
-            //         selectedAddonData.price / selectedAddonData.time_period;
-            //     selectedAddonData.price = newAmount;
-            //     selectedAddonData.time_period = 1;
-            // } else if (selectedAddonData.time_period_type === "DAY") {
-            //     let newAmount =
-            //         selectedAddonData.price / selectedAddonData.time_period;
-            //     selectedAddonData.price = newAmount;
-            //     selectedAddonData.time_period = 1;
-            // }
-            console.log("selectedAddonData", selectedAddonData);
+            let selectedAddonData1 = addonsCardList.filter(
+                (a: any) => a._id === value
+            )[0];
+
+            setSelectedAddonDetailsForString(selectedAddonData1);
+            if (selectedSubscriptionPlan.period_type === "MONTH") {
+                if (selectedAddonData.time_period_type === "MONTH") {
+                    let newAmountPerMonth =
+                        selectedAddonData.price / selectedAddonData.time_period;
+                    selectedAddonData.price =
+                        newAmountPerMonth * selectedSubscriptionPlan.period;
+                } else {
+                    let newAmountAsPerDay =
+                        selectedAddonData.price / selectedAddonData.time_period;
+
+                    let newAmountAsPerMonth = newAmountAsPerDay * 30; // 30day per month
+                    selectedAddonData.price =
+                        newAmountAsPerMonth * selectedSubscriptionPlan.period;
+                }
+            } else if (selectedSubscriptionPlan.period_type === "DAY") {
+                let newAmount =
+                    selectedAddonData.price / selectedAddonData.time_period;
+
+                selectedAddonData.price =
+                    newAmount * selectedAddonData.time_period;
+
+                /// new
+                if (selectedAddonData.time_period_type === "MONTH") {
+                    let newAmountPerMonth =
+                        selectedAddonData.price / selectedAddonData.time_period;
+                    selectedAddonData.price =
+                        newAmountPerMonth * selectedSubscriptionPlan.period;
+                } else {
+                    let newAmountAsPerDay =
+                        selectedAddonData.price / selectedAddonData.time_period;
+
+                    let newAmountAsPerMonth = newAmountAsPerDay * 30; // 30day per month
+                    selectedAddonData.price =
+                        newAmountAsPerMonth * selectedSubscriptionPlan.period;
+                }
+            }
 
             setSelectedAddonDetails(selectedAddonData);
             setSelectedAddonPrice(selectedAddonData.price * selectNumber);
+
             handleAddonChange(
                 cardIndex,
                 "addOnPlans",
@@ -283,39 +317,51 @@ const SubscriptionAddonsCard = memo(
             const priceSuffix = "/-";
             const pricePrefix = " Rs ";
 
+            // Check if selectAddonDetailsForString is empty
+            if (
+                !selectAddonDetailsForString ||
+                Object.keys(selectAddonDetailsForString).length === 0
+            ) {
+                return "";
+            }
+
             let addonStr =
-                selectAddonDetails.add_on_title +
+                selectAddonDetailsForString.add_on_title +
                 " " +
-                selectAddonDetails.add_on_type +
+                selectAddonDetailsForString.add_on_type +
                 " @ " +
                 pricePrefix +
-                selectAddonDetails.price +
+                selectAddonDetailsForString.price +
                 priceSuffix;
 
             let dayStr = "";
 
-            switch (selectAddonDetails.time_period_type) {
+            switch (selectAddonDetailsForString.time_period_type) {
                 case "DAY": {
                     dayStr =
-                        selectAddonDetails.time_period > 1 ? "Days" : "Day";
+                        selectAddonDetailsForString.time_period > 1
+                            ? "Days"
+                            : "Day";
                     break;
                 }
                 case "MONTH": {
                     dayStr =
-                        selectAddonDetails.time_period > 1 ? "Months" : "Month";
+                        selectAddonDetailsForString.time_period > 1
+                            ? "Months"
+                            : "Month";
                     break;
                 }
                 default: {
-                    dayStr = selectAddonDetails.time_period_type;
+                    dayStr = selectAddonDetailsForString.time_period_type;
                     break;
                 }
             }
 
             const durationStr =
-                ", For " + selectAddonDetails.time_period + " " + dayStr;
-
-            const priceStr =
-                ", " + pricePrefix + selectedAddonsPrice + priceSuffix;
+                ", For " +
+                selectAddonDetailsForString.time_period +
+                " " +
+                dayStr;
 
             return addonStr.concat(durationStr);
         };
@@ -357,7 +403,7 @@ const SubscriptionAddonsCard = memo(
                                     {
                                         required: true,
                                         message:
-                                            "Please Enter your Subscription Plan!",
+                                            "Please Enter your Addon Plan!",
                                     },
                                 ]}
                             >

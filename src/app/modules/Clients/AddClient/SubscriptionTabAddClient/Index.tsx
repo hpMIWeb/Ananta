@@ -546,6 +546,7 @@ const SubscriptionTabAddClient = ({
                                                 ]}
                                             >
                                                 <Select
+                                                    placeholder="Select Plan"
                                                     options={subscriptionCardList.map(
                                                         (s: any) => ({
                                                             value: s._id,
@@ -553,7 +554,6 @@ const SubscriptionTabAddClient = ({
                                                         })
                                                     )}
                                                     showSearch
-                                                    placeholder="Select Plan"
                                                     disabled={!isEdit}
                                                 />
                                             </Form.Item>
@@ -596,6 +596,9 @@ const SubscriptionTabAddClient = ({
                                                 setTotalAddonAmount
                                             } // Pass the function to update total
                                             isEdit={isEdit}
+                                            selectedSubscriptionPlan={
+                                                selectedSubscriptionPlan
+                                            }
                                         />
                                     )
                                 )}
