@@ -18,6 +18,7 @@ const SubscriptionAddonsCard = memo(
         cardIndex,
         subscriptionAddons,
         setTotalAddonAmount,
+        isEdit,
         selectedSubscriptionPlan,
     }: any) => {
         const currentAddon = subscriptionAddons[cardIndex];
@@ -414,6 +415,7 @@ const SubscriptionAddonsCard = memo(
                                     }
                                     placeholder="Select AddOn"
                                     value={currentAddon.addOnPlans || undefined}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -445,7 +447,7 @@ const SubscriptionAddonsCard = memo(
                                         className="customInputNumber"
                                         addonBefore={
                                             <Button
-                                                disabled={selectNumber === 0}
+                                                disabled={selectNumber === 1}
                                                 style={{ padding: 10 }}
                                                 className="transparentBtn"
                                                 onClick={handlerDecrease}
@@ -458,6 +460,7 @@ const SubscriptionAddonsCard = memo(
                                                 style={{ padding: 10 }}
                                                 className="transparentBtn"
                                                 onClick={handlerIncrease}
+                                                disabled={!isEdit}
                                             >
                                                 +
                                             </Button>
@@ -466,10 +469,11 @@ const SubscriptionAddonsCard = memo(
                                         onChange={(e: any) => {
                                             handleQtyChange(e);
                                         }}
-                                        min={0}
+                                        min={1}
                                         max={100}
                                         step={1}
                                         controls
+                                        disabled={!isEdit}
                                     />
                                 </Form.Item>
                             </div>
@@ -484,6 +488,7 @@ const SubscriptionAddonsCard = memo(
                                         handleAddOnRemove(cardIndex);
                                     }}
                                     danger
+                                    disabled={!isEdit}
                                 >
                                     <Icon
                                         height={14}
