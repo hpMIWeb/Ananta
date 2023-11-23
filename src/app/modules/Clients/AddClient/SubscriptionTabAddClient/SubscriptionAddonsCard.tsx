@@ -50,6 +50,8 @@ const SubscriptionAddonsCard = memo(
         const getAddonsCardData = () => {
             api.getAddonList().then((resp: any) => {
                 setAddonsCardList(resp.data);
+                calculateTotal(resp.data);
+                generateAddonDetails();
             });
         };
         const superAdminAddonType = [
@@ -248,10 +250,16 @@ const SubscriptionAddonsCard = memo(
             handleRemoveAddon(cardIndex);
         };
 
-        const calculateTotal = () => {
-            const selectedAddonData = addonsCardList.find(
+        const calculateTotal = (addonsCardList12 = []) => {
+            let selectedAddonData = addonsCardList.find(
                 (a: any) => a._id === currentAddon.addOnPlans
             );
+            if (addonsCardList12.length > 0) {
+                selectedAddonData = addonsCardList12.find(
+                    (a: any) => a._id === currentAddon.addOnPlans
+                );
+            }
+
             const addonPrice = selectedAddonData ? selectedAddonData.price : 0;
             const updatedAddon = {
                 ...currentAddon,
