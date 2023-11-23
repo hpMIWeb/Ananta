@@ -22,6 +22,11 @@ const SubscriptionAddonsCard = memo(
         selectedSubscriptionPlan,
     }: any) => {
         const currentAddon = subscriptionAddons[cardIndex];
+        // Add state for selected add-on plan
+        const [selectedAddonPlan, setSelectedAddonPlan] = useState(
+            currentAddon.addOnPlans
+        );
+
         const [selectNumber, setSelectNumber] = useState(
             currentAddon ? currentAddon.addOnQuantity : 1
         );
@@ -174,7 +179,9 @@ const SubscriptionAddonsCard = memo(
             );
 
             setAddOnListOpts(addOnList);
-            currentAddon.addOnPlans = undefined;
+            // Update the selected add-on plan when changing add-on type
+            setSelectedAddonPlan(undefined);
+
             setSelectedAddonDetailsForString({});
             generateAddonDetails();
             handleAddonChange(
@@ -187,6 +194,7 @@ const SubscriptionAddonsCard = memo(
         };
 
         const handleAddonPlanChange = (value: any) => {
+            setSelectedAddonPlan(value);
             let selectedAddonData = addonsCardList.filter(
                 (a: any) => a._id === value
             )[0];
@@ -401,6 +409,7 @@ const SubscriptionAddonsCard = memo(
                                     showSearch
                                     placeholder="Select Type"
                                     value={currentAddon.addOnType || undefined}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -422,7 +431,7 @@ const SubscriptionAddonsCard = memo(
                                         handleAddonPlanChange(e)
                                     }
                                     placeholder="Select AddOn"
-                                    value={currentAddon.addOnPlans || undefined}
+                                    value={selectedAddonPlan || undefined}
                                     disabled={!isEdit}
                                 />
                             </Form.Item>
