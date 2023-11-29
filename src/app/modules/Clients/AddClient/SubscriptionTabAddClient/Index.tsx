@@ -7,7 +7,17 @@ import {
 } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Col, DatePicker, Drawer, Form, Row, Select } from "antd";
+import {
+    Avatar,
+    Card,
+    Col,
+    DatePicker,
+    Drawer,
+    Form,
+    Image,
+    Row,
+    Select,
+} from "antd";
 import styles from "./subscriptionTabAddClient.module.scss";
 import Button from "../../../../../components/Button/Index";
 import Icon from "../../../../../components/Icon/Index";
@@ -24,7 +34,8 @@ import { toast } from "react-toastify";
 import { ClientType, RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
-
+import cashBack from "../../../../../assets/images/cashbac.png";
+import falconIcon from "../../../../../assets/images/falcon.png";
 const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
@@ -1001,7 +1012,7 @@ const SubscriptionTabAddClient = ({
                     </Col>
                 </Row>
                 {filteredPromoCodes.map((coupon: any) => (
-                    <Card
+                    /*<Card
                         key={coupon._id}
                         style={{
                             marginBottom: "16px",
@@ -1029,7 +1040,84 @@ const SubscriptionTabAddClient = ({
                         >
                             Apply Coupon
                         </Button>
-                    </Card>
+                    </Card>*/
+
+                    <Col>
+                        <div
+                            className="d-flex border shadow-sm mb-4"
+                            style={{ borderRadius: "10px" }}
+                        >
+                            <div className="top-0 start-0 gap-3">
+                                <img
+                                    //className="img-fluid"
+                                    className="me-2"
+                                    src={cashBack}
+                                    alt=""
+                                    width="40"
+                                    height="100%"
+                                />
+                            </div>
+                            <div
+                                className="w-100 rounded p-3 history-card"
+                                style={{ paddingTop: "30px !important" }}
+                            >
+                                <div className="d-flex gap-3 ">
+                                    <img
+                                        className="me-2"
+                                        src={falconIcon}
+                                        alt=""
+                                        width="10%"
+                                        height="10%"
+                                    />
+                                    <div className="">
+                                        <h6 className="mb-1 fw-bold">
+                                            {coupon.name}
+                                        </h6>
+                                        <p className="fs-14 text-opacity-50 mb-1">
+                                            {coupon.description}
+                                        </p>
+                                    </div>
+                                    <div className="ms-auto text-end">
+                                        <Button
+                                            type="link"
+                                            block
+                                            className="me-2"
+                                            onClick={() => {
+                                                applyCoupon(coupon);
+                                            }}
+                                        >
+                                            APPLY
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="d-flex align-items-center gap-3 border-top pt-3 mt-3">
+                                    <div className="text-start">
+                                        <span className="mb-0">
+                                            <Button
+                                                type="link"
+                                                block
+                                                className="me-2"
+                                            >
+                                                + More
+                                            </Button>
+                                        </span>
+                                    </div>
+                                    {/* <div className="ms-auto text-end">
+                                        <Button
+                                            type="primary"
+                                            className="text-uppercase me-2"
+                                            //style={{ width: "100%" }}
+                                            onClick={() => {
+                                                applyCoupon(coupon);
+                                            }}
+                                        >
+                                            Apply Coupon
+                                        </Button>
+                                    </div> */}
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
                 ))}
             </Drawer>
         </Form>
