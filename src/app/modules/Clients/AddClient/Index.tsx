@@ -245,9 +245,10 @@ const AddClient = ({ selectedClientData }: any) => {
                 >
                     <div
                         className={classNames(
-                            "d-flex align-items-center w-100",
-                            styles.promocodeHeaderTitle
+                            "card-header d-flex",
+                            styles.promoCodeCardHeaderBox
                         )}
+                        style={{ minHeight: 60 }}
                     >
                         <div className="me-auto">
                             <h5
