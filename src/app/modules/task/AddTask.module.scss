@@ -66,4 +66,55 @@
     .cancelAddClientBtn {
         margin-bottom: 5px;
     }
+
+    .a1 {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .a2 {
+        font-size: 30px !important;
+    }
+    .aa2 {
+        font-size: 30px;
+        margin-left: 50px;
+    }
+    .a3 {
+        font-size: 12px;
+        color: gray;
+    }
+    .a4 {
+        font-size: 12px;
+        color: black;
+        margin-top: -14px;
+        font-weight: 600;
+    }
+    .a5 {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .aa5 {
+        display: flex;
+        flex-wrap: nowrap;
+        margin-left: 210px;
+    }
+    .a6 {
+        color: black;
+        font-size: smaller;
+    }
+    .a7 {
+        color: black;
+        font-weight: 600;
+        font-size: smaller;
+    }
+    .a8 {
+        width: fit-content;
+    }
+    .a9 {
+        margin-top: 50px;
+        margin-left: 130px;
+        display: flex;
+    }
+    .a10 {
+        background-color: azure;
+    }
 }
