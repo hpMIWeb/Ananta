@@ -436,31 +436,46 @@ const AddTask = () => {
                                 )}
                             >
                                 <div className="mb-3">
-                                    <Form.Item
-                                        className="customAddClientSelectOptions"
-                                        name="mode"
-                                        rules={[
+                                    <div className={styles.a1}>
+                                        <div className={styles.a5}>
                                             {
-                                                required: true,
-                                                message:
-                                                    "Please select task mode.",
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            ref={selectModeRef}
-                                            allowClear
-                                            placeholder={
-                                                <span>Select Mode</span>
+                                                <CalendarOutlined
+                                                    className={styles.a2}
+                                                />
                                             }
-                                            options={modeOptions}
-                                            value={addTask.mode}
-                                            showSearch={true}
-                                            onChange={(value, event) => {
-                                                inputChangeHandler(event);
-                                            }}
-                                        />
-                                    </Form.Item>
+                                            &nbsp;
+                                            <div>
+                                                <p className={styles.a3}>
+                                                    Due Date
+                                                </p>
+                                                <p className={styles.a4}>
+                                                    {" "}
+                                                    Not set yet{" "}
+                                                    <Popover
+                                                        style={{ width: "20%" }}
+                                                        placement="bottom"
+                                                        content={
+                                                            <div
+                                                                style={{
+                                                                    width: 300,
+                                                                }}
+                                                            >
+                                                                <DatePicker
+                                                                    showTime
+                                                                    bordered={
+                                                                        false
+                                                                    }
+                                                                    className="w100"
+                                                                />
+                                                            </div>
+                                                        }
+                                                    >
+                                                        <CaretDownOutlined></CaretDownOutlined>
+                                                    </Popover>{" "}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
