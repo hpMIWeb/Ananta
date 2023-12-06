@@ -163,7 +163,7 @@ const items: MenuItem[] = [
                 <Icon name="submission" width={17.5} height={14} />
             ),
             getItem(
-                "PromoCodes",
+                "Promo Codes",
                 "3",
                 <Icon name="promo" width={17.5} height={14} />
             ),
