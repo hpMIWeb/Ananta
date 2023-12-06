@@ -322,7 +322,9 @@ const SubscriptionTab = () => {
                                 Subscribers
                             </p>
                             <p className="semiBold">
-                                {cardInfo.subscribers_count}
+                                {cardInfo.subscribers_count
+                                    ? cardInfo.subscribers_count
+                                    : 0}
                             </p>
                         </>
                     ),
