@@ -135,6 +135,16 @@ const BasicInfo = ({
         if ("pinCode" in changedValues && changedValues.pinCode.length === 6) {
             getPostalCodeData(changedValues);
         }
+        if ("firmPAN" in changedValues) {
+            form.setFieldsValue({
+                firmPAN: changedValues.firmPAN.toUpperCase(),
+            });
+        }
+        if ("firmGSTIN" in changedValues) {
+            form.setFieldsValue({
+                firmGSTIN: changedValues.firmGSTIN.toUpperCase(),
+            });
+        }
     };
 
     useEffect(() => {

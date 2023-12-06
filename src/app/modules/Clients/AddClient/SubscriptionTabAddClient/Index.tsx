@@ -89,6 +89,7 @@ const SubscriptionTabAddClient = ({
     const showDrawer = () => {
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
+
         setPromoCodeList(promoCardList);
         setOpenPromoCodeDrawer(true);
     };
