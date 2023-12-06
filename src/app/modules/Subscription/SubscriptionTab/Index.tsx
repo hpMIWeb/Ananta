@@ -45,6 +45,7 @@ const SubscriptionTab = () => {
     const [selectedSubscriptionId, setSelectedSubscriptionId] = useState("");
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
     const [currentPageSize, setCurrentPageSize] = useState<number>(5);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [superAdminAddon, setSuperAdminAddonOption] = useState([
         {
             value: "All Subscription",
@@ -73,6 +74,25 @@ const SubscriptionTab = () => {
             label: "Associate Partner",
         },
     ]);
+
+    const [getSubscriptionList, setGetSubscriptionList] = useState<any>([]);
+
+    const [addonFilterState, setAddonFilterValueState] = useState({
+        type: "category",
+        value: "",
+    });
+
+    // Set the initial state of clientData to all clients
+    useEffect(() => {
+        setGetSubscriptionList(
+            getFilteredValue(
+                getSubscriptionList,
+                "",
+                sortState,
+                addonFilterState
+            )
+        );
+    }, [getSubscriptionList, sortState, addonFilterState]);
     const addonOption =
         roleType === RoleTypes.SuperAdmin
             ? superAdminAddon
@@ -509,6 +529,28 @@ const SubscriptionTab = () => {
         }
     }, [editSubscriptionsSuccess]);
 
+    useEffect(() => {
+        const subscriptionData = getFilteredValue(
+            getSubscriptionList,
+            searchQuery,
+            sortState,
+            addonFilterState
+        );
+        setGetSubscriptionList(subscriptionData);
+    }, [searchQuery]);
+
+    // Search input change handler
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
+        const subscriptionData = getFilteredValue(
+            getSubscriptionList,
+            searchValue,
+            sortState,
+            addonFilterState
+        );
+        setGetSubscriptionList(subscriptionData);
+    };
+
     const setPageChange = (pageNumber: number, pageSize: number) => {
         setCurrentPageNumber(pageNumber);
         setCurrentPageSize(pageSize);
@@ -518,10 +560,30 @@ const SubscriptionTab = () => {
         <div>
             <SearchFilterBar
                 searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                sortState={sortState}
-                setSortStateHandler={setSortState}
+                setSearchValue={handleSearch}
                 showAddOn={true}
+                sortState={sortState}
+                addonFilterState={addonFilterState}
+                setSortStateHandler={(options: any) => {
+                    setSortState(options);
+                    const subscriptionDataList = getFilteredValue(
+                        getSubscriptionList,
+                        searchQuery,
+                        sortState,
+                        addonFilterState
+                    );
+                    setGetSubscriptionList(subscriptionDataList);
+                }}
+                setAddonFilterHandler={(fillerValue: any) => {
+                    setAddonFilterValueState(fillerValue);
+                    const subscriptionDataList = getFilteredValue(
+                        getSubscriptionList,
+                        searchQuery,
+                        sortState,
+                        addonFilterState
+                    );
+                    setGetSubscriptionList(subscriptionDataList);
+                }}
                 addonOption={addonOption}
                 initialAddOnsValue="All Subscription"
             />
