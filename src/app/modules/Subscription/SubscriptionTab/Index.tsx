@@ -273,15 +273,16 @@ const SubscriptionTab = () => {
                 },
             ];
         } else {
+            console.log(cardInfo);
             return [
                 {
                     iconName: "time",
                     descComponent: (
                         <>
                             <p className="mb-0 fs--1 description-label">
-                                Validity
+                                Category
                             </p>
-                            <p className="semiBold">{cardInfo.period}</p>
+                            <p className="semiBold">{cardInfo.category}</p>
                         </>
                     ),
                 },
