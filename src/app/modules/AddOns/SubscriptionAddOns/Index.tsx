@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../../components/Button/Index";
 import styles from "./subscriptionAddOns.module.scss";
 import AddOnsAccordianContent from "../../Subscription/AddOnsAccordianContent/Index";
@@ -25,7 +25,7 @@ const SubscriptionAddOns = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
     const [currentPageSize, setCurrentPageSize] = useState<number>(5);
     const navigation = useNavigate();
-
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const handleEditBtnClick = (id: string) => {
         navigation(`/addons/edit`, { state: { id: id } });
     };
@@ -35,16 +35,61 @@ const SubscriptionAddOns = () => {
         setCurrentPageSize(pageSize);
     };
 
+    const [addonData, setAddonData] = useState<any>([]);
+    const [addonFilterState, setAddonFilterValueState] = useState({
+        type: "add_on_type",
+        value: "",
+    });
+    // Set the initial state of clientData to all clients
+    useEffect(() => {
+        setAddonData(
+            getFilteredValue(
+                addonsListCardList,
+                "",
+                sortState,
+                addonFilterState
+            )
+        );
+    }, [addonsListCardList, sortState, addonFilterState]);
+
+    // Search input change handler
+    const handleSearch = (searchValue: string) => {
+        setSearchQuery(searchValue);
+        const subscriptionData = getFilteredValue(
+            addonsListCardList,
+            searchValue,
+            sortState,
+            addonFilterState
+        );
+        setAddonData(subscriptionData);
+    };
+
     return (
         <div className={styles.addOnsTabWrapper}>
             <SearchFilterBar
                 showAddOn
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
+                setSearchValue={handleSearch}
                 sortState={sortState}
-                setSortState={setSortState}
+                addonFilterState={addonFilterState}
                 setSortStateHandler={(options: any) => {
                     setSortState(options);
+                    const subscriptionDataList = getFilteredValue(
+                        addonData,
+                        searchQuery,
+                        sortState,
+                        addonFilterState
+                    );
+                    setAddonData(subscriptionDataList);
+                }}
+                setAddonFilterHandler={(fillerValue: any) => {
+                    setAddonFilterValueState(fillerValue);
+                    const subscriptionDataList = getFilteredValue(
+                        addonData,
+                        searchQuery,
+                        sortState,
+                        addonFilterState
+                    );
+                    setAddonData(subscriptionDataList);
                 }}
             />
             {/* <div className="d-flex w-100">
@@ -65,28 +110,26 @@ const SubscriptionAddOns = () => {
             <div className={styles.addOnsAccordianWrapper}>
                 {loading && <CardContentSkeletonLoader />}
                 {!loading &&
-                    getFilteredValue(
-                        displayedPaginationItems,
-                        searchValue,
-                        sortState
-                    ).map((addOns: any, index: number) => (
-                        <AddOnsAccordianContent
-                            displayIndex={getCurrentItemNumber(
-                                index + 1,
-                                currentPageNumber,
-                                currentPageSize
-                            )}
-                            key={addOns._id}
-                            addOnsDetail={addOns}
-                            handleEditBtnClick={handleEditBtnClick}
-                        />
-                    ))}
+                    displayedPaginationItems.map(
+                        (addOns: any, index: number) => (
+                            <AddOnsAccordianContent
+                                displayIndex={getCurrentItemNumber(
+                                    index + 1,
+                                    currentPageNumber,
+                                    currentPageSize
+                                )}
+                                key={addOns._id}
+                                addOnsDetail={addOns}
+                                handleEditBtnClick={handleEditBtnClick}
+                            />
+                        )
+                    )}
             </div>
-            {!loading && !addonsListCardList.length && (
+            {!loading && !addonData.length && (
                 <NoDataAvailable name="No AddOns Available!" />
             )}
             <Pagination
-                data={addonsListCardList}
+                data={addonData}
                 setPaginationDisplayedItems={setPaginationDisplayedItems}
                 setPageNumber={setPageChange}
             />
