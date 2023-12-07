@@ -89,6 +89,13 @@ const OrganisationDetails = ({
         }
     };
 
+    const handlePanChange = (e: any) => {
+        const inputValue = e.target.value.toUpperCase();
+        //   setPanValue(inputValue);
+        // You can also update the form value if needed
+        form.setFieldsValue({ pan: inputValue });
+    };
+
     return (
         <div>
             <Form
@@ -316,6 +323,7 @@ const OrganisationDetails = ({
                                                 placeholder="PAN Number"
                                                 className="customAddFormInputText"
                                                 maxLength={10}
+                                                onChange={handlePanChange}
                                             />
                                         </Form.Item>
                                     </div>
