@@ -26,8 +26,13 @@ import { getTeamReducersApi } from "../../../../redux/getTeamsReducer";
 import { getDepartmentsReducersApi } from "../../../../redux/getDepartmentsReducers";
 import { getDesignationReducersApi } from "../../../../redux/getDesignationReducers";
 import { useAppDispatch } from "../../../states/store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [showEditButton, setShowEditButton] = useState<boolean>(false);
+
     const [activeTab, setActiveTab] = useState(1);
     const [disableTabArray, setDisableTabArray] = useState({
         1: false,
@@ -110,6 +115,27 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
         }
     };
 
+    // Set clientType based on selectedClientData or a default value
+    useEffect(() => {
+        if (selectedEmployeeData) {
+            setShowEditButton(true);
+
+            setDisableTabArray({
+                1: false,
+                2: false,
+                3: false,
+                4: false,
+                5: false,
+            });
+        } else {
+            setIsEdit(true);
+        }
+    }, [selectedEmployeeData]);
+
+    const editClickHandler = () => {
+        setIsEdit(!isEdit);
+    };
+
     const items = [
         {
             key: 1,
@@ -121,6 +147,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
                     setEmployeeInfo={setEmployeeInfo}
                     selectedEmployeeID={selectedEmployeeID}
                     selectedEmployeeData={selectedEmployeeData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -134,6 +161,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
                     setEmployeeInfo={setEmployeeInfo}
                     selectedEmployeeID={selectedEmployeeID}
                     selectedEmployeeData={selectedEmployeeData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -147,6 +175,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
                     setEmployeeInfo={setEmployeeInfo}
                     selectedEmployeeID={selectedEmployeeID}
                     selectedEmployeeData={selectedEmployeeData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -160,6 +189,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
                     setEmployeeInfo={setEmployeeInfo}
                     selectedEmployeeID={selectedEmployeeID}
                     selectedEmployeeData={selectedEmployeeData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -174,6 +204,7 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
                     setEmployeeInfo={setEmployeeInfo}
                     selectedEmployeeID={selectedEmployeeID}
                     selectedEmployeeData={selectedEmployeeData}
+                    isEdit={isEdit}
                 />
             ),
         },
@@ -225,7 +256,42 @@ const AddEmployee = ({ selectedEmployeeID, selectedEmployeeData }: any) => {
             <div className={styles.addEmployeeDetailBox}>
                 {getEmployeesListLoading && clientId && (
                     <FormContentSkeletonLoader />
-                )}
+                )}{" "}
+                <div className="row">
+                    <div
+                        className={classNames("col-12 col-md-4 col-lg-4")}
+                    ></div>
+                    <div
+                        className={classNames("col-12 col-md-6 col-lg-6")}
+                    ></div>
+                    {showEditButton && (
+                        <div className={classNames("col-12 col-md-2 col-lg-2")}>
+                            <div className="mb-3">
+                                <div
+                                    className="ms-auto mt-5"
+                                    style={{ float: "right" }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={isEdit ? faXmark : faEdit}
+                                        style={{
+                                            fontSize: isEdit ? "25px" : "20px",
+                                            color: "#2c7be5",
+                                            cursor: "pointer",
+                                            marginRight: "15px",
+                                            float: "right",
+                                            marginTop: isEdit ? "-3px" : "0",
+                                        }}
+                                        title={
+                                            "Click here to " +
+                                            (isEdit ? "cancel" : "edit")
+                                        }
+                                        onClick={editClickHandler}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
                 {!(getEmployeesListLoading && clientId) && (
                     <Tabs
                         className="subscriptionTabs"

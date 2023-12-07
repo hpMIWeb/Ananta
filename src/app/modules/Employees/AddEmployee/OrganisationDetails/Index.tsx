@@ -16,6 +16,7 @@ const OrganisationDetails = ({
     onChange,
     setEmployeeInfo,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const getRolesList = useSelector((state: any) => state.getRoles.data) || [];
@@ -140,6 +141,7 @@ const OrganisationDetails = ({
                                                     value: department?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -169,6 +171,7 @@ const OrganisationDetails = ({
                                                     value: team?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -198,6 +201,7 @@ const OrganisationDetails = ({
                                                     value: designation?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -237,6 +241,7 @@ const OrganisationDetails = ({
                                                     value: role._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -282,6 +287,7 @@ const OrganisationDetails = ({
                                                         event.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -324,6 +330,7 @@ const OrganisationDetails = ({
                                                 className="customAddFormInputText"
                                                 maxLength={10}
                                                 onChange={handlePanChange}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -349,6 +356,7 @@ const OrganisationDetails = ({
                                                 placeholder="Date of Joining"
                                                 className="customFormDatePicker"
                                                 format="DD/MM/YYYY"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -407,6 +415,7 @@ const OrganisationDetails = ({
                                                 className="customFormDatePicker"
                                                 use12Hours
                                                 format="h:mm A"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -433,6 +442,7 @@ const OrganisationDetails = ({
                                                 className="customFormDatePicker"
                                                 format="h:mm A"
                                                 use12Hours
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -497,6 +507,7 @@ const OrganisationDetails = ({
                                             <Input
                                                 placeholder="Reference"
                                                 className="customAddFormInputText"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>

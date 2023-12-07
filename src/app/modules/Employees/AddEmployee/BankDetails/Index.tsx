@@ -12,6 +12,7 @@ const BankDetails = ({
     onChange,
     setEmployeeInfo,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const [bankInfoData, setBankInfoData] = useState<any>([]);
@@ -107,6 +108,7 @@ const BankDetails = ({
                                             <Input
                                                 placeholder="Select Branch"
                                                 className="customAddFormInputText"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -129,6 +131,7 @@ const BankDetails = ({
                                             <Input
                                                 placeholder="Select Branch"
                                                 className="customAddFormInputText"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -174,6 +177,7 @@ const BankDetails = ({
                                                         event.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -219,6 +223,7 @@ const BankDetails = ({
                                                         value: "required",
                                                     },
                                                 ]}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -268,6 +273,7 @@ const BankDetails = ({
                                                 placeholder="IFSC Code"
                                                 className="customAddFormInputText"
                                                 maxLength={11}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -300,6 +306,7 @@ const BankDetails = ({
                                                 placeholder="MICR Code"
                                                 className="customAddFormInputText"
                                                 maxLength={18}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -332,6 +339,7 @@ const BankDetails = ({
                                             <Input
                                                 placeholder="SWIFT Code"
                                                 className="customAddFormInputText"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>

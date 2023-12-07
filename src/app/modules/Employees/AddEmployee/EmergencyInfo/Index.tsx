@@ -10,6 +10,7 @@ const EmergencyInfo = ({
     setEmployeeInfo,
     loading,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const [emergencyInfoData, setEmergencyInfoData] = useState([
@@ -89,6 +90,7 @@ const EmergencyInfo = ({
                                         remove={remove}
                                         canDelete={true}
                                         onDeleteCardClick={onDeleteCardClick}
+                                        isEdit={isEdit}
                                     />
                                     <hr className={styles.ownerInfoCardLine} />
                                 </div>
@@ -106,6 +108,7 @@ const EmergencyInfo = ({
                             onChange={onChange}
                             previousTab={4}
                             primaryButtonText="Save"
+                            isEdit={isEdit}
                         />
                     </div>
                 </div>
