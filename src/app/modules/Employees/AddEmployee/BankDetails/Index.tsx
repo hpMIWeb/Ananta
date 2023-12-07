@@ -254,13 +254,20 @@ const BankDetails = ({
                                             rules={[
                                                 {
                                                     validator: (_, value) => {
+                                                        if (!value) {
+                                                            // If the field is empty, validation passes
+                                                            return Promise.resolve();
+                                                        }
+
                                                         if (
                                                             /^[A-Za-z]{4}[a-zA-Z0-9]{7}$/.test(
                                                                 value
                                                             )
                                                         ) {
+                                                            // If the value matches the IFSC code format, validation passes
                                                             return Promise.resolve();
                                                         } else {
+                                                            // If the value doesn't match the format, reject with an error message
                                                             return Promise.reject(
                                                                 "Invalid IFSC code format."
                                                             );
