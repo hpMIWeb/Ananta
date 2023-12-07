@@ -406,6 +406,27 @@ const BasicInfo = ({
                                                             );
                                                         }
 
+                                                        // Skip validation if the email matches the current email
+                                                        if (
+                                                            value ===
+                                                            selectedClientData?.firmGSTIN
+                                                        ) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        const firmGSTINExistsInList =
+                                                            clientList.some(
+                                                                (client: any) =>
+                                                                    client.firmGSTIN ===
+                                                                    value
+                                                            );
+                                                        if (
+                                                            firmGSTINExistsInList
+                                                        ) {
+                                                            return Promise.reject(
+                                                                "GST TIN already exists in the database."
+                                                            );
+                                                        }
+
                                                         return Promise.resolve();
                                                     } else {
                                                         return Promise.reject();
