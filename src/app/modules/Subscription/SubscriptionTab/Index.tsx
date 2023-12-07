@@ -52,11 +52,11 @@ const SubscriptionTab = () => {
             label: "All Subscription",
         },
         {
-            value: "Consultant",
+            value: "consultant",
             label: "Consultant",
         },
         {
-            value: "Business Enterprise",
+            value: "business_enterprise",
             label: "Business Enterprise",
         },
     ]);
@@ -70,12 +70,12 @@ const SubscriptionTab = () => {
             label: "Client",
         },
         {
-            value: "associate_partner",
+            value: "associate partner",
             label: "Associate Partner",
         },
     ]);
 
-    const [getSubscriptionList, setGetSubscriptionList] = useState<any>([]);
+    const [subscriptionData, setSubscriptionData] = useState<any>([]);
 
     const [addonFilterState, setAddonFilterValueState] = useState({
         type: "category",
@@ -84,15 +84,16 @@ const SubscriptionTab = () => {
 
     // Set the initial state of clientData to all clients
     useEffect(() => {
-        setGetSubscriptionList(
+        console.log("subscriptionCardList", subscriptionCardList);
+        setSubscriptionData(
             getFilteredValue(
-                getSubscriptionList,
+                subscriptionCardList,
                 "",
                 sortState,
                 addonFilterState
             )
         );
-    }, [getSubscriptionList, sortState, addonFilterState]);
+    }, [subscriptionCardList, sortState, addonFilterState]);
     const addonOption =
         roleType === RoleTypes.SuperAdmin
             ? superAdminAddon
@@ -531,24 +532,24 @@ const SubscriptionTab = () => {
 
     useEffect(() => {
         const subscriptionData = getFilteredValue(
-            getSubscriptionList,
+            subscriptionCardList,
             searchQuery,
             sortState,
             addonFilterState
         );
-        setGetSubscriptionList(subscriptionData);
+        setSubscriptionData(subscriptionData);
     }, [searchQuery]);
 
     // Search input change handler
     const handleSearch = (searchValue: string) => {
         setSearchQuery(searchValue);
         const subscriptionData = getFilteredValue(
-            getSubscriptionList,
+            subscriptionCardList,
             searchValue,
             sortState,
             addonFilterState
         );
-        setGetSubscriptionList(subscriptionData);
+        setSubscriptionData(subscriptionData);
     };
 
     const setPageChange = (pageNumber: number, pageSize: number) => {
@@ -567,22 +568,22 @@ const SubscriptionTab = () => {
                 setSortStateHandler={(options: any) => {
                     setSortState(options);
                     const subscriptionDataList = getFilteredValue(
-                        getSubscriptionList,
+                        subscriptionData,
                         searchQuery,
                         sortState,
                         addonFilterState
                     );
-                    setGetSubscriptionList(subscriptionDataList);
+                    setSubscriptionData(subscriptionDataList);
                 }}
                 setAddonFilterHandler={(fillerValue: any) => {
                     setAddonFilterValueState(fillerValue);
                     const subscriptionDataList = getFilteredValue(
-                        getSubscriptionList,
+                        subscriptionData,
                         searchQuery,
                         sortState,
                         addonFilterState
                     );
-                    setGetSubscriptionList(subscriptionDataList);
+                    setSubscriptionData(subscriptionDataList);
                 }}
                 addonOption={addonOption}
                 initialAddOnsValue="All Subscription"
@@ -590,11 +591,7 @@ const SubscriptionTab = () => {
 
             {loading && <CardContentSkeletonLoader />}
             {!loading &&
-                getFilteredValue(
-                    displayedPaginationItems,
-                    searchValue,
-                    sortState
-                ).map((card: any, index: number) => (
+                displayedPaginationItems.map((card: any, index: number) => (
                     <SubscriptionCard
                         displayIndex={getCurrentItemNumber(
                             index + 1,
@@ -616,11 +613,11 @@ const SubscriptionTab = () => {
                     />
                 ))}
 
-            {!loading && !subscriptionCardList.length && (
-                <NoDataAvailable name="No Clients Available!" />
+            {!loading && !subscriptionData.length && (
+                <NoDataAvailable name="No Subscription Available!" />
             )}
             <Pagination
-                data={subscriptionCardList}
+                data={subscriptionData}
                 setPaginationDisplayedItems={setPaginationDisplayedItems}
                 setPageNumber={setPageChange}
             />
