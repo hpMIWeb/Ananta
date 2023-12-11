@@ -332,7 +332,7 @@ const SubscriptionAddonsCard = memo(
         };
 
         const generateAddonDetails = () => {
-            const priceSuffix = "/-";
+            const priceSuffix = "";
             const pricePrefix = " Rs ";
 
             // Check if selectAddonDetailsForString is empty
@@ -530,7 +530,6 @@ const SubscriptionAddonsCard = memo(
                     >
                         Rs.{" "}
                         {displayNumberInCurrencyFormate(selectedAddonsPrice)}
-                        /-
                     </p>
                 </div>
                 {selectAddonDetails.add_on_title &&

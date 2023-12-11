@@ -8,6 +8,7 @@ import Icon from "../../../../../components/Icon/Index";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 
 interface IInstrument {
     instrumentAmount: number;
@@ -195,13 +196,13 @@ const PaymentTabAddClient = ({
                                 )}
                             >
                                 <p className={styles.invoiceAmount}>
-                                    Rs.
                                     {clientValue &&
                                     clientValue.subscriptionDetails
-                                        ? clientValue.subscriptionDetails
-                                              .invoicePrice
+                                        ? displayNumberInCurrencyFormate(
+                                              clientValue.subscriptionDetails
+                                                  .invoicePrice
+                                          )
                                         : 0}
-                                    /-
                                 </p>
                             </div>
                         </div>

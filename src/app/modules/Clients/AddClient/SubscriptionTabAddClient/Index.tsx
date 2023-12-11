@@ -397,7 +397,7 @@ const SubscriptionTabAddClient = ({
                 startDate,
                 endDate: monthAdded,
                 adminDiscount: adminDiscount ? adminDiscount : 0,
-                invoicePrice: Math.round(invoiceAmount),
+                invoicePrice: invoiceAmount,
                 roundOff: roundOff ? roundOff : 0,
             };
 
@@ -771,7 +771,6 @@ const SubscriptionTabAddClient = ({
                                                             {displayNumberInCurrencyFormate(
                                                                 couponDiscount
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
@@ -851,7 +850,6 @@ const SubscriptionTabAddClient = ({
                                                             {displayNumberInCurrencyFormate(
                                                                 taxableValue
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
@@ -877,7 +875,6 @@ const SubscriptionTabAddClient = ({
                                                                     100) *
                                                                     18
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
@@ -925,7 +922,6 @@ const SubscriptionTabAddClient = ({
                                                             {displayNumberInCurrencyFormate(
                                                                 invoiceAmount
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
