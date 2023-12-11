@@ -36,6 +36,7 @@ import Cookies from "js-cookie";
 import dayjs from "dayjs";
 import cashBack from "../../../../../assets/images/cashbac.png";
 import falconIcon from "../../../../../assets/images/falcon.png";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
@@ -231,7 +232,7 @@ const SubscriptionTabAddClient = ({
                                 styles.addCaPlanHeader
                             )}
                         >
-                            Rs. {details.price}
+                            {displayNumberInCurrencyFormate(details.price)}
                         </h3>
                         <p className="mb-1">Price</p>
                     </div>
@@ -582,9 +583,10 @@ const SubscriptionTabAddClient = ({
                                                     styles.subscriptionPrice
                                                 )}
                                             >
-                                                Rs.{" "}
-                                                {selectedSubscriptionPlan.price}
-                                                /-
+                                                {" "}
+                                                {displayNumberInCurrencyFormate(
+                                                    selectedSubscriptionPlan.price
+                                                )}
                                             </p>
                                         )}
                                     </div>
@@ -738,14 +740,14 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.{" "}
-                                                            {selectedSubscriptionPlan.price +
-                                                                (subscriptionAddons &&
-                                                                subscriptionAddons.length >
-                                                                    0
-                                                                    ? totalAddonAmount
-                                                                    : 0)}
-                                                            /-
+                                                            {displayNumberInCurrencyFormate(
+                                                                selectedSubscriptionPlan.price +
+                                                                    (subscriptionAddons &&
+                                                                    subscriptionAddons.length >
+                                                                        0
+                                                                        ? totalAddonAmount
+                                                                        : 0)
+                                                            )}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -765,8 +767,11 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1 success-text"
                                                             id="total"
                                                         >
-                                                            -Rs.{" "}
-                                                            {couponDiscount}/-
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
+                                                                couponDiscount
+                                                            )}
+                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
@@ -777,7 +782,7 @@ const SubscriptionTabAddClient = ({
                                                         <p>
                                                             (
                                                             {
-                                                                selectedCoupon.name
+                                                                selectedCoupon?.name
                                                             }
                                                             )
                                                         </p>
@@ -842,7 +847,11 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs. {taxableValue}/-
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
+                                                                taxableValue
+                                                            )}
+                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
@@ -863,8 +872,7 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.
-                                                            {Math.round(
+                                                            {displayNumberInCurrencyFormate(
                                                                 (taxableValue /
                                                                     100) *
                                                                     18
@@ -913,8 +921,8 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.{" "}
-                                                            {Math.round(
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
                                                                 invoiceAmount
                                                             )}
                                                             /-

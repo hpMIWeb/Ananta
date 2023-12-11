@@ -10,6 +10,7 @@ import Input from "../../../../../components/Input/Index";
 import { RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
 import api from "../../../../utilities/apiServices";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -527,7 +528,9 @@ const SubscriptionAddonsCard = memo(
                             styles.subscriptionPrice
                         )}
                     >
-                        Rs. {selectedAddonsPrice.toFixed(2)}/-
+                        Rs.{" "}
+                        {displayNumberInCurrencyFormate(selectedAddonsPrice)}
+                        /-
                     </p>
                 </div>
                 {selectAddonDetails.add_on_title &&
