@@ -750,7 +750,6 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col right-align-cell">
                                                     <a
@@ -771,8 +770,25 @@ const SubscriptionTabAddClient = ({
                                                         </p>
                                                     </div>
                                                 </div>
+                                            </div>{" "}
+                                            <div className="row rowPadding">
+                                                <div className="col right-align-cell">
+                                                    <a className="text-end mb-1 promocode-link">
+                                                        <p>
+                                                            (
+                                                            {
+                                                                selectedCoupon.name
+                                                            }
+                                                            )
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div
+                                                        style={{ width: 100 }}
+                                                    ></div>
+                                                </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -814,7 +830,6 @@ const SubscriptionTabAddClient = ({
                                                 }
                                                 style={{ marginTop: 0 }}
                                             />
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -832,7 +847,6 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -860,7 +874,6 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -885,7 +898,6 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div
                                                 style={{ marginTop: "-16px" }}
                                                 className="row rowPadding"
