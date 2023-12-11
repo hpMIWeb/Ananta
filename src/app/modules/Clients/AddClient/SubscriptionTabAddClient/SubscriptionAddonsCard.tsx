@@ -528,7 +528,6 @@ const SubscriptionAddonsCard = memo(
                             styles.subscriptionPrice
                         )}
                     >
-                        Rs.{" "}
                         {displayNumberInCurrencyFormate(selectedAddonsPrice)}
                     </p>
                 </div>
