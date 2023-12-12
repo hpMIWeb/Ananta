@@ -305,10 +305,11 @@ const SubscriptionTabAddClient = ({
         adminDiscount -
         couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
-    const invoiceAmount =
-        taxableValue +
-        gstAmount +
-        (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
+    const invoiceAmountBeforeRoundOff = taxableValue + gstAmount;
+    const roundedValue = Math.round(invoiceAmountBeforeRoundOff);
+    let roundOffValue = (roundedValue - invoiceAmountBeforeRoundOff).toFixed(2);
+    form.setFieldsValue({ roundOff: roundOffValue });
+    const invoiceAmount = roundedValue;
 
     const handleRemoveAddon = (index: any) => {
         const updatedAddons = subscriptionAddons.filter(
