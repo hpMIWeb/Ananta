@@ -762,11 +762,7 @@ const BasicInfo = ({
                                     // beforeUpload={beforeUpload}
                                     // onChange={handleChange}
                                 >
-                                    <img
-                                        src={uploadLogo}
-                                        alt="avatar"
-                                        style={{ width: "100%" }}
-                                    />
+                                    <img src={uploadLogo} alt="avatar" />
                                 </Upload>
                             </div>
                         </div>
