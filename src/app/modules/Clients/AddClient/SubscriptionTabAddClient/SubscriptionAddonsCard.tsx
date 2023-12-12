@@ -55,7 +55,11 @@ const SubscriptionAddonsCard = memo(
 
         const getAddonsCardData = () => {
             api.getAddonList().then((resp: any) => {
-                setAddonsCardList(resp.data);
+                const addonList = resp.data;
+                const activeAddonList = addonList.filter(
+                    (addon: any) => addon.status === "Active"
+                );
+                setAddonsCardList(activeAddonList);
                 calculateTotal(resp.data);
                 generateAddonDetails();
             });
