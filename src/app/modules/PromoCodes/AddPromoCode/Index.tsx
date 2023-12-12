@@ -486,12 +486,12 @@ const AddPromoCode = () => {
                                     style={{ height: 33 }}
                                     options={[
                                         {
-                                            value: "Accountant",
+                                            value: "accountant",
                                             label: "Accountant",
                                         },
                                         { value: "ca", label: "CA" },
                                         {
-                                            value: "Tax Consultant",
+                                            value: "tax_consultant",
                                             label: "Tax Consultant",
                                         },
                                     ]}

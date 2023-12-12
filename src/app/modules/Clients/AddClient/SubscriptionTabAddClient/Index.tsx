@@ -123,6 +123,11 @@ const SubscriptionTabAddClient = ({
         const activePromoCodeList = promoCardList.filter(
             (promoCode: any) => promoCode.status === "Active"
         );
+
+        const filterPromoCodeList = promoCardList.filter(
+            (promoCode: any) =>
+                promoCode.userCategory.toLowerCase() === clientType
+        );
         setPromoCodeList(activePromoCodeList);
         setOpenPromoCodeDrawer(true);
     };
