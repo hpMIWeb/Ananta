@@ -54,6 +54,10 @@ const PaymentTabAddClient = ({
                     selectedClientData?.paymentDetails.creditPeriod,
                 creditType: selectedClientData?.paymentDetails.creditType,
             });
+            setBillingMethod(
+                selectedClientData.subscriptionDetails.subscriptionType
+            );
+
             setPaymentForm({
                 paymentTerms: selectedClientData?.paymentDetails.paymentTerms,
                 creditPeriodTime:
