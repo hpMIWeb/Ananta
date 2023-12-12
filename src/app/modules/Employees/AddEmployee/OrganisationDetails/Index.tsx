@@ -32,6 +32,20 @@ const OrganisationDetails = ({
         { type: "default", index: 0 },
     ]);
 
+    const [teamList, setTeamList] = useState(getTeamList);
+    const [designationList, setDesignationList] = useState(getDesignationList);
+
+    const handleChangeDepartment = (selectedValue: any) => {
+        const filteredTeams = getTeamList.filter(
+            (team: any) => team.department._id === selectedValue
+        );
+        const filteredDesignation = getDesignationList.filter(
+            (designation: any) => designation.department === selectedValue
+        );
+        setTeamList(filteredTeams);
+        setDesignationList(filteredDesignation);
+    };
+
     const onFinish = (value: any) => {
         const organizationDetails = {
             ...value,
@@ -142,6 +156,7 @@ const OrganisationDetails = ({
                                                 })
                                             )}
                                             disabled={!isEdit}
+                                            onChange={handleChangeDepartment}
                                         />
                                     </Form.Item>
                                 </div>
@@ -165,7 +180,7 @@ const OrganisationDetails = ({
                                     >
                                         <Select
                                             placeholder="Select Team"
-                                            options={getTeamList.map(
+                                            options={teamList.map(
                                                 (team: any) => ({
                                                     label: team?.name,
                                                     value: team?._id,
@@ -195,7 +210,7 @@ const OrganisationDetails = ({
                                     >
                                         <Select
                                             placeholder="Select Designation"
-                                            options={getDesignationList.map(
+                                            options={designationList.map(
                                                 (designation: any) => ({
                                                     label: designation?.name,
                                                     value: designation?._id,
