@@ -813,24 +813,28 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>{" "}
-                                            <div className="row rowPadding">
-                                                <div className="col right-align-cell">
-                                                    <a className="text-end mb-1 promocode-link">
-                                                        <p>
-                                                            (
-                                                            {
-                                                                selectedCoupon?.name
-                                                            }
-                                                            )
-                                                        </p>
-                                                    </a>
+                                            {selectedCoupon?.name && (
+                                                <div className="row rowPadding">
+                                                    <div className="col right-align-cell">
+                                                        <a className="text-end mb-1 promocode-link">
+                                                            <p>
+                                                                (
+                                                                {
+                                                                    selectedCoupon.name
+                                                                }
+                                                                )
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <div
+                                                            style={{
+                                                                width: 100,
+                                                            }}
+                                                        ></div>
+                                                    </div>
                                                 </div>
-                                                <div className="col-auto">
-                                                    <div
-                                                        style={{ width: 100 }}
-                                                    ></div>
-                                                </div>
-                                            </div>
+                                            )}
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
