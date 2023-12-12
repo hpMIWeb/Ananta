@@ -49,6 +49,9 @@ const SubscriptionTabAddClient = ({
     const subscriptionCardList = useSelector(
         (state: any) => state.getSubscriptionsListApi.data
     );
+    const [subscriptionList, setSubscriptionList] =
+        useState<any>(subscriptionCardList);
+
     const promoCardList = useSelector(
         (state: any) => state.getPromocodeList.data
     );
@@ -82,6 +85,29 @@ const SubscriptionTabAddClient = ({
         );
         setFilteredPromoCodes(filteredCodes);
     };
+    useEffect(() => {
+        const activeSubscription = subscriptionCardList.filter(
+            (subscription: any) => subscription.status === "Active"
+        );
+        if (
+            clientType === "ca" ||
+            clientType === "accountant" ||
+            clientType === "tax_consultant"
+        ) {
+            const filteredSubscription = activeSubscription.filter(
+                (subscription: any) => subscription.category === "consultant"
+            );
+
+            setSubscriptionList(filteredSubscription);
+        } else if (clientType === "business_enterprise") {
+            const filteredSubscription = activeSubscription.filter(
+                (subscription: any) =>
+                    subscription.category === "business_enterprise"
+            );
+            setSubscriptionList(filteredSubscription);
+        }
+    }, []);
+
     useEffect(() => {
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
@@ -561,7 +587,7 @@ const SubscriptionTabAddClient = ({
                                             >
                                                 <Select
                                                     placeholder="Select Plan"
-                                                    options={subscriptionCardList.map(
+                                                    options={subscriptionList.map(
                                                         (s: any) => ({
                                                             value: s._id,
                                                             label: s.plan_name,

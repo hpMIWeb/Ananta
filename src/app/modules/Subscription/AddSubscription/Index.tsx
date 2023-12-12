@@ -99,10 +99,10 @@ const AddSubscription = () => {
             label: "Business Enterprise",
         },
     ];
-    // const categoryOptions =
-    //     roleType === RoleTypes.SuperAdmin ? superAdminOptions : caAdminOption;
     const categoryOptions =
-        roleType === RoleTypes.SuperAdmin ? categoryOption : categoryOption;
+        roleType === RoleTypes.SuperAdmin ? superAdminOptions : caAdminOption;
+    // const categoryOptions =
+    //     roleType === RoleTypes.SuperAdmin ? categoryOption : categoryOption;
 
     const handleIsTransactionCreditsUnlimitedChange = (value: boolean) => {
         setIsTransactionCreditsUnlimited(value);
