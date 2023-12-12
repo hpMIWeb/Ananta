@@ -80,7 +80,10 @@ const SubscriptionTabAddClient = ({
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         // Filter the promo codes based on the search input
-        const filteredCodes = promoCardList.filter((code: any) =>
+        const activePromoCodeList = promoCardList.filter(
+            (promoCode: any) => promoCode.status === "Active"
+        );
+        const filteredCodes = activePromoCodeList.filter((code: any) =>
             code.name.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredPromoCodes(filteredCodes);
@@ -117,7 +120,10 @@ const SubscriptionTabAddClient = ({
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
 
-        setPromoCodeList(promoCardList);
+        const activePromoCodeList = promoCardList.filter(
+            (promoCode: any) => promoCode.status === "Active"
+        );
+        setPromoCodeList(activePromoCodeList);
         setOpenPromoCodeDrawer(true);
     };
 
