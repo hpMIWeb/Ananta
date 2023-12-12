@@ -226,3 +226,14 @@ p {
     font-size: 16px !important;
     margin-top: 7px;
 }
+
+:where(
+        .css-dev-only-do-not-override-w8mnev
+    ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+    .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover,
+:where(
+        .css-dev-only-do-not-override-w8mnev
+    ).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+    .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover {
+    border-color: #ffffff !important;
+}
