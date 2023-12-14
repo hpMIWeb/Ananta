@@ -81,13 +81,13 @@ const PaymentTabAddClient = ({
             const hasValues = paymentRowData.some(
                 (row) => row.instrumentType && row.instrumentAmount
             );
-            if (hasValues) {
-            } else {
-                toast.error("Please enter at least 1 Instrument details.", {
+
+            if (!hasValues) {
+                toast.error("Please enter at least 1 Instrument detail.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                return;
             }
-            return;
         }
         if (billingMethod === "subscription") {
             const finalFormValues = {
