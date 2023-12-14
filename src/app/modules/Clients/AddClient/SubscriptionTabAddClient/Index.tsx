@@ -88,6 +88,7 @@ const SubscriptionTabAddClient = ({
         );
         setFilteredPromoCodes(filteredCodes);
     };
+
     useEffect(() => {
         const activeSubscription = subscriptionCardList.filter(
             (subscription: any) => subscription.status === "Active"
@@ -117,18 +118,16 @@ const SubscriptionTabAddClient = ({
     }, []);
 
     const showDrawer = () => {
-        dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
-
         const activePromoCodeList = promoCardList.filter(
             (promoCode: any) => promoCode.status === "Active"
         );
 
-        const filterPromoCodeList = promoCardList.filter(
+        const filterPromoCodeList = activePromoCodeList.filter(
             (promoCode: any) =>
                 promoCode.userCategory.toLowerCase() === clientType
         );
-        setPromoCodeList(activePromoCodeList);
+        setPromoCodeList(filterPromoCodeList);
         setOpenPromoCodeDrawer(true);
     };
 
@@ -457,10 +456,12 @@ const SubscriptionTabAddClient = ({
     useEffect(() => {
         if (selectedCoupon) {
             let discountVal = selectedCoupon.ammount;
+            let addonValue = totalAddonAmount ? totalAddonAmount : 0;
+            let subscriptionTotalValue =
+                selectedSubscriptionPlan.price + addonValue;
             if (selectedCoupon.type === "Percentage") {
                 const pctValue =
-                    (selectedSubscriptionPlan.price * selectedCoupon.ammount) /
-                    100;
+                    (subscriptionTotalValue * selectedCoupon.ammount) / 100;
                 discountVal = pctValue;
             }
 
@@ -470,8 +471,8 @@ const SubscriptionTabAddClient = ({
             }
 
             // Validate `discountValue` with actual plan price
-            if (discountVal > selectedSubscriptionPlan.price) {
-                discountVal = selectedSubscriptionPlan.price;
+            if (discountVal > subscriptionTotalValue) {
+                discountVal = subscriptionTotalValue;
             }
 
             setCouponDiscount(discountVal);
