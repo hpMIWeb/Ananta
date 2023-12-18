@@ -487,7 +487,7 @@ const LayoutComponent = ({
             case "31":
                 navigate("/associatePartners");
                 return;
-            case "101":
+            case "35":
                 navigate("/task");
                 return;
             case "36":
