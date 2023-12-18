@@ -21,6 +21,7 @@ const BasicInfo = ({
     onChange,
     setEmployeeInfo,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const { state } = useLocation();
@@ -255,6 +256,7 @@ const BasicInfo = ({
                                         <Input
                                             placeholder="First Name"
                                             className="customAddFormInputText"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -282,6 +284,7 @@ const BasicInfo = ({
                                         <Input
                                             placeholder="Middle Name"
                                             className="customAddFormInputText"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -317,6 +320,7 @@ const BasicInfo = ({
                                         <Input
                                             placeholder="Last Name"
                                             className="customAddFormInputText"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -347,6 +351,7 @@ const BasicInfo = ({
                                                     label: "Other",
                                                 },
                                             ]}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -366,6 +371,7 @@ const BasicInfo = ({
                                             placeholder="Date of Birth"
                                             className="customFormDatePicker"
                                             format="DD/MM/YYYY"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -393,6 +399,7 @@ const BasicInfo = ({
                                                 { value: "AB+", label: "AB+" },
                                                 { value: "AB-", label: "AB-" },
                                             ]}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -447,6 +454,7 @@ const BasicInfo = ({
                                             placeholder="Email"
                                             type="email"
                                             className="customAddFormInputText"
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -523,6 +531,7 @@ const BasicInfo = ({
                                             containerClass="phoneNumberContainerClassInput"
                                             country="in"
                                             countryCodeEditable={false}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -550,6 +559,7 @@ const BasicInfo = ({
                                                     mobile_hasError: hasError,
                                                 });
                                             }}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -609,6 +619,7 @@ const BasicInfo = ({
                                 <TextArea
                                     placeholder="Address"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -647,6 +658,7 @@ const BasicInfo = ({
                                             event.preventDefault();
                                         }
                                     }}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -673,6 +685,7 @@ const BasicInfo = ({
                                             label: country.countryName,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -699,6 +712,7 @@ const BasicInfo = ({
                                             label: state.name,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -721,6 +735,7 @@ const BasicInfo = ({
                                             label: city.name,
                                         })
                                     )}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>

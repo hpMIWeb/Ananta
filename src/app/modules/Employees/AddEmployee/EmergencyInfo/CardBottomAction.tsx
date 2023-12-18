@@ -9,6 +9,7 @@ const CardBottomAction = ({
     loading,
     primaryButtonText,
     previousTab = 1,
+    isEdit,
 }: any) => {
     return (
         <div className="d-flex">

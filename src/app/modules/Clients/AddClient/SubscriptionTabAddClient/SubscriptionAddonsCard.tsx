@@ -10,6 +10,7 @@ import Input from "../../../../../components/Input/Index";
 import { RoleTypes } from "../../../../../utils/constant";
 import Cookies from "js-cookie";
 import api from "../../../../utilities/apiServices";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 
 const SubscriptionAddonsCard = memo(
     ({
@@ -54,7 +55,11 @@ const SubscriptionAddonsCard = memo(
 
         const getAddonsCardData = () => {
             api.getAddonList().then((resp: any) => {
-                setAddonsCardList(resp.data);
+                const addonList = resp.data;
+                const activeAddonList = addonList.filter(
+                    (addon: any) => addon.status === "Active"
+                );
+                setAddonsCardList(activeAddonList);
                 calculateTotal(resp.data);
                 generateAddonDetails();
             });
@@ -331,7 +336,7 @@ const SubscriptionAddonsCard = memo(
         };
 
         const generateAddonDetails = () => {
-            const priceSuffix = "/-";
+            const priceSuffix = "";
             const pricePrefix = " Rs ";
 
             // Check if selectAddonDetailsForString is empty
@@ -527,7 +532,7 @@ const SubscriptionAddonsCard = memo(
                             styles.subscriptionPrice
                         )}
                     >
-                        Rs. {selectedAddonsPrice.toFixed(2)}/-
+                        {displayNumberInCurrencyFormate(selectedAddonsPrice)}
                     </p>
                 </div>
                 {selectAddonDetails.add_on_title &&

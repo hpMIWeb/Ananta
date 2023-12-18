@@ -8,6 +8,7 @@ import Icon from "../../../../../components/Icon/Index";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 
 interface IInstrument {
     instrumentAmount: number;
@@ -53,6 +54,10 @@ const PaymentTabAddClient = ({
                     selectedClientData?.paymentDetails.creditPeriod,
                 creditType: selectedClientData?.paymentDetails.creditType,
             });
+            setBillingMethod(
+                selectedClientData.subscriptionDetails.subscriptionType
+            );
+
             setPaymentForm({
                 paymentTerms: selectedClientData?.paymentDetails.paymentTerms,
                 creditPeriodTime:
@@ -76,13 +81,13 @@ const PaymentTabAddClient = ({
             const hasValues = paymentRowData.some(
                 (row) => row.instrumentType && row.instrumentAmount
             );
-            if (hasValues) {
-            } else {
-                toast.error("Please enter at least 1 Instrument details.", {
+
+            if (!hasValues) {
+                toast.error("Please enter at least 1 Instrument detail.", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                return;
             }
-            return;
         }
         if (billingMethod === "subscription") {
             const finalFormValues = {
@@ -195,13 +200,13 @@ const PaymentTabAddClient = ({
                                 )}
                             >
                                 <p className={styles.invoiceAmount}>
-                                    Rs.
                                     {clientValue &&
                                     clientValue.subscriptionDetails
-                                        ? clientValue.subscriptionDetails
-                                              .invoicePrice
+                                        ? displayNumberInCurrencyFormate(
+                                              clientValue.subscriptionDetails
+                                                  .invoicePrice
+                                          )
                                         : 0}
-                                    /-
                                 </p>
                             </div>
                         </div>

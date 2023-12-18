@@ -13,6 +13,7 @@ import { deleteSubscriptionsReducersApi } from "../../../../redux/deleteSubscrip
 import { useAppDispatch } from "../../../states/store";
 import Cookies from "js-cookie";
 import { featureList } from "../../../utilities/utility";
+import { RoleTypes } from "../../../../utils/constant";
 
 const AddSubscription = () => {
     // const featureList: any = [
@@ -42,8 +43,13 @@ const AddSubscription = () => {
     const [isBranchUnlimited, setIsBranchUnlimited] = useState<boolean>(false);
     const [isTurnoverUnlimited, setIsTurnoverUnlimited] =
         useState<boolean>(false);
-    const [subscriptionCategory, setSubscriptionCategory] = useState<string>(); // Initialize with a default category
+    const [subscriptionCategory, setSubscriptionCategory] = useState(""); // Initialize with a default category
 
+    const alllowSubscriptionCategoryForModule = [
+        "business_enterprise",
+        "associate_partner",
+        "consultant",
+    ];
     const handleIsSpaceUnlimitedChange = (value: boolean) => {
         setIsSpaceUnlimited(value);
     };
@@ -63,12 +69,40 @@ const AddSubscription = () => {
             label: "Client",
         },
         {
+            value: "client",
+            label: "Client",
+        },
+        {
             value: "associate_partner",
             label: "Associate Partner",
         },
     ]);
+    const categoryOption = [
+        {
+            value: "all",
+            label: "ALl",
+        },
+        {
+            value: "ca",
+            label: "CA",
+        },
+        {
+            value: "accountant",
+            label: "Accountant",
+        },
+        {
+            value: "tax_consultant",
+            label: "Tax Consultant",
+        },
+        {
+            value: "business_enterprise",
+            label: "Business Enterprise",
+        },
+    ];
     const categoryOptions =
-        roleType === "superadmin" ? superAdminOptions : caAdminOption;
+        roleType === RoleTypes.SuperAdmin ? superAdminOptions : caAdminOption;
+    // const categoryOptions =
+    //     roleType === RoleTypes.SuperAdmin ? categoryOption : categoryOption;
 
     const handleIsTransactionCreditsUnlimitedChange = (value: boolean) => {
         setIsTransactionCreditsUnlimited(value);
@@ -274,7 +308,9 @@ const AddSubscription = () => {
                             period_type: "MONTH",
                             status: "Active",
                             display_on_portal: true,
-                            category: subscriptionCategory,
+                            category: subscriptionCategory
+                                ? subscriptionCategory
+                                : undefined,
                             transaction: "applicable",
                         }}
                         onFinish={onFinish}
@@ -861,54 +897,54 @@ const AddSubscription = () => {
                         )}
                         {/* {hide when role is ca admin} */}
 
-                        {subscriptionCategory === "associate_partner" ||
-                            (subscriptionCategory === "business_enterprise" && (
-                                <div className="formFieldRowWrapper">
-                                    <div className="col-auto formLabelWrapper">
-                                        <label className="form-label">
-                                            Modules
-                                        </label>
-                                    </div>
-                                    <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
-                                        <div
-                                            className={
-                                                styles.featureCheckBoxWrapper
-                                            }
-                                        >
-                                            {featureList.map(
-                                                (task: any, index: any) => (
-                                                    <div key={index}>
-                                                        <Switch
-                                                            size="small"
-                                                            className="smallCheckBox"
-                                                            checked={
-                                                                featureState
-                                                                    ? featureState[
-                                                                          task
-                                                                              .value
-                                                                      ]
-                                                                    : task.defaultState
-                                                            }
-                                                            onChange={() =>
-                                                                handleFeatureToggle(
-                                                                    task
-                                                                )
-                                                            }
-                                                        />
-                                                        <label
-                                                            className={
-                                                                styles.featureCheckBoxLabel
-                                                            }
-                                                        >
-                                                            {task.label}
-                                                        </label>
-                                                    </div>
-                                                )
-                                            )}
-                                        </div>
+                        {alllowSubscriptionCategoryForModule.includes(
+                            subscriptionCategory
+                        ) && (
+                            <div className="formFieldRowWrapper">
+                                <div className="col-auto formLabelWrapper">
+                                    <label className="form-label">
+                                        Modules
+                                    </label>
+                                </div>
+                                <div className="col-12 col-sm-6 col-md-4 formInputWrapper">
+                                    <div
+                                        className={
+                                            styles.featureCheckBoxWrapper
+                                        }
+                                    >
+                                        {featureList.map(
+                                            (task: any, index: any) => (
+                                                <div key={index}>
+                                                    <Switch
+                                                        size="small"
+                                                        className="smallCheckBox"
+                                                        checked={
+                                                            featureState
+                                                                ? featureState[
+                                                                      task.value
+                                                                  ]
+                                                                : task.defaultState
+                                                        }
+                                                        onChange={() =>
+                                                            handleFeatureToggle(
+                                                                task
+                                                            )
+                                                        }
+                                                    />
+                                                    <label
+                                                        className={
+                                                            styles.featureCheckBoxLabel
+                                                        }
+                                                    >
+                                                        {task.label}
+                                                    </label>
+                                                </div>
+                                            )
+                                        )}
                                     </div>
                                 </div>
-                            ))}
+                            </div>
+                        )}
 
                         <div className="formFieldRowWrapper">
                             <div className="col-auto formLabelWrapper">

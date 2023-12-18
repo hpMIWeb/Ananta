@@ -19,6 +19,7 @@ const EmergencyInfoCardBox = ({
     clientType,
     form,
     _id,
+    isEdit,
 }: any) => {
     return (
         <>
@@ -58,6 +59,7 @@ const EmergencyInfoCardBox = ({
                                     id={`name-${field.key}`}
                                     placeholder="Contact Person"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -91,6 +93,7 @@ const EmergencyInfoCardBox = ({
                                     id={`relation-${field.key}`}
                                     placeholder="Relation"
                                     className="customAddFormInputText"
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -142,6 +145,7 @@ const EmergencyInfoCardBox = ({
                                             mobile_hasError: hasError,
                                         });
                                     }}
+                                    disabled={!isEdit}
                                 />
                             </Form.Item>
                         </div>
@@ -205,6 +209,7 @@ const EmergencyInfoCardBox = ({
                                             onDeleteCardClick(field.name, "_id")
                                         }
                                         danger
+                                        disabled={!isEdit}
                                     >
                                         <Icon
                                             height={14}

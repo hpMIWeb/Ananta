@@ -135,6 +135,16 @@ const BasicInfo = ({
         if ("pinCode" in changedValues && changedValues.pinCode.length === 6) {
             getPostalCodeData(changedValues);
         }
+        if ("firmPAN" in changedValues) {
+            form.setFieldsValue({
+                firmPAN: changedValues.firmPAN.toUpperCase(),
+            });
+        }
+        if ("firmGSTIN" in changedValues) {
+            form.setFieldsValue({
+                firmGSTIN: changedValues.firmGSTIN.toUpperCase(),
+            });
+        }
     };
 
     useEffect(() => {
@@ -396,6 +406,27 @@ const BasicInfo = ({
                                                             );
                                                         }
 
+                                                        // Skip validation if the email matches the current email
+                                                        if (
+                                                            value ===
+                                                            selectedClientData?.firmGSTIN
+                                                        ) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        const firmGSTINExistsInList =
+                                                            clientList.some(
+                                                                (client: any) =>
+                                                                    client.firmGSTIN ===
+                                                                    value
+                                                            );
+                                                        if (
+                                                            firmGSTINExistsInList
+                                                        ) {
+                                                            return Promise.reject(
+                                                                "GST TIN already exists in the database."
+                                                            );
+                                                        }
+
                                                         return Promise.resolve();
                                                     } else {
                                                         return Promise.reject();
@@ -448,6 +479,28 @@ const BasicInfo = ({
                                                                     value
                                                                 )
                                                             ) {
+                                                                // Skip validation if the email matches the current email
+                                                                if (
+                                                                    value ===
+                                                                    selectedClientData?.firmRegistrationNo
+                                                                ) {
+                                                                    return Promise.resolve();
+                                                                }
+                                                                const firmGSTINExistsInList =
+                                                                    clientList.some(
+                                                                        (
+                                                                            client: any
+                                                                        ) =>
+                                                                            client.firmRegistrationNo ===
+                                                                            value
+                                                                    );
+                                                                if (
+                                                                    firmGSTINExistsInList
+                                                                ) {
+                                                                    return Promise.reject(
+                                                                        "Firm Registration No already exists in the database."
+                                                                    );
+                                                                }
                                                                 return Promise.resolve();
                                                             } else {
                                                                 return Promise.reject(
@@ -709,11 +762,7 @@ const BasicInfo = ({
                                     // beforeUpload={beforeUpload}
                                     // onChange={handleChange}
                                 >
-                                    <img
-                                        src={uploadLogo}
-                                        alt="avatar"
-                                        style={{ width: "100%" }}
-                                    />
+                                    <img src={uploadLogo} alt="avatar" />
                                 </Upload>
                             </div>
                         </div>

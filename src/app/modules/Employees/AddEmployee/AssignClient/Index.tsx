@@ -12,6 +12,7 @@ const AssignClient = ({
     onChange,
     setEmployeeInfo,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const getClients = useSelector((state: any) => state.getClients.data);
     const [clientList, setClientList] = useState<any>(getClients);
@@ -157,6 +158,7 @@ const AssignClient = ({
                                 style={{ marginRight: 12 }}
                                 type="primary"
                                 onClick={handleAssignClientModalClick}
+                                disabled={!isEdit}
                             >
                                 {selectedClientIDs.length === 0
                                     ? "Assign"

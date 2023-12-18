@@ -16,6 +16,7 @@ const OrganisationDetails = ({
     onChange,
     setEmployeeInfo,
     selectedEmployeeData,
+    isEdit,
 }: any) => {
     const [form] = Form.useForm();
     const getRolesList = useSelector((state: any) => state.getRoles.data) || [];
@@ -30,6 +31,20 @@ const OrganisationDetails = ({
     const [ownerInfoData, setOwnerInfoData] = useState([
         { type: "default", index: 0 },
     ]);
+
+    const [teamList, setTeamList] = useState(getTeamList);
+    const [designationList, setDesignationList] = useState(getDesignationList);
+
+    const handleChangeDepartment = (selectedValue: any) => {
+        const filteredTeams = getTeamList.filter(
+            (team: any) => team.department._id === selectedValue
+        );
+        const filteredDesignation = getDesignationList.filter(
+            (designation: any) => designation.department === selectedValue
+        );
+        setTeamList(filteredTeams);
+        setDesignationList(filteredDesignation);
+    };
 
     const onFinish = (value: any) => {
         const organizationDetails = {
@@ -89,6 +104,13 @@ const OrganisationDetails = ({
         }
     };
 
+    const handlePanChange = (e: any) => {
+        const inputValue = e.target.value.toUpperCase();
+        //   setPanValue(inputValue);
+        // You can also update the form value if needed
+        form.setFieldsValue({ pan: inputValue });
+    };
+
     return (
         <div>
             <Form
@@ -133,6 +155,8 @@ const OrganisationDetails = ({
                                                     value: department?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
+                                            onChange={handleChangeDepartment}
                                         />
                                     </Form.Item>
                                 </div>
@@ -156,12 +180,13 @@ const OrganisationDetails = ({
                                     >
                                         <Select
                                             placeholder="Select Team"
-                                            options={getTeamList.map(
+                                            options={teamList.map(
                                                 (team: any) => ({
                                                     label: team?.name,
                                                     value: team?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -185,12 +210,13 @@ const OrganisationDetails = ({
                                     >
                                         <Select
                                             placeholder="Select Designation"
-                                            options={getDesignationList.map(
+                                            options={designationList.map(
                                                 (designation: any) => ({
                                                     label: designation?.name,
                                                     value: designation?._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -230,6 +256,7 @@ const OrganisationDetails = ({
                                                     value: role._id,
                                                 })
                                             )}
+                                            disabled={!isEdit}
                                         />
                                     </Form.Item>
                                 </div>
@@ -275,6 +302,7 @@ const OrganisationDetails = ({
                                                         event.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -316,6 +344,8 @@ const OrganisationDetails = ({
                                                 placeholder="PAN Number"
                                                 className="customAddFormInputText"
                                                 maxLength={10}
+                                                onChange={handlePanChange}
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -341,6 +371,7 @@ const OrganisationDetails = ({
                                                 placeholder="Date of Joining"
                                                 className="customFormDatePicker"
                                                 format="DD/MM/YYYY"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -399,6 +430,7 @@ const OrganisationDetails = ({
                                                 className="customFormDatePicker"
                                                 use12Hours
                                                 format="h:mm A"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -425,6 +457,7 @@ const OrganisationDetails = ({
                                                 className="customFormDatePicker"
                                                 format="h:mm A"
                                                 use12Hours
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>
@@ -489,6 +522,7 @@ const OrganisationDetails = ({
                                             <Input
                                                 placeholder="Reference"
                                                 className="customAddFormInputText"
+                                                disabled={!isEdit}
                                             />
                                         </Form.Item>
                                     </div>

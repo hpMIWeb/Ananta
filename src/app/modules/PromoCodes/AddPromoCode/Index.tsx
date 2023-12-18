@@ -296,6 +296,30 @@ const AddPromoCode = () => {
                                     }
                                     className="customInputNumber"
                                     style={{ width: "100%" }}
+                                    onChange={(value) => {
+                                        // If couponType is Percentage, append '%' to the value
+                                        if (
+                                            couponType === "Percentage" &&
+                                            typeof value === "number"
+                                        ) {
+                                            value = `${value}%`;
+                                        }
+                                        // Update the form field
+                                        form.setFieldsValue({ ammount: value });
+                                    }}
+                                    onBlur={() => {
+                                        // If couponType is Percentage, remove '%' when blurring
+                                        const value =
+                                            form.getFieldValue("amount");
+                                        if (
+                                            couponType === "Percentage" &&
+                                            typeof value === "string"
+                                        ) {
+                                            form.setFieldsValue({
+                                                ammount: value.replace("%", ""),
+                                            });
+                                        }
+                                    }}
                                 />
                             </Form.Item>
                         </div>
@@ -462,12 +486,12 @@ const AddPromoCode = () => {
                                     style={{ height: 33 }}
                                     options={[
                                         {
-                                            value: "Accountant",
+                                            value: "accountant",
                                             label: "Accountant",
                                         },
                                         { value: "ca", label: "CA" },
                                         {
-                                            value: "Tax Consultant",
+                                            value: "tax_consultant",
                                             label: "Tax Consultant",
                                         },
                                     ]}

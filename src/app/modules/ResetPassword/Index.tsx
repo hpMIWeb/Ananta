@@ -1,14 +1,21 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./resetPassword.module.scss";
 import Logo from "../../../assets/images/main-logo.png";
 import { Button, Form, Input } from "antd";
 import api from "../../utilities/apiServices";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ResetPassword = ({}) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [form] = Form.useForm();
+    const useQuery = () => new URLSearchParams(useLocation().search);
+    const query = useQuery();
+    const email = query.get("email");
 
+    useEffect(() => {
+        form.setFieldsValue({ email: email });
+    }, [email]);
     const onFinish = (e: any) => {
         const { email, password, newPassword } = e;
         const credentials = {
@@ -43,6 +50,7 @@ const ResetPassword = ({}) => {
                         Reset Password
                     </h5>
                     <Form
+                        form={form}
                         name="basic"
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}

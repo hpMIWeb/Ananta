@@ -36,6 +36,7 @@ import Cookies from "js-cookie";
 import dayjs from "dayjs";
 import cashBack from "../../../../../assets/images/cashbac.png";
 import falconIcon from "../../../../../assets/images/falcon.png";
+import { displayNumberInCurrencyFormate } from "../../../../../utils/helpers";
 const SubscriptionTabAddClient = ({
     onChange,
     setFormValue,
@@ -48,6 +49,9 @@ const SubscriptionTabAddClient = ({
     const subscriptionCardList = useSelector(
         (state: any) => state.getSubscriptionsListApi.data
     );
+    const [subscriptionList, setSubscriptionList] =
+        useState<any>(subscriptionCardList);
+
     const promoCardList = useSelector(
         (state: any) => state.getPromocodeList.data
     );
@@ -76,20 +80,54 @@ const SubscriptionTabAddClient = ({
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         // Filter the promo codes based on the search input
-        const filteredCodes = promoCardList.filter((code: any) =>
+        const activePromoCodeList = promoCardList.filter(
+            (promoCode: any) => promoCode.status === "Active"
+        );
+        const filteredCodes = activePromoCodeList.filter((code: any) =>
             code.name.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredPromoCodes(filteredCodes);
     };
+
+    useEffect(() => {
+        const activeSubscription = subscriptionCardList.filter(
+            (subscription: any) => subscription.status === "Active"
+        );
+        if (
+            clientType === "ca" ||
+            clientType === "accountant" ||
+            clientType === "tax_consultant"
+        ) {
+            const filteredSubscription = activeSubscription.filter(
+                (subscription: any) => subscription.category === "consultant"
+            );
+
+            setSubscriptionList(filteredSubscription);
+        } else if (clientType === "business_enterprise") {
+            const filteredSubscription = activeSubscription.filter(
+                (subscription: any) =>
+                    subscription.category === "business_enterprise"
+            );
+            setSubscriptionList(filteredSubscription);
+        }
+    }, []);
+
     useEffect(() => {
         dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
     }, []);
 
     const showDrawer = () => {
-        dispatch(getAddonsReducersListApi());
         dispatch(getPromocodeReducersListApi());
-        setPromoCodeList(promoCardList);
+        const activePromoCodeList = promoCardList.filter(
+            (promoCode: any) => promoCode.status === "Active"
+        );
+
+        const filterPromoCodeList = activePromoCodeList.filter(
+            (promoCode: any) =>
+                promoCode.userCategory.toLowerCase() === clientType
+        );
+        setPromoCodeList(filterPromoCodeList);
         setOpenPromoCodeDrawer(true);
     };
 
@@ -230,7 +268,7 @@ const SubscriptionTabAddClient = ({
                                 styles.addCaPlanHeader
                             )}
                         >
-                            Rs. {details.price}
+                            {displayNumberInCurrencyFormate(details.price)}
                         </h3>
                         <p className="mb-1">Price</p>
                     </div>
@@ -303,10 +341,11 @@ const SubscriptionTabAddClient = ({
         adminDiscount -
         couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
-    const invoiceAmount =
-        taxableValue +
-        gstAmount +
-        (isNaN(parseFloat(roundOff)) ? 0 : parseFloat(roundOff));
+    const invoiceAmountBeforeRoundOff = taxableValue + gstAmount;
+    const roundedValue = Math.round(invoiceAmountBeforeRoundOff);
+    let roundOffValue = (roundedValue - invoiceAmountBeforeRoundOff).toFixed(2);
+    form.setFieldsValue({ roundOff: roundOffValue });
+    const invoiceAmount = roundedValue;
 
     const handleRemoveAddon = (index: any) => {
         const updatedAddons = subscriptionAddons.filter(
@@ -395,7 +434,7 @@ const SubscriptionTabAddClient = ({
                 startDate,
                 endDate: monthAdded,
                 adminDiscount: adminDiscount ? adminDiscount : 0,
-                invoicePrice: Math.round(invoiceAmount),
+                invoicePrice: invoiceAmount,
                 roundOff: roundOff ? roundOff : 0,
             };
 
@@ -417,10 +456,12 @@ const SubscriptionTabAddClient = ({
     useEffect(() => {
         if (selectedCoupon) {
             let discountVal = selectedCoupon.ammount;
+            let addonValue = totalAddonAmount ? totalAddonAmount : 0;
+            let subscriptionTotalValue =
+                selectedSubscriptionPlan.price + addonValue;
             if (selectedCoupon.type === "Percentage") {
                 const pctValue =
-                    (selectedSubscriptionPlan.price * selectedCoupon.ammount) /
-                    100;
+                    (subscriptionTotalValue * selectedCoupon.ammount) / 100;
                 discountVal = pctValue;
             }
 
@@ -430,8 +471,8 @@ const SubscriptionTabAddClient = ({
             }
 
             // Validate `discountValue` with actual plan price
-            if (discountVal > selectedSubscriptionPlan.price) {
-                discountVal = selectedSubscriptionPlan.price;
+            if (discountVal > subscriptionTotalValue) {
+                discountVal = subscriptionTotalValue;
             }
 
             setCouponDiscount(discountVal);
@@ -558,7 +599,7 @@ const SubscriptionTabAddClient = ({
                                             >
                                                 <Select
                                                     placeholder="Select Plan"
-                                                    options={subscriptionCardList.map(
+                                                    options={subscriptionList.map(
                                                         (s: any) => ({
                                                             value: s._id,
                                                             label: s.plan_name,
@@ -581,9 +622,10 @@ const SubscriptionTabAddClient = ({
                                                     styles.subscriptionPrice
                                                 )}
                                             >
-                                                Rs.{" "}
-                                                {selectedSubscriptionPlan.price}
-                                                /-
+                                                {" "}
+                                                {displayNumberInCurrencyFormate(
+                                                    selectedSubscriptionPlan.price
+                                                )}
                                             </p>
                                         )}
                                     </div>
@@ -737,19 +779,18 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.{" "}
-                                                            {selectedSubscriptionPlan.price +
-                                                                (subscriptionAddons &&
-                                                                subscriptionAddons.length >
-                                                                    0
-                                                                    ? totalAddonAmount
-                                                                    : 0)}
-                                                            /-
+                                                            {displayNumberInCurrencyFormate(
+                                                                selectedSubscriptionPlan.price +
+                                                                    (subscriptionAddons &&
+                                                                    subscriptionAddons.length >
+                                                                        0
+                                                                        ? totalAddonAmount
+                                                                        : 0)
+                                                            )}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col right-align-cell">
                                                     <a
@@ -765,13 +806,36 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1 success-text"
                                                             id="total"
                                                         >
-                                                            -Rs.{" "}
-                                                            {couponDiscount}/-
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
+                                                                couponDiscount
+                                                            )}
                                                         </p>
                                                     </div>
                                                 </div>
-                                            </div>
-
+                                            </div>{" "}
+                                            {selectedCoupon?.name && (
+                                                <div className="row rowPadding">
+                                                    <div className="col right-align-cell">
+                                                        <a className="text-end mb-1 promocode-link">
+                                                            <p>
+                                                                (
+                                                                {
+                                                                    selectedCoupon.name
+                                                                }
+                                                                )
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <div
+                                                            style={{
+                                                                width: 100,
+                                                            }}
+                                                        ></div>
+                                                    </div>
+                                                </div>
+                                            )}
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -813,7 +877,6 @@ const SubscriptionTabAddClient = ({
                                                 }
                                                 style={{ marginTop: 0 }}
                                             />
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -826,12 +889,14 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs. {taxableValue}/-
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
+                                                                taxableValue
+                                                            )}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -848,18 +913,15 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.
-                                                            {Math.round(
+                                                            {displayNumberInCurrencyFormate(
                                                                 (taxableValue /
                                                                     100) *
                                                                     18
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div className="row rowPadding">
                                                 <div className="col">
                                                     <p className="text-end mb-1">
@@ -884,7 +946,6 @@ const SubscriptionTabAddClient = ({
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div
                                                 style={{ marginTop: "-16px" }}
                                                 className="row rowPadding"
@@ -900,11 +961,10 @@ const SubscriptionTabAddClient = ({
                                                             className="text-end mb-1"
                                                             id="total"
                                                         >
-                                                            Rs.{" "}
-                                                            {Math.round(
+                                                            {" "}
+                                                            {displayNumberInCurrencyFormate(
                                                                 invoiceAmount
                                                             )}
-                                                            /-
                                                         </p>
                                                     </div>
                                                 </div>
