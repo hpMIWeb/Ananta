@@ -1,0 +1,23 @@
+.follower-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+.follower-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.follower-icon {
+    font-size: 30px;
+}
+.follower-label {
+    font-size: 12px;
+    color: gray;
+}
+.follower-value {
+    font-size: 12px;
+    color: black;
+    margin-top: -14px;
+    font-weight: 600;
+    cursor: pointer;
+}
