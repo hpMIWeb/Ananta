@@ -197,7 +197,7 @@ const SubscriptionTab = () => {
                                 Transaction Credits
                             </p>
                             <p className="semiBold">
-                                {cardInfo.no_of_transactions}
+                                {cardInfo.transaction_credits}
                             </p>
                         </>
                     ),
