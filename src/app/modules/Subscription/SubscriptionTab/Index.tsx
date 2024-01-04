@@ -48,7 +48,7 @@ const SubscriptionTab = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [superAdminAddon, setSuperAdminAddonOption] = useState([
         {
-            value: "All Subscription",
+            value: "",
             label: "All Subscription",
         },
         {
@@ -62,7 +62,7 @@ const SubscriptionTab = () => {
     ]);
     const [caAdminAddonOption, setCAdminAddonOption] = useState([
         {
-            value: "All Subscription",
+            value: "",
             label: "All Subscription",
         },
         {
@@ -84,7 +84,6 @@ const SubscriptionTab = () => {
 
     // Set the initial state of clientData to all clients
     useEffect(() => {
-        console.log("subscriptionCardList", subscriptionCardList);
         setSubscriptionData(
             getFilteredValue(
                 subscriptionCardList,
@@ -294,7 +293,6 @@ const SubscriptionTab = () => {
                 },
             ];
         } else {
-            console.log(cardInfo);
             return [
                 {
                     iconName: "time",

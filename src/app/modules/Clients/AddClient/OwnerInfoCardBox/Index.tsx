@@ -256,6 +256,11 @@ const OwnerInfoCardBox = ({
                                     key={[field.fieldKey, "membershipNo"]}
                                     rules={[
                                         {
+                                            required: true,
+                                            message:
+                                                "Please Enter Membership No!",
+                                        },
+                                        {
                                             pattern: /^\d{6}$/,
                                             message:
                                                 "Membership number should be exactly six digits and contain only numbers!",

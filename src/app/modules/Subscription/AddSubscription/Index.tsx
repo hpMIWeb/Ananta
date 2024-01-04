@@ -168,6 +168,8 @@ const AddSubscription = () => {
             is_transaction_credits_unlimited: isTransactionCreditsUnlimited,
             is_turnover_unlimited: isTurnoverUnlimited,
             subscribers_count: 0,
+            price: Number(e.price.replace(/,/g, "")),
+
             transactions: {
                 sales_and_purchase: e.sales_and_purchase,
                 credit_and_debit_notes: e.credit_and_debit_notes,
@@ -211,6 +213,9 @@ const AddSubscription = () => {
 
             form.setFieldsValue({
                 ...currentCardDetail,
+                price: new Intl.NumberFormat("en-IN").format(
+                    currentCardDetail.price
+                ),
                 office_users: currentCardDetail.no_of_users.office_users,
                 client_office_users:
                     currentCardDetail.no_of_users.client_office_users,
@@ -238,6 +243,17 @@ const AddSubscription = () => {
         }
     }, [subscriptionCardList, subscriptionId, form]);
 
+    const handlePriceChange = (e: any) => {
+        // Remove non-numeric characters
+        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+
+        // Format the value with commas
+        const formattedValue = new Intl.NumberFormat("en-IN").format(rawValue);
+
+        // Set the formatted value to state
+
+        form.setFieldsValue({ price: formattedValue });
+    };
     useEffect(() => {
         if (success || successSubscriptionsSuccess) {
             navigation("/subscription");
@@ -1020,6 +1036,7 @@ const AddSubscription = () => {
                                         <Input
                                             placeholder="Price"
                                             className="customAddFormInputText"
+                                            onChange={handlePriceChange}
                                         />
                                     </Form.Item>
                                 </div>
