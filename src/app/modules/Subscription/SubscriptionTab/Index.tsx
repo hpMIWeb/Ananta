@@ -252,14 +252,14 @@ const SubscriptionTab = () => {
                             </p>
                             <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
                                 <li>
-                                    CA Office Users -{" "}
+                                    Office Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.office_users
                                         ? cardInfo.no_of_users.office_users
                                         : 0}
                                 </li>
                                 <li>
-                                    Client Office Users -{" "}
+                                    Client Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.client_office_users
                                         ? cardInfo.no_of_users
@@ -267,7 +267,7 @@ const SubscriptionTab = () => {
                                         : 0}
                                 </li>
                                 <li>
-                                    Client Vendors Users -{" "}
+                                    Vendors Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.client_vendor
                                         ? cardInfo.no_of_users.client_vendor
@@ -480,14 +480,14 @@ const SubscriptionTab = () => {
                             </p>
                             <ul className="ps-3 mt-1 fw-semi-bold mb-1 feature-description-list">
                                 <li>
-                                    CA Office Users -{" "}
+                                    Office Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.office_users
                                         ? cardInfo.no_of_users.office_users
                                         : 0}
                                 </li>
                                 <li>
-                                    Client Office Users -{" "}
+                                    Client Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.client_office_users
                                         ? cardInfo.no_of_users
@@ -495,7 +495,7 @@ const SubscriptionTab = () => {
                                         : 0}
                                 </li>
                                 <li>
-                                    Client Vendors Users -{" "}
+                                    Vendors Users -{" "}
                                     {cardInfo.no_of_users &&
                                     cardInfo.no_of_users.client_vendor
                                         ? cardInfo.no_of_users.client_vendor
