@@ -47,7 +47,7 @@ const ResetPassword = ({}) => {
                 </div>
                 <div className={styles.loginCardBody}>
                     <h5 className={styles.loginCardSigninLabel}>
-                        Reset Password
+                        Create Password
                     </h5>
                     <Form
                         form={form}
