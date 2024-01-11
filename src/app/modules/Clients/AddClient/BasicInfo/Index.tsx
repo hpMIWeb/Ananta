@@ -145,6 +145,12 @@ const BasicInfo = ({
                 firmGSTIN: changedValues.firmGSTIN.toUpperCase(),
             });
         }
+        if ("firmRegistrationNo" in changedValues) {
+            form.setFieldsValue({
+                firmRegistrationNo:
+                    changedValues.firmRegistrationNo.toUpperCase(),
+            });
+        }
     };
 
     useEffect(() => {
