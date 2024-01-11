@@ -405,7 +405,7 @@ const AddPromoCode = () => {
                                 <DatePicker
                                     placeholder="Start Date & Time"
                                     className="customFormDatePicker"
-                                    format="DD/MM/YYYY"
+                                    format="DD/MM/YYYY HH:mm"
                                     showTime
                                 />
                             </Form.Item>
@@ -432,7 +432,7 @@ const AddPromoCode = () => {
                                 <DatePicker
                                     placeholder="End Date & Time"
                                     className="customFormDatePicker"
-                                    format="DD/MM/YYYY"
+                                    format="DD/MM/YYYY HH:mm"
                                     showTime
                                 />
                             </Form.Item>
