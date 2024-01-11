@@ -103,11 +103,11 @@ const SubscriptionCardIcon = ({ name }: any) => {
                         height={19.19}
                     />
                 );
-            case "Info":
+            case "info":
                 return (
                     <Icon
                         className={styles.cardDescBtn}
-                        name="Info"
+                        name="info"
                         width={19.19}
                         height={19.19}
                     />
