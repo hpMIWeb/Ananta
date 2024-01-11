@@ -608,6 +608,7 @@ const SubscriptionTab = () => {
                             handleSubscriptionHistoryModalClick
                         }
                         historyData={card.editHistory}
+                        isColorHeader={false}
                     />
                 ))}
 

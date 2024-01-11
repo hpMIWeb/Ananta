@@ -22,6 +22,7 @@ const SubscriptionCardContent = ({
     displayIndex,
     handleViewBtnClick = () => {},
     handleProfileClick = () => {},
+    isColorHeader = true,
 }: any) => {
     const onChangeActive = (e: any) => {
         onChangeActiveClick(e, id);
@@ -59,7 +60,7 @@ const SubscriptionCardContent = ({
                             >
                                 <span
                                     style={{
-                                        color: "#2c7be5",
+                                        color: isColorHeader ? "#2c7be5" : "",
                                         cursor: "pointer",
                                     }}
                                     onClick={viewBtnClick}
