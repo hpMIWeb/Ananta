@@ -86,8 +86,6 @@ const AddPromoCode = () => {
         const sanitizedValue =
             typeof value === "string" ? value.replace("%", "") : value;
 
-        console.log(sanitizedValue);
-
         if (
             couponType === "Percentage" &&
             (isNaN(sanitizedValue) || parseFloat(sanitizedValue) > 100)

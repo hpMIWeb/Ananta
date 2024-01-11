@@ -337,7 +337,7 @@ const SubscriptionAddonsCard = memo(
 
         const generateAddonDetails = () => {
             const priceSuffix = "";
-            const pricePrefix = " Rs ";
+            const pricePrefix = " ";
 
             // Check if selectAddonDetailsForString is empty
             if (
@@ -350,10 +350,12 @@ const SubscriptionAddonsCard = memo(
             let addonStr =
                 selectAddonDetailsForString.add_on_title +
                 " " +
-                selectAddonDetailsForString.add_on_type +
+                // selectAddonDetailsForString.add_on_type +
                 " @ " +
                 pricePrefix +
-                selectAddonDetailsForString.price +
+                displayNumberInCurrencyFormate(
+                    selectAddonDetailsForString.price
+                ) +
                 priceSuffix;
 
             let dayStr = "";
