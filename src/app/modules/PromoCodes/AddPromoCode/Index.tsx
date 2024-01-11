@@ -62,8 +62,10 @@ const AddPromoCode = () => {
     };
 
     const onFinish = (e: any) => {
-        // @ts-ignore
-        //TODO:: need to solve
+        const amount =
+            typeof e.ammount === "string"
+                ? e.ammount.replace("%", "")
+                : e.ammount;
         dispatch(
             createPromoCodeApi({
                 payload: {
@@ -73,6 +75,7 @@ const AddPromoCode = () => {
                     display_on_portal: isUsePerUserUnlimited,
                     subscribers_count: 0,
                     promoId: promocodeId,
+                    ammount: amount,
                 },
                 promoId: promocodeId,
             })
@@ -80,9 +83,14 @@ const AddPromoCode = () => {
     };
 
     const validateDiscountAmount = (_: any, value: any) => {
+        const sanitizedValue =
+            typeof value === "string" ? value.replace("%", "") : value;
+
+        console.log(sanitizedValue);
+
         if (
             couponType === "Percentage" &&
-            (isNaN(value) || parseFloat(value) > 100)
+            (isNaN(sanitizedValue) || parseFloat(sanitizedValue) > 100)
         ) {
             return Promise.reject(
                 new Error(
