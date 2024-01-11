@@ -61,7 +61,11 @@ const SubscriptionTabAddClient = ({
     const startDate = Form.useWatch("startDate", form);
     const subscriptionType = Form.useWatch("subscriptionType", form);
     const subscriptionPlan = Form.useWatch("subscriptionPlan", form);
-    const adminDiscount = Form.useWatch("adminDiscount", form) || 0;
+    const adminDiscountVal =
+        String(Form.useWatch("adminDiscount", form)) || "0";
+    const adminDiscount = adminDiscountVal
+        ? Number(adminDiscountVal.replace(/,/g, ""))
+        : 0;
     const roundOff = Form.useWatch("roundOff", form) || 0;
     const [openPromoCodeDrawer, setOpenPromoCodeDrawer] = useState(false);
 
@@ -313,14 +317,26 @@ const SubscriptionTabAddClient = ({
             setSubscriptionAddons(addons);
             setSelectedCoupon(subscriptionDetails.promoCode);
             setSelectedCouponId(subscriptionDetails?.promoCode?._id);
+            const adminDiscountVal = subscriptionDetails.adminDiscount;
 
+            console.log(typeof adminDiscountVal);
+            // Check if adminDiscountVal is a string before using replace
+
+            // Format the value with commas
+            const formattedValue = new Intl.NumberFormat("en-IN").format(
+                parseFloat(adminDiscountVal)
+            );
+
+            // Set the formatted value to state
+
+            form.setFieldsValue({});
             form.setFieldsValue({
                 subscriptionType: subscriptionDetails?.subscriptionType,
                 subscriptionPlan: subscriptionDetails?.subscriptionPlan?._id,
                 startDate: dayjs(subscriptionDetails?.startDate),
                 endDate: dayjs(subscriptionDetails?.endDate),
                 promoCode: subscriptionDetails?.promoCode?._id,
-                adminDiscount: subscriptionDetails.adminDiscount,
+                adminDiscount: formattedValue,
                 roundOff: subscriptionDetails.roundOff,
             });
         }
@@ -342,9 +358,11 @@ const SubscriptionTabAddClient = ({
         couponDiscount;
     const gstAmount = (taxableValue / 100) * 18;
     const invoiceAmountBeforeRoundOff = taxableValue + gstAmount;
+    //round off auto calculate codes
     const roundedValue = Math.round(invoiceAmountBeforeRoundOff);
     let roundOffValue = (roundedValue - invoiceAmountBeforeRoundOff).toFixed(2);
     form.setFieldsValue({ roundOff: roundOffValue });
+
     const invoiceAmount = roundedValue;
 
     const handleRemoveAddon = (index: any) => {
@@ -488,6 +506,18 @@ const SubscriptionTabAddClient = ({
         } else {
             toast.error("Please select a coupon.");
         }
+    };
+
+    const handleAdminDiscountHandle = (e: any) => {
+        // Remove non-numeric characters
+        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+
+        // Format the value with commas
+        const formattedValue = new Intl.NumberFormat("en-IN").format(rawValue);
+
+        // Set the formatted value to state
+
+        form.setFieldsValue({ adminDiscount: formattedValue });
     };
 
     return (
@@ -852,9 +882,13 @@ const SubscriptionTabAddClient = ({
                                                                 onKeyPress={(
                                                                     event: any
                                                                 ) => {
+                                                                    // Allow only numeric characters and up to two digits after the decimal point
                                                                     if (
-                                                                        !/[0-9]/.test(
-                                                                            event.key
+                                                                        !/^\d*\.?\d{0,2}$/.test(
+                                                                            event
+                                                                                .currentTarget
+                                                                                .value +
+                                                                                event.key
                                                                         )
                                                                     ) {
                                                                         event.preventDefault();
@@ -862,9 +896,12 @@ const SubscriptionTabAddClient = ({
                                                                 }}
                                                                 defaultValue={0}
                                                                 className="customAddFormInputText text-end"
-                                                                maxLength="10"
+                                                                maxLength="12"
                                                                 disabled={
                                                                     !isEdit
+                                                                }
+                                                                onChange={
+                                                                    handleAdminDiscountHandle
                                                                 }
                                                             />
                                                         </Form.Item>
