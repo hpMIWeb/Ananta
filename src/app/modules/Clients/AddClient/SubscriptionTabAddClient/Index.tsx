@@ -56,7 +56,6 @@ const SubscriptionTabAddClient = ({
         (state: any) => state.getPromocodeList.data
     );
     const [subscriptionAddons, setSubscriptionAddons] = useState<any>([]);
-    const [promoCodeList, setPromoCodeList] = useState<any>(promoCardList);
 
     const [form] = Form.useForm();
     const startDate = Form.useWatch("startDate", form);
@@ -119,6 +118,7 @@ const SubscriptionTabAddClient = ({
 
     const showDrawer = () => {
         dispatch(getPromocodeReducersListApi());
+
         const activePromoCodeList = promoCardList.filter(
             (promoCode: any) => promoCode.status === "Active"
         );
@@ -127,7 +127,7 @@ const SubscriptionTabAddClient = ({
             (promoCode: any) =>
                 promoCode.userCategory.toLowerCase() === clientType
         );
-        setPromoCodeList(filterPromoCodeList);
+        setFilteredPromoCodes(filterPromoCodeList);
         setOpenPromoCodeDrawer(true);
     };
 
