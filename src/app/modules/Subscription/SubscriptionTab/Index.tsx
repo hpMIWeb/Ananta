@@ -558,7 +558,7 @@ const SubscriptionTab = () => {
     return (
         <div>
             <SearchFilterBar
-                searchValue={searchValue}
+                searchValue={searchQuery}
                 setSearchValue={handleSearch}
                 showAddOn={true}
                 sortState={sortState}
