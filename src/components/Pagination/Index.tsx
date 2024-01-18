@@ -30,10 +30,17 @@ const Pagination = ({
     };
 
     const updateDisplayedItems = (page: number) => {
-        const startIndex = (page - 1) * currentPageSize;
+        let startIndex = (page - 1) * currentPageSize;
         const endIndex = startIndex + currentPageSize;
         const itemsToDisplay = data.slice(startIndex, endIndex);
-        setPaginationDisplayedItems(itemsToDisplay);
+
+        if (itemsToDisplay.length > 0) {
+            setPaginationDisplayedItems(itemsToDisplay);
+        } else {
+            setPaginationDisplayedItems(data);
+            page = 1;
+            startIndex = 1;
+        }
         setPageNumber(page, currentPageSize);
     };
 
